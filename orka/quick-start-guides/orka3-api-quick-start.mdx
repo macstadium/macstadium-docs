@@ -18,16 +18,16 @@ The ultimate quick start
 If you want to skip the detailed explanations, just run through these steps on your own:
 
   1. Get an authentication token from the Orka3 CLI.
-  2. [List your nodes](https://orkadocs.macstadium.com/reference/listnodes) and check their state in the response.
-  3. List the available [VMs](https://orkadocs.macstadium.com/reference/listvms) with the API.
-  4. [Deploy your first VM instance](https://orkadocs.macstadium.com/reference/vmdeploy).
+  2. [List your nodes](https://macstadium.github.io/orka-api-docs/#tag/Nodes/operation/listNodes) and check their state in the response.
+  3. List the available [VMs](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/listVMs) with the API.
+  4. [Deploy your first VM instance](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/vmDeploy).
   5. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from the deploy response from Step 4. Use the `admin/admin` credentials.
   6. Once you login be sure to change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
-  7. [Commit](https://orkadocs.macstadium.com/reference/imagecommit) or [save the changes](https://orkadocs.macstadium.com/reference/imagesave) to a new base image (use the VM name from Step 4).
-  8. [Deploy another VM instance](https://orkadocs.macstadium.com/reference/vmdeploy).
+  7. [Commit](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/imageCommit) or [save the changes](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/imageSave) to a new base image (use the VM name from Step 4).
+  8. [Deploy another VM instance](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/vmDeploy).
   9. Run Apple Screen Sharing and connect to the newly deployed VM. Use the connection information returned in Step 8.
-  10. [Delete](https://orkadocs.macstadium.com/reference/deletevm) your VM instances.
-  11. [List](https://orkadocs.macstadium.com/reference/listvms) your VMs.
+  10. [Delete](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/deleteVM) your VM instances.
+  11. [List](https://macstadium.github.io/orka-api-docs/#tag/VMs/operation/listVMs) your VMs.
 
 
 
@@ -70,7 +70,7 @@ You can get your Orka API URL from your [IP Plan](https://support.macstadium.com
 Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
 
   * The Orka3 API is a RESTful API and conforms to enterprise industry standards.
-  * The complete API reference is available [here](https://orkadocs.macstadium.com/reference).
+  * The complete API reference is available [here](https://macstadium.github.io/orka-api-docs/).
 
 
 
