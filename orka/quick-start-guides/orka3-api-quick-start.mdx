@@ -1,7 +1,7 @@
 ---
 title: "Orka3 API Quick Start"
 zendesk_id: 28349313921563
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28349313921563-Orka3-API-Quick-Start"
+zendesk_url: "/orka/quick-start-guides/orka3-api-quick-start"
 section: "Quick Start Guides"
 category: "Orka"
 created_at: "2024-08-16T21:04:39Z"
@@ -42,10 +42,10 @@ The Orka3 API will be most useful to:
 
 ## Before you begin
 
-  1. Make sure you can access the account for your cluster in the MacStadium Customer Portal. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+  1. Make sure you can access the account for your cluster in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](https://support.macstadium.com/hc/en-us/articles/28230867289883) it from the [MacStadium portal](https://portal.macstadium.com/).
   3. Connect to your Orka cluster via VPN. 
-     * [Download and install a VPN client](https://support.macstadium.com/hc/en-us/articles/28329406438683). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
+     * [Download and install a VPN client](/orka/networking-with-orka-at-macstadium/vpn-connection). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
      * Use the server address and credentials from the VPN section at the top of your IP Plan.
 
 
@@ -63,7 +63,7 @@ You can get your Orka API URL from your [IP Plan](https://support.macstadium.com
 
   * For clusters deployed before Orka 2.1, it's the `.100` address for your `Private-1` network (usually, `10.221.188.100`), prefixed with `http`. For example: `http://10.221.188.100`.
   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
-  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](https://support.macstadium.com/hc/en-us/articles/28329724250011) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](https://orkadocs.macstadium.com/docs/custom-tls-certificate).
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](https://orkadocs.macstadium.com/docs/custom-tls-certificate).
 
 
 
@@ -367,9 +367,9 @@ OR
   
 brew upgrade orka-vm-tools
 ```
-This action ensures that your VM is running the latest version of the [Orka VM Tools](https://support.macstadium.com/hc/en-us/articles/28340435787163). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables vital features, such as [shared VM storage](https://support.macstadium.com/hc/en-us/articles/28340384486683).
+This action ensures that your VM is running the latest version of the [Orka VM Tools](/orka/orka-resources/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables vital features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
 
-If your cluster is not running the latest Orka version, download and install an [Orka VM Tools](https://support.macstadium.com/hc/en-us/articles/28340435787163) that matches the version of your cluster.
+If your cluster is not running the latest Orka version, download and install an [Orka VM Tools](/orka/orka-resources/vm-tools) that matches the version of your cluster.
 
   6. Always apply the latest OS updates and restart the VM.
 

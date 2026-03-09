@@ -1,7 +1,7 @@
 ---
 title: "CI/CD Integrations Quick Start"
 zendesk_id: 28394315916827
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28394315916827-CI-CD-Integrations-Quick-Start"
+zendesk_url: "/orka/quick-start-guides/cicd-integrations-quick-start"
 section: "Quick Start Guides"
 category: "Orka"
 created_at: "2024-08-19T13:40:41Z"
@@ -17,7 +17,7 @@ How to get started with your preferred CI/CD integration. Learn how to set it up
 
 If you want to skip the detailed explanations, just run through these steps on your own:
 
-  1. Review the list of available integrations at [Orka Tools & Integrations](https://support.macstadium.com/hc/en-us/articles/28347376278299) and choose the one you want to use.
+  1. Review the list of available integrations at [Orka Tools & Integrations](/orka/orka-overview/tools-integrations) and choose the one you want to use.
   2. Create a service account and get a token.
   3. List the available VMs and images.
   4. Create an SSH-enabled VM config for your workflow with the API.
@@ -25,7 +25,7 @@ If you want to skip the detailed explanations, just run through these steps on y
 
 
 
-Orka provides many integrations and plugins to set up a CI/CD pipeline with your preferred service provider. You can also build an in-house CI/CD integration with the [Orka3 CLI](https://support.macstadium.com/hc/en-us/articles/28347375974555) or the [Orka3 API](https://support.macstadium.com/hc/en-us/articles/28349313921563). This page focuses on the ready CI/CD solutions for Orka.
+Orka provides many integrations and plugins to set up a CI/CD pipeline with your preferred service provider. You can also build an in-house CI/CD integration with the [Orka3 CLI](/orka/quick-start-guides/orka3-cli-quick-start) or the [Orka3 API](/orka/quick-start-guides/orka3-api-quick-start). This page focuses on the ready CI/CD solutions for Orka.
 
 The Orka CI/CD integrations will be most useful to:
 
@@ -36,10 +36,10 @@ The Orka CI/CD integrations will be most useful to:
 
 ## 1\. Before you begin
 
-  1. Make sure you can access the account for your cluster in the MacStadium Customer Portal. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+  1. Make sure you can access the account for your cluster in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](https://support.macstadium.com/hc/en-us/articles/28230867289883) it from the [MacStadium portal](https://portal.macstadium.com/).
   3. Connect to your Orka cluster via VPN. Make sure that your CI/CD integration can reach the cluster via VPN.
-     1. [Download and install a VPN client](https://support.macstadium.com/hc/en-us/articles/28329406438683). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
+     1. [Download and install a VPN client](/orka/networking-with-orka-at-macstadium/vpn-connection). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
      2. Use the server address and credentials from the VPN section at the top of your IP Plan.
   4. Install the Orka3 CLI on your system.
 
@@ -47,7 +47,7 @@ The Orka CI/CD integrations will be most useful to:
 
 ## 2\. Some Orka CI/CD basics
 
-  * CI/CD integrations must target your Orka API URL. If you are using an [Orka domain](https://support.macstadium.com/hc/en-us/articles/28329724250011) or an [external custom domain](https://support.macstadium.com/hc/en-us/articles/28330039248923), you must ensure that the CI/CD integration can resolve the domain.
+  * CI/CD integrations must target your Orka API URL. If you are using an [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) or an [external custom domain](/orka/networking-with-orka-at-macstadium/external-custom-domains), you must ensure that the CI/CD integration can resolve the domain.
 
 
 
@@ -78,7 +78,7 @@ A new VM that spins up and lives for the duration of the CI/CD pipeline iteratio
 
 ## 3\. Pick your CI/CD integration
 
-Go to [Orka Tools & Integrations](https://support.macstadium.com/hc/en-us/articles/28347376278299) and review the latest list of available integrations. Pick the one you want to use and navigate to its detailed setup instructions (usually available in the respective repo or official integration page).
+Go to [Orka Tools & Integrations](/orka/orka-overview/tools-integrations) and review the latest list of available integrations. Pick the one you want to use and navigate to its detailed setup instructions (usually available in the respective repo or official integration page).
 
 ## 4\. Create a service account and get a token
 
@@ -93,7 +93,7 @@ orka3 sa token <SERVICE_ACCOUNT_NAME>
 ```
 Grab the token from the response and use it to authenticate the CI/CD integration with the Orka cluster.
 
-These commands create a service account in the `orka-default` namespace and obtain a valid token for it. If you need your CI/CD integration to be able to work in additional namespaces, you need to create the service account in the respective namespace or [configure the respective role bindings](https://support.macstadium.com/hc/en-us/articles/28333357279387).
+These commands create a service account in the `orka-default` namespace and obtain a valid token for it. If you need your CI/CD integration to be able to work in additional namespaces, you need to create the service account in the respective namespace or [configure the respective role bindings](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).
 
 ## 5\. Create the template for your permanent or ephemeral agent
 

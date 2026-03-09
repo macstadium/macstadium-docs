@@ -1,7 +1,7 @@
 ---
 title: "Private Cloud Networking Setup"
 zendesk_id: 28307653163419
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28307653163419-Private-Cloud-Networking-Setup"
+zendesk_url: "/iaas/connecting-to-other-clouds/private-cloud-networking-setup"
 section: "Connecting to Other Clouds"
 category: "IaaS"
 created_at: "2024-08-15T18:19:21Z"
@@ -13,13 +13,13 @@ suggested_new_path: "/iaas/connecting-to-other-clouds/private-cloud-networking-s
 
 **IMPORTANT** : Because of the highly customizable nature of on-premises private clouds, this guide is not precise but aims to provide general guidelines instead.
 
-If you need to establish one-time or temporary access to your MacStadium cloud from a single virtual or physical machine, you can connect via VPN using Cisco AnyConnect. For more information, see [Connect to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+If you need to establish one-time or temporary access to your MacStadium cloud from a single virtual or physical machine, you can connect via VPN using Cisco AnyConnect. For more information, see [Connect to Your Cloud via VPN](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
 
 If you need to connect an entire private cloud to your MacStadium cloud through a stable, persistent connection, you need to establish an IPsec site-to-site VPN between the two clouds.
 
 To create a stable IPSec site-to-site VPN between your two clouds, you need to:
 
-  1. Check the [software version and model](https://support.macstadium.com/hc/en-us/articles/28278001459739) of the Cisco ASA/ASAv device of your MacStadium cloud.
+  1. Check the [software version and model](/iaas/cisco-firewalls/checking-the-firewall-version) of the Cisco ASA/ASAv device of your MacStadium cloud.
   2. Configure your private cloud to connect to your MacStadium cloud. You might need to configure one or more of the following: 
      * Provide the public endpoint of your MacStadium cloud. Usually, this is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
      * Enable policy-based routing between your private cloud and the internal private network of your MacStadium cloud (by, default the Private-1 network). Usually, this is the private network host and range listed in Appendix A of the IP Plan.
@@ -40,7 +40,7 @@ You need to prepare these settings based on your Cisco ASA/ASAv software and mod
   * [Cisco Documentation: Navigating the Cisco ASA Series Documentation](https://www.cisco.com/c/en/us/td/docs/security/asa/roadmap/asaroadmap.html)
   * [Cisco Documentation: Managing Site-to-Site VPNs: The Basics](https://www.cisco.com/c/en/us/td/docs/security/security_management/cisco_security_manager/security_manager/4-1/user/guide/CSMUserGuide_wrapper/vpchap.pdf)
   * [Cisco Documentation: Cisco ASA Series Syslog Messages](https://www.cisco.com/c/en/us/td/docs/security/asa/syslog/b_syslog.html)
-  * [Logging into Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355)
-  * [AWS Networking Setup](https://support.macstadium.com/hc/en-us/articles/28294500691739)
-  * [Azure Networking Setup](https://support.macstadium.com/hc/en-us/articles/28279691634075)
-  * [Google Cloud Networking Setup](https://support.macstadium.com/hc/en-us/articles/28300901563163)
+  * [Logging into Your Cisco Firewall](/iaas/cisco-firewalls/logging-into-cisco-firewall)
+  * [AWS Networking Setup](/iaas/aws/aws-networking-setup)
+  * [Azure Networking Setup](/iaas/azure/azure-networking-setup)
+  * [Google Cloud Networking Setup](/iaas/google-cloud-platform/google-cloud-networking-setup)

@@ -1,7 +1,7 @@
 ---
 title: "AWS VPN Tunnel Troubleshooting"
 zendesk_id: 28401023073691
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28401023073691-AWS-VPN-Tunnel-Troubleshooting"
+zendesk_url: "/orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting"
 section: "Networking with Orka at MacStadium"
 category: "Orka"
 created_at: "2024-08-19T16:13:50Z"
@@ -21,8 +21,8 @@ What to look for when you're experiencing issues with your AWS-Orka VPN tunnel a
   * The command line interface returns `ERROR: unable to find interface “outside”`.  
 **Workaround:** Sometimes, the command line interface is case-sensitive and you need to preserve the capitalization of the network configuration as proivded in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).  
 1\. Clean up the firewall configuration.  
-2\. [Rename outside in your configuration file to Outside.](https://support.macstadium.com/hc/en-us/articles/28401474359835)  
-3\. [Re-run the complete configuration in Cisco ASDM-IDM.](https://support.macstadium.com/hc/en-us/articles/28401305336475)
+2\. [Rename outside in your configuration file to Outside.](/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file)  
+3\. [Re-run the complete configuration in Cisco ASDM-IDM.](/orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel)
 
 
 
@@ -71,7 +71,7 @@ Verify that the [route tables](https://docs.aws.amazon.com/vpc/latest/userguide/
 
 ## Cisco ASAv checks
 
-All checks in this section are performed against the [VPN configuration file](https://support.macstadium.com/hc/en-us/articles/28401474359835).
+All checks in this section are performed against the [VPN configuration file](/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file).
 
 Verify that you've replaced `<local_subnet>` and `<local_subnet_mask>` with the correct values for the `Private-1` network from the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
 
@@ -86,8 +86,8 @@ Verify that you've configured the NAT exemption rule properly.
 To resolve any of the listed common problems with the Cisco ASAv configuration, complete the following steps:
 
   1. Clean up the firewall configuration.
-  2. Make the necessary changes to the [configuration file](https://support.macstadium.com/hc/en-us/articles/28401474359835).
-  3. [Re-run the complete configuration in Cisco ASDM-IDM.](https://support.macstadium.com/hc/en-us/articles/28401305336475)
+  2. Make the necessary changes to the [configuration file](/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file).
+  3. [Re-run the complete configuration in Cisco ASDM-IDM.](/orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel)
 
 
 
@@ -111,8 +111,8 @@ For information about how to enable inbound traffic, see [Amazon VPC Documentati
 
 Sometimes, you might need to clean up the Cisco ASAv configuration and start over.
 
-  1. [Verify that you are connected via VPN to your Orka cluster.](https://support.macstadium.com/hc/en-us/articles/28329406438683)
-  2. [Run Cisco ASDM-IDM and log in to the firewall.](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+  1. [Verify that you are connected via VPN to your Orka cluster.](/orka/networking-with-orka-at-macstadium/vpn-connection)
+  2. [Run Cisco ASDM-IDM and log in to the firewall.](/iaas/cisco-firewalls/logging-into-cisco-firewall)
   3. In the Cisco ASDM-IDM application toolbar, select **Tools** > **Command Line Interface...**.
 
 

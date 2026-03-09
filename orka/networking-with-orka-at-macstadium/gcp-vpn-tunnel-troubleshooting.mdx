@@ -1,7 +1,7 @@
 ---
 title: "GCP VPN Tunnel Troubleshooting"
 zendesk_id: 28399407505563
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28399407505563-GCP-VPN-Tunnel-Troubleshooting"
+zendesk_url: "/orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
 section: "Networking with Orka at MacStadium"
 category: "Orka"
 created_at: "2024-08-19T15:41:14Z"
@@ -21,13 +21,13 @@ Sometimes, the command line interface might return `ERROR: unable to find interf
 For more information, see Cleaning up the ASA/ASAv configuration.
   2. Rename `outside` in your configuration to `Outside`.
   3. Re-run the complete configuration in Cisco ASDM-IDM.  
-For more information, see [Setting Up the Orka Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28399706953243).
+For more information, see [Setting Up the Orka Side of the Site-to-Site VPN](/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel).
 
 
 
 ## The tunnel is connected but there's no traffic between GCP and Orka
 
-If GCP shows that the tunnel is `Established` but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Preparing the VPN Configuration for Input into Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28399706953243).
+If GCP shows that the tunnel is `Established` but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Preparing the VPN Configuration for Input into Cisco ASA/ASAv](/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel).
 
   * Verify that your `{ shared_key }` is correct. The `{ shared_key }` in the configuration must match the key set for the VPN connection.
   * Verify that you've replaced `{ macstadium_network_address }` and `{ macstadium_network_mask }` with the correct values for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
@@ -41,8 +41,8 @@ If GCP shows that the tunnel is `Established` but there is no visibility and con
 To resolve any of the listed common problems with the Cisco ASA/ASAv configuration, complete the following steps:
 
   1. Clean up the firewall configuration..
-  2. Make the necessary changes to the [configuration](https://support.macstadium.com/hc/en-us/articles/28400048105243).
-  3. [Re-run](https://support.macstadium.com/hc/en-us/articles/28399706953243) the complete configuration in Cisco ASDM-IDM.
+  2. Make the necessary changes to the [configuration](/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file).
+  3. [Re-run](/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel) the complete configuration in Cisco ASDM-IDM.
 
 
 
@@ -63,8 +63,8 @@ For more information about user login on GCP instances, see [Google Cloud Docume
 
 Sometimes, you might need to clean up the Cisco ASAv configuration and start over.
 
-  1. [Verify that you are connected via VPN to your Orka cluster.](https://support.macstadium.com/hc/en-us/articles/28329406438683)
-  2. [Run Cisco ASDM-IDM and log in to the firewall.](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+  1. [Verify that you are connected via VPN to your Orka cluster.](/orka/networking-with-orka-at-macstadium/vpn-connection)
+  2. [Run Cisco ASDM-IDM and log in to the firewall.](/iaas/cisco-firewalls/logging-into-cisco-firewall)
   3. In the Cisco ASDM-IDM application toolbar, select **Tools** > **Command Line Interface...**.
 
 

@@ -1,7 +1,7 @@
 ---
 title: "Orka on AWS: Getting Started"
 zendesk_id: 39570388988059
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started"
+zendesk_url: "/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started"
 section: "Orka on AWS and On-Prem"
 category: "Orka"
 created_at: "2025-08-01T13:45:45Z"
@@ -60,7 +60,7 @@ By default:
         /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
 ```
   * Networking
-    * Apple Silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](https://support.macstadium.com/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0), enabling the ability to get an IP on a subnet in your VPC.
+    * Apple Silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350), enabling the ability to get an IP on a subnet in your VPC.
   * User Management and Authorization
     * Users need to register at portal.mactadium.com, as all user management is handled through the portal service. A future release will allow customers to use their own OIDC provider or Authentication mechanism.
   * Logging, Monitoring, and Alerting
@@ -200,7 +200,7 @@ To set up the provider:
 
 ### Exposing the Orka API Service[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#exposing-the-orka-api-service)
 
-To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins). Please review the [Orka API User Guide](https://support.macstadium.com/hc/en-us/articles/28349313921563) for more details.
+To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins). Please review the [Orka API User Guide](/orka/quick-start-guides/orka3-api-quick-start) for more details.
 
 We recommend using the [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/) to expose the service.
 

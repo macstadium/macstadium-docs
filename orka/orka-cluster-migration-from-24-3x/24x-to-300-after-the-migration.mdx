@@ -1,7 +1,7 @@
 ---
 title: "2.4.x to 3.0.0: After the Migration"
 zendesk_id: 28346593518363
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28346593518363-2-4-x-to-3-0-0-After-the-Migration"
+zendesk_url: "/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration"
 section: "Orka Cluster Migration from 2.4->3.x"
 category: "Orka"
 created_at: "2024-08-16T19:56:20Z"
@@ -19,7 +19,7 @@ Although Orka 3.0.0 provides some backward compatibility and ensures that multip
 
 MacStadium Customer Portal account administrators must handle the post-migration user management.
 
-All team members who need to be able to access the cluster must be among the users of your MacStadium Customer Portal account. All team members must be in the Admin or Tech role. Customer Portal account administrators might need to [invite additional team members](https://support.macstadium.com/hc/en-us/articles/28328612687899). Users might need to complete the invitation process.
+All team members who need to be able to access the cluster must be among the users of your MacStadium Customer Portal account. All team members must be in the Admin or Tech role. Customer Portal account administrators might need to [invite additional team members](/orka/orka-cluster-access/customer-portal-manage-account-users). Users might need to complete the invitation process.
 
 ## Configure your tools
 
@@ -87,7 +87,7 @@ orka3 node tag <NODE> <TAG>
 ```
 ## Re-create user and node grouping (node dedication)
 
-Orka 3.0.0 introduces a new way to handle resource dedication - via namespaces. For more information, see [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).
+Orka 3.0.0 introduces a new way to handle resource dedication - via namespaces. For more information, see [Orka Cluster: Manage Access to Resources](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).
 
 First, you must create a namespace that you will isolate for one or more users. Next, you need to move nodes to this namespace. This lets you dedicate the resources in the namespace to the respective users. You must also add the respective users or service accounts as subjects to the role binding for the namespace.
     
@@ -135,4 +135,4 @@ orka3 image delete <IMAGE_NAME>
 
 Custom automation around the basic scenario should be backward compatible and continue working out of the box after the migration. However, you might need to re-work more complex custom automation that relies on deprecated or changed features.
 
-Use the [2.4.x to 3.0.0: CLI Mapping](https://support.macstadium.com/hc/en-us/articles/28346199889179) and [2.4.x to 3.0.0: API Mapping](https://support.macstadium.com/hc/en-us/articles/28346085154971) to figure out how to migrate your custom automation to Orka 3.0.0.
+Use the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping) to figure out how to migrate your custom automation to Orka 3.0.0.

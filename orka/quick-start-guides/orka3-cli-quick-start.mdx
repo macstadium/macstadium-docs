@@ -1,7 +1,7 @@
 ---
 title: "Orka3 CLI Quick Start"
 zendesk_id: 28347375974555
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28347375974555-Orka3-CLI-Quick-Start"
+zendesk_url: "/orka/quick-start-guides/orka3-cli-quick-start"
 section: "Quick Start Guides"
 category: "Orka"
 created_at: "2024-08-16T20:12:26Z"
@@ -48,17 +48,17 @@ The Orka3 CLI will be helpful to:
 
 ## 1\. Before you begin
 
-  1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+  1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](https://support.macstadium.com/hc/en-us/articles/28230867289883) it from the [MacStadium portal](https://portal.macstadium.com/).
   3. Connect to your Orka cluster via VPN.
-     * [Download and install a VPN client](https://support.macstadium.com/hc/en-us/articles/28329406438683). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
+     * [Download and install a VPN client](/orka/networking-with-orka-at-macstadium/vpn-connection). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
      * Use the server address and credentials from the VPN section at the top of your IP Plan.
 
 
 
 ## 2\. Download and configure the Orka3 CLI
 
-  1. Download and install the latest [Orka3 CLI](https://support.macstadium.com/hc/en-us/articles/28347376278299) that matches your environment version.
+  1. Download and install the latest [Orka3 CLI](/orka/orka-overview/tools-integrations) that matches your environment version.
      * On macOS, run the `pkg` executable.
      * On Linux, unpack the archive and move the executable to `/usr/local/bin`.
      * On Windows, add the directory of the executable to your `PATH`.
@@ -84,7 +84,7 @@ This operation is a one-time effort. With it, you set the Orka service endpoint 
 You can get your Orka API URL from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883):
 
   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
-  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](https://support.macstadium.com/hc/en-us/articles/28330039248923) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](https://support.macstadium.com/hc/en-us/articles/28330039248923).
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 
 
 
@@ -243,9 +243,9 @@ The good news is that `ghcr.io/macstadium/orka-images/sonoma:latest` is already 
 ```
 brew install orka-vm-tools OR brew upgrade orka-vm-tools
 ```
-This action ensures that your VM is running the latest version of the [Orka VM Tools](https://orkadocs.macstadium.com/docs/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables key features, such as [shared VM storage](https://support.macstadium.com/hc/en-us/articles/28340384486683).
+This action ensures that your VM is running the latest version of the [Orka VM Tools](https://orkadocs.macstadium.com/docs/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables key features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
 
-If your cluster and CLI are not running the latest Orka version, download and install an [Orka VM Tools](https://support.macstadium.com/hc/en-us/articles/28340435787163) that matches the versions of your cluster and Orka3 CLI.
+If your cluster and CLI are not running the latest Orka version, download and install an [Orka VM Tools](/orka/orka-resources/vm-tools) that matches the versions of your cluster and Orka3 CLI.
 
   6. Apply the latest OS updates and restart the VM.
 

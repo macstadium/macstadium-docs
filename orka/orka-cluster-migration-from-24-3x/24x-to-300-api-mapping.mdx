@@ -1,7 +1,7 @@
 ---
 title: "2.4.x to 3.0.0: API Mapping"
 zendesk_id: 28346085154971
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28346085154971-2-4-x-to-3-0-0-API-Mapping"
+zendesk_url: "/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping"
 section: "Orka Cluster Migration from 2.4->3.x"
 category: "Orka"
 created_at: "2024-08-16T19:46:09Z"
@@ -17,10 +17,10 @@ Use the following mapping to figure out how to migrate your API-based custom aut
 
 Orka 2.4.x API | Orka3 API  
 ---|---  
-`{GET|POST|DELETE|PUT} /users` | Removed. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).  
-`POST /users/password` | Removed. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).  
-`POST /users/groups/myUserGroup` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).  
-`POST /users/groups/$ungrouped` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).  
+`{GET|POST|DELETE|PUT} /users` | Removed. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).  
+`POST /users/password` | Removed. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).  
+`POST /users/groups/myUserGroup` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).  
+`POST /users/groups/$ungrouped` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).  
 `POST /token` | For a user: `orka3 user get-token`  
 For a service account: `POST /api/v1/namespaces/{namespace}/serviceaccounts/{serviceaccount}/token`  
 `DELETE /token` | Removed.  

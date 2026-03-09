@@ -1,7 +1,7 @@
 ---
 title: "Site-To-Site VPN Configuration with AWS"
 zendesk_id: 28280561588507
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28280561588507-Site-To-Site-VPN-Configuration-with-AWS"
+zendesk_url: "/iaas/aws/site-to-site-vpn-configuration-with-aws"
 section: "AWS"
 category: "IaaS"
 created_at: "2024-08-14T21:15:35Z"
@@ -19,7 +19,7 @@ The goal of this documentation is to update the Site-To-Site VPN configuration w
 
   * A one-time or temporary access to the MacStadium cloud from a single virtual or physical machine is required.
   * Cisco AnyConnect VPN is recommended.
-  * For more information, see [Connecting to Your Cloud (via VPN)](https://support.macstadium.com/hc/en-us/articles/28230568733979)
+  * For more information, see [Connecting to Your Cloud (via VPN)](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn)
 
 
 
@@ -57,13 +57,13 @@ Cisco Documentation: [Managing Site-to-Site VPNs: The Basics](https://www.cisco.
 
 Cisco Documentation: [Cisco ASA Series Syslog Messages](https://www.cisco.com/c/en/us/td/docs/security/asa/syslog/b_syslog.html)
 
-[Logging into Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+[Logging into Your Cisco Firewall](/iaas/cisco-firewalls/logging-into-cisco-firewall)
 
 ## Networking Setup for Private Cloud
 
 **WARNING** : Because of the highly customizable nature of on-premises private clouds, this guide is not exact steps but rather general guidelines.
 
-**NOTE** : A one-time or temporary access must be established from a single virtual or physical machine to the MacStadium cloud. It is recommended to use Cisco AnyConnect VPN. For more information, see [Connect to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+**NOTE** : A one-time or temporary access must be established from a single virtual or physical machine to the MacStadium cloud. It is recommended to use Cisco AnyConnect VPN. For more information, see [Connect to Your Cloud via VPN](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
 
 To establish a stable and persistent connection, between the entire private cloud to the MacStadium cloud, then establish an **IPsec Site-To-Site VPN** between the two clouds.
 
@@ -196,7 +196,7 @@ Based on the requirements and current setup, it might be necessary to enable inb
 
 ## AWS VPN Configuration for Cisco ASA/ASAv
 
-**NOTE** : Proceed with the [AWS VPN configuration for Cisco.](https://support.macstadium.com/hc/en-us/articles/28280625682587)
+**NOTE** : Proceed with the [AWS VPN configuration for Cisco.](/iaas/aws/aws-vpn-config-for-cisco-asaasav)
 
 After creating theSite-To-Site VPN connection in Amazon, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud.
 
@@ -212,7 +212,7 @@ Amazon provides a prefilled configuration file with very detailed instructions. 
 Amazon has prefilled configurations ready for download, from a variety of vendors. The default firewall vendor for MacStadium private clouds is Cisco Systems, Inc.
 
   1. Verify there is a Site-To-Site VPN connection in Amazon. 
-     * For more information about how to set up your VPN, see [Setting Up the AWS Side of the Site-To-Site VPN](https://support.macstadium.com/hc/en-us/articles/28294500691739).
+     * For more information about how to set up your VPN, see [Setting Up the AWS Side of the Site-To-Site VPN](/iaas/aws/aws-networking-setup).
   2. Log in to the AWS Management Console and access your VPC service, which is located in the top right corner of the screen.
   3. In the VPC service sidebar, locate the Virtual Private Network menu and select Site-To-Site VPN Connections.
   4. In the list, select the newly created VPN connection and click Download Configuration.
@@ -404,7 +404,7 @@ TCP State Bypass | pm-state-bypass
 
 ## Completing Cisco ASA/ASAv Configuration
 
-To complete configuration into the Cisco ASA/ASAv, see Setting Up the [MacStadium Side of the Site-To-Site VPN](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+To complete configuration into the Cisco ASA/ASAv, see Setting Up the [MacStadium Side of the Site-To-Site VPN](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).
 
 ## Manually Enabling Route Propagation
 
@@ -431,13 +431,13 @@ For mostly CLI users, use [OpenConnect](https://www.infradead.org/openconnect/in
 
 If Homebrew is enabled, then run `brew install openconnect` from the command line.
 
-For Windows users, download ([build](https://www.infradead.org/openconnect/download.html)) the [OpenConnect package or use Cisco AnyConnect](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+For Windows users, download ([build](https://www.infradead.org/openconnect/download.html)) the [OpenConnect package or use Cisco AnyConnect](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
 
 ### Why OpenConnect?
 
 Cisco firewalls are designed to work with the [Cisco AnyConnect Secure Mobility Client ](https://www.cisco.com/c/en/us/support/security/anyconnect-secure-mobility-client/series.html)as a VPN client. Users who prefer a GUI VPN client or prefer running on Windows, use Cisco AnyConnect.
 
-  * [Download and use Cisco AnyConnect](https://support.macstadium.com/hc/en-us/articles/28230568733979)
+  * [Download and use Cisco AnyConnect](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn)
 
 
 

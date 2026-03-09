@@ -1,7 +1,7 @@
 ---
 title: "Azure Troubleshooting"
 zendesk_id: 28312694112539
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28312694112539-Azure-Troubleshooting"
+zendesk_url: "/iaas/azure/azure-troubleshooting"
 section: "Azure"
 category: "IaaS"
 created_at: "2024-08-15T20:33:10Z"
@@ -27,15 +27,15 @@ Sometimes, the command line interface might return ERROR: unable to find interfa
   1. Clean up the ASA configuration. 
      * For more information, see Cleaning up the ASA/ASAv configuration.
   2. Rename outside in your configuration to the precise name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. 
-     * For more information, see [Azure VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28299207547547).
+     * For more information, see [Azure VPN Config for Cisco ASA/ASAv](/iaas/azure/azure-vpn-config-for-cisco-asaasav).
   3. Re-run the complete configuration in Cisco ASDM-IDM. 
-     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+     * For more information, see [Site-to-Site VPN Config](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).
 
 
 
 ## The tunnel is connected but there's no traffic between Azure and MacStadium
 
-If Azure shows that the tunnel is Connected but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Azure VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28299207547547).
+If Azure shows that the tunnel is Connected but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Azure VPN Config for Cisco ASA/ASAv](/iaas/azure/azure-vpn-config-for-cisco-asaasav).
 
   * Verify that your \{ shared_key } is correct. The \{ shared_key } in the configuration must match the key set for the VPN connection.
   * Verify that you've replaced \{ macstadium_network_address } and \{ macstadium_network_mask } with the correct values for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network.
@@ -55,12 +55,12 @@ To resolve any of the listed common problems with the Cisco ASA/ASAv configurati
   2. Make the necessary changes to the configuration.  
 
 ```
- * For more information, see [Azure VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28299207547547).
+ * For more information, see [Azure VPN Config for Cisco ASA/ASAv](/iaas/azure/azure-vpn-config-for-cisco-asaasav).
 ```
   3. Re-run the complete configuration in Cisco ASDM-IDM.  
 
 ```
- * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+ * For more information, see [Site-to-Site VPN Config](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).
 ```
 ## There's traffic from Azure to MacStadium but you cannot access Azure from MacStadium
 
@@ -77,9 +77,9 @@ For information about how to enable inbound traffic, see [Azure Documentation: F
 Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start over.
 
   1. Verify that you are connected via VPN to your MacStadium private cloud.  
-For more information about how to connect to the VPN, see [Connecting to Your Cloud (via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979)).
+For more information about how to connect to the VPN, see [Connecting to Your Cloud (via VPN](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn)).
   2. Run Cisco ASDM-IDM and log in.
-  3. For more information about how to log in to your firewall, see [Logging into Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).  
+  3. For more information about how to log in to your firewall, see [Logging into Your Cisco Firewall](/iaas/cisco-firewalls/logging-into-cisco-firewall).  
 In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface**.  
 ![3e9a00a-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28312679274779)
   4. Select Single Line.

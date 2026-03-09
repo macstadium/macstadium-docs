@@ -1,7 +1,7 @@
 ---
 title: "AWS Troubleshooting"
 zendesk_id: 28312073382299
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28312073382299-AWS-Troubleshooting"
+zendesk_url: "/iaas/aws/aws-troubleshooting"
 section: "AWS"
 category: "IaaS"
 created_at: "2024-08-15T20:14:58Z"
@@ -29,9 +29,9 @@ The command-line interface returns `ERROR: unable to find interface "outside"`.
   1. Clean up the ASA configuration. 
      * For more information, see Cleaning up the ASA/ASAv configuration.
   2. Rename outside in your configuration file to the precise name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. 
-     * For more information, see [AWS VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28280625682587).
+     * For more information, see [AWS VPN Config for Cisco ASA/ASAv](/iaas/aws/aws-vpn-config-for-cisco-asaasav).
   3. Re-run the complete configuration in Cisco ASDM-IDM. 
-     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+     * For more information, see [Site-to-Site VPN Config](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).
 
 
 
@@ -76,7 +76,7 @@ For more information about route tables in Amazon, see [Amazon VPC Documentation
 
 ### Cisco ASA/ASAv checks
 
-All checks in this section are performed against the site-to-site VPN configuration file downloaded from Amazon. For more information, see [AWS VPN Config for Cisco ASA/ASAv.](https://support.macstadium.com/hc/en-us/articles/28280625682587)
+All checks in this section are performed against the site-to-site VPN configuration file downloaded from Amazon. For more information, see [AWS VPN Config for Cisco ASA/ASAv.](/iaas/aws/aws-vpn-config-for-cisco-asaasav)
 
 **Verify that you've replaced \<local_subnet> and \<local_subnet_mask> with the correct values for the internal, private network of your MacStadium private cloud.**
 
@@ -97,9 +97,9 @@ You can find the networking information for this network in Appendix A of your [
   1. Clean up the firewall configuration. 
      * For more information, see Cleaning up the ASA/ASAv configuration.
   2. Make the necessary changes to the configuration file. 
-     * For more information, see [AWS VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28280625682587).
+     * For more information, see [AWS VPN Config for Cisco ASA/ASAv](/iaas/aws/aws-vpn-config-for-cisco-asaasav).
   3. Re-run the complete configuration in Cisco ASDM-IDM. 
-     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+     * For more information, see [Site-to-Site VPN Config](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).
 
 
 
@@ -118,9 +118,9 @@ For information about how to enable inbound traffic, see [Amazon VPC Documentati
 Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start over.
 
   1. Verify that you are connected via VPN to your MacStadium private cloud. 
-     * For more information about how to connect to the VPN, see [Connecting to Your Cloud (via VPN)](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud (via VPN)](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
   2. Run Cisco ASDM-IDM and log in. 
-     * For more information about how to log in to your firewall, see [Logging in to Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+     * For more information about how to log in to your firewall, see [Logging in to Your Cisco Firewall](/iaas/cisco-firewalls/logging-into-cisco-firewall).
   3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface**.  
 ![bd5bfc2-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28312073324955)
   4. Select Single Line.

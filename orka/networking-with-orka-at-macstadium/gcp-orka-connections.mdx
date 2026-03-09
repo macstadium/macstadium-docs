@@ -1,7 +1,7 @@
 ---
 title: "GCP-Orka Connections"
 zendesk_id: 28400373391003
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28400373391003-GCP-Orka-Connections"
+zendesk_url: "/orka/networking-with-orka-at-macstadium/gcp-orka-connections"
 section: "Networking with Orka at MacStadium"
 category: "Orka"
 created_at: "2024-08-19T16:02:13Z"
@@ -15,19 +15,19 @@ Overview of how to connect GCP to your Orka cluster. Deep dive for detailed inst
   
 ## One-time access
 
-If you need to establish one-time or temporary access to your Orka cluster from a single virtual machine hosted in Google Cloud Platform (GCP), you can [connect via VPN](https://support.macstadium.com/hc/en-us/articles/28329406438683) from the GCP machine to your Orka cluster.
+If you need to establish one-time or temporary access to your Orka cluster from a single virtual machine hosted in Google Cloud Platform (GCP), you can [connect via VPN](/orka/networking-with-orka-at-macstadium/vpn-connection) from the GCP machine to your Orka cluster.
 
 ## VPN tunnel
 
 If you need to connect an entire GCP private cloud to your Orka cluster through a stable, persistent connection, you need to establish an IPsec site-to-site VPN between the two clouds (VPN tunnel):
 
-  1. [Create a Site-to-Site VPN for your GCP private cloud.](https://support.macstadium.com/hc/en-us/articles/28400298949147)
-  2. [Download and adjust the GCP-specific configuration file for the VPN.](https://support.macstadium.com/hc/en-us/articles/28400048105243)
-  3. [Apply the configuration to your Cisco ASAv device using the Cisco ASDM-IDM.](https://support.macstadium.com/hc/en-us/articles/28399706953243)
+  1. [Create a Site-to-Site VPN for your GCP private cloud.](/orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel)
+  2. [Download and adjust the GCP-specific configuration file for the VPN.](/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file)
+  3. [Apply the configuration to your Cisco ASAv device using the Cisco ASDM-IDM.](/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel)
 
 
 
 ### You can also:
 
-  * [Verify the GCP VPN tunnel.](https://support.macstadium.com/hc/en-us/articles/28399632896411)
-  * [Perform GCP VPN tunnel troubleshooting.](https://support.macstadium.com/hc/en-us/articles/28399407505563)
+  * [Verify the GCP VPN tunnel.](/orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel)
+  * [Perform GCP VPN tunnel troubleshooting.](/orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting)

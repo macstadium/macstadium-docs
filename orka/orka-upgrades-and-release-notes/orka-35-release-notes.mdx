@@ -1,7 +1,7 @@
 ---
 title: "Orka 3.5 Release Notes"
 zendesk_id: 41327066930459
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/41327066930459-Orka-3-5-Release-Notes"
+zendesk_url: "/orka/orka-upgrades-and-release-notes/orka-35-release-notes"
 section: "Orka Upgrades and Release Notes"
 category: "Orka"
 created_at: "2025-09-22T17:54:53Z"
@@ -74,7 +74,7 @@ For AWS deployments (two-step process):
 
 To enable shared attached disk support for your Orka instance:
 
-  1. Set up a [CodeBuild project](https://support.macstadium.com/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster- "https://support.macstadium.com/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster-") (if one is not already configured) and set: `vm_shared_disk_enabled: true`
+  1. Set up a [CodeBuild project](/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster- "/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster-") (if one is not already configured) and set: `vm_shared_disk_enabled: true`
 
   2. Configure each EC2 Mac Instance. Set the `VM_SHARED_DISK_SIZE` environment variable to the desired size as part of the user data script during instance launch:
 
@@ -241,7 +241,7 @@ We are excited to announce the latest Orka release, which brings with it signifi
 
 > Note: Customers must configure their own DHCP server on the network infrastructure. Static IP configuration through Orka is not currently supported.
 
-The release of Orka 3.5.0 brings with it new support for bridged networking for customers running [Orka On-Prem](https://support.macstadium.com/hc/en-us/articles/39570839057819-Orka-On-Prem-Getting-Started), enabling seamless connectivity from a virtual environment to a physical network environment.
+The release of Orka 3.5.0 brings with it new support for bridged networking for customers running [Orka On-Prem](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started), enabling seamless connectivity from a virtual environment to a physical network environment.
 
 #### Key capabilities:
 
@@ -249,7 +249,7 @@ Bridged networking allows Orka VMs to connect directly to a physical network as 
 
 #### Getting started:
 
-For more information on getting started using bridge networking with Orka, please visit: [Bridge networking with Orka](https://support.macstadium.com/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0).
+For more information on getting started using bridge networking with Orka, please visit: [Bridge networking with Orka](/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350).
 
 ### MacOS 26 Tahoe guest support:
 
@@ -291,7 +291,7 @@ Orka 3.5.0 introduces Harbor OCI storage as an alternative to NFS storage in Ork
 
 #### Technical requirements:
 
-For technical requirements, please visit: [https://](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[support.](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[macstadium.](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[com/hc/en-us/](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[a](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[r](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[t](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[ic](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[l](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[e](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[s](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[/41318654531099-U](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[si](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[ng-H](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[a](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[rbor-OCI-Storag](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[e](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[-](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[wi](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[th-the-Or](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[k](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[a-CLI](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)
+For technical requirements, please visit: [https://](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[support.](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[macstadium.](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[com/hc/en-us/](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[a](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[r](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[t](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[ic](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[l](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[e](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[s](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[/41318654531099-U](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[si](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[ng-H](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[a](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[rbor-OCI-Storag](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[e](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[-](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[wi](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[th-the-Or](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[k](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[a-CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)
 
 ### Improvements
 

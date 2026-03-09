@@ -1,7 +1,7 @@
 ---
 title: "3. Orka Side of the GCP VPN Tunnel"
 zendesk_id: 28399706953243
-zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28399706953243-3-Orka-Side-of-the-GCP-VPN-Tunnel"
+zendesk_url: "/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel"
 section: "Networking with Orka at MacStadium"
 category: "Orka"
 created_at: "2024-08-19T15:48:55Z"
@@ -17,13 +17,13 @@ How to set up the Orka side of your GCP-Orka tunnel to enable two-way access bet
 > 
 >   * Active VPN connection to your Orka cluster.
 >   * Your Cisco ASAv connection information from the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
->   * The downloaded and prepared [VPN configuration file](https://support.macstadium.com/hc/en-us/articles/28400048105243).
+>   * The downloaded and prepared [VPN configuration file](/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file).
 > 
 
 
-After you [have created your site-to-site VPN connection in Google Cloud Platform (GCP)](https://support.macstadium.com/hc/en-us/articles/28400298949147) and you [have prepared the configuration](https://support.macstadium.com/hc/en-us/articles/28400048105243) for use, you need to apply the required changes to the Cisco ASA/ASAv device in your Orka environment.
+After you [have created your site-to-site VPN connection in Google Cloud Platform (GCP)](/orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel) and you [have prepared the configuration](/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file) for use, you need to apply the required changes to the Cisco ASA/ASAv device in your Orka environment.
 
-  1. [Run Cisco ASDM-IDM and log in.](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+  1. [Run Cisco ASDM-IDM and log in.](/iaas/cisco-firewalls/logging-into-cisco-firewall)
   2. In the Cisco ASDM-IDM application toolbar, select **Tools** > **Command Line Interface...**.
 
 
@@ -31,5 +31,5 @@ After you [have created your site-to-site VPN connection in Google Cloud Platfor
 ![a56dcdd-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28399706941211)
 
   3. Select **Multiple Line**.
-  4. Type [`configure terminal`](https://www.cisco.com/c/m/en_us/techdoc/dc/reference/cli/n5k/commands/configure-terminal.html), press `Enter`, and paste the contents of the [prepared VPN configuration file](https://support.macstadium.com/hc/en-us/articles/28400048105243).
+  4. Type [`configure terminal`](https://www.cisco.com/c/m/en_us/techdoc/dc/reference/cli/n5k/commands/configure-terminal.html), press `Enter`, and paste the contents of the [prepared VPN configuration file](/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file).
   5. Click **Send**.
