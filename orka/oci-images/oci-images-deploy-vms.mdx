@@ -16,24 +16,26 @@ Using an OCI image in your workloads is as simple as just deploying a VM and spe
 #### **Orka CLI**
     
     
-    orka3 vm deploy --image <SERVER_ADDRESS>/<IMAGE>[:<TAG>]  
-      
-    OR  
-      
-    orka3 vm deploy --image <SERVER_ADDRESS>/<IMAGE>[:<TAG>] --namespace <NAMESPACE>
-
+```
+orka3 vm deploy --image <SERVER_ADDRESS>/<IMAGE>[:<TAG>]  
+  
+OR  
+  
+orka3 vm deploy --image <SERVER_ADDRESS>/<IMAGE>[:<TAG>] --namespace <NAMESPACE>
+```
 #### **Orka API**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "image": "<SERVER_ADDRESS>/<IMAGE>[:<TAG>]"  
-    }'
-
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'  
+-H 'Content-Type: application/json' \  
+-d '{  
+"image": "<SERVER_ADDRESS>/<IMAGE>[:<TAG>]"  
+}'
+```
 Note that you need to provide the registry path to the image name and optionally its tag. For example: ghcr.io/my-organization/orka-images/orka-arm:latest.
 
 You can add as many or as few configuration options as you need, including a user-specified name. If you are using the Orka3 CLI, run orka3 vm deploy --help for more information. If you are using the Orka3 API, see [Deploy a VM](https://orkadocs.macstadium.com/reference/vmdeploy).

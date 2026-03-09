@@ -77,17 +77,18 @@ Sometimes, you might need to clean up the Cisco ASAv configuration and start ove
 
     
     
-    clear configure tunnel-group { gcp_vpn_ip }  
-    clear configure group-policy gcp  
-    clear configure access-list gcp-in  
-    clear configure access-list gcp-acl  
-    clear configure access-list gcp-filter  
-    clear configure crypto map gcp-vpn-map  
-    clear configure crypto ipsec ikev2 ipsec-proposal gcp  
-    no nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET  
-    no object-group network GCP-NET  
-    no object-group network ONPREM-NET
-
+```
+clear configure tunnel-group { gcp_vpn_ip }  
+clear configure group-policy gcp  
+clear configure access-list gcp-in  
+clear configure access-list gcp-acl  
+clear configure access-list gcp-filter  
+clear configure crypto map gcp-vpn-map  
+clear configure crypto ipsec ikev2 ipsec-proposal gcp  
+no nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET  
+no object-group network GCP-NET  
+no object-group network ONPREM-NET
+```
 **Table 1: Placeholders**
 
 Placeholder | Value | Description  

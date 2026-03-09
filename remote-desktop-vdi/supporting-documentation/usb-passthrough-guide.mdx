@@ -104,73 +104,74 @@ Target system:
 
   * Citrix Workspace App installed on test client(s):
 
-    * Windows 11 client (recommended baseline).
+```
+* Windows 11 client (recommended baseline).
 
-    * macOS 15.4+ client (to validate current known issue).
-
-
-
-
+* macOS 15.4+ client (to validate current known issue).
+```
 Physical USB devices:
 
   * Mass storage device (USB drive).
 
-    * Optional: HID device (Wacom tablet, game controller).
+```
+* Optional: HID device (Wacom tablet, game controller).
 
-    * Optional: iPhone/iPad (for developer redirection testing).
-
-
-
-
+* Optional: iPhone/iPad (for developer redirection testing).
+```
 #### 2\. Test Procedure
 
   1. Enable Policy
 
-     1. Confirm USB Redirection is enabled for the correct Delivery Group.
+```
+ 1. Confirm USB Redirection is enabled for the correct Delivery Group.
 
-     2. Allow ~5 minutes for policy propagation.
-
+ 2. Allow ~5 minutes for policy propagation.
+```
   2. Connect from Client
 
-     1. Plug USB device into local client.
+```
+ 1. Plug USB device into local client.
 
-     2. Launch Citrix Workspace App → open the macOS VDA desktop session.
+ 2. Launch Citrix Workspace App → open the macOS VDA desktop session.
 
-     3. Check Devices menu in Workspace toolbar for USB device.
-
+ 3. Check Devices menu in Workspace toolbar for USB device.
+```
   3. Switch Redirection Mode
 
-     1. If device not mounted, try switching from Optimized to Generic.
+```
+ 1. If device not mounted, try switching from Optimized to Generic.
 
-     2. On macOS 15.4+, Generic may revert to Optimized (known issue).
-
+ 2. On macOS 15.4+, Generic may revert to Optimized (known issue).
+```
   4. Validate in VDA
 
-     1. Inside VDA, check Finder for mount.
+```
+ 1. Inside VDA, check Finder for mount.
 
-     2. Run to confirm detection:
-
+ 2. Run to confirm detection:
+```
 `diskutil list`
 
   5. Network Latency Check
 
-     1. Run:
-
+```
+ 1. Run:
+```
 `ctxsession -v`
 
-     2. If latency >150–200ms, device may not mount.
-
+```
+ 2. If latency >150–200ms, device may not mount.
+```
   6. Collect Logs (if issues)
 
-     1. Run:
-
+```
+ 1. Run:
+```
 `sudo xdlcollect`
 
-     2. Save and attach logs for escalation.
-
-
-
-
+```
+ 2. Save and attach logs for escalation.
+```
 #### 3\. Expected Results
 
 Windows Client: USB mass storage should appear and mount in Finder.  

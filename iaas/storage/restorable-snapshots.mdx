@@ -21,15 +21,14 @@ There are two types of snapshots:
 
   * **Cloud Snapshot**
 
-    * A snapshot of an entire Private Cloud instance.
-
+```
+* A snapshot of an entire Private Cloud instance.
+```
   * **VM Snapshot**
 
-    * A snapshot of an individual Virtual Machine.
-
-
-
-
+```
+* A snapshot of an individual Virtual Machine.
+```
 ### Snapshot Profiles
 
 Snapshots are created by using __snapshot profiles__. Once a snapshot profile is set up, it can be set to automatically snapshot machines on a regular basis according to stored schedules. The retention period, frequency, and machines snapshotted are all configurable. A snapshot profile can be assigned to an entire Private Cloud, an individual VM, or a NAS volume.
@@ -42,39 +41,40 @@ Default profiles are readily available and can be modified if needed. The follow
 
   * **SOX****(Sarbanes-Oxley)**
 
-    * Yearly snapshots retained for 7 years
+```
+* Yearly snapshots retained for 7 years
 
-    * Monthly snapshots retained for 1 year
+* Monthly snapshots retained for 1 year
 
-    * Weekly snapshots retained for 31 days
+* Weekly snapshots retained for 31 days
 
-    * Daily snapshots retained for 7 days
-
+* Daily snapshots retained for 7 days
+```
   * **HIPAA (Health Insurance Portability & Accountability Act)**
 
-    * Yearly snapshots retained indefinitely (no expiration)
+```
+* Yearly snapshots retained indefinitely (no expiration)
 
-    * Monthly snapshots retained for 1 year
+* Monthly snapshots retained for 1 year
 
-    * Weekly snapshots retained for 31 days
+* Weekly snapshots retained for 31 days
 
-    * Daily snapshots retained for 7 days
-
+* Daily snapshots retained for 7 days
+```
   * **NAS****Volume Syncs**
 
-    * Daily (at 6pm) snapshots retained for 3 days
-
+```
+* Daily (at 6pm) snapshots retained for 3 days
+```
   * ***Cloud Snapshots (Suggested default profile for entire-system snapshots)**
 
-    * Hourly for 3 hours
+```
+* Hourly for 3 hours
 
-    * Daily (at midnight) snapshots retained for 3 days
+* Daily (at midnight) snapshots retained for 3 days
 
-    * Daily (at noon) snapshots retained for 1 day
-
-
-
-
+* Daily (at noon) snapshots retained for 1 day
+```
 Any of the default profiles can be modified to meet individual needs or requirements.
 
 ### Using a Default Snapshot Profile
@@ -182,8 +182,9 @@ If a Cloud Level Snapshot is configured, individual VM snapshots may not needed.
 
   4. Select desired  __**snapshot profile**__ from the dropdown list
 
-     * The default Cloud Snapshots profile is recommended as a starting point for Cloud Snapshots.
-
+```
+ * The default Cloud Snapshots profile is recommended as a starting point for Cloud Snapshots.
+```
   5. Click **Submit** at the bottom of the page.
 
 

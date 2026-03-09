@@ -39,11 +39,11 @@ You can get your Orka API URL from your [IP Plan](https://support.macstadium.com
 
   * For clusters deployed before Orka 2.1, it's the .100 address for your Private-1 network (usually, 10.221.188.100), prefixed with http. For example: http://10.221.188.100.
   * For clusters deployed with Orka 2.1 or later, it's the .20 address for your Private-1 network (usually 10.221.188.20). prefixed with http. For example: http://10.221.188.20.
-  * You can also use https://<orka-domain> and https://<custom-domain>(if configured). To get the Orka domain for your Orka cluster, contact MacStadium. To use an external custom domain, see here.
+  * You can also use https://\<orka-domain> and https://\<custom-domain>(if configured). To get the Orka domain for your Orka cluster, contact MacStadium. To use an external custom domain, see here.
 
 
 
-**Note:** You can use http://<orka-IP>, https://<orka-domain>, and https://<custom-domain> interchangeably in your workflows.
+**Note:** You can use http://\<orka-IP>, https://\<orka-domain>, and https://\<custom-domain> interchangeably in your workflows.
 
 ## Log in to the Orka cluster
 
@@ -51,16 +51,18 @@ Orka customers log in to their cluster with their MacStadium Customer Portal cre
 
 ### Using the Orka3 CLI
 
-If this is the first time you are logging in after installing the Orka CLI, you need to add the <ORKA_ENDPOINT> to your CLI configuration:
+If this is the first time you are logging in after installing the Orka CLI, you need to add the \<ORKA_ENDPOINT> to your CLI configuration:
     
     
-    orka3 config set --api-url <ORKA_ENDPOINT>
-
+```
+orka3 config set --api-url <ORKA_ENDPOINT>
+```
 If you have already configured the endpoint, run the following command:
     
     
-    orka3 login
-
+```
+orka3 login
+```
 The Orka3 CLI launches a new browser window. Enter your credentials for the MacStadium Customer Portal and click Sign In. Return to the Orka3 CLI.
 
 ### Using the Orka Web UI
@@ -69,13 +71,14 @@ If you are using Orka Web UI, complete the following steps:
 
   1. In the Orka CLI, run the following command:
          
-         orka3 user get-token  
-           
-         OR, if you have a service account,  
-           
-         orka3 serviceaccount token <SERVICE_ACCOUNT>
-
-  2. In the browser, navigate to your <ORKA_ENDPOINT> and, when prompted, provide the token obtained in Step 1.
+```
+     orka3 user get-token  
+       
+     OR, if you have a service account,  
+       
+     orka3 serviceaccount token <SERVICE_ACCOUNT>
+```
+  2. In the browser, navigate to your \<ORKA_ENDPOINT> and, when prompted, provide the token obtained in Step 1.
 
 
 
@@ -95,17 +98,18 @@ If you are using the Orka API, complete the following steps:
   1. In the Orka3 CLI, run the following command:  
 
          
-         orka3 user get-token  
-           
-         OR, if you have a service account,  
-           
-         orka3 serviceaccount token <SERVICE_ACCOUNT>
+```
+     orka3 user get-token  
+       
+     OR, if you have a service account,  
+       
+     orka3 serviceaccount token <SERVICE_ACCOUNT>
+```
+  2. In the browser, navigate to your \<ORKA_ENDPOINT>/api/v1/swagger and click Authorize.
 
-  2. In the browser, navigate to your <ORKA_ENDPOINT>/api/v1/swagger and click Authorize.
+  3. In the Value text box, type Bearer \<TOKEN> and click Authorize.
 
-  3. In the Value text box, type Bearer <TOKEN> and click Authorize.
-
-  4. Replace <TOKEN> with the token obtained in Step 1.
+  4. Replace \<TOKEN> with the token obtained in Step 1.
 
   5. Click Close
 
@@ -127,34 +131,38 @@ Service accounts are intended for use with CI/CD integrations. They don't requir
 
 #### **Orka CLI**
          
-         orka3 sa create <SERVICE_ACCOUNT_NAME> [--namespace <TARGET_NAMESPACE>]  
-           
-         E.g. To create the 'sa-jenkins' service account in the 'orka-test' namespace, run:  
-         orka3 sa create sa-jenkins --namespace orka-test
-
+```
+     orka3 sa create <SERVICE_ACCOUNT_NAME> [--namespace <TARGET_NAMESPACE>]  
+       
+     E.g. To create the 'sa-jenkins' service account in the 'orka-test' namespace, run:  
+     orka3 sa create sa-jenkins --namespace orka-test
+```
 #### **Orka API**
          
-         curl -X 'POST' \  
-         'http://<ORKA_API_IP>/api/v1/namespaces/<NAMESPACE_NAME>/serviceaccounts/<SERVICE_ACCOUNT_NAME>' \  
-         -H 'accept: application/json' \  
-         -H 'Authorization: Bearer <TOKEN>' \  
-         -d ''
-
+```
+     curl -X 'POST' \  
+     'http://<ORKA_API_IP>/api/v1/namespaces/<NAMESPACE_NAME>/serviceaccounts/<SERVICE_ACCOUNT_NAME>' \  
+     -H 'accept: application/json' \  
+     -H 'Authorization: Bearer <TOKEN>' \  
+     -d ''
+```
   2. Generate a token.
 
 #### **Orka CLI**
          
-         orka3 serviceaccount token <SERVICE_ACCOUNT>
-
+```
+     orka3 serviceaccount token <SERVICE_ACCOUNT>
+```
 #### **Orka API**
          
-         curl -X 'POST' \  
-         'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/serviceaccounts/<SERVICE_ACCOUNT_NAME>/token' \  
-         -H 'accept: application/json' \  
-         -H 'Authorization: Bearer <TOKEN>' \  
-         -H 'Content-Type: application/json' \  
-         -d '{  
-           
-         }'
-
+```
+     curl -X 'POST' \  
+     'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/serviceaccounts/<SERVICE_ACCOUNT_NAME>/token' \  
+     -H 'accept: application/json' \  
+     -H 'Authorization: Bearer <TOKEN>' \  
+     -H 'Content-Type: application/json' \  
+     -d '{  
+       
+     }'
+```
   3. Use the obtained credentials in your CI/CD integrations.

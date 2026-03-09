@@ -17,11 +17,11 @@ SAML SSO is a paid offering.
 
 📘 Please contact the account team through the Customer Portal for more information.
 
-👍 Log into the Portal by going to <https://portal.macstadium.com/login>.
+👍 Log into the Portal by going to \<https://portal.macstadium.com/login>.
 
 ⚠️ We do not currently support IdP-initiated logins. After SSO is configured with MacStadium, all users will use the below link to log into your account using an ID that will be provided to you by the MacStadium team.
 
-<https://portal.macstadium.com/sso>
+\<https://portal.macstadium.com/sso>
 
 ## Overview
 
@@ -52,10 +52,12 @@ SAML SSO with Azure AD , allowa customers to:
 ![6385eeb-7.png](https://support.macstadium.com/hc/article_attachments/28263129267739)
   8. Configure SAML (Steps 11 to 15)
 
-     * Identifier (Entity ID): `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
-     * Reply URL (Assertion Consumer Service URL): `https://idp.macstadium.com/saml2/idpresponse`
-     * Logout URL (Optional): `https://idp.macstadium.com/saml2/logout`
-     * **Save**  
+```
+ * Identifier (Entity ID): `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
+ * Reply URL (Assertion Consumer Service URL): `https://idp.macstadium.com/saml2/idpresponse`
+ * Logout URL (Optional): `https://idp.macstadium.com/saml2/logout`
+ * **Save**  
+```
 ![37d0f10-8.png](https://support.macstadium.com/hc/article_attachments/28263129269275)
   9. **IMPORTANT** : Next, edit the Attributes & Claims for your SAML app. You will need the email field to be mapped to user.mail.  
 ![Email Claim.png](https://support.macstadium.com/hc/article_attachments/37939325807643)  

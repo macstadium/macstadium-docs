@@ -50,36 +50,38 @@ If `--enable-custom-pods` is set, creates a new namespace dedicated to running c
 
   1. Move one or more nodes to the namespace to provide computational resources:
          
-         orka3 node namespace NODE --namespace NAMESPACE
-
+```
+     orka3 node namespace NODE --namespace NAMESPACE
+```
   2. Provide explicit access to users or service accounts:
          
-         orka3 rolebinding add-subject --namespace NAMESPACE --user EMAIL
-         orka3 rolebinding add-subject --namespace NAMESPACE --serviceaccount SA_NAMESPACE:SERVICE_ACCOUNT
-
-
-
-
+```
+     orka3 rolebinding add-subject --namespace NAMESPACE --user EMAIL
+     orka3 rolebinding add-subject --namespace NAMESPACE --serviceaccount SA_NAMESPACE:SERVICE_ACCOUNT
+```
 **Syntax:**
     
     
-    orka3 namespace create NAMESPACE_NAME [flags]
-
+```
+orka3 namespace create NAMESPACE_NAME [flags]
+```
 **Options:**
     
     
-    --enable-custom-pods   Configure namespace for custom pods (formerly sandboxing)
-    -h, --help             Display help for create
-
+```
+--enable-custom-pods   Configure namespace for custom pods (formerly sandboxing)
+-h, --help             Display help for create
+```
 **Examples:**
     
     
-    # Create a new namespace
-    orka3 namespace create orka-test
-    
-    # Create a namespace for custom pods (cannot run Orka VMs)
-    orka3 namespace create orka-cp --enable-custom-pods
+```
+# Create a new namespace
+orka3 namespace create orka-test
 
+# Create a namespace for custom pods (cannot run Orka VMs)
+orka3 namespace create orka-cp --enable-custom-pods
+```
 ## Listing Namespaces
 
 **orka3 namespace list**
@@ -89,26 +91,29 @@ List all namespaces for the Orka cluster. Use this command to check if one or mo
 **Syntax:**
     
     
-    orka3 namespace list [NAMESPACE_1 [NAMESPACE_2 ...]] [--output wide|json] [flags]
-
+```
+orka3 namespace list [NAMESPACE_1 [NAMESPACE_2 ...]] [--output wide|json] [flags]
+```
 **Options:**
     
     
-    -h, --help            Display help for list
-    -o, --output string   (Optional) Output format: table (default)|wide|json
-
+```
+-h, --help            Display help for list
+-o, --output string   (Optional) Output format: table (default)|wide|json
+```
 **Examples:**
     
     
-    # List existing namespaces for your Orka cluster
-    orka3 namespace list
-    
-    # Check if a specific namespace exists
-    orka3 namespace list orka-test
-    
-    # Check if several specific namespaces exist
-    orka3 namespace list orka-test orka-production
+```
+# List existing namespaces for your Orka cluster
+orka3 namespace list
 
+# Check if a specific namespace exists
+orka3 namespace list orka-test
+
+# Check if several specific namespaces exist
+orka3 namespace list orka-test orka-production
+```
 ## Deleting Namespaces
 
 **orka3 namespace delete**
@@ -120,19 +125,23 @@ Delete the specified namespace. All VMs (or custom pods) must be removed and nod
 **Syntax:**
     
     
-    orka3 namespace delete NAMESPACE_NAME [NAMESPACE_2 ...] [flags]
-
+```
+orka3 namespace delete NAMESPACE_NAME [NAMESPACE_2 ...] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for delete
-    -t, --timeout duration   (Optional) Time to wait before giving up (default 1h0m0s)
-
+```
+-h, --help               Display help for delete
+-t, --timeout duration   (Optional) Time to wait before giving up (default 1h0m0s)
+```
 **Examples:**
     
     
-    # Delete a namespace
-    orka3 namespace delete orka-test
-    
-    # Delete multiple namespaces
-    orka3 namespace delete orka-test orka-production
+```
+# Delete a namespace
+orka3 namespace delete orka-test
+
+# Delete multiple namespaces
+orka3 namespace delete orka-test orka-production
+```

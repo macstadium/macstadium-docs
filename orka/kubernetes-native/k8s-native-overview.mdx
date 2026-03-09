@@ -28,75 +28,78 @@ You can still use kubectl instead. However, exercise caution and consider managi
   1. Install kubectl locally or upgrade your existing installation. For example:  
 
          
-         brew install kubectl  
-           
-         OR  
-           
-         brew upgrade kubectl
-
+```
+     brew install kubectl  
+       
+     OR  
+       
+     brew upgrade kubectl
+```
   2. Authenticate with your Orka cluster:  
 **Orka3 CLI**  
 
          
-         orka3 login  
-           
-         OR  
-           
-         orka3 user set-token
-
+```
+     orka3 login  
+       
+     OR  
+       
+     orka3 user set-token
+```
   3. Manage Orka resources with kubectl:  
 
          
-         kubectl apply -f <FILE_NAME> --namespace=<NAMESPACE>  
-           
-         OR  
-           
-         kubectl get <RESOURCE> --namespace=<NAMESPACE>  
-           
-         OR  
-           
-         kubectl edit <RESOURCE> --namespace=<NAMESPACE>  
-           
-         OR  
-           
-         kubectl delete <RESOURCE> --namespace=<NAMESPACE>
-
+```
+     kubectl apply -f <FILE_NAME> --namespace=<NAMESPACE>  
+       
+     OR  
+       
+     kubectl get <RESOURCE> --namespace=<NAMESPACE>  
+       
+     OR  
+       
+     kubectl edit <RESOURCE> --namespace=<NAMESPACE>  
+       
+     OR  
+       
+     kubectl delete <RESOURCE> --namespace=<NAMESPACE>
+```
   4. Create and configure a namespace for running custom pods.  
 First, you need to create a namespace with enabled custom pods. Next, you must grant access to the namespace to the users who need to deploy to it. And finally, you need to assign computational resources to the namespace.  
 Note that you will not be able to deploy Orka resources to this namespace.  
 **Orka3 CLI**
          
-         orka3 create namespace <NAMESPACE_NAME> --enable-custom-pods  
-           
-         orka3 rb add-subject --user <EMAIL_ADDRESS> --namespace <NAMESPACE_NAME>  
-           
-         orka3 node namespace <NODE_NAME> <NAMESPACE_NAME>
-
+```
+     orka3 create namespace <NAMESPACE_NAME> --enable-custom-pods  
+       
+     orka3 rb add-subject --user <EMAIL_ADDRESS> --namespace <NAMESPACE_NAME>  
+       
+     orka3 node namespace <NODE_NAME> <NAMESPACE_NAME>
+```
   5. Manage your custom pods with kubectl.  
 
          
-         kubectl apply -f <FILE_NAME> --namespace=<NAMESPACE_NAME>  
-           
-         OR  
-           
-         kubectl get <CUSTOM_POD> --namespace=<NAMESPACE_NAME>  
-           
-         OR  
-           
-         kubectl edit <CUSTOM_POD> --namespace=<NAMESPACE_NAME>  
-           
-         OR  
-           
-         kubectl delete <CUSTOM_POD> --namespace=<NAMESPACE_NAME>
-
+```
+     kubectl apply -f <FILE_NAME> --namespace=<NAMESPACE_NAME>  
+       
+     OR  
+       
+     kubectl get <CUSTOM_POD> --namespace=<NAMESPACE_NAME>  
+       
+     OR  
+       
+     kubectl edit <CUSTOM_POD> --namespace=<NAMESPACE_NAME>  
+       
+     OR  
+       
+     kubectl delete <CUSTOM_POD> --namespace=<NAMESPACE_NAME>
+```
 For any custom pods you need to run, add the following toleration to the pod:  
 **YAML**
          
-         {"key": "orka.macstadium.com/namespace-reserved", "value": "<NAMESPACE_NAME>"}
-
-
-
-
+```
+     {"key": "orka.macstadium.com/namespace-reserved", "value": "<NAMESPACE_NAME>"}
+```
 ## Limitations
 
   * Your access to Orka resources depends on the role of the user you authenticated with. For more information, see [here](https://support.macstadium.com/hc/en-us/articles/28328584628379).
@@ -106,4 +109,6 @@ For any custom pods you need to run, add the following toleration to the pod:
 **YAML**  
 
         
-        {"key": "orka.macstadium.com/namespace-reserved", "value": "<NAMESPACE_NAME>"}
+```
+    {"key": "orka.macstadium.com/namespace-reserved", "value": "<NAMESPACE_NAME>"}
+```

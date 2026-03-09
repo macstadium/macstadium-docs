@@ -25,8 +25,9 @@ After you have completed both the Microsoft Azure and the MacStadium sides of th
 
     
     
-    show crypto isakmp sa
-
+```
+show crypto isakmp sa
+```
 If the site-to-site VPN connection is configured properly, you should see information about an active IKEv1.
 
 For more information about this verification command, see [Cisco Documentation: show crypto isakmp sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#isakmp_sa).
@@ -44,8 +45,9 @@ For more information about this verification command, see [Cisco Documentation: 
 
     
     
-    show crypto ipsec sa
-
+```
+show crypto ipsec sa
+```
 If the site-to-site VPN connection is configured properly, you should see a detailed log.
 
 For more information about this verification command, see [Cisco Documentation: show crypto ipsec sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#ipsec_sa).
@@ -64,20 +66,22 @@ For more information about this verification command, see [Cisco Documentation: 
   1. Verify that you have created a virtual machine in MacStadium.
   2. Verify that you have created a virtual machine in Azure.
   3. In the terminal on your MacStadium VM, run the following command. 
-     * Replace <user> with the username for your Azure VM.
-     * Replace <azure-vm-ip> with the private IP of the Azure VM. 
+     * Replace \<user> with the username for your Azure VM.
+     * Replace \<azure-vm-ip> with the private IP of the Azure VM. 
            
-           ssh <user>@<azure-vm-ip>
-
+```
+       ssh <user>@<azure-vm-ip>
+```
   4. When prompted, provide your password or key for the specified username on the specified Azure VM. 
-     * If the connection is successful, the prefix of the terminal becomes <user>@<azure-vm-ip>. This indicates that you have connected from MacStadium to Azure over the tunnel.
+     * If the connection is successful, the prefix of the terminal becomes \<user>@\<azure-vm-ip>. This indicates that you have connected from MacStadium to Azure over the tunnel.
   5. Run the following command. 
-     * Replace <user> with the username for your MacStadium VM.
-     * Replace <macstadium-vm-ip> with the private IP of the MacStadium VM. 
+     * Replace \<user> with the username for your MacStadium VM.
+     * Replace \<macstadium-vm-ip> with the private IP of the MacStadium VM. 
            
-           ssh <user>@<macstadium-vm-ip>
-
-  6. When prompted, provide your password or key for the specified username on the specified MacStadium VM. If the connection is successful, the prefix of the terminal becomes <user>@<macstadium-vm-ip>. This indicates that you have connected from Azure to MacStadium over the tunnel.
+```
+       ssh <user>@<macstadium-vm-ip>
+```
+  6. When prompted, provide your password or key for the specified username on the specified MacStadium VM. If the connection is successful, the prefix of the terminal becomes \<user>@\<macstadium-vm-ip>. This indicates that you have connected from Azure to MacStadium over the tunnel.
 
 
 

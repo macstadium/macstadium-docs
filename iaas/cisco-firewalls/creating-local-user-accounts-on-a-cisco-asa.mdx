@@ -54,13 +54,14 @@ Using a ASDM allows the user to make line by line changes, while using a graphic
   5. Create the new user account by typing the command in the following format: `username username password password privilege priv_level`
      * **NOTES:**
 
-       * The username username keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
-       * The password password keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
-       * The privilege priv_level keyword sets the privilege level for the created user account. The priv_level is a numeric value ranging from 0 to 15.
-       * By default, a user account has a privilege level of 2.
-       * A level of 15 grants the user account the highest level of access.
-       * An example of the CLI command is `ciscoasa(config)# username exampleuser1 password examplepassword privilege 1`
-
+```
+   * The username username keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
+   * The password password keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
+   * The privilege priv_level keyword sets the privilege level for the created user account. The priv_level is a numeric value ranging from 0 to 15.
+   * By default, a user account has a privilege level of 2.
+   * A level of 15 grants the user account the highest level of access.
+   * An example of the CLI command is `ciscoasa(config)# username exampleuser1 password examplepassword privilege 1`
+```
   6. Save the configuration with the command `write memory`
   7. Type the exit or end command to return to privileged mode of the ASA.
 
@@ -143,32 +144,42 @@ To remove a user account, use `no version` with the username that is being remov
 
 **NOTE:** For information on Advanced Options for user account creations and management, see the following guides:
 
-<https://www.cisco.com/c/en/us/td/docs/security/asa/asa918/asdm718/general/asdm-718-general-config/aaa-local.html>
+\<https://www.cisco.com/c/en/us/td/docs/security/asa/asa918/asdm718/general/asdm-718-general-config/aaa-local.html>
 
-<https://www.cisco.com/c/en/us/td/docs/security/asa/asa914/configuration/general/asa-914-general-config/aaa-local.html>
+\<https://www.cisco.com/c/en/us/td/docs/security/asa/asa914/configuration/general/asa-914-general-config/aaa-local.html>
 
 ## Connect to the Cisco ASA using SSH
 
   1. Configure aaa to use local database for ssh and console  
 
-     * `ciscoasa# aaa authentication ssh console LOCAL`
-     * **NOTE** : aaa = authentication (permitting access), authorization (specify commands when granted access), accounting (keeps track of utilization reports of users after logged in and generate accounting reports for billing)  
+```
+ * `ciscoasa# aaa authentication ssh console LOCAL`
+ * **NOTE** : aaa = authentication (permitting access), authorization (specify commands when granted access), accounting (keeps track of utilization reports of users after logged in and generate accounting reports for billing)  
+```
 LOCAL = local database
   2. Create admin username with privilege 15 (username, P@ssw0rd)  
 
-     * `ciscoasa# username username password P@ssw0rd priv 15`
-     * **NOTE** : priv 15 = top privilege level (full superuser, can give different command access to different privilege levels)
+```
+ * `ciscoasa# username username password P@ssw0rd priv 15`
+ * **NOTE** : priv 15 = top privilege level (full superuser, can give different command access to different privilege levels)
+```
   3. Turn on password for enable.  
 
-     * `ciscoasa# aaa authentication enable console LOCAL`
-     * This forces a password for the enable prompt.
+```
+ * `ciscoasa# aaa authentication enable console LOCAL`
+ * This forces a password for the enable prompt.
+```
   4. Turn on serial console authentication.  
 
-     * `ciscoasa# aaa authentication serial console LOCAL`
-     * This turns on user/pass for serial access.
+```
+ * `ciscoasa# aaa authentication serial console LOCAL`
+ * This turns on user/pass for serial access.
+```
   5. Save changes  
 
-     * `ciscoasa# write mem`
+```
+ * `ciscoasa# write mem`
+```
   6. Log out console and verify access.  
 
 
@@ -184,28 +195,35 @@ LOCAL = local database
 
   7. Generate ssh key pair.  
 
-     * `ciscoasa# crypto key generate rsa modulus 4096`
+```
+ * `ciscoasa# crypto key generate rsa modulus 4096`
 
-     * The name for the keys will be:
+ * The name for the keys will be:
 
-       * Keypair generation process begin. Please wait…
+   * Keypair generation process begin. Please wait…
 
-       * ciscoasa(config)#
+   * ciscoasa(config)#
 
-     * SSH is an encrypted protocol, uses RSA to generate public and private key
+ * SSH is an encrypted protocol, uses RSA to generate public and private key
 
-     * 4096 = block size
+ * 4096 = block size
 
-     * rsa = encryption algorithm
-
+ * rsa = encryption algorithm
+```
   8. Allow access to the inside interface.  
 
-     * `ciscoasa# ssh 0.0.0.0 0.0.0.0 inside`
-     * This enables ssh access to the inside interface from any IPv4
+```
+ * `ciscoasa# ssh 0.0.0.0 0.0.0.0 inside`
+ * This enables ssh access to the inside interface from any IPv4
+```
   9. Force ssh version 2.  
 
-     * `ciscoasa# ssh version 2`
+```
+ * `ciscoasa# ssh version 2`
+```
   10. Add timeout of 15 min to ssh.  
 
-     * `ciscoasa# ssh timeout 15`
+```
+ * `ciscoasa# ssh timeout 15`
+```
   11. Verify login with ssh through 192.168.1.1 in putty.

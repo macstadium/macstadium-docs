@@ -47,13 +47,16 @@ If the firewall configuration is in an high-availability (HA) Pair, then ensure 
   9. Click Backup.  
 ![761fe82-image \(1\).png](https://support.macstadium.com/hc/article_attachments/28277009636251)  
 
-     * **OPTIONAL** : If the firewall is configured with identity certificates, then select a passphrase to encrypt identity certificates. Document the passphrase that is used as it is needed for future restores.  
+```
+ * **OPTIONAL** : If the firewall is configured with identity certificates, then select a passphrase to encrypt identity certificates. Document the passphrase that is used as it is needed for future restores.  
+```
 ![045969f-image.png](https://support.macstadium.com/hc/article_attachments/28277009642139)
 
   10. Click OK  
 
-     * **NOTE** : The Progress Message can be copied to a text editor for review and validation.
-
+```
+ * **NOTE** : The Progress Message can be copied to a text editor for review and validation.
+```
   11. Click Close after backup is completed. A Backup Statistics window opens and displays additional information about the Backup process.  
 ![092cb90-image.png](https://support.macstadium.com/hc/article_attachments/28277009648155)
   12. Click OK  
@@ -74,27 +77,33 @@ If the firewall configuration is in an high-availability (HA) Pair, then ensure 
 ![576de37-image.png](https://support.macstadium.com/hc/article_attachments/28277042174747)
   7. From the Restore Configurations pop-up page, select the options to restore.  
 
-     * **RECOMMENDED SETTINGS:**
+```
+ * **RECOMMENDED SETTINGS:**
 
-       * Running configuration
+   * Running configuration
 
-       * Start-up configuration
+   * Start-up configuration
 
-       * All Security Images
+   * All Security Images
 
-       * Identity Certificates
+   * Identity Certificates
 
-       * Leave the remaining default options untouched  
+   * Leave the remaining default options untouched  
+```
 ![0daf363-image.png](https://support.macstadium.com/hc/article_attachments/28277042179227)
 
   8. Click Restore.
   9. You should now see the below message. Click Yes.  
 ![dc7fa4e-image.png](https://support.macstadium.com/hc/article_attachments/28277009661339)  
 
-     * **NOTE** : If applicable, enter the Certificate Passphrase used to backup the identity Certificate, then click the OK.  
+```
+ * **NOTE** : If applicable, enter the Certificate Passphrase used to backup the identity Certificate, then click the OK.  
+```
 ![bb30c48-image.png](https://support.macstadium.com/hc/article_attachments/28277042184091)
 
-     * **NOTE** : The following message may appear during the Restore Progress. Select Refresh Now or Cancel button. Choosing Cancel will not halt the Restore process.  
+```
+ * **NOTE** : The following message may appear during the Restore Progress. Select Refresh Now or Cancel button. Choosing Cancel will not halt the Restore process.  
+```
 ![1d021b9-image.png](https://support.macstadium.com/hc/article_attachments/28277042189339)
   10. Once the Restore process is complete, click Close. 
      * **NOTE** :The Progress Message can be copied to a text editor for review and validation.
@@ -107,13 +116,11 @@ If the firewall configuration is in an high-availability (HA) Pair, then ensure 
 
 ![c58aece-image.png](https://support.macstadium.com/hc/article_attachments/28277042199707)
 
-       * If the Unapplied Changes message box appears, then click Apply Changes.
+```
+   * If the Unapplied Changes message box appears, then click Apply Changes.
 
-       * If the Unapplied Changes message box does not appear, then click Save in the ASDM application.
-
-
-
-
+   * If the Unapplied Changes message box does not appear, then click Save in the ASDM application.
+```
 ## Additional Notes:
 
   * If firewall access prevents enables the backup process but does not enable the restore process, then open a MacStadium Support ticket.

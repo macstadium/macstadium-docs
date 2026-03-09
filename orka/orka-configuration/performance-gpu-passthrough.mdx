@@ -24,14 +24,16 @@ Quick command summary
 **Orka CLI**
     
     
-    orka3 vm deploy  
-    orka3 vm deploy --gpu
-
+```
+orka3 vm deploy  
+orka3 vm deploy --gpu
+```
 **Orka API**
     
     
-    POST /api/v1/namespaces/{namespace}/vms
-
+```
+POST /api/v1/namespaces/{namespace}/vms
+```
 When GPU Passthrough is enabled for the cluster, VMs with enabled GPU Passthrough will be able to access and utilize the host GPU for their workloads.
 
 **Before you begin, make sure that your Orka environment is updated to Orka 1.5.0 or later and that GPU passthrough is enabled in the cluster.**
@@ -57,24 +59,26 @@ For all Intel-based VMs, GPU Passthrough is disabled by default and you need to 
 **Orka CLI**
     
     
-    orka3 vmc create gpu-config -i <IMAGE> --gpu
-
+```
+orka3 vmc create gpu-config -i <IMAGE> --gpu
+```
 **Orka API**
     
     
-    curl --location --request POST 'http://<ORKA_API_IP>/resources/vm/create' \  
-    --header 'Content-Type: application/json' \  
-    --header 'Authorization: Bearer <TOKEN>' \  
-    --data-raw '{  
-    "orka_vm_name": "<VM_NAME>",  
-    "orka_base_image": "<IMAGE>",  
-    "orka_image": "<VM_NAME>",  
-    "orka_cpu_core": <CPU_AMOUNT>,  
-    "vcpu_count": <VCPU_AMOUNT>,  
-    "gpu_passthrough": true,  
-    "vnc_console": false  
-    }'
-
+```
+curl --location --request POST 'http://<ORKA_API_IP>/resources/vm/create' \  
+--header 'Content-Type: application/json' \  
+--header 'Authorization: Bearer <TOKEN>' \  
+--data-raw '{  
+"orka_vm_name": "<VM_NAME>",  
+"orka_base_image": "<IMAGE>",  
+"orka_image": "<VM_NAME>",  
+"orka_cpu_core": <CPU_AMOUNT>,  
+"vcpu_count": <VCPU_AMOUNT>,  
+"gpu_passthrough": true,  
+"vnc_console": false  
+}'
+```
 ## Override GPU Passthrough during deployment
 
 For all Intel-based VMs, you can enable or disable GPU Passthrough at the time of deployment. This lets you override the existing GPU Passthrough settings of your VM configurations.
@@ -82,20 +86,23 @@ For all Intel-based VMs, you can enable or disable GPU Passthrough at the time o
 **Orka CLI**
     
     
-    orka3 vm deploy --config gpu-config --gpu  
-      
-    OR  
-      
-    orka3 vm deploy --config gpu-config --gpu=no
-
+```
+orka3 vm deploy --config gpu-config --gpu  
+  
+OR  
+  
+orka3 vm deploy --config gpu-config --gpu=no
+```
 **Orka API**
     
     
-    curl --location --request POST 'http://<ORKA_API_IP>/resources/vm/deploy' \  
-    --header 'Content-Type: application/json' \  
-    --header 'Authorization: Bearer <TOKEN>' \  
-    --data-raw '{  
-    "orka_vm_name": "<VM_NAME>",  
-    "gpu_passthrough": true,  
-    "vnc_console": false  
-    }'
+```
+curl --location --request POST 'http://<ORKA_API_IP>/resources/vm/deploy' \  
+--header 'Content-Type: application/json' \  
+--header 'Authorization: Bearer <TOKEN>' \  
+--data-raw '{  
+"orka_vm_name": "<VM_NAME>",  
+"gpu_passthrough": true,  
+"vnc_console": false  
+}'
+```

@@ -18,11 +18,13 @@ We found a confirmed solution with the help of a customer:
 "I figured out what the problem was in case you all are seeing this in other places. The bluetooth daemon had crashed. I'm not sure why that made coreaudiod and launchd go crazy, but the fix is this:
     
     
-    $ sudo launchctl unload -w /system/library/launchdaemons/com.apple.blued.plist 
-
+```
+$ sudo launchctl unload -w /system/library/launchdaemons/com.apple.blued.plist 
+```
 If the daemon crashes you may see a message like this: /System/Library/LaunchDaemons/com.apple.blued.plist: Could not find specified service. Next, run this:
     
     
-    $ sudo launchctl load -w /system/library/launchdaemons/com.apple.blued.plist 
-
+```
+$ sudo launchctl load -w /system/library/launchdaemons/com.apple.blued.plist 
+```
 Once blued is running properly, coreaudiod and launchd both "settle down."

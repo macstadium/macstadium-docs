@@ -31,25 +31,28 @@ Orka 3.1.0 is a major Orka release that brings support for public IPs for all in
 In Orka 3.0.x you were able to use public IPs only from the Jenkins and TeamCity plugins. Orka 3.1.0 allows you to use public IPs from the CLI and other integrations. To do that, use the public API IP provided by the Orka team to configure the CLI or the integrations
     
     
-    orka3 config set --api-url <API_PUBLIC_IP>
-
+```
+orka3 config set --api-url <API_PUBLIC_IP>
+```
 ### (Intel-only) Support for old OS versions[](https://orkadocs.macstadium.com/docs/orka-v310#intel-only-support-for-old-os-versions)
 
 Orka 3.1.0 allows the deployment of High Sierra and Mojave. To do that, ensure that legacy IO is enabled and net boost is disabled for the VM
     
     
-    orka3 vm deploy -i mojave.img --legacy-io --disable-net-boost
-
+```
+orka3 vm deploy -i mojave.img --legacy-io --disable-net-boost
+```
 ### Image size details[](https://orkadocs.macstadium.com/docs/orka-v310#image-size-details)
 
 Orka 3.1.0 provides information about the image disk size as well as the actual size it takes on the storage. To get this information, run
     
     
-    orka3 image list -o wide
-    
-    NAME                    DESCRIPTION                         SIZE   STORAGE SIZE   TYPE    STATE   ERROR
-    sonoma-90gb-orka3-arm   sonoma-90gb-orka3-arm  							90G    16G            arm64   Ready
+```
+orka3 image list -o wide
 
+NAME                    DESCRIPTION                         SIZE   STORAGE SIZE   TYPE    STATE   ERROR
+sonoma-90gb-orka3-arm   sonoma-90gb-orka3-arm  							90G    16G            arm64   Ready
+```
 _size_ \- This is the disk size of any VM deployed with that image
 
 _storage size_ \- This is the size the image takes on the storage
@@ -84,7 +87,7 @@ Orka 3.1.0. introduces the following improvements:
   * You might experience performance issues when running Xcode 15 on your Orka VMs.  
 **Workaround:** Try updating your OS to macOS 14 Sonoma.
   * You cannot disable System Integrity Protection on the base Sonoma image.  
-**Workaround:** MacStadiun has published a new base Sonoma image with System Integrity Protection (SIP) disabled <https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
+**Workaround:** MacStadiun has published a new base Sonoma image with System Integrity Protection (SIP) disabled \<https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
   * You cannot enable Kernel extensions. This is an Apple limitation.  
 **Workaround:** None.
   * You might be unable to update existing Intel-based VMs to macOS Ventura or later. This limitation relates to the Orka image design and the Apple virtualization framework.  
@@ -140,8 +143,9 @@ Wait for the operation to complete.
 
     
     
-    xattr -d com.apple.quarantine '/Applications/Xcode.app'
-
+```
+xattr -d com.apple.quarantine '/Applications/Xcode.app'
+```
 ## How to upgrade[](https://orkadocs.macstadium.com/docs/orka-v310#how-to-upgrade)
 
 > **Scheduled maintenance window required**

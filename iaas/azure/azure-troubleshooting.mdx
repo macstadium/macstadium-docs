@@ -37,8 +37,8 @@ Sometimes, the command line interface might return ERROR: unable to find interfa
 
 If Azure shows that the tunnel is Connected but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Azure VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28299207547547).
 
-  * Verify that your { shared_key } is correct. The { shared_key } in the configuration must match the key set for the VPN connection.
-  * Verify that you've replaced { macstadium_network_address } and { macstadium_network_mask } with the correct values for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network.
+  * Verify that your \{ shared_key } is correct. The \{ shared_key } in the configuration must match the key set for the VPN connection.
+  * Verify that you've replaced \{ macstadium_network_address } and \{ macstadium_network_mask } with the correct values for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network.
   * You can find the networking information for this network in Appendix A of your IP Plan.
   * Verify that you've configured the NAT exemption rule properly. 
     * The host and subnet mask required for ONPREM-NET are the host and mask for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network. You can find the networking information for this network in Appendix A of your IP Plan.
@@ -54,13 +54,14 @@ To resolve any of the listed common problems with the Cisco ASA/ASAv configurati
      * For more information, see Cleaning up the ASA/ASAv configuration.
   2. Make the necessary changes to the configuration.  
 
-     * For more information, see [Azure VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28299207547547).
+```
+ * For more information, see [Azure VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28299207547547).
+```
   3. Re-run the complete configuration in Cisco ASDM-IDM.  
 
-     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
-
-
-
+```
+ * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+```
 ## There's traffic from Azure to MacStadium but you cannot access Azure from MacStadium
 
 Sometimes, you might be able to establish an SSH connection from Azure to MacStadium but you might not be able to see or access Azure from MacStadium.
@@ -87,48 +88,53 @@ In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interfa
 
     
     
-    clear configure tunnel-group { azure_virtual_network_gateway_ip }  
-    clear configure crypto map azure-crypto-map  
-    clear configure crypto ipsec ikev1 transform-set azure-ipsec-proposal-set  
-    no nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static AZURE-NET AZURE-NET  
-    clear configure access-list AZURE-VPN-ACL  
-    no object-group network AZURE-NET  
-    no object-group network ONPREM-NET
-
+```
+clear configure tunnel-group { azure_virtual_network_gateway_ip }  
+clear configure crypto map azure-crypto-map  
+clear configure crypto ipsec ikev1 transform-set azure-ipsec-proposal-set  
+no nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static AZURE-NET AZURE-NET  
+clear configure access-list AZURE-VPN-ACL  
+no object-group network AZURE-NET  
+no object-group network ONPREM-NET
+```
 ### Table 1: Placeholders
 
 Placeholder | Description | Example  
 ---|---|---  
       
     
-    { azure_virtual_network_gateway_ip } 
-
+```
+{ azure_virtual_network_gateway_ip } 
+```
 |   
 The public IP assigned to the virtual network gateway in Azure.  | 
     
     
-    192.168.0.0  
-      
-      
-    
-    { macstadium_network_name } 
+```
+192.168.0.0  
+  
+  
 
+{ macstadium_network_name } 
+```
 |   
 The name of the private network in MacStadium that needs to be accessed by Azure. You can find the information about your private network in Appendix A of the IP Plan.  | 
     
     
-    Private-1  
-      
-      
-    
-    { macstadium_outside_interface } 
+```
+Private-1  
+  
+  
 
+{ macstadium_outside_interface } 
+```
 |    
 The name of the outside interface of your Cisco ASA/ASAv device. You can find the information about your outside interface in Appendix A of the IP Plan. | 
     
     
-    Outside  
-  
+```
+Outside  
+```
 ## Additional Troubleshooting Resources by Microsoft
 
 For more detailed troubleshooting instructions, see [Azure Documentation: Troubleshoot VPN Gateway](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-troubleshoot).

@@ -114,7 +114,7 @@ ciscoasa#``
 
 **NOTE** : Instead of creating an object representing a single source IP Address, create a Network Object Group and then add a Network Object to that group. This is handy if there are liable to be more IP addresses to allow access in the future. For more information, see:
 
-<https://www.cisco.com/c/en/us/td/docs/security/asa/asa96/configuration/firewall/asa-96-firewall-config/access-objects.html>
+\<https://www.cisco.com/c/en/us/td/docs/security/asa/asa96/configuration/firewall/asa-96-firewall-config/access-objects.html>
 
 ## NAT via Cisco Adaptive Security Device Manager (ASDM)
 
@@ -138,10 +138,14 @@ For external access to your MacStadium hosts, a static NAT must be previously co
   14. Click OK.  
 ![4ab3a50-image.png](https://support.macstadium.com/hc/article_attachments/28269995156635)  
 
-     * **NOTE** : To allow access to a single internal host instead of the entire Private-1 network, reference the object created for that specific host in the Destination field.14
+```
+ * **NOTE** : To allow access to a single internal host instead of the entire Private-1 network, reference the object created for that specific host in the Destination field.14
+```
   15. Make sure the new rule is at the TOP.  
 
-     * To move the new rule to the top, select the new rule and click the upper arrow highlighted.  
+```
+ * To move the new rule to the top, select the new rule and click the upper arrow highlighted.  
+```
 ![2f3cf6b-image.png](https://support.macstadium.com/hc/article_attachments/28269981359131)
 
   16. Click Apply

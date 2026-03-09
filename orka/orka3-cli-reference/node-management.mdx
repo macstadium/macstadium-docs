@@ -41,45 +41,48 @@ Show basic or extended information about Orka nodes. Based on the specified outp
 **Syntax:**
     
     
-    orka3 node list [NODE_NAME_1 [NODE_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
-
+```
+orka3 node list [NODE_NAME_1 [NODE_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for list
-    -o, --output string      (Optional) Output format: table (default)|wide|json
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for list
+-o, --output string      (Optional) Output format: table (default)|wide|json
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # List all Orka nodes in the 'orka-default' namespace
-    orka3 node list
-    
-    # List all nodes (extended table)
-    orka3 node list --output wide
-    
-    # List all nodes in a specific namespace (basic table)
-    orka3 node list --namespace orka-test
-    
-    # List all nodes in a specific namespace (extended table)
-    orka3 node list --namespace orka-test --output wide
-    
-    # Show basic information about a specific node
-    orka3 node list mini-1
-    
-    # Show detailed information about a specific node
-    orka3 node list mini-1 --output wide
-    
-    # Show basic information about multiple nodes
-    orka3 node list mini-1 mini-2
-    
-    # Show detailed information about multiple nodes
-    orka3 node list mini-1 mini-2 --output wide
-    
-    # Print information in JSON format
-    orka3 node list --output json
+```
+# List all Orka nodes in the 'orka-default' namespace
+orka3 node list
 
+# List all nodes (extended table)
+orka3 node list --output wide
+
+# List all nodes in a specific namespace (basic table)
+orka3 node list --namespace orka-test
+
+# List all nodes in a specific namespace (extended table)
+orka3 node list --namespace orka-test --output wide
+
+# Show basic information about a specific node
+orka3 node list mini-1
+
+# Show detailed information about a specific node
+orka3 node list mini-1 --output wide
+
+# Show basic information about multiple nodes
+orka3 node list mini-1 mini-2
+
+# Show detailed information about multiple nodes
+orka3 node list mini-1 mini-2 --output wide
+
+# Print information in JSON format
+orka3 node list --output json
+```
 ## Node Tagging for Affinity
 
 Node affinity indicates that the tagged node is preferred for the deployment of VMs with the same tag. Orka first attempts to deploy on any nodes with the respective tag, before moving to the remaining nodes in the environment.
@@ -104,31 +107,35 @@ Tag the specified Orka node for targeted VM deployment (set node affinity).
 To list the tags applied to a node, run:
     
     
-    orka3 node list NAME [--namespace NAMESPACE] --output wide
-
+```
+orka3 node list NAME [--namespace NAMESPACE] --output wide
+```
 **Syntax:**
     
     
-    orka3 node tag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
-
+```
+orka3 node tag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for tag
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for tag
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # Tag a node in the 'orka-default' namespace
-    orka3 node tag mini-1 jenkins
-    
-    # Tag a node in a specific namespace
-    orka3 node tag mini-1 --namespace orka-test jenkins
-    
-    # Check if the tag was applied as expected
-    orka3 node list mini-1 --output wide
+```
+# Tag a node in the 'orka-default' namespace
+orka3 node tag mini-1 jenkins
 
+# Tag a node in a specific namespace
+orka3 node tag mini-1 --namespace orka-test jenkins
+
+# Check if the tag was applied as expected
+orka3 node list mini-1 --output wide
+```
 **orka3 node untag**
 
 Untag the specified Orka node for targeted VM deployment (remove node affinity). Remove only one tag at a time (run the command separately for each tag).
@@ -136,26 +143,29 @@ Untag the specified Orka node for targeted VM deployment (remove node affinity).
 **Syntax:**
     
     
-    orka3 node untag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
-
+```
+orka3 node untag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for untag
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for untag
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # Remove a tag from a node
-    orka3 node untag mini-1 my-tag
-    
-    # Remove a tag from a node in a specific namespace
-    orka3 node untag mini-1 --namespace orka-test my-tag
-    
-    # Check if the tag was removed as expected
-    orka3 node list mini-1 --output wide
+```
+# Remove a tag from a node
+orka3 node untag mini-1 my-tag
 
+# Remove a tag from a node in a specific namespace
+orka3 node untag mini-1 --namespace orka-test my-tag
+
+# Check if the tag was removed as expected
+orka3 node list mini-1 --output wide
+```
 ## Moving Nodes Between Namespaces
 
 **orka3 node namespace**
@@ -169,22 +179,26 @@ After creating a new namespace, move one or more nodes to the namespace to provi
 **Syntax:**
     
     
-    orka3 node namespace NODE [--namespace CURRENT_NAMESPACE] TARGET_NAMESPACE [flags]
-
+```
+orka3 node namespace NODE [--namespace CURRENT_NAMESPACE] TARGET_NAMESPACE [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for namespace
-    -n, --namespace string   (Optional) Current namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for namespace
+-n, --namespace string   (Optional) Current namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # Move a node from 'orka-default' to 'orka-test'
-    orka3 node namespace mini-1 orka-test
-    
-    # Move a node from 'orka-test' to 'orka-production'
-    orka3 node namespace mini-1 --namespace orka-test orka-production
-    
-    # Move a node back to 'orka-default'
-    orka3 node namespace mini-1 --namespace orka-production orka-default
+```
+# Move a node from 'orka-default' to 'orka-test'
+orka3 node namespace mini-1 orka-test
+
+# Move a node from 'orka-test' to 'orka-production'
+orka3 node namespace mini-1 --namespace orka-test orka-production
+
+# Move a node back to 'orka-default'
+orka3 node namespace mini-1 --namespace orka-production orka-default
+```

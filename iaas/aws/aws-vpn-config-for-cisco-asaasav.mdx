@@ -66,28 +66,32 @@ Placeholder | Description | More information | Example
   5. Uncomment the lines for object and nat configuration at the end of the config file. To uncomment, remove ! at the start of the line.
   6. Keep the following line. This ensures the SLA monitor works as expected.
          
-         object network obj-SrcNet
-         subnet 0.0.0.0 0.0.0.0
+```
+     object network obj-SrcNet
+     subnet 0.0.0.0 0.0.0.0
 
-     * Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If you choose to modify this line, do not configure the <sla_monitor_address> value.
+ * Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If you choose to modify this line, do not configure the <sla_monitor_address> value.
+```
   7. On the following line, change 0.0.0.0 0.0.0.0 to a combination of the IP address and the subnet mask for your Amazon VPC.
      * You can get these values by logging in to your AWS Management Console, navigating to your VPC dashboard, selecting your VPC, and checking the Description at the bottom of the screen. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the /16 notation converts to a 255.255.0.0 subnet mask).
      * For example
            
-           object network obj-amzn
-           subnet 0.0.0.0 0.0.0.0
-           TO
-           object network obj-amzn
-           subnet 192.168.0.0 255.255.0.0
-
+```
+       object network obj-amzn
+       subnet 0.0.0.0 0.0.0.0
+       TO
+       object network obj-amzn
+       subnet 192.168.0.0 255.255.0.0
+```
   8. On the following line, change inside and outside to the names of the internal private network and the outside interface of your MacStadium private cloud, respectively, as provided in Appendix A of your IP Plan. By default, these are Private-1 and Outside, respectively.
          
-         nat (inside,outside) 1 source static obj-SrcNet obj-SrcNet
-         destination static obj-amzn obj-amzn
-         TO
-         nat (Private-1,Outside) 1 source static obj-SrcNet obj-SrcNet
-         destination static obj-amzn obj-amzn
-
+```
+     nat (inside,outside) 1 source static obj-SrcNet obj-SrcNet
+     destination static obj-amzn obj-amzn
+     TO
+     nat (Private-1,Outside) 1 source static obj-SrcNet obj-SrcNet
+     destination static obj-amzn obj-amzn
+```
   9. (Optional) Delete the remaining commented lines to clean up the file. Commented lines are indicated by ! at the beginning of the line.
   10. Save your changes.
 
@@ -112,32 +116,36 @@ holder | Description | More information | Example
 
     
     
-    access-list <acl-state-bypass> extended permit ip <local_subnet> <local_subnet_mask> <vpc_subnet> <vpc_subnet_mask>
-
+```
+access-list <acl-state-bypass> extended permit ip <local_subnet> <local_subnet_mask> <vpc_subnet> <vpc_subnet_mask>
+```
   2. Create a class map to identify the traffic for which you want to disable stateful firewall inspection:
 
 
     
     
-    class-map <cm-state-bypass>
-      match access-list <acl-state-bypass>
-
+```
+class-map <cm-state-bypass>
+  match access-list <acl-state-bypass>
+```
   3. Create a policy map to assign the TCP State Bypass action to the class map:
 
 
     
     
-    policy-map <pm-state-bypass>
-      class <cm-state-bypass>
-        set connection advanced-options tcp-state-bypass
-
+```
+policy-map <pm-state-bypass>
+  class <cm-state-bypass>
+    set connection advanced-options tcp-state-bypass
+```
   4. Apply the policy map to your private interface:
 
 
     
     
-    service-policy <pm-state-bypass> interface <private_interface>
-
+```
+service-policy <pm-state-bypass> interface <private_interface>
+```
   5. Save your changes.
 
 

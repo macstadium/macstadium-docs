@@ -67,16 +67,18 @@ Orka 3.0.0 is a major Orka release that brings Single Sign-On and native Kuberne
 You can now deploy and work with Intel-based and Apple silicon-based VMs running on macOS 14 Sonoma. The latest vanilla Sonoma images and ISOs reside in the remote repository.
     
     
-    orka3 remote-image list
-    orka3 remote-image pull <SONOMA_IMAGE_NAME>
-
+```
+orka3 remote-image list
+orka3 remote-image pull <SONOMA_IMAGE_NAME>
+```
 (Intel-only) If you experience degraded performance on Intel-based Sonoma VMs, you might want to disable all animations.
 
 Orka 3.0.0 also provides an OCI-compatible Apple silicon-based macOS 14 Sonoma image in GitHub Packages. To deploy a VM with it, just run:
     
     
-    orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
-
+```
+orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
+```
 ### Orka 3.0.0 now provides truly native Kubernetes functionality[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-now-provides-truly-native-kubernetes-functionality)
 
 All Orka resources are rewritten to be Kubernetes native. This lets you use `kubectl` in addition to the Orka3 CLI and the new Orka3 API in Orka 3.0.0.
@@ -86,16 +88,18 @@ All Orka resources are rewritten to be Kubernetes native. This lets you use `kub
 You can now deploy VMs that pull an image straight from an OCI-compatible registry (such as GitHub Packages).
     
     
-    orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:latest
-
+```
+orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:latest
+```
 Or you can push a VM's disk as an image to an OCI-compatible registry.
     
     
-    orka3 vm push <VM_NAME> server.com/repository/image:tag
-
+```
+orka3 vm push <VM_NAME> server.com/repository/image:tag
+```
 This feature is available only for Apple silicon-based VMs and images. Registry credentials are required to push an image. For more information, run `orka3 regcred --help`.
 
-Check <https://github.com/macstadium/orka-images> for the latest OCI-compatible images offered by MacStadium.
+Check \<https://github.com/macstadium/orka-images> for the latest OCI-compatible images offered by MacStadium.
 
 ### Orka 3.0.0 now runs on Kubernetes 1.27[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-now-runs-on-kubernetes-127)
 
@@ -126,10 +130,11 @@ Starting with Orka 3.0, Orka relies on Single Sign-On (SSO), service accounts, a
 Among the native Kubernetes capabilities of Orka 3.0.0 are namespaces. By default, all Orka users have access to the `orka-default` namespace. However, to apply resource dedication and isolation in your cluster, you can create more namespaces with the `orka-` prefix. Next, you need to move one or more nodes to the new namespace and configure the role binding for the namespace.
     
     
-    orka3 ns create orka-dedicated
-    orka3 node namespace <NODE> orka-dedicated
-    orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
-
+```
+orka3 ns create orka-dedicated
+orka3 node namespace <NODE> orka-dedicated
+orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
+```
 Nodes moved to a namespace become dedicated to this namespace, and only users and service accounts added to the respective role binding have access to this node and its computational resources. Formerly, you were able to create node dedication by creating user groups and applying the groups to the respective node.
 
 ### Orka 3.0.0 handles sandboxing via namespaces[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-handles-sandboxing-via-namespaces)
@@ -137,22 +142,25 @@ Nodes moved to a namespace become dedicated to this namespace, and only users an
 Orka 3.0 introduces a new way to handle sandboxing - with namespaces. First, you need to create a dedicated namespace with enabled custom pods. Next, you need to move one or more nodes to that namespace. You also need to provide access to the namespace to all users and service accounts that require access.
     
     
-    orka3 ns create orka-sandbox --enable-custom-pods
-    orka node <NODE> orka-sandbox
-    orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
-
+```
+orka3 ns create orka-sandbox --enable-custom-pods
+orka node <NODE> orka-sandbox
+orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
+```
 After that, you can deploy custom pods. For any custom pods you want to run, add the following toleration to the pod. Provide the name for the sandbox namespace under `value`.
     
     
-    {"key": "orka.macstadium.com/namespace-reserved", "value": "orka-sandbox"}
-
+```
+{"key": "orka.macstadium.com/namespace-reserved", "value": "orka-sandbox"}
+```
 ### Orka 3.0.0 no longer requires VM configurations[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-no-longer-requires-vm-configurations)
 
 You can now deploy a VM without creating or specifying a VM configuration. Deploying a VM as now simple as running:
     
     
-    orka3 vm deploy --image <IMAGE_NAME>
-
+```
+orka3 vm deploy --image <IMAGE_NAME>
+```
 You can specify an image stored locally in your cluster or the complete image path to an OCI-compatible registry.
 
 ### Orka 3.0.0 lets you download ISOs on your local machine[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-lets-you-download-isos-on-your-local-machine)
@@ -160,12 +168,13 @@ You can specify an image stored locally in your cluster or the complete image pa
 You can now download any ISO stored in your cluster to your local machine for editing and testing.
     
     
-    curl -X 'GET' \
-      'http://<ORKA_API_URL>/api/v1/namespaces/orka-default/isos/<ISO_NAME>/download' \
-      -H 'accept: application/json' \
-      -H 'Authorization: Bearer <TOKEN>' \
-      -o '<FILE_PATH>'
-
+```
+curl -X 'GET' \
+  'http://<ORKA_API_URL>/api/v1/namespaces/orka-default/isos/<ISO_NAME>/download' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <TOKEN>' \
+  -o '<FILE_PATH>'
+```
 ### Orka 3.0.0 lets you add comprehensive descriptions for images and ISOs[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-lets-you-add-comprehensive-descriptions-for-images-and-isos)
 
 Images and ISOs now have an extra field - description. You can use it to provide important details about the image, such as macOS version, origin (local, remote, copied or pulled), owner, or even specific OS settings. It's up to you. Use the `orka3 image set-description` or `orka3 iso set-description` command, or the `POST /api/v1/namespaces/{namespace}/images/{image}/description` or `/api/v1/namespaces/{namespace}/isos/{iso}/description` endpoints.
@@ -261,7 +270,7 @@ Orka 3.0.0. introduces the following improvements:
   * You might experience performance issues when running Xcode 15 on your Orka VMs.  
 **Workaround:** Try updating your OS to macOS 14 Sonoma.
   * You cannot disable System Integrity Protection on the base Sonoma image.  
-**Workaround:** MacStadiun has published a new base Sonoma image with System Integrity Protection (SIP) disabled <https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
+**Workaround:** MacStadiun has published a new base Sonoma image with System Integrity Protection (SIP) disabled \<https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
   * You cannot enable Kernel extensions. This is an Apple limitation.  
 **Workaround:** None.
   * You might be unable to update existing Intel-based VMs to macOS Ventura or later. This limitation relates to the Orka image design and the Apple virtualization framework.  
@@ -319,8 +328,9 @@ Wait for the operation to complete.
 
     
     
-    xattr -d com.apple.quarantine '/Applications/Xcode.app'
-
+```
+xattr -d com.apple.quarantine '/Applications/Xcode.app'
+```
 ## How to upgrade[](https://orkadocs.macstadium.com/docs/orka-v300#how-to-upgrade)
 
 > **Scheduled maintenance window required**

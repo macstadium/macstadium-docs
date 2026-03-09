@@ -35,26 +35,26 @@ For example: 10.221.188.241.
 
   1. In the Terminal, run the following command: 
          
-         sudo nano /etc/hosts
-
+```
+     sudo nano /etc/hosts
+```
   2. When prompted, provide your password.
   3. At the bottom of the file, on a new line, add the Ingress IP and the Orka domain, separated by a space.  
 
          
-         <INGRESS-IP> <ORKA-DOMAIN>  
-           
-         For example:  
-         10.221.188.22 company.orka.app
-
+```
+     <INGRESS-IP> <ORKA-DOMAIN>  
+       
+     For example:  
+     10.221.188.22 company.orka.app
+```
   4. Press Ctrl+0 and then press Enter to save your changes.
   5. Press Ctrl+X to exit nano.
   6. (Optional, macOS) If you cannot reach your Orka domain, try flushing the DNS cache. 
          
-         dscacheutil -flushcache
-
-
-
-
+```
+     dscacheutil -flushcache
+```
 ### Windows
 
   1. Press the Windows key and type Notepad in the search text box.
@@ -64,11 +64,12 @@ For example: 10.221.188.241.
   5. At the bottom of the file, on a new line, add the Ingress IP and the Orka domain, separated by a space.  
 
          
-         <INGRESS-IP> <ORKA-DOMAIN>  
-           
-         For example:  
-         10.221.188.22 company.orka.app
-
+```
+     <INGRESS-IP> <ORKA-DOMAIN>  
+       
+     For example:  
+     10.221.188.22 company.orka.app
+```
   6. Save your changes and close the file.
 
 
@@ -87,22 +88,20 @@ You can use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.10
 
   2. Configure your Orka tools to target the Orka domain. Note that you need to use https with your Orka domain.
 
-     * For the Orka API, change your API requests to target https://<orka-domain>.
+```
+ * For the Orka API, change your API requests to target https://<orka-domain>.
 
-     * For the Orka Web UI, open https://<orka-domain> in your browser.
+ * For the Orka Web UI, open https://<orka-domain> in your browser.
 
-     * For CI/CD integrations, switch to https://<orka-domain> in the respective plugin configuration.
-
-
-
-
+ * For CI/CD integrations, switch to https://<orka-domain> in the respective plugin configuration.
+```
 ## 3\. (Orka API-only) Download and trust the Orka domain certificate
 
 To be able to run API calls against your Orka domain, you need to download the certificate for the Orka domain locally and add it to your trusted certificates.
 
 To download the certificate, complete the following steps:
 
-  1. Open Firefox and navigate to [https://<orka-domain>](https://<orka-domain>).
+  1. Open Firefox and navigate to [https://\<orka-domain>](https://\<orka-domain>).
   2. Click the padlock icon in the address bar. In the pop-up, click Connection secure and then More information.
   3. In the Page Info dialog, click View Certificate.
   4. Scroll down and locate the PEM download section. Download the PEM (cert) file.
@@ -124,10 +123,11 @@ To download the certificate, complete the following steps:
 Run the following commands:
     
     
-    sudo mkdir /usr/local/share/ca-certificates/extra  
-    sudo cp mycertificate.pem /usr/local/share/ca-certificates/extra/mycertificate.crt  
-    sudo update-ca-certificates
-
+```
+sudo mkdir /usr/local/share/ca-certificates/extra  
+sudo cp mycertificate.pem /usr/local/share/ca-certificates/extra/mycertificate.crt  
+sudo update-ca-certificates
+```
 ### Windows
 
   1. Rename the downloaded certificate and change its extension to .crt.

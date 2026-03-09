@@ -36,25 +36,27 @@ This part of the workflow is optional.
 
     
     
-    show crypto isakmp sa
-
+```
+show crypto isakmp sa
+```
 If the site-to-site VPN connection is configured properly, you should see information about an active IKEv1. For example:
     
     
-    Result of the command: "show crypto isakmp sa"  
-      
-    IKEv1 SAs:  
-      
-    Active SA: 1  
-    Rekey SA: 0 (A tunnel will report 1 Active and 1 Rekey SA during rekey)  
-    Total IKE SA: 1  
-      
-    1 IKE Peer: ...  
-    Type : L2L Role : initiator   
-    Rekey : no State : MM_ACTIVE  
-      
-    There are no IKEv2 SAs
-
+```
+Result of the command: "show crypto isakmp sa"  
+  
+IKEv1 SAs:  
+  
+Active SA: 1  
+Rekey SA: 0 (A tunnel will report 1 Active and 1 Rekey SA during rekey)  
+Total IKE SA: 1  
+  
+1 IKE Peer: ...  
+Type : L2L Role : initiator   
+Rekey : no State : MM_ACTIVE  
+  
+There are no IKEv2 SAs
+```
 ## Verify that there is an IPsec security association between peers
 
   1. [Run Cisco ASDM-IDM and log in to your firewall.](https://support.macstadium.com/hc/en-us/articles/28231599395355)
@@ -69,29 +71,31 @@ If the site-to-site VPN connection is configured properly, you should see inform
 
     
     
-    show crypto ipsec sa
-
+```
+show crypto ipsec sa
+```
 If the site-to-site VPN connection is configured properly, you should see a detailed log. For example:
     
     
-    Result of the command: "show crypto ipsec sa"  
-      
-    interface: Outside  
-    Crypto map tag: amzn_vpn_map_1, seq num: 1, local addr: ...  
-      
-    access-list acl-amzn extended permit ip any ...   
-    local ident (addr/mask/prot/port): ...  
-    remote ident (addr/mask/prot/port): ...  
-    current_peer: ...  
-      
-      
-    ....  
-      
-    inbound esp sas:  
-    ...  
-    outbound esp sas:  
-    ...
-
+```
+Result of the command: "show crypto ipsec sa"  
+  
+interface: Outside  
+Crypto map tag: amzn_vpn_map_1, seq num: 1, local addr: ...  
+  
+access-list acl-amzn extended permit ip any ...   
+local ident (addr/mask/prot/port): ...  
+remote ident (addr/mask/prot/port): ...  
+current_peer: ...  
+  
+  
+....  
+  
+inbound esp sas:  
+...  
+outbound esp sas:  
+...
+```
 ## Verify that the tunnel is connected
 
   1. Log in to your GCP console.
@@ -117,8 +121,9 @@ For more information about user login on GCP instances, see [Google Cloud Docume
 
     
     
-    ssh <user>@<gcp-vm-ip>
-
+```
+ssh <user>@<gcp-vm-ip>
+```
 Replace `<user>` with the username for your GCP instance.  
 Replace `<gcp-vm-ip>` with the private IP of the GCP instance.
 
@@ -129,8 +134,9 @@ If the connection is successful, the prefix of the terminal becomes `<user>@<gcp
 
     
     
-    ssh <user>@<orka-vm-ip>
-
+```
+ssh <user>@<orka-vm-ip>
+```
 Replace `<user>` with the username for your Orka VM.  
 Replace `<orka-vm-ip>` with the private IP of the Orka VM.
 

@@ -71,8 +71,9 @@ The DNS server address is the `.251` address for the `Private-1` network from th
   1. Use a text editor to open `/etc/resolv.conf`.
   2. Locate the nameserver section and add the Orka DNS address: 
          
-         nameserver <ORKA-DNS-ADDRESS>
-
+```
+     nameserver <ORKA-DNS-ADDRESS>
+```
   3. Make sure that this is the first nameserver entry in the list.
 
 
@@ -94,12 +95,13 @@ The DNS server address is the `.251` address for the `Private-1` network from th
 
 ### Use OpenConnect
 
-  1. From the command line, run the following command. Replace <SERVER ADDRESS> with the server address from Step 1: VPN in the IP Plan. 
+  1. From the command line, run the following command. Replace \<SERVER ADDRESS> with the server address from Step 1: VPN in the IP Plan. 
          
-         sudo openconnect <SERVER ADDRESS> --protocol=anyconnect  
-         // OR if running on Windows  
-         openconnect <SERVER ADDRESS> --protocol=anyconnect
-
+```
+     sudo openconnect <SERVER ADDRESS> --protocol=anyconnect  
+     // OR if running on Windows  
+     openconnect <SERVER ADDRESS> --protocol=anyconnect
+```
   2. Follow the prompts. 
      * On the immediate Password prompt, provide the sudo password (the password for the current computer user) and press Enter.
      * On the Enter 'yes' to accept, 'no' to abort; anything else to view: prompt, type yes and press Enter.
@@ -168,10 +170,11 @@ With Cisco AnyConnect already connected to your cluster:
 
   3. If prompted that an untrusted server was blocked, perform the following steps:  
 
-     * Click Change Setting... and deselect Block connections to untrusted servers.
-     * Close the Preferences - VPN window.
-     * Click Connect again.  
-  
+```
+ * Click Change Setting... and deselect Block connections to untrusted servers.
+ * Close the Preferences - VPN window.
+ * Click Connect again.  
+```
 ![blockconnections.png](https://support.macstadium.com/hc/article_attachments/41209843041947)  
   
 

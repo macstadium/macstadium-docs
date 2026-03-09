@@ -49,8 +49,9 @@ When a shared attached disk is used for the first time on a host, you need to fo
 
     
     
-    diskutil list internal physical
-
+```
+diskutil list internal physical
+```
 Look for the disk identifier in the output. The disk will initially be unformatted and will not contain a filesystem.
 
   2. Format and mount the disk:
@@ -58,8 +59,9 @@ Look for the disk identifier in the output. The disk will initially be unformatt
 
     
     
-       diskutil eraseDisk -noEFI JHFS+ shared /dev/<disk-identifier>
-
+```
+   diskutil eraseDisk -noEFI JHFS+ shared /dev/<disk-identifier>
+```
 Replace `<disk-identifier>` with the identifier from the previous step (e.g., `disk1`). The disk will be automatically mounted at `/Volumes/shared`.  
 
 
@@ -80,10 +82,11 @@ To enable shared attached disk support for your Orka instance:
 
     
     
-    #!/bin/bash
-    export VM_SHARED_DISK_SIZE=500
-    /usr/local/bin/bootstrap-orka <eks-cluster-name> <aws-region> <orka-engine-license-key>
-
+```
+#!/bin/bash
+export VM_SHARED_DISK_SIZE=500
+/usr/local/bin/bootstrap-orka <eks-cluster-name> <aws-region> <orka-engine-license-key>
+```
 **Note:** Both steps are required. The `VM_SHARED_DISK_SIZE` environment variable must be set for _each instance_ , but the `vm_shared_disk_enabled` variable is set _once_ globally.
 
   3. The bootstrap script will automatically configure the instance to use the VM shared disk feature, and applies to all VM deployments from the instance
@@ -105,7 +108,9 @@ To disable the feature, first set `vm_shared_disk_enabled: false` in Ansible and
 
   * For Apple silicon nodes: Shared attached disk support is **disabled** by default: `vm_shared_disk_enabled: false`.
 
-    * Optional: Set `osx_node_orka_vm_shared_disk_size` to specify disk size (Note: This is for on-prem/MSDC users only, and does not apply to AWS)
+```
+* Optional: Set `osx_node_orka_vm_shared_disk_size` to specify disk size (Note: This is for on-prem/MSDC users only, and does not apply to AWS)
+```
   * Critical limitation for Apple silicon: When shared attached disk is enabled, only **one** VM may run per Apple silicon node
 
   * Users running AWS: Note that the `VM_SHARED_DISK_SIZE` environment variable must be set in the user data script to enable the feature
@@ -130,12 +135,13 @@ The Orka CLI now reads the default namespace directly from your `orka` kubeconfi
 #### Set a custom default namespace
     
     
-    export ORKA_DEFAULT_NAMESPACE=my-team-namespace
-    orka3 vm list
-    
-    
-    kubectl config set-context orka --namespace=orka-default
+```
+export ORKA_DEFAULT_NAMESPACE=my-team-namespace
+orka3 vm list
 
+
+kubectl config set-context orka --namespace=orka-default
+```
 #### Technical requirements:
 
   * Orka CLI version 3.5.2 or later
@@ -163,13 +169,11 @@ The Orka CLI now reads the default namespace directly from your `orka` kubeconfi
 
   * Reduced noise and fixed behavior in non-default namespaces
 
-    * Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
+```
+* Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
 
-    * The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
-
-
-
-
+* The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
+```
 ## Bug fixes
 
   * macOS Tahoe 26.0 compatibility fixes for image deletion, copying, and tagging

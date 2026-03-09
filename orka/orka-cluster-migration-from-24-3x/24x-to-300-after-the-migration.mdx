@@ -26,19 +26,21 @@ All team members who need to be able to access the cluster must be among the use
 Orka CLI users need to upgrade to Orka 3.0.0 CLI.
     
     
-    brew install orka3
-
+```
+brew install orka3
+```
 If you prefer to use the Orka Web UI, you need to get an authentication token for it.
 
 You can use a user token (duration: 1 hour) or a service account token (duration: 1 year or custom).
     
     
-    orka3 user get-token  
-      
-    OR  
-      
-    orka3 sa create <SERVICE_ACCOUNT_NAME> && orka3 sa <SERVICE_ACCOUNT_NAME> token
-
+```
+orka3 user get-token  
+  
+OR  
+  
+orka3 sa create <SERVICE_ACCOUNT_NAME> && orka3 sa <SERVICE_ACCOUNT_NAME> token
+```
 MacStadium will gradually roll out updates to the Orka CI/CD integrations. If a new version becomes available, consider upgrading the respective integration.
 
 ## Create service accounts for your CI/CD integrations
@@ -48,36 +50,41 @@ CI/CD integrations will continue to work out-of-the-box after the migration.
 MacStadium will gradually roll out updates to the Orka CI/CD integrations. To avoid future issues, you need to update your CI/CD integrations to the latest available version. After you upgrade your CI/CD integrations to Orka 3.0.0, you need to create dedicated service account tokens for your tools and re-configure them to use the updated authentication method.
     
     
-    orka3 sa create <SERVICE_ACCOUNT_NAME> [--namespace <NAMESPACE>]
-
+```
+orka3 sa create <SERVICE_ACCOUNT_NAME> [--namespace <NAMESPACE>]
+```
 ## Re-create sandboxed nodes and redeploy custom pods
 
 Orka 3.0.0 introduces a new way to handle sandboxing. First, you need to create a dedicated namespace with enabled custom pods. Next, you need to move one or more nodes to that namespace. You also need to provide access to the namespace to all users and service accounts that require access.
     
     
-    orka3 ns create orka-sandbox --enable-custom-pods  
-    orka3 node namespace <NODE> orka-sandbox  
-    orka3 rb add-subject --namespace orka-sandbox --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
-
+```
+orka3 ns create orka-sandbox --enable-custom-pods  
+orka3 node namespace <NODE> orka-sandbox  
+orka3 rb add-subject --namespace orka-sandbox --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
+```
 After that, you can re-create your custom pods. For any custom pods you need to re-create, add the following toleration to the pod. Provide the name for the sandbox namespace under value.
 
 **YAML**
     
     
-    {"key": "orka.macstadium.com/namespace-reserved", "value": "orka-sandbox"}
-
+```
+{"key": "orka.macstadium.com/namespace-reserved", "value": "orka-sandbox"}
+```
 Finally, re-create your custom Kubernetes resources in the sandbox namespace. For example:
     
     
-    kubectl {create|apply} <RESOURCE> --namespace orka-sandbox 
-
+```
+kubectl {create|apply} <RESOURCE> --namespace orka-sandbox 
+```
 ## Re-create node tags (node affinity)
 
 Although all VM tags persist in the respective VM configurations, all node tags are removed during the migration. You need to manually re-apply them. Note that you can apply only one tag at a time. To apply multiple tags to a node, you need to run the command multiple times.
     
     
-    orka3 node tag <NODE> <TAG>
-
+```
+orka3 node tag <NODE> <TAG>
+```
 ## Re-create user and node grouping (node dedication)
 
 Orka 3.0.0 introduces a new way to handle resource dedication - via namespaces. For more information, see [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).
@@ -85,10 +92,11 @@ Orka 3.0.0 introduces a new way to handle resource dedication - via namespaces. 
 First, you must create a namespace that you will isolate for one or more users. Next, you need to move nodes to this namespace. This lets you dedicate the resources in the namespace to the respective users. You must also add the respective users or service accounts as subjects to the role binding for the namespace.
     
     
-    orka3 ns create orka-dedicated  
-    orka3 node namespace <NODE> orka-dedicated  
-    orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
-
+```
+orka3 ns create orka-dedicated  
+orka3 node namespace <NODE> orka-dedicated  
+orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-test:sa-githubactions
+```
 ## Re-create VMs
 
 Moving to Orka 3.0.0 removes all deployed VMs but retains all VM configurations. You need to manually re-deploy all VMs that you want to use from the respective VM configurations.
@@ -96,8 +104,9 @@ Moving to Orka 3.0.0 removes all deployed VMs but retains all VM configurations.
 Note that after the migration, you will see all VM configurations for all users on the cluster. You will also begin to see all VMs for all users in the respective namespace.
     
     
-    orka3 vm deploy --config <VM_CONFIG_NAME> [--namespace <NAMESPACE>]
-
+```
+orka3 vm deploy --config <VM_CONFIG_NAME> [--namespace <NAMESPACE>]
+```
 ## Update Orka VM Tools across your images
 
 You must update existing Apple silicon-based images stored locally in the cluster to use Orka VM Tools 3.0. Remote images are already upgraded to use Orka VM Tools 3.0.
@@ -105,21 +114,23 @@ You must update existing Apple silicon-based images stored locally in the cluste
 First, deploy a VM using the image that you want to update. Next, connect to the VM via SSH and upgrade the local installation of the Orka VM Tools. Finally, commit the changes to the image.
     
     
-    orka3 vm deploy --image <IMAGE_NAME>  
-    ssh <macOS_user>@<VM_IP> -p <SSH_PORT>  
-    brew upgrade orka-vm-tools  
-    exit  
-    orka3 vm commit <VM_NAME>
-
+```
+orka3 vm deploy --image <IMAGE_NAME>  
+ssh <macOS_user>@<VM_IP> -p <SSH_PORT>  
+brew upgrade orka-vm-tools  
+exit  
+orka3 vm commit <VM_NAME>
+```
 ## (Optional) Remove/re-configure VM configurations or images that you no longer need
 
 After the migration, you will begin to see all VM configurations for all users on the cluster. You might want to clean up the cluster from unneeded VM configurations and images.
     
     
-    orka3 vm-config delete <VM_CONFIG_NAME>  
-      
-    orka3 image delete <IMAGE_NAME>
-
+```
+orka3 vm-config delete <VM_CONFIG_NAME>  
+  
+orka3 image delete <IMAGE_NAME>
+```
 ## Update any custom automation you might have
 
 Custom automation around the basic scenario should be backward compatible and continue working out of the box after the migration. However, you might need to re-work more complex custom automation that relies on deprecated or changed features.

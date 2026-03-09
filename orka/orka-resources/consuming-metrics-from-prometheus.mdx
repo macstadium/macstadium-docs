@@ -36,9 +36,10 @@ To verify you are able to access the Orka server and operator metrics, try cURLi
 **curl**
     
     
-    curl -I 10.221.188.20/metrics  
-    curl -I 10.221.188.20:8080/metrics
-
+```
+curl -I 10.221.188.20/metrics  
+curl -I 10.221.188.20:8080/metrics
+```
 You should receive a response of 200 OK if all is well.
 
 #### **TIP**
@@ -50,29 +51,30 @@ In order to scrape the Orka server and operator metrics, add jobs to your Promet
 **prometheus.yml**
     
     
-    scrape_configs:  
-    # ...  
-      
-    - job_name: 'orka/orka-server'  
-    scrape_interval: 30s  
-    scrape_timeout: 30s  
-    metrics_path: /metrics  
-    scheme: http  
-    static_configs:  
-    - targets: ['10.221.188.20']  
-    labels:  
-    service: 'orka-server'  
-      
-    - job_name: 'orka/orka-operator'  
-    scrape_interval: 30s  
-    scrape_timeout: 30s  
-    metrics_path: /metrics  
-    scheme: http  
-    static_configs:  
-    - targets: ['10.221.188.20:8080']  
-    labels:  
-    service: 'orka-operator'
-
+```
+scrape_configs:  
+# ...  
+  
+- job_name: 'orka/orka-server'  
+scrape_interval: 30s  
+scrape_timeout: 30s  
+metrics_path: /metrics  
+scheme: http  
+static_configs:  
+- targets: ['10.221.188.20']  
+labels:  
+service: 'orka-server'  
+  
+- job_name: 'orka/orka-operator'  
+scrape_interval: 30s  
+scrape_timeout: 30s  
+metrics_path: /metrics  
+scheme: http  
+static_configs:  
+- targets: ['10.221.188.20:8080']  
+labels:  
+service: 'orka-operator'
+```
 ### Prometheus Node Exporters
 
 Every node in the Orka cluster runs a Prometheus Node Exporter on port 9100. This includes both Intel and ARM nodes. To ensure you are able to scrape the node exporter data, try cURLing the metrics endpoint from any node:
@@ -80,8 +82,9 @@ Every node in the Orka cluster runs a Prometheus Node Exporter on port 9100. Thi
 **curl**
     
     
-    curl -I http://10.221.188.31:9100/metrics
-
+```
+curl -I http://10.221.188.31:9100/metrics
+```
 If the node exporter is running and reachable from outside the cluster, you should receive a response of 200 OK.
 
 #### **Outside Access**
@@ -93,22 +96,23 @@ In order to scrape the node exporter data, add a job to your Prometheus configur
 **prometheus.yml**
     
     
-    scrape_configs:  
-    # ...  
-      
-    - job_name: 'orka/node-exporter'  
-    scrape_interval: 5s  
-    static_configs:  
-    - targets: ['10.221.188.5:9100', '10.221.188.6:9100', '10.221.188.7:9100']  
-    labels:  
-    group: 'master'  
-    - targets: ['10.221.188.31:9100', '10.221.188.32:9100', '10.221.188.33:9100']  
-    labels:  
-    group: 'x86'  
-    - targets: ['10.221.188.34:9100']  
-    labels:  
-    group: 'arm'
-
+```
+scrape_configs:  
+# ...  
+  
+- job_name: 'orka/node-exporter'  
+scrape_interval: 5s  
+static_configs:  
+- targets: ['10.221.188.5:9100', '10.221.188.6:9100', '10.221.188.7:9100']  
+labels:  
+group: 'master'  
+- targets: ['10.221.188.31:9100', '10.221.188.32:9100', '10.221.188.33:9100']  
+labels:  
+group: 'x86'  
+- targets: ['10.221.188.34:9100']  
+labels:  
+group: 'arm'
+```
 #### **TIP**
 
 As an alternative to the static config, you can use [file-based service discovery](https://prometheus.io/docs/guides/file-sd/) to scrape the targets.

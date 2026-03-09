@@ -26,6 +26,7 @@ When prompted, enter your administrator-privileged username and password (the ac
 Once logged in, you can execute the following command at the prompt to re-enable VNC (where it says mypasswd, insert your desired VNC Password):
     
     
-    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw mypasswd -restart -agent -privs -all
-
+```
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw mypasswd -restart -agent -privs -all
+```
 You can now close your terminal/SSH window, and attempt to re-connect via your VNC / ARD client as normal.

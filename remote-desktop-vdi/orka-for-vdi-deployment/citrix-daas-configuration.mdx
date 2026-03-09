@@ -40,41 +40,42 @@ Machine Catalogs are logical groupings of virtual machines in Citrix. When using
 
   3. **Select catalog type:**
 
-     * Choose **"Remote PC Access"**
+```
+ * Choose **"Remote PC Access"**
 
-     * This type is designed for physical Mac devices and works with Citrix VDA for macOS
+ * This type is designed for physical Mac devices and works with Citrix VDA for macOS
 
-     * Select **"Machines that are not power managed"** (Orka manages the VM lifecycle)
-
+ * Select **"Machines that are not power managed"** (Orka manages the VM lifecycle)
+```
   4. **Configure Machine Catalog settings:**
 
-     * **Catalog name:** Use a descriptive name like "Orka-macOS-Sonoma-Standard" or "MacStadium-VDI-Finance"
+```
+ * **Catalog name:** Use a descriptive name like "Orka-macOS-Sonoma-Standard" or "MacStadium-VDI-Finance"
 
-     * **Description:** Document the purpose, OS version, and hardware specs (e.g., "macOS Sonoma on M2 Mac mini, 16GB RAM, for finance team")
+ * **Description:** Document the purpose, OS version, and hardware specs (e.g., "macOS Sonoma on M2 Mac mini, 16GB RAM, for finance team")
 
-     * **Session type:** Single-session (each user gets their own desktop)
+ * **Session type:** Single-session (each user gets their own desktop)
 
-     * **User assignment:** Choose based on your use case:
+ * **User assignment:** Choose based on your use case:
 
-       * **Random (pooled):** Users get any available desktop (non-persistent)
+   * **Random (pooled):** Users get any available desktop (non-persistent)
 
-       * **Static (dedicated):** Users get the same desktop every session (persistent)
-
+   * **Static (dedicated):** Users get the same desktop every session (persistent)
+```
   5. **Machine accounts:**
 
-     * For non-domain-joined Macs, select **"No, do not add to Active Directory"**
+```
+ * For non-domain-joined Macs, select **"No, do not add to Active Directory"**
 
-     * This requires Rendezvous protocol for connectivity
-
+ * This requires Rendezvous protocol for connectivity
+```
   6. **Add machines:**
 
-     * You'll add machines to the catalog after deploying VMs with Citrix VDA
+```
+ * You'll add machines to the catalog after deploying VMs with Citrix VDA
 
-     * Machines register automatically using the enrollment token
-
-
-
-
+ * Machines register automatically using the enrollment token
+```
 **Machine Catalog naming strategy:**
 
 Use a consistent naming pattern that reflects:
@@ -106,41 +107,41 @@ An enrollment token is critical for connecting your Orka-hosted VMs to Citrix Cl
 
   4. **Configure token settings:**
 
-     * **Token name:** Descriptive identifier (e.g., "Orka-Finance-Q1-2026")
+```
+ * **Token name:** Descriptive identifier (e.g., "Orka-Finance-Q1-2026")
 
-     * **Expiration:** Set based on your deployment timeline
+ * **Expiration:** Set based on your deployment timeline
 
-       * 12 hours: For immediate testing
+   * 12 hours: For immediate testing
 
-       * 7 days: Standard deployment window
+   * 7 days: Standard deployment window
 
-       * 30 days: Ongoing/phased rollouts
+   * 30 days: Ongoing/phased rollouts
 
-     * **Number of uses:**
+ * **Number of uses:**
 
-       * Unlimited (default): Token can register multiple VMs
+   * Unlimited (default): Token can register multiple VMs
 
-       * Limited: Specify exact number if needed for strict control
-
+   * Limited: Specify exact number if needed for strict control
+```
   5. **Copy the token immediately:**
 
-     * The token is displayed only once
+```
+ * The token is displayed only once
 
-     * Store it securely in your Ansible Vault
+ * Store it securely in your Ansible Vault
 
-     * If lost, generate a new token (old token remains valid until expiration)
-
-
-
-
+ * If lost, generate a new token (old token remains valid until expiration)
+```
 **Adding a token to Ansible configuration:**
 
 Update your Ansible Vault file:
     
     
-    vault_citrix_enrollment_token: "your-actual-token-here"
-    vault_citrix_customer_id: "YOUR_CUSTOMER_ID"
-
+```
+vault_citrix_enrollment_token: "your-actual-token-here"
+vault_citrix_customer_id: "YOUR_CUSTOMER_ID"
+```
 Reference this token in your VDA installation playbooks. The token can be passed to the Citrix VDA installer during VM provisioning. These tokens can be leveraged for automatically registering the VM with your Machine Catalog, with the appropriate scripts or Ansible playbooks in place to invoke Citrix enrollment command:
 
 `sudo /opt/Citrix/VDA/bin/VdaEnrollmentTool -EnrollmentToken:<token> -Restart`
@@ -174,90 +175,93 @@ Delivery Groups control which users can access which machines and define the use
 
   3. **Select machines:**
 
-     * Choose the Machine Catalog created earlier
+```
+ * Choose the Machine Catalog created earlier
 
-     * Specify how many machines to include (can be all or a subset)
-
+ * Specify how many machines to include (can be all or a subset)
+```
   4. **Configure users:**
 
-     * **Add users or groups** who should have access
+```
+ * **Add users or groups** who should have access
 
-     * Options include:
+ * Options include:
 
-       * Active Directory users/groups (if domain-joined)
+   * Active Directory users/groups (if domain-joined)
 
-       * Azure AD users/groups
+   * Azure AD users/groups
 
-       * Individual user accounts
+   * Individual user accounts
 
-     * For testing, you can use "Allow unauthenticated users" (Note: This is **not recommended** for production)
-
+ * For testing, you can use "Allow unauthenticated users" (Note: This is **not recommended** for production)
+```
   5. **Delivery Group name and settings:**
 
-     * Name: Descriptive, for example: "Finance-macOS-VDI" or "Engineering-Sonoma-Desktops"
+```
+ * Name: Descriptive, for example: "Finance-macOS-VDI" or "Engineering-Sonoma-Desktops"
 
-     * Display name: What users see in Citrix Workspace (e.g., "macOS Finance Desktop")
+ * Display name: What users see in Citrix Workspace (e.g., "macOS Finance Desktop")
 
-     * Description: Document purpose and access requirements
+ * Description: Document purpose and access requirements
 
-     * Time zone: Set to match user locations or leave as client time zone
-
+ * Time zone: Set to match user locations or leave as client time zone
+```
   6. **Configure desktop assignment:**
 
-     * For pooled (random) catalogs: Users get any available desktop
+```
+ * For pooled (random) catalogs: Users get any available desktop
 
-     * For dedicated (static) catalogs: Users are permanently assigned to specific desktops
-
+ * For dedicated (static) catalogs: Users are permanently assigned to specific desktops
+```
   7. **Application and desktop delivery:**
 
-     * Published Desktop: Users access a full macOS desktop
+```
+ * Published Desktop: Users access a full macOS desktop
 
-     * Published Applications: Specific apps published to users
+ * Published Applications: Specific apps published to users
 
-     * For Citrix + Orka VDI, select the "Add Desktop" delivery type
-
+ * For Citrix + Orka VDI, select the "Add Desktop" delivery type
+```
   8. **Session policies:**
 
-     * Configure session timeout settings
+```
+ * Configure session timeout settings
 
-     * Set idle session behavior
+ * Set idle session behavior
 
-     * Define reconnection policies
+ * Define reconnection policies
 
-     * Enable or disable features like printing, clipboard, USB redirection
-
-
-
-
+ * Enable or disable features like printing, clipboard, USB redirection
+```
 **Access policy considerations:**
 
   * **Authentication method:** How users prove their identity
 
-    * Active Directory (traditional)
+```
+* Active Directory (traditional)
 
-    * Azure AD / Okta / other SAML providers
+* Azure AD / Okta / other SAML providers
 
-    * Multi-factor authentication (MFA) support
-
+* Multi-factor authentication (MFA) support
+```
   * **Access from:** Define where users can connect from
 
-    * Internal network only
+```
+* Internal network only
 
-    * Remote access via Citrix Gateway
+* Remote access via Citrix Gateway
 
-    * Both internal and external
-
+* Both internal and external
+```
   * **Device posture:** (Optional) Restrict based on device compliance
 
-    * Managed devices only
+```
+* Managed devices only
 
-    * Endpoint security requirements
+* Endpoint security requirements
 
-    * Operating system versions
-
-
-
-
+* Operating system versions
+```
 **Multiple Delivery Groups**
 
 Consider creating several Delivery Groups from the same Machine Catalog:
@@ -319,23 +323,22 @@ Rendezvous is typically enabled by default for Citrix DaaS environments with non
 
   4. Configure Rendezvous settings:
 
-     * HDX Adaptive Transport: Set to "Preferred" or "Server Only"
+```
+ * HDX Adaptive Transport: Set to "Preferred" or "Server Only"
 
-     * Rendezvous Protocol: Enable
+ * Rendezvous Protocol: Enable
 
-     * WebSocket connections: Allow
-
+ * WebSocket connections: Allow
+```
   5. On the VDA side:
 
-     * The VDA automatically detects Rendezvous capability
+```
+ * The VDA automatically detects Rendezvous capability
 
-     * Establishes outbound connection to `*.*.nssvc.net`
+ * Establishes outbound connection to `*.*.nssvc.net`
 
-     * Maintains persistent WebSocket connection for HDX session brokering
-
-
-
-
+ * Maintains persistent WebSocket connection for HDX session brokering
+```
 **Network requirements for Rendezvous**
 
 Ensure VMs have outbound access to:
@@ -344,13 +347,11 @@ Ensure VMs have outbound access to:
 
   * If your firewall requires specific subdomains, use:
 
-    * `*.g.nssvc.net` (Gateway Service)
+```
+* `*.g.nssvc.net` (Gateway Service)
 
-    * `*.c.nssvc.net` (Control plane)
-
-
-
-
+* `*.c.nssvc.net` (Control plane)
+```
 No inbound ports required on the VDA when using Rendezvous (major security advantage).
 
 **Rendezvous Protocol behavior**
@@ -382,13 +383,11 @@ If you need to disable Rendezvous:
 
   3. Update VDA configuration:
 
-     * Disable Rendezvous in VDA settings
+```
+ * Disable Rendezvous in VDA settings
 
-     * Point VDA to StoreFront servers instead of Cloud Connectors
-
-
-
-
+ * Point VDA to StoreFront servers instead of Cloud Connectors
+```
 Keeping Rendezvous enabled is recommended for simplicity and functionality.
 
 **Testing Rendezvous connectivity**
@@ -433,101 +432,103 @@ Preparation steps:
 
   1. **Download Citrix VDA for macOS:**
 
-     * Access Citrix Downloads portal
+```
+ * Access Citrix Downloads portal
 
-     * Locate "Citrix VDA for macOS" package
+ * Locate "Citrix VDA for macOS" package
 
-     * Download latest stable version
+ * Download latest stable version
 
-     * Verify package integrity
-
+ * Verify package integrity
+```
   2. **Install Microsoft .NET Runtime 8.0:**
 
-     * Required dependency for VDA enrollment and registration
+```
+ * Required dependency for VDA enrollment and registration
 
-     * Download from Microsoft package feed for macOS
+ * Download from Microsoft package feed for macOS
 
-     * Reference: [](https://learn.microsoft.com/en-us/dotnet/core/install/macos)[Install .NET on macOS - .NET](https://learn.microsoft.com/en-us/dotnet/core/install/macos)
+ * Reference: [](https://learn.microsoft.com/en-us/dotnet/core/install/macos)[Install .NET on macOS - .NET](https://learn.microsoft.com/en-us/dotnet/core/install/macos)
 
-     * Install on base image or individual VMs
-
+ * Install on base image or individual VMs
+```
   3. **Prepare installation parameters:**
 
-     * Citrix enrollment token
+```
+ * Citrix enrollment token
 
-     * Customer ID
+ * Customer ID
 
-     * Delivery controller addresses or cloud endpoint
+ * Delivery controller addresses or cloud endpoint
 
-     * Network configuration settings
-
-
-
-
+ * Network configuration settings
+```
 **Manual deployment approach**
 
 For pilot deployments or troubleshooting:
 
   1. **Deploy test VM from base image:**
 
-     * Use Orka Engine to create a VM from a macOS base image
-           
-           # Plan deployment (dry-run)
-           ansible-playbook -i inventory deploy.yml \
-             -e "vm_group=citrix-vda-test" \
-             -e "desired_vms=1" \
-             --tags plan
-           
-           # Execute deployment
-           ansible-playbook -i inventory deploy.yml \
-             -e "vm_group=citrix-vda-test" \
-             -e "desired_vms=1"
+```
+ * Use Orka Engine to create a VM from a macOS base image
+       
+       # Plan deployment (dry-run)
+       ansible-playbook -i inventory deploy.yml \
+         -e "vm_group=citrix-vda-test" \
+         -e "desired_vms=1" \
+         --tags plan
+       
+       # Execute deployment
+       ansible-playbook -i inventory deploy.yml \
+         -e "vm_group=citrix-vda-test" \
+         -e "desired_vms=1"
 
-     * Allocate appropriate VM resources (CPU, RAM, storage)
+ * Allocate appropriate VM resources (CPU, RAM, storage)
 
-     * Attach VM to correct network bridge
+ * Attach VM to correct network bridge
 
-     * Start VM and establish SSH access
-
+ * Start VM and establish SSH access
+```
   2. **Copy VDA installer to VM:**
 
-     * Transfer CitrixVDA.pkg to VM via SCP or shared storage
+```
+ * Transfer CitrixVDA.pkg to VM via SCP or shared storage
 
-     * Also copy .NET Runtime installer if not in base image
-
+ * Also copy .NET Runtime installer if not in base image
+```
   3. **Install prerequisites:**
 
-     * Install .NET Runtime 8.0
+```
+ * Install .NET Runtime 8.0
 
-     * Verify installation successful
+ * Verify installation successful
 
-     * Restart if required
-
+ * Restart if required
+```
   4. **Install Citrix VDA:**
 
-     * Run VDA installer package with administrative privileges
+```
+ * Run VDA installer package with administrative privileges
 
-     * Provide enrollment token during installation (note: enrollment can take 5-10 minutes)
+ * Provide enrollment token during installation (note: enrollment can take 5-10 minutes)
 
-     * Specify Citrix Cloud customer ID
+ * Specify Citrix Cloud customer ID
 
-     * Configure network settings (Rendezvous enabled if non-domain-joined)
+ * Configure network settings (Rendezvous enabled if non-domain-joined)
 
-     * Complete installation and restart VM
-
+ * Complete installation and restart VM
+```
   5. **Initial configuration:**
 
-     * VDA service starts automatically after installation
+```
+ * VDA service starts automatically after installation
 
-     * Verify VDA service is running
+ * Verify VDA service is running
 
-     * Check log files for any errors
+ * Check log files for any errors
 
-     * Confirm network connectivity to Citrix Cloud endpoints
-
-
-
-
+ * Confirm network connectivity to Citrix Cloud endpoints
+```
 **Automated deployment approach**
 
 For scalable deployments, automate VDA installation via Ansible.
@@ -540,10 +541,11 @@ For scalable deployments, automate VDA installation via Ansible.
 
     
     
-    ansible-playbook -i inventory.ini create_orka_vm.yml \
-      -e "vm_name=quick-vm" \
-      -e "image_source=ghcr.io/macstadium/orka-images/sonoma:latest"
-
+```
+ansible-playbook -i inventory.ini create_orka_vm.yml \
+  -e "vm_name=quick-vm" \
+  -e "image_source=ghcr.io/macstadium/orka-images/sonoma:latest"
+```
 2\. Install .NET Runtime 8.0
 
 3\. Install Citrix VDA (without enrolling)
@@ -589,10 +591,11 @@ After successful VDA deployment:
 
     
     
-    ansible-playbook -i inventory.ini publish_orka_image.yml \
-      -e "local_image=my-backup" \
-      -e "remote_image=myregistry.com/orka/my-image:v1"
-
+```
+ansible-playbook -i inventory.ini publish_orka_image.yml \
+  -e "local_image=my-backup" \
+  -e "remote_image=myregistry.com/orka/my-image:v1"
+```
   * Document installed software versions
 
   * Test image deployment before marking as production-ready
@@ -637,17 +640,15 @@ Check registration status in Web Studio:
 
   4. Verify your VM appears with:
 
-     * Machine name (hostname)
+```
+ * Machine name (hostname)
 
-     * Registration state: "Registered"
+ * Registration state: "Registered"
 
-     * Power state: "On"
+ * Power state: "On"
 
-     * Session state: "Available"
-
-
-
-
+ * Session state: "Available"
+```
 **VDA logs on VM:**
 
 Examine VDA log files for registration confirmation:
@@ -656,15 +657,13 @@ Examine VDA log files for registration confirmation:
 
   * Key log files:
 
-    * `vda.log` \- Main VDA service log
+```
+* `vda.log` \- Main VDA service log
 
-    * `registration.log` \- Registration-specific events
+* `registration.log` \- Registration-specific events
 
-    * `broker.log` \- Communication with Citrix Cloud
-
-
-
-
+* `broker.log` \- Communication with Citrix Cloud
+```
 Look for successful registration messages:
 
   * "Registration successful"
@@ -727,31 +726,35 @@ Look for successful registration messages:
 ##### Check VDA service status:
     
     
-    ansible mac_vms -i inventory.ini \
-      -m shell \
-      -a "sudo launchctl list | grep citrix"
-
+```
+ansible mac_vms -i inventory.ini \
+  -m shell \
+  -a "sudo launchctl list | grep citrix"
+```
 ##### Restart VDA service:
     
     
-    ansible mac_vms -i inventory.ini \
-      -m shell \
-      -a "sudo launchctl kickstart -k system/com.citrix.vda"
-
+```
+ansible mac_vms -i inventory.ini \
+  -m shell \
+  -a "sudo launchctl kickstart -k system/com.citrix.vda"
+```
 ##### View VDA logs:
     
     
-    ansible mac_vms -i inventory.ini \
-      -m shell \
-      -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
-
+```
+ansible mac_vms -i inventory.ini \
+  -m shell \
+  -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
+```
 ##### Test Citrix Cloud connectivity:
     
     
-    ansible mac_vms -i inventory.ini \
-      -m shell \
-      -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
-
+```
+ansible mac_vms -i inventory.ini \
+  -m shell \
+  -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
+```
 **Re-registration scenarios:**
 
 VMs may need to re-register if:

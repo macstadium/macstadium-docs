@@ -65,9 +65,11 @@ For more information about route tables in Amazon, see [Amazon VPC Documentation
 ![117e2d9-select-route-tables.png](https://support.macstadium.com/hc/article_attachments/28312040787995)
   4. In the list of routing tables, select the main table.  
 
-     * At the bottom of the screen, select Route Propagation and make sure that the propagation is enabled. If your virtual private gateway is not listed, make sure that it's attached to the VPC.
-     * If propagation is disabled, click Edit route propagation.
-     * Select the Propagate checkbox and click Save.  
+```
+ * At the bottom of the screen, select Route Propagation and make sure that the propagation is enabled. If your virtual private gateway is not listed, make sure that it's attached to the VPC.
+ * If propagation is disabled, click Edit route propagation.
+ * Select the Propagate checkbox and click Save.  
+```
 ![e025068-route-propagation.png](https://support.macstadium.com/hc/article_attachments/28312040790811)
 
 
@@ -76,7 +78,7 @@ For more information about route tables in Amazon, see [Amazon VPC Documentation
 
 All checks in this section are performed against the site-to-site VPN configuration file downloaded from Amazon. For more information, see [AWS VPN Config for Cisco ASA/ASAv.](https://support.macstadium.com/hc/en-us/articles/28280625682587)
 
-**Verify that you've replaced <local_subnet> and <local_subnet_mask> with the correct values for the internal, private network of your MacStadium private cloud.**
+**Verify that you've replaced \<local_subnet> and \<local_subnet_mask> with the correct values for the internal, private network of your MacStadium private cloud.**
 
 By default, this is the Private-1 network.
 
@@ -127,80 +129,89 @@ Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start
 
     
     
-    clear configure tunnel-group <tunnel_1>  
-    clear configure tunnel-group <tunnel_2>  
-    clear configure group-policy <policy_name>  
-    clear configure crypto map <map_name>  
-    clear configure access-list <outside_access_in>  
-    clear configure access-list amzn-filter  
-    clear configure access-list acl-amzn (likely: acl-amzn)  
-    clear configure crypto ipsec transform-set transform-amzn  
-    clear configure sla monitor 1  
-    no nat (<private_lan>,<outside_interface>) 1 source static obj-SrcNet obj-SrcNet destination static obj-amzn obj-amzn  
-    no object network obj-SrcNet  
-    no object network obj-amzn
-
+```
+clear configure tunnel-group <tunnel_1>  
+clear configure tunnel-group <tunnel_2>  
+clear configure group-policy <policy_name>  
+clear configure crypto map <map_name>  
+clear configure access-list <outside_access_in>  
+clear configure access-list amzn-filter  
+clear configure access-list acl-amzn (likely: acl-amzn)  
+clear configure crypto ipsec transform-set transform-amzn  
+clear configure sla monitor 1  
+no nat (<private_lan>,<outside_interface>) 1 source static obj-SrcNet obj-SrcNet destination static obj-amzn obj-amzn  
+no object network obj-SrcNet  
+no object network obj-amzn
+```
 ### Table 1: Placeholders
 
 Placeholder | Description | Example  
 ---|---|---  
       
     
-    <tunnel_1> 
-
+```
+<tunnel_1> 
+```
 | The IP of the tunnel, configured with the first set of tunnel-group commands in the Amazon configuration file. | 
     
     
-    192.168.0.0  
-      
-    
-    <tunnel_2> 
+```
+192.168.0.0  
+  
 
+<tunnel_2> 
+```
 | The IP of the tunnel, configured with the second set of tunnel-group commands in the Amazon configuration file. | 
     
     
-    192.168.0.0  
-      
-    
-    <policy_name> 
+```
+192.168.0.0  
+  
 
+<policy_name> 
+```
 | The name of the policy configured with the group-policy commands in the Amazon configuration file. By default: filter. | 
     
     
-    filter  
-      
-    
-    <map_name> 
+```
+filter  
+  
 
+<map_name> 
+```
 | The name of the crypto map configured with the crypto map commands in the Amazon configuration file. | 
     
     
-    amzn_vpn_map  
-      
-    
-    <outside_access_in> 
+```
+amzn_vpn_map  
+  
 
+<outside_access_in> 
+```
 | The unique name of the access control list created with the configuration file in the Amazon configuration file. | 
     
     
-    outside_access_in  
-      
-    
-    <private_lan> 
+```
+outside_access_in  
+  
 
+<private_lan> 
+```
 | The name of the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network. You can find the networking information for this network in Appendix A of your IP Plan. | 
     
     
-    Private-1  
-      
-    
-    <outside_interface> 
+```
+Private-1  
+  
 
+<outside_interface> 
+```
 | The name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. You can find the networking information for this network in Appendix A of your IP Plan. | 
     
     
-    Outside  
-  
+```
+Outside  
+```
 ## More troubleshooting by Amazon
 
 For more detailed troubleshooting instructions, [see Amazon VPC Documentation: Troubleshooting Cisco ASA Customer Gateway Connectivity](https://docs.aws.amazon.com/vpc/latest/adminguide/Cisco_ASA_Troubleshooting.html).

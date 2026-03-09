@@ -46,10 +46,11 @@ The first step is to connect to the target machine. Do this via VNC or via the W
 To download and run the setup script contained in the [repository](https://github.com/macstadium/ansible-playbook-osx-ci-setup). To do that run the following commands:
     
     
-    curl https://raw.githubusercontent.com/macstadium/ansible-playbook-osx-ci-setup/master/scripts/ansible_setup.sh -o ~/ansible_setup.sh   
-    chmod +x ~/ansible_setup.sh  
-    sudo ~/ansible_setup.sh 
-
+```
+curl https://raw.githubusercontent.com/macstadium/ansible-playbook-osx-ci-setup/master/scripts/ansible_setup.sh -o ~/ansible_setup.sh   
+chmod +x ~/ansible_setup.sh  
+sudo ~/ansible_setup.sh 
+```
 This installs:
 
   * Xcode Command Line Tools
@@ -63,8 +64,9 @@ Now clone the [repository](https://github.com/macstadium/ansible-playbook-osx-ci
 This is done by running:
     
     
-    git clone https://github.com/macstadium/ansible-playbook-osx-ci-setup.git
-
+```
+git clone https://github.com/macstadium/ansible-playbook-osx-ci-setup.git
+```
 This playbook consists of two roles:
 
   * [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) \- Installs all common tooling and creates a user capable of running build jobs
@@ -75,9 +77,10 @@ This playbook consists of two roles:
 To install these two roles execute:
     
     
-    cd ansible-playbook-osx-ci-setup  
-    ansible-galaxy install -r requirements.yml
-
+```
+cd ansible-playbook-osx-ci-setup  
+ansible-galaxy install -r requirements.yml
+```
 ## OSX-CI Role Requirements
 
 The [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) requires a path to a public public ssh key on the target machine. The role adds the key to the `authorized_keys` file of the created user to enable remote login via ssh with a private key.
@@ -87,8 +90,9 @@ The [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) requires a path 
 If you do not have a ssh key pair you can create one by executing on the target machine:
     
     
-    ssh-keygen -m PEM -t rsa -C "build machine key" -f "buildMachine_rsa"
-
+```
+ssh-keygen -m PEM -t rsa -C "build machine key" -f "buildMachine_rsa"
+```
 **NOTE** : For increased security, it is recommended to associate a passphrase to the private key.
 
 The command creates two files:
@@ -101,8 +105,9 @@ The command creates two files:
 To copy the private key to a secure machine, use `scp`. This command executes copy over SSH; run:
     
     
-    scp /path-to-buildMachine_rsa/ username@host:/path-to-location-on-secure-machine
-
+```
+scp /path-to-buildMachine_rsa/ username@host:/path-to-location-on-secure-machine
+```
 ## Xcode Role Requirements
 
 The [Xcode](https://github.com/macstadium/ansible-role-xcode) needs a Xcode xip file to be present on the target machine. Get the version needed from the [Apple Downloads Page](https://developer.apple.com/download/more/).
@@ -112,13 +117,15 @@ The [Xcode](https://github.com/macstadium/ansible-role-xcode) needs a Xcode xip 
 The playbook requires a privilege escalation password:
     
     
-    ansible_become_pass
-
+```
+ansible_become_pass
+```
 To specify a password which will be used to create a default keychain for the build user:
     
     
-    ci_user_default_keychain_password:
-
+```
+ci_user_default_keychain_password:
+```
 It is highly recommended not to pass the passwords in plain text.
 
 To encrypt use [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html).
@@ -126,8 +133,9 @@ To encrypt use [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guid
 Add the variable to [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) and execute the following command:
     
     
-    ansible-vault encrypt group_vars/all.yml
-
+```
+ansible-vault encrypt group_vars/all.yml
+```
 A vault password is required and is later used to decrypt the file. Once the operation is executed the file is encrypted.
 
 ## Running the Ansible Playbook
@@ -135,8 +143,9 @@ A vault password is required and is later used to decrypt the file. Once the ope
 To execute the Ansible playbook you can use the following command by replacing the `{placehoders}` with the correct values:
     
     
-    ansible-playbook site.yml -i inventory -e ansible_user={AdminUser} -e xcode_xip_location={XcodeLocation} -e xcode_major_version={XcodeMajorVersion} -e ci_user_public_key_location={PublicSshKeyLocation} --ask-vault-pass
-
+```
+ansible-playbook site.yml -i inventory -e ansible_user={AdminUser} -e xcode_xip_location={XcodeLocation} -e xcode_major_version={XcodeMajorVersion} -e ci_user_public_key_location={PublicSshKeyLocation} --ask-vault-pass
+```
 You will be prompted for the vault password that you used to encrypt the [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) file in the previous step.
 
 Once the executing is completed, you will have a fully-setup machine that you can use for OSX/iOS builds and for a Jenkins agent.

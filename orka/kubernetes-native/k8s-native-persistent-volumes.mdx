@@ -18,16 +18,17 @@ For security reasons, Orka does not let you configure [persistent volumes](https
 **Quick command summary**
     
     
-    brew install kubectl  
-    orka3 login OR orka3 user set-token <TOKEN>  
-    orka3 ns create <NAMESPACE> --enable-custom-pods  
-    orka3 node namespace <NODE> <NAMESPACE>  
-    orka3 rb add-subject --namespace <NAMESPACE> --user <USER>  
-    kubectl apply -f *.yaml --namespace=<NAMESPACE>  
-    kubectl get [pods / pvc]  
-    kubectl describe  
-    kubectl delete
-
+```
+brew install kubectl  
+orka3 login OR orka3 user set-token <TOKEN>  
+orka3 ns create <NAMESPACE> --enable-custom-pods  
+orka3 node namespace <NODE> <NAMESPACE>  
+orka3 rb add-subject --namespace <NAMESPACE> --user <USER>  
+kubectl apply -f *.yaml --namespace=<NAMESPACE>  
+kubectl get [pods / pvc]  
+kubectl describe  
+kubectl delete
+```
 ## Limitations
 
 Persistent volumes are not applicable to standard Orka VMs. They can be consumed only by pods deployed with kubectl, and are called by functions such as attach-disk.
@@ -44,28 +45,28 @@ You need to install kubectl and configure a namespace with permissions to run cu
 
   1. If not already installed, install kubectl locally. For example: 
          
-         brew install kubectl
-
+```
+     brew install kubectl
+```
   2. Authenticate with the Orka cluster.  
 
          
-         orka3 login  
-           
-         OR  
-           
-         orka user set-token <TOKEN>
-
+```
+     orka3 login  
+       
+     OR  
+       
+     orka user set-token <TOKEN>
+```
   3. Set up the namespace for the PV. The name must match the name confirmed with the MacStadium team when requesting the PV. The namespace must have custom pods enabled. Next, you need to move computational resources to the namespace and you need to grant namespace access to the users or service accounts which will be working with the namespace. 
          
-         orka3 namespace create <NAME> --enable-custom-pods  
-           
-         orka3 node namespace <NODE> <NAMESPACE>  
-           
-         orka3 rb add-subject --namespace <NAMESPACE> --user <USER>
-
-
-
-
+```
+     orka3 namespace create <NAME> --enable-custom-pods  
+       
+     orka3 node namespace <NODE> <NAMESPACE>  
+       
+     orka3 rb add-subject --namespace <NAMESPACE> --user <USER>
+```
 ## Step 3: Create the persistent volume claim
 
 A persistent volume claim (PVC) lets you tap into your persistent volume and consume it. You need to create a basic yaml manifest for the PVC and apply it to the environment.
@@ -73,28 +74,31 @@ A persistent volume claim (PVC) lets you tap into your persistent volume and con
   1. Create the PVC manifest. For more information, see [Kubernetes Documentation: PersistentVolumeClaims](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims). For example:  
 **pvc.yml**
          
-         # pvc.yaml  
-         kind: PersistentVolumeClaim  
-         apiVersion: v1  
-         metadata:  
-         name: mypvc  
-         spec:  
-         accessModes:  
-         - ReadWriteOnce  
-         resources:  
-         requests:  
-         storage: 20Gi
-
+```
+     # pvc.yaml  
+     kind: PersistentVolumeClaim  
+     apiVersion: v1  
+     metadata:  
+     name: mypvc  
+     spec:  
+     accessModes:  
+     - ReadWriteOnce  
+     resources:  
+     requests:  
+     storage: 20Gi
+```
 The values for metadata:name and metadata:namespace must match the values for claimRef:name and claimRef:namespace declared in the manifest of the persistent volume. Double-check with the MacStadium team for these values.
 
-  2. Apply the PVC. Replace pvc.yaml with the complete file path to your own PVC manifest. Replace <NAMESPACE> with the namespace you created earlier. 
+  2. Apply the PVC. Replace pvc.yaml with the complete file path to your own PVC manifest. Replace \<NAMESPACE> with the namespace you created earlier. 
          
-         kubectl apply -f pvc.yaml --namespace=<NAMESPACE>
-
+```
+     kubectl apply -f pvc.yaml --namespace=<NAMESPACE>
+```
   3. Verify that the persistent volume claim is bound to the persistent volume. 
          
-         kubectl get pvc
-
+```
+     kubectl get pvc
+```
 If the persistent volume claim works as expected, you will see a similar output:  
 ![Screenshot 2024-08-16 at 11.52.25 AM.png](https://support.macstadium.com/hc/article_attachments/28335737308059)
 
@@ -103,7 +107,7 @@ If the persistent volume claim works as expected, you will see a similar output:
 
 **Status Pending?**
 
-If the status is Pending instead of Bound, double-check your PVC manifest, fix any naming issues, remove the old pvc with kubectl delete pvc <NAME>, and re-apply the fixed manifest. If the problem persists, contact the MacStadium team.
+If the status is Pending instead of Bound, double-check your PVC manifest, fix any naming issues, remove the old pvc with kubectl delete pvc \<NAME>, and re-apply the fixed manifest. If the problem persists, contact the MacStadium team.
 
 ## Step 4: Deploy a pod that uses the persistent volume
 
@@ -112,47 +116,48 @@ Now that you have created a PVC and bound it to the PV, you can deploy a pod tha
   1. Create the pod manifest. The pod needs to reference both the PV and the PVC. For example:  
 mypod.yaml 
          
-         apiVersion: v1  
-         kind: Pod  
-         metadata:  
-         name: mypod  
-         spec:  
-         volumes:  
-         - name: my-pv  
-         persistentVolumeClaim:  
-         claimName: mypvc  
-         containers:  
-         - name: mypod  
-         image: ubuntu  
-         command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]  
-         volumeMounts:  
-         - mountPath: "/usr/share/mypod"  
-         name: my-pv  
-         restartPolicy: Never  
-         tolerations:  
-         - key: orka.macstadium.com/namespace-reserved  
-         value: <NAMESPACE>
-
+```
+     apiVersion: v1  
+     kind: Pod  
+     metadata:  
+     name: mypod  
+     spec:  
+     volumes:  
+     - name: my-pv  
+     persistentVolumeClaim:  
+     claimName: mypvc  
+     containers:  
+     - name: mypod  
+     image: ubuntu  
+     command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]  
+     volumeMounts:  
+     - mountPath: "/usr/share/mypod"  
+     name: my-pv  
+     restartPolicy: Never  
+     tolerations:  
+     - key: orka.macstadium.com/namespace-reserved  
+     value: <NAMESPACE>
+```
 This example deploys a Linux VM. Pay attention to the command line and the tolerations section. Without the command line, the state of your Linux VM will become Stopped. Without the tolerations section, you won't be able to create the pod.
 
   2. Apply the pod. Replace mypod.yaml with the complete file path to your pod manifest. 
          
-         kubectl apply -f mypod.yaml --namespace=<NAMESPACE>
-
+```
+     kubectl apply -f mypod.yaml --namespace=<NAMESPACE>
+```
   3. Verify that the pod is deployed and running. 
          
-         kubectl get pods
-
+```
+     kubectl get pods
+```
 If the pod works as expected, you will see a similar output:  
 ![Screenshot 2024-08-16 at 11.54.51 AM.png](https://support.macstadium.com/hc/article_attachments/28335737311003)
 
   4. Verify that the pod uses the claim and the persistent volume. Look for the data listed for Volumes. 
          
-         kubectl describe pod <NAME>
-
-
-
-
+```
+     kubectl describe pod <NAME>
+```
 ## (Optional) Step 5: Deploy a service to handle the networking between your pods and your Orka VMs
 
 If you want to have connectivity between your Orka VMs and any pods deployed with kubectl, you need to deploy a networking service. For more information, see [Kubernetes Documentation: Service](https://kubernetes.io/docs/concepts/services-networking/service/).
@@ -165,9 +170,12 @@ When you no longer need to use a PVC and the respective PV, you can delete the P
 
   1. Delete the PVC. 
          
-         kubectl delete pvc <NAME>
-
+```
+     kubectl delete pvc <NAME>
+```
   2. Contact the MacStadium team.  
 
-     * If you want to reclaim the storage, an administrator might need to clean it up and verify that it's available for use again. This would depend on the provisioning type and the reclaim policy for the PV.
-     * If you no longer need the storage, an administrator can remove the PV.
+```
+ * If you want to reclaim the storage, an administrator might need to clean it up and verify that it's available for use again. This would depend on the provisioning type and the reclaim policy for the PV.
+ * If you no longer need the storage, an administrator can remove the PV.
+```

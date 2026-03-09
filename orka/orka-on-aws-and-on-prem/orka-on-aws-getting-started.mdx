@@ -46,18 +46,19 @@ The new AMI is compatible with Orka 3.5 and all EC2 Apple Silicon Mac instance t
 
 By default:
 
-      * The NVMe disk is used for Orka storage of VM and image data on M4 instances only
+```
+  * The NVMe disk is used for Orka storage of VM and image data on M4 instances only
 
-      * Autologin is enabled for the `ec2-user`, and is required when running a Sequoia guest OS or newer
+  * Autologin is enabled for the `ec2-user`, and is required when running a Sequoia guest OS or newer
 
-      * **Note:** The `ENABLE_NVME_DISK` and `ENABLE_AUTOLOGIN` variables are **not** required. These are set to `true` by default, and either variable may be disabled if needed:  
+  * **Note:** The `ENABLE_NVME_DISK` and `ENABLE_AUTOLOGIN` variables are **not** required. These are set to `true` by default, and either variable may be disabled if needed:  
 
-            
-            #!/bin/bash
-            export ENABLE_NVME_DISK=false # disable NVMe disk, use EBS storage instead
-            export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
-            /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
-
+        
+        #!/bin/bash
+        export ENABLE_NVME_DISK=false # disable NVMe disk, use EBS storage instead
+        export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
+        /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
+```
   * Networking
     * Apple Silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](https://support.macstadium.com/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0), enabling the ability to get an IP on a subnet in your VPC.
   * User Management and Authorization
@@ -146,14 +147,15 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
      4. Select a security group that has access to the EKS API
   5. In the BuildSpec, add the following commands:
          
-         - aws eks update-kubeconfig --name {cluster_name} --region {region}
-         - ansible-playbook /ansible/site.yml -e "k8s_api_address={k8s_api_address}" -e "kube_oidc_client_id={kube_oidc_client_id}"
-
+```
+     - aws eks update-kubeconfig --name {cluster_name} --region {region}
+     - ansible-playbook /ansible/site.yml -e "k8s_api_address={k8s_api_address}" -e "kube_oidc_client_id={kube_oidc_client_id}"
+```
 Where:  
-{cluster_name} - the name of your EKS cluster  
-{region} - the region where the cluster is deployed  
-{k8s_api_address} - the K8s API address of your cluster  
-{kube_oidc_client_id} - the OIDC client ID provided by MacStadium
+\{cluster_name} - the name of your EKS cluster  
+\{region} - the region where the cluster is deployed  
+\{k8s_api_address} - the K8s API address of your cluster  
+\{kube_oidc_client_id} - the OIDC client ID provided by MacStadium
 
   6. Save the configuration.
   7. Next, Configure CodeBuild to access the Ansible image provided by MacStadium and to manage the EKS cluster:
@@ -256,7 +258,7 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 5\. Activate: ``orka-engine license set --key YOUR_KEY``
 
-You can also download Orka Engine directly at: <https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
+You can also download Orka Engine directly at: \<https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
 
 ### Bootstrap Script[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#bootstrap-script)
 
@@ -266,13 +268,10 @@ The AMI includes a bootstrap script that can be run via [user data](https://docs
   * The customer should pass the following as user data when launching an instance:  
 
         
-        #!/bin/bash
-        /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
-
-
-
-
-  
+```
+    #!/bin/bash
+    /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
+```
 This will attach the node to the EKS cluster as a self-managed node.
 
 ### 
@@ -291,25 +290,28 @@ You will need to have the following for use with ECR:
 You can get credentials for use with a private ECR registry with the aws CLI as follows:
     
     
-    aws ecr get-login-password --region <region>
-
+```
+aws ecr get-login-password --region <region>
+```
 For a public ECR registry:
     
     
-    aws ecr-public get-login-password --region us-east-1
-
+```
+aws ecr-public get-login-password --region us-east-1
+```
 You can then configure the credentials for the Orka cluster using the token:
     
     
-    aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --password-stdin https://<aws-account-number>.dkr.ecr.<region>.amazonaws.com
-
+```
+aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --password-stdin https://<aws-account-number>.dkr.ecr.<region>.amazonaws.com
+```
 > **Note**
 > 
 > The token is scoped for image push / pull operations based on the IAM policies configured for the calling entity - i.e. whichever user or role calls the `aws ecr get-login-password` command
 
 > **Note**
 > 
-> The token is valid for 12 hours and will need to be refreshed regularly. See: <https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token>
+> The token is valid for 12 hours and will need to be refreshed regularly. See: \<https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token>
 > 
 > A future release will improve upon this with a credential helper.
 
@@ -341,7 +343,7 @@ To deprovision a Mac Node you need to:
 
   1. Delete the Mac instance
   2. (Optional) Release the Mac dedicated host if you no longer need it
-  3. Delete the Kubernetes node by running kubectl delete node <node_name> where <node_name> is the name of the node you want to deprovision
+  3. Delete the Kubernetes node by running kubectl delete node \<node_name> where \<node_name> is the name of the node you want to deprovision
 
 
 
@@ -379,7 +381,7 @@ Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x v
 
 ### How is macOS 15 Sequoia supported on AWS?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#how-is-macos-15-sequoia-supported-on-aws)
 
-macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the Apple Virtualization documentation <https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines>. Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
+macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the Apple Virtualization documentation \<https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines>. Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
 
   1. After setting up your EC2 Mac, you will need to setup a login keychain on the host OS before running the Sequoia OS Orka VM image.
   2. MacStadium will supply a Sequoia OCI image that is upgraded from a Sonoma image rather than created from a Sequoia IPSW on Sequoia host. This will run without the Apple ID functionality in guest.

@@ -18,15 +18,15 @@ suggested_new_path: "/orka/orka-resources/orka3-cli-command-reference"
 Manage Orka
     
     
-    orka3 [flags]
-    
-
+```
+orka3 [flags]
+```
 ### Options
     
     
-    -h, --help help for orka3
-    
-
+```
+-h, --help help for orka3
+```
 ### Sub-commands (quick glossary)
 
   * **orka3 completion** \- Generate the autocompletion script for the specified shell
@@ -62,9 +62,9 @@ See each sub-command&#x27;s help for details on how to use the generated script.
 #### **Options**
     
     
-    -h, --help help for completion
-    
-
+```
+-h, --help help for completion
+```
 ### Sub-commands (quick glossary)
 
   * **orka3** \- Manage Orka
@@ -91,36 +91,36 @@ If it is not installed already, you can install it via your OS's package manager
 To load completions in your current shell session:
     
     
-    source <(orka3 completion bash)
-    
-
+```
+source <(orka3 completion bash)
+```
 To load completions for every new session, execute once:
 
 ####  **Linux** :
     
     
-    orka3 completion bash > /etc/bash_completion.d/orka3
-    
-
+```
+orka3 completion bash > /etc/bash_completion.d/orka3
+```
 #### **macOS** :
     
     
-    orka3 completion bash > $(brew --prefix)/etc/bash_completion.d/orka3
-    
-
+```
+orka3 completion bash > $(brew --prefix)/etc/bash_completion.d/orka3
+```
 You will need to start a new shell for this setup to take effect.
     
     
-    orka3 completion bash
-    
-
+```
+orka3 completion bash
+```
 #### **Options**
     
     
-    -h, --help help for bash  
-    --no-descriptions disable completion descriptions
-    
-
+```
+-h, --help help for bash  
+--no-descriptions disable completion descriptions
+```
 []("" """")
 
 ## orka3 completion fish
@@ -134,28 +134,28 @@ Generate the autocompletion script for the fish shell.
 To load completions in your current shell session:
     
     
-    orka3 completion fish | source
-    
-
+```
+orka3 completion fish | source
+```
 To load completions for every new session, execute once:
     
     
-    orka3 completion fish > ~/.config/fish/completions/orka3.fish
-    
-
+```
+orka3 completion fish > ~/.config/fish/completions/orka3.fish
+```
 You will need to start a new shell for this setup to take effect.
     
     
-    orka3 completion fish [flags]
-    
-
+```
+orka3 completion fish [flags]
+```
 #### **Options**
     
     
-    -h, --help help for fish  
-    --no-descriptions disable completion descriptions
-    
-
+```
+-h, --help help for fish  
+--no-descriptions disable completion descriptions
+```
 []("" """")
 
 ## orka3 completion powershell
@@ -169,23 +169,23 @@ Generate the autocompletion script for powershell.
 To load completions in your current shell session:
     
     
-    orka3 completion powershell | Out-String | Invoke-Expression
-    
-
+```
+orka3 completion powershell | Out-String | Invoke-Expression
+```
 To load completions for every new session, add the output of the above command  
 to your powershell profile.
     
     
-    orka3 completion powershell [flags]
-    
-
+```
+orka3 completion powershell [flags]
+```
 #### **Options**
     
     
-    -h, --help help for powershell  
-    --no-descriptions disable completion descriptions
-    
-
+```
+-h, --help help for powershell  
+--no-descriptions disable completion descriptions
+```
 []("" """")
 
 ## orka3 completion zsh
@@ -199,42 +199,42 @@ Generate the autocompletion script for the zsh shell.
 If shell completion is not already enabled in your environment you will need to enable it. You can execute the following once:
     
     
-    echo "autoload -U compinit; compinit" >> ~/.zshrc
-    
-
+```
+echo "autoload -U compinit; compinit" >> ~/.zshrc
+```
 To load completions in your current shell session:
     
     
-    source <(orka3 completion zsh)
-    
-
+```
+source <(orka3 completion zsh)
+```
 To load completions for every new session, execute once:
 
 ####  **Linux** :
     
     
-    orka3 completion zsh > "${fpath[1]}/_orka3"
-    
-
+```
+orka3 completion zsh > "${fpath[1]}/_orka3"
+```
 #### **macOS** :
     
     
-    orka3 completion zsh > $(brew --prefix)/share/zsh/site-functions/_orka3
-    
-
+```
+orka3 completion zsh > $(brew --prefix)/share/zsh/site-functions/_orka3
+```
 You will need to start a new shell for this setup to take effect.
     
     
-    orka3 completion zsh [flags]
-    
-
+```
+orka3 completion zsh [flags]
+```
 #### **Options**
     
     
-    -h, --help help for zsh  
-    --no-descriptions disable completion descriptions
-    
-
+```
+-h, --help help for zsh  
+--no-descriptions disable completion descriptions
+```
 []("" """")
 
 ## orka3 config
@@ -250,9 +250,9 @@ The first time you run the Orka CLI, you need to set your Orka service URL. Orka
 #### **Options**
     
     
-    -h, --help help for config
-    
-
+```
+-h, --help help for config
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -280,31 +280,32 @@ For environments initially deployed before Orka 2.1, this is typically http://10
 You can also use your built-in Orka domain (COMPANY.orka.app) or an external custom domain. For more information, see [Built-In Orka Domains](https://support.macstadium.com/hc/en-us/articles/28329724250011) and [External Custom Domains](https://support.macstadium.com/hc/en-us/articles/28330039248923).
     
     
-    orka3 config set --api-url ORKA_SERVICE_URL [flags]
-    
-
+```
+orka3 config set --api-url ORKA_SERVICE_URL [flags]
+```
 #### **Examples**
     
     
-    # Set your Orka service URL to 10.221.188.20 (for environments initially deployed with Orka 2.1 and later)  
-    orka3 config set --api-url http://10.221.188.20  
-      
-    # Set your Orka service URL to 10.221.188.100 (for environments initially deployed before Orka 2.1)  
-    orka3 config set --api-url http://10.221.188.100  
-      
-    # Set your Orka service URL to your built-in Orka domain (additional configuration required)  
-    orka3 config set --api-url https://company.orka.app  
-      
-    # Set your Orka service URL to an external custom domain (additional configuration required)  
-    orka3 config set --api-url https://company.com
-
+```
+# Set your Orka service URL to 10.221.188.20 (for environments initially deployed with Orka 2.1 and later)  
+orka3 config set --api-url http://10.221.188.20  
+  
+# Set your Orka service URL to 10.221.188.100 (for environments initially deployed before Orka 2.1)  
+orka3 config set --api-url http://10.221.188.100  
+  
+# Set your Orka service URL to your built-in Orka domain (additional configuration required)  
+orka3 config set --api-url https://company.orka.app  
+  
+# Set your Orka service URL to an external custom domain (additional configuration required)  
+orka3 config set --api-url https://company.com
+```
 #### **Options**
     
     
-    -a, --api-url string (Required) The Orka service URL against which to run all Orka CLI commands.  
-    -h, --help help for set  -h, --help             help for set
-    
-
+```
+-a, --api-url string (Required) The Orka service URL against which to run all Orka CLI commands.  
+-h, --help help for set  -h, --help             help for set
+```
 []("" """")
 
 ## orka3 config view
@@ -316,22 +317,22 @@ View your current local Orka CLI configuration
 View your current local Orka CLI configuration.
     
     
-    orka3 config view [flags]
-    
-
+```
+orka3 config view [flags]
+```
 #### **Examples**
     
     
-    # Print your current Orka CLI configuration  
-    orka3 config view
-    
-
+```
+# Print your current Orka CLI configuration  
+orka3 config view
+```
 #### **Options**
     
     
-     -h, --help help for view
-    
-
+```
+ -h, --help help for view
+```
 []("" """")
 
 ## orka3 image
@@ -349,15 +350,15 @@ An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted
 Remote and local images are accessible from all namespaces.
     
     
-    orka3 image [flags]
-    
-
+```
+orka3 image [flags]
+```
 #### **Options**
     
     
-    -h, --help help for image
-    
-
+```
+-h, --help help for image
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -396,26 +397,26 @@ An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted
 Remote and local images are accessible from all namespaces.
     
     
-    orka3 image copy IMAGE_NAME IMAGE_COPY_NAME [--set-description 'DESCRIPTION'] [flags]
-    
-
+```
+orka3 image copy IMAGE_NAME IMAGE_COPY_NAME [--set-description 'DESCRIPTION'] [flags]
+```
 #### **Examples**
     
     
-    # Copy the existing '90gbventurassh.orkasi' and set the name of the copy to '90gbventurassh-copy.orkasi'  
-    orka3 image copy 90gbventurassh.orkasi 90gbventurassh-copy.orkasi  
-      
-    # Copy the existing '90gbventurassh.orkasi', set the name of the copy to '90gbventurassh-copy.orkasi' and provide a custom description for the copy  
-    orka3 image copy 90gbventurassh.orkasi 90gbventurassh.orkasi --description 'user@company.com copied this image from 90gbventurassh.orkasi'
-    
-
+```
+# Copy the existing '90gbventurassh.orkasi' and set the name of the copy to '90gbventurassh-copy.orkasi'  
+orka3 image copy 90gbventurassh.orkasi 90gbventurassh-copy.orkasi  
+  
+# Copy the existing '90gbventurassh.orkasi', set the name of the copy to '90gbventurassh-copy.orkasi' and provide a custom description for the copy  
+orka3 image copy 90gbventurassh.orkasi 90gbventurassh.orkasi --description 'user@company.com copied this image from 90gbventurassh.orkasi'
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the copy. Defaults to 'Copied from SOURCE_IMAGE_DESCRIPTION'.  
-    -h, --help help for copy
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the copy. Defaults to 'Copied from SOURCE_IMAGE_DESCRIPTION'.  
+-h, --help help for copy
+```
 []("" """")
 
 ## orka3 image delete
@@ -429,24 +430,25 @@ Delete the specified locally stored image(s).
 CAUTION: This operation cannot be undone. VMs or VM configurations that use this image will be affected and might stop working as expected.
     
     
-    orka3 image delete IMAGE_NAME [IMAGE_NAME_2 ...] [flags]
-    
-
+```
+orka3 image delete IMAGE_NAME [IMAGE_NAME_2 ...] [flags]
+```
 #### **Examples**
     
     
-    # Delete '90gbventurassh.orkasi' from your Orka cluster  
-    orka3 image delete 90gbventurassh.orkasi  
-      
-    # Delete '90gbventurassh.orkasi' and '90gbventurassh.img' from your Orka cluster  
-    orka3 image delete 90gbventurassh.orkasi 90gbventurassh.img
-    
-
+```
+# Delete '90gbventurassh.orkasi' from your Orka cluster  
+orka3 image delete 90gbventurassh.orkasi  
+  
+# Delete '90gbventurassh.orkasi' and '90gbventurassh.img' from your Orka cluster  
+orka3 image delete 90gbventurassh.orkasi 90gbventurassh.img
+```
 #### **Options**
     
     
-    -h, --help help for delete
-
+```
+-h, --help help for delete
+```
 []("" """")
 
 ## orka3 image generate
@@ -468,26 +470,26 @@ orka3 image list GENERATED_IMAGE_NAME
 Images are used to spin up VMs. Generated images are always created as 'amd64' images (Intel-based images). Generated images are accessible from all namespaces.
     
     
-    orka3 image generate IMAGE_NAME SIZE [--set-description 'DESCRIPTION'] [flags]
-    
-
+```
+orka3 image generate IMAGE_NAME SIZE [--set-description 'DESCRIPTION'] [flags]
+```
 #### **Examples**
     
     
-    # (Intel-only) Generate an empty 120GB image and set its name to '120gbemptyimage'  
-    orka3 image generate 120gbemptyimage 120G  
-      
-    # (Intel-only) Generate an empty 120GB image, set its name to '120gbemptyimage', and provide a custom description for it  
-    orka3 image generate 120gbemptyimage 120G --description 'user@company.com created this empty image
-    
-
+```
+# (Intel-only) Generate an empty 120GB image and set its name to '120gbemptyimage'  
+orka3 image generate 120gbemptyimage 120G  
+  
+# (Intel-only) Generate an empty 120GB image, set its name to '120gbemptyimage', and provide a custom description for it  
+orka3 image generate 120gbemptyimage 120G --description 'user@company.com created this empty image
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the generated image. Defaults to a blank description.  
-    -h, --help help for generate
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the generated image. Defaults to a blank description.  
+-h, --help help for generate
+```
 []("" """")
 
 ## orka3 image list
@@ -508,44 +510,44 @@ If '--output' is not set, prints only the essential information in a table forma
 You can also print an extended table with error information or JSON.
     
     
-    orka3 image list [IMAGE_NAME_1 [IMAGE_NAME_2 ...]] [--output wide|json] [flags]
-    
-
+```
+orka3 image list [IMAGE_NAME_1 [IMAGE_NAME_2 ...]] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List the images stored locally in your Orka cluster  
-    orka3 image list  
-      
-    # Check if the specified image exists locally  
-    orka3 image list 90gbventurassh.img  
-      
-    # Check if the specified images exist locally  
-    orka3 image list 90gbventurassh.img 90gbventurassh.orkasi  
-      
-    # Search for all local Intel-based images  
-    orka3 image list | grep 'amd64'  
-      
-    # List the images stored locally and print the output as JSON  
-    orka3 image list --output json  
-      
-    # Show additional error information for the locally stored images  
-    orka3 image list --output wide  
-      
-    # Show additional error information for '90gbventurassh.orkasi'  
-    orka3 image list 90gbventurassh.orkasi --output wide  
-      
-    # Show additional error information for the specified images  
-    orka3 image list 90gbventurassh.orkasi 90gbventurassh.img --output wide
-    
-
+```
+# List the images stored locally in your Orka cluster  
+orka3 image list  
+  
+# Check if the specified image exists locally  
+orka3 image list 90gbventurassh.img  
+  
+# Check if the specified images exist locally  
+orka3 image list 90gbventurassh.img 90gbventurassh.orkasi  
+  
+# Search for all local Intel-based images  
+orka3 image list | grep 'amd64'  
+  
+# List the images stored locally and print the output as JSON  
+orka3 image list --output json  
+  
+# Show additional error information for the locally stored images  
+orka3 image list --output wide  
+  
+# Show additional error information for '90gbventurassh.orkasi'  
+orka3 image list 90gbventurassh.orkasi --output wide  
+  
+# Show additional error information for the specified images  
+orka3 image list 90gbventurassh.orkasi 90gbventurassh.img --output wide
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 []("" """")
 
 ## orka3 image set-description
@@ -565,22 +567,22 @@ An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted
 Remote and local images are accessible from all namespaces.
     
     
-    orka3 image set-description IMAGE_NAME DESCRIPTION [flags]
-    
-
+```
+orka3 image set-description IMAGE_NAME DESCRIPTION [flags]
+```
 #### **Examples**
     
     
-    # Set a custom description for '90gbventurassh.orkasi'  
-    orka3 image set-description 90gbventurassh.orkasi 'user@company.com set this description'
-    
-
+```
+# Set a custom description for '90gbventurassh.orkasi'  
+orka3 image set-description 90gbventurassh.orkasi 'user@company.com set this description'
+```
 #### **Options**
     
     
-     -h, --help help for set-description
-    
-
+```
+ -h, --help help for set-description
+```
 []("" """")
 
 ## orka3 iso
@@ -594,15 +596,15 @@ Manage locally stored ISOs. You can use ISOs to perform a fresh macOS install on
 Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 iso [flags]
-    
-
+```
+orka3 iso [flags]
+```
 #### **Options**
     
     
-     -h, --help help for iso
-    
-
+```
+ -h, --help help for iso
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -636,26 +638,26 @@ orka3 iso list ISO_COPY_NAME
 You can use ISOs to perform a fresh macOS install on an empty Intel-based disk. Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 iso copy ISO_NAME ISO_COPY_NAME [--set-description 'DESCRIPTION'] [flags]
-    
-
+```
+orka3 iso copy ISO_NAME ISO_COPY_NAME [--set-description 'DESCRIPTION'] [flags]
+```
 #### **Examples**
     
     
-    # Copy the existing 'ventura.iso' and set the name of the copy to 'ventura-copy.iso'  
-    orka3 iso copy ventura.iso ventura-copy.iso  
-      
-    # Copy the existing 'ventura.iso', set the name of the copy to 'ventura-copy.iso' and provide a custom description for the copy  
-    orka3 iso copy ventura.iso ventura-copy.iso --description 'user@company.com copied this ISO from ventura.iso'
-    
-
+```
+# Copy the existing 'ventura.iso' and set the name of the copy to 'ventura-copy.iso'  
+orka3 iso copy ventura.iso ventura-copy.iso  
+  
+# Copy the existing 'ventura.iso', set the name of the copy to 'ventura-copy.iso' and provide a custom description for the copy  
+orka3 iso copy ventura.iso ventura-copy.iso --description 'user@company.com copied this ISO from ventura.iso'
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the copy. Defaults to 'SOURCE_ISO_DESCRIPTION'.  
-    -h, --help help for copy
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the copy. Defaults to 'SOURCE_ISO_DESCRIPTION'.  
+-h, --help help for copy
+```
 []("" """")
 
 ## orka3 iso delete
@@ -671,25 +673,25 @@ CAUTION: This operation cannot be undone. VMs or VM configurations that use this
 You can use ISOs to perform a fresh macOS install on an empty Intel-based disk. Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 iso delete ISO_NAME [ISO_NAME_2 ...] [flags]
-    
-
+```
+orka3 iso delete ISO_NAME [ISO_NAME_2 ...] [flags]
+```
 #### **Examples**
     
     
-    # Delete 'ventura.iso' from your Orka cluster  
-    orka3 iso delete ventura.iso  
-      
-    # Delete 'ventura.iso' and 'ventura-copy.iso' from your Orka cluster  
-    orka3 iso delete ventura.iso ventura-copy.iso
-    
-
+```
+# Delete 'ventura.iso' from your Orka cluster  
+orka3 iso delete ventura.iso  
+  
+# Delete 'ventura.iso' and 'ventura-copy.iso' from your Orka cluster  
+orka3 iso delete ventura.iso ventura-copy.iso
+```
 #### **Options**
     
     
-    -h, --help help for delete
-    
-
+```
+-h, --help help for delete
+```
 []("" """")
 
 ## orka3 iso list
@@ -706,43 +708,44 @@ If '--output' is not set, prints only the essential information in a table forma
 You can also print an extended table with error information or JSON.
     
     
-    orka3 iso list [ISO_NAME_1 [ISO_NAME_2 ...]] [--output wide|json] [flags]
-    
-
+```
+orka3 iso list [ISO_NAME_1 [ISO_NAME_2 ...]] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List the ISOs stored locally in your Orka cluster  
-    orka3 iso list  
-      
-    # Check if the specified ISO exists locally  
-    orka3 iso list ventura.iso  
-      
-    # Check if the specified ISOs exist locally  
-    orka3 iso list ventura.iso monterey.iso  
-      
-    # Search for all local ISOs that contain 'monterey' in the name  
-    orka3 iso list | grep 'monterey'  
-      
-    # List the ISOs stored locally and print the output as JSON  
-    orka3 iso list --output json  
-      
-    # Show additional error information for the locally stored ISOs  
-    orka3 iso list --output wide  
-      
-    # Show additional error information for 'ventura.iso'  
-    orka3 iso list ventura.iso --output wide  
-      
-    # Show additional error information for the specified ISOs  
-    orka3 iso list monterey.iso ventura.iso --output wide
-
+```
+# List the ISOs stored locally in your Orka cluster  
+orka3 iso list  
+  
+# Check if the specified ISO exists locally  
+orka3 iso list ventura.iso  
+  
+# Check if the specified ISOs exist locally  
+orka3 iso list ventura.iso monterey.iso  
+  
+# Search for all local ISOs that contain 'monterey' in the name  
+orka3 iso list | grep 'monterey'  
+  
+# List the ISOs stored locally and print the output as JSON  
+orka3 iso list --output json  
+  
+# Show additional error information for the locally stored ISOs  
+orka3 iso list --output wide  
+  
+# Show additional error information for 'ventura.iso'  
+orka3 iso list ventura.iso --output wide  
+  
+# Show additional error information for the specified ISOs  
+orka3 iso list monterey.iso ventura.iso --output wide
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 []("" """")
 
 ## orka3 iso set-description
@@ -758,22 +761,22 @@ CAUTION: This operation overrides the existing description and cannot be undone.
 You can use ISOs to perform a fresh macOS install on an empty Intel-based disk. Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 iso set-description ISO_NAME DESCRIPTION [flags]
-    
-
+```
+orka3 iso set-description ISO_NAME DESCRIPTION [flags]
+```
 #### **Examples**
     
     
-    # Set a custom description for 'ventura.iso'  
-    orka3 iso set-description ventura.iso 'user@company.com set this description'
-    
-
+```
+# Set a custom description for 'ventura.iso'  
+orka3 iso set-description ventura.iso 'user@company.com set this description'
+```
 #### **Options**
     
     
-    -h, --help help for set-description
-    
-
+```
+-h, --help help for set-description
+```
 []("" """")
 
 ## orka3 login
@@ -792,22 +795,22 @@ Alternatively, you can log in with a valid authentication token (e.g., a service
 orka3 user set-token
     
     
-    orka3 login [flags]
-    
-
+```
+orka3 login [flags]
+```
 #### **Examples**
     
     
-    # Log in to your Orka cluster with your MacStadium Customer Portal credentials  
-    orka3 user login
-    
-
+```
+# Log in to your Orka cluster with your MacStadium Customer Portal credentials  
+orka3 user login
+```
 #### **Options**
     
     
-    -h, --help help for login
-    
-
+```
+-h, --help help for login
+```
 []("" """")
 
 ## orka3 namespace
@@ -823,15 +826,15 @@ Namespaces let you group and dedicate resources to specific Orka users or servic
 All cluster namespaces must have the 'orka-' prefix.
     
     
-    orka3 namespace [flags]
-    
-
+```
+orka3 namespace [flags]
+```
 #### **Options**
     
     
-    -h, --help help for namespace
-    
-
+```
+-h, --help help for namespace
+```
 #### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -868,26 +871,26 @@ orka3 rolebinding add-subject --namespace NAMESPACE --user EMAIL
 orka3 rolebinding add-subject --namespace NAMESPACE --serviceaccount SA_NAMESPACE:SERVICE_ACCOUNT
     
     
-    orka3 namespace create NAMESPACE_NAME [flags]
-    
-
+```
+orka3 namespace create NAMESPACE_NAME [flags]
+```
 #### **Examples**
     
     
-    # Create a new namespace named 'orka-test'  
-    orka3 namespace create orka-test  
-      
-    # Create a new namespace named 'orka-cp' which allows running custom pods (previosly sandboxing)  
-    orka3 namespace create orka-cp --enable-custom-pods
-    
-
+```
+# Create a new namespace named 'orka-test'  
+orka3 namespace create orka-test  
+  
+# Create a new namespace named 'orka-cp' which allows running custom pods (previosly sandboxing)  
+orka3 namespace create orka-cp --enable-custom-pods
+```
 #### **Options**
     
     
-    --enable-custom-pods If set, configures the namespace to enable the running of custom pods (formerly, sandboxing). You will not be able to run Orka VMs in that namespace.  
-    -h, --help help for create
-    
-
+```
+--enable-custom-pods If set, configures the namespace to enable the running of custom pods (formerly, sandboxing). You will not be able to run Orka VMs in that namespace.  
+-h, --help help for create
+```
 []("" """")
 
 ## orka3 namespace delete
@@ -903,26 +906,26 @@ You need to remove all VMs (or custom pods) and nodes from the namespace before 
 CAUTION: This is a destructive operation and cannot be undone. To restore a deleted namespace, you need to re-create it, move the respective Orka nodes, and re-add the respective users to the respective rolebindings.
     
     
-    orka3 namespace delete NAMESPACE_NAME [NAMESPACE_2 ...] [flags]
-    
-
+```
+orka3 namespace delete NAMESPACE_NAME [NAMESPACE_2 ...] [flags]
+```
 #### **Examples**
     
     
-    # Delete the 'orka-test' namespace  
-    orka3 namespace delete orka-test  
-      
-    # Delete multiple namespaces  
-    orka3 namespace delete orka-test orka-production
-    
-
+```
+# Delete the 'orka-test' namespace  
+orka3 namespace delete orka-test  
+  
+# Delete multiple namespaces  
+orka3 namespace delete orka-test orka-production
+```
 #### **Options**
     
     
-    -h, --help help for delete  
-    -t, --timeout duration (Optional) If set, indicates the length of time to wait before giving up on deleting each namespace. (default 1h0m0s)
-    
-
+```
+-h, --help help for delete  
+-t, --timeout duration (Optional) If set, indicates the length of time to wait before giving up on deleting each namespace. (default 1h0m0s)
+```
 []("" """")
 
 ## orka3 namespace list
@@ -934,29 +937,29 @@ CAUTION: This is a destructive operation and cannot be undone. To restore a dele
 List all namespaces for your Orka cluster. You can also use this command to check if one or more specific namespaces already exist (see examples). This operation requires administrative privileges.
     
     
-    orka3 namespace list [NAMESPACE_1 [NAMESPACE_2 ...]] [flags]
-    
-
+```
+orka3 namespace list [NAMESPACE_1 [NAMESPACE_2 ...]] [flags]
+```
 #### **Examples**
     
     
-    # List the existing namespaces for your Orka cluster  
-    orka3 namespace list  
-      
-    # Check if a specific namespace exists  
-    orka3 namespace list orka-test  
-      
-    # Check if several specific namespaces exist  
-    orka3 namespace list orka-test orka-production
-    
-
+```
+# List the existing namespaces for your Orka cluster  
+orka3 namespace list  
+  
+# Check if a specific namespace exists  
+orka3 namespace list orka-test  
+  
+# Check if several specific namespaces exist  
+orka3 namespace list orka-test orka-production
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 []("" """")
 
 ## orka3 node
@@ -972,16 +975,16 @@ If '--namespace' is not set, operates in the 'orka-default' namespace.
 Some commands require administrative privileges.
     
     
-    orka3 node [flags]
-    
-
+```
+orka3 node [flags]
+```
 #### **Options**
     
     
-    -h, --help help for node  
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-h, --help help for node  
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -1010,52 +1013,53 @@ You can also print an extended table or JSON.
 If '--namespace' is not set, operates in the 'orka-default' namespace.
     
     
-    orka3 node list [NODE_NAME_1 [NODE_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
-    
-
+```
+orka3 node list [NODE_NAME_1 [NODE_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List all Orka nodes in the 'orka-default' namespace  
-    orka3 node list  
-      
-    # List all Orka nodes in the 'orka-default' namespace (extended table)  
-    orka3 node list --output wide  
-      
-    # List all Orka nodes in the specified namespace (basic table)  
-    orka3 node list --namespace orka-test  
-      
-    # List all Orka nodes in the specified namespace (extended table)  
-    orka3 node list --namespace orka-test --output wide  
-      
-    # Show basic information about the specified Orka node  
-    orka3 node list mini-1  
-      
-    # Show detailed information about the specified Orka node  
-    orka3 node list mini-1 --output wide  
-      
-    # Show basic information about the specified Orka nodes  
-    orka3 node list mini-1 mini-2  
-      
-    # Show detailed information about the specified Orka nodes  
-    orka3 node list mini-1 mini-2 --output wide  
-      
-    # Print the information in JSON output format  
-    orka3 node list --output json
-
+```
+# List all Orka nodes in the 'orka-default' namespace  
+orka3 node list  
+  
+# List all Orka nodes in the 'orka-default' namespace (extended table)  
+orka3 node list --output wide  
+  
+# List all Orka nodes in the specified namespace (basic table)  
+orka3 node list --namespace orka-test  
+  
+# List all Orka nodes in the specified namespace (extended table)  
+orka3 node list --namespace orka-test --output wide  
+  
+# Show basic information about the specified Orka node  
+orka3 node list mini-1  
+  
+# Show detailed information about the specified Orka node  
+orka3 node list mini-1 --output wide  
+  
+# Show basic information about the specified Orka nodes  
+orka3 node list mini-1 mini-2  
+  
+# Show detailed information about the specified Orka nodes  
+orka3 node list mini-1 mini-2 --output wide  
+  
+# Print the information in JSON output format  
+orka3 node list --output json
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 node namespace
@@ -1069,33 +1073,34 @@ Move Orka nodes across namespaces. This operation requires administrative privil
 If '--namespace' is not set, assumes that the specified node is located in the 'orka-default' namespace.
     
     
-    orka3 node namespace NODE [--namespace CURRENT_NAMESPACE] TARGET_NAMESPACE [flags]
-    
-
+```
+orka3 node namespace NODE [--namespace CURRENT_NAMESPACE] TARGET_NAMESPACE [flags]
+```
 #### **Examples**
     
     
-    # Move the specified Orka node from the 'orka-default' namespace to the 'orka-test' namespace  
-    orka3 node namespace mini-1 orka-test  
-      
-    # Move the specified Orka node from the 'orka-test' namespace to the 'orka-production' namespace  
-    orka3 node namespace mini-1 --namespace orka-test orka-production  
-      
-    # Move the specified Orka node back from the 'orka-production' namespace to the 'orka-default' namespace  
-    orka3 node namespace mini-1 --namespace orka-production orka-default
-    
-
+```
+# Move the specified Orka node from the 'orka-default' namespace to the 'orka-test' namespace  
+orka3 node namespace mini-1 orka-test  
+  
+# Move the specified Orka node from the 'orka-test' namespace to the 'orka-production' namespace  
+orka3 node namespace mini-1 --namespace orka-test orka-production  
+  
+# Move the specified Orka node back from the 'orka-production' namespace to the 'orka-default' namespace  
+orka3 node namespace mini-1 --namespace orka-production orka-default
+```
 #### **Options**
     
     
-    -h, --help   help for namespace
-    
-
+```
+-h, --help   help for namespace
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 node tag
@@ -1123,34 +1128,34 @@ To list the tags applied to a node, run the following command:
 orka3 node list NAME [--namespace NAMESPACE] --output wide
     
     
-    orka3 node tag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 node tag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Tag the specified Orka node, located in the 'orka-default' namespace, with the specified tag ('jenkins')  
-    orka3 tag mini-1 jenkins  
-      
-    # Tag the specified Orka node, located in the 'orka-test' namespace, with the specified tag ('jenkins')  
-    orka3 tag mini-1 --namespace orka-test jenkins  
-      
-    # Check if the tag was applied as expected  
-    orka3 node list mini-1 --output wide
-    
-
+```
+# Tag the specified Orka node, located in the 'orka-default' namespace, with the specified tag ('jenkins')  
+orka3 tag mini-1 jenkins  
+  
+# Tag the specified Orka node, located in the 'orka-test' namespace, with the specified tag ('jenkins')  
+orka3 tag mini-1 --namespace orka-test jenkins  
+  
+# Check if the tag was applied as expected  
+orka3 node list mini-1 --output wide
+```
 #### **Options**
     
     
-    -h, --help   help for tag
-    
-
+```
+-h, --help   help for tag
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 node untag
@@ -1173,34 +1178,34 @@ To list the tags applied to a node, run the following command:
 orka3 node list NAME [--namespace NAMESPACE] --output wide
     
     
-    orka3 node untag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 node untag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Remove the specified single tag from the specified Orka node  
-    orka3 node untag mini-1 my-tag  
-      
-    # Remove the specified single tag from the specified Orka node located in the 'orka-test' namespace  
-    orka3 node untag mini-1 --namespace orka-test my-tag  
-      
-    # Check if the tag was removed as expected  
-    orka3 node list mini-1 --output wide
-    
-
+```
+# Remove the specified single tag from the specified Orka node  
+orka3 node untag mini-1 my-tag  
+  
+# Remove the specified single tag from the specified Orka node located in the 'orka-test' namespace  
+orka3 node untag mini-1 --namespace orka-test my-tag  
+  
+# Check if the tag was removed as expected  
+orka3 node list mini-1 --output wide
+```
 #### **Options**
     
     
-    -h, --help   help for untag
-    
-
+```
+-h, --help   help for untag
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 registrycredential
@@ -1223,16 +1228,16 @@ orka3 vm push VM_NAME server.com/repository/image:tag
 If '--namespace' is not set, creates the registry credentials in the 'orka-default' namespace.
     
     
-    orka3 registrycredential [flags]
-    
-
+```
+orka3 registrycredential [flags]
+```
 #### **Options**
     
     
-    -h, --help help for registrycredential  
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-h, --help help for registrycredential  
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -1262,45 +1267,45 @@ If insecure communication is allowed, requests to the registry server will fall 
 If '--namespace' is not set, adds the credentials in the 'orka-default' namespace.
     
     
-    orka3 registrycredential add SERVER --username USERNAME {--password PASSWORD | --password-stdin} [--replace] [--allow-insecure] [flags]
-    
-
+```
+orka3 registrycredential add SERVER --username USERNAME {--password PASSWORD | --password-stdin} [--replace] [--allow-insecure] [flags]
+```
 #### **Examples**
     
     
-    # Add registry credentials for GitHub Packages in the specified namespace  
-    orka3 regcred add https://ghcr.io --username whoami --password ghp_*** --namespace orka-test  
-      
-    # Read the password for GitHub Packages from stdin  
-    echo -n "$PASSWORD" | orka3 regcred add https://ghcr.io --username whoami --password-stdin  
-      
-    # Read the password for GitHub Packages from file over stdin  
-    orka3 regcred add https://ghcr.io --username whoami --password-stdin < password.txt  
-      
-    # Add credentials for an insecure server  
-    orka3 regcred add --allow-insecure http://10.221.188.5:30080 --username admin --password p@ssw0rd  
-      
-    # Replace the existing credentials for GitHub Packages  
-    orka3 regcred add --replace https://ghcr.io --username whoami --password ghp_***
-    
-
+```
+# Add registry credentials for GitHub Packages in the specified namespace  
+orka3 regcred add https://ghcr.io --username whoami --password ghp_*** --namespace orka-test  
+  
+# Read the password for GitHub Packages from stdin  
+echo -n "$PASSWORD" | orka3 regcred add https://ghcr.io --username whoami --password-stdin  
+  
+# Read the password for GitHub Packages from file over stdin  
+orka3 regcred add https://ghcr.io --username whoami --password-stdin < password.txt  
+  
+# Add credentials for an insecure server  
+orka3 regcred add --allow-insecure http://10.221.188.5:30080 --username admin --password p@ssw0rd  
+  
+# Replace the existing credentials for GitHub Packages  
+orka3 regcred add --replace https://ghcr.io --username whoami --password ghp_***
+```
 #### **Options**
     
     
-          --allow-insecure    (Optional) If HTTPS is not available, falls back to HTTP.
-      -h, --help              help for add
-      -p, --password string   Password for registry authentication. You can read the password from stdin instead with the &#x27;--password-stdin&#x27; flag.
-          --password-stdin    Read the password from stdin. You can provide the password with the &#x27;--password&#x27; flag instead.
-          --replace           (Optional) Replaces the credentials for the specified server name.
-      -u, --username string   (Required) Username for registry authentication.
-    
-
+```
+      --allow-insecure    (Optional) If HTTPS is not available, falls back to HTTP.
+  -h, --help              help for add
+  -p, --password string   Password for registry authentication. You can read the password from stdin instead with the &#x27;--password-stdin&#x27; flag.
+      --password-stdin    Read the password from stdin. You can provide the password with the &#x27;--password&#x27; flag instead.
+      --replace           (Optional) Replaces the credentials for the specified server name.
+  -u, --username string   (Required) Username for registry authentication.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 registrycredential list
@@ -1317,32 +1322,32 @@ You can also print an extended table or JSON.
 If '--namespace' is not set, lists the servers stored in the 'orka-default' namespace.
     
     
-    orka3 registrycredential list [flags]
-    
-
+```
+orka3 registrycredential list [flags]
+```
 #### **Examples**
     
     
-    # List the OCI registry servers for which you have stored credentials in the 'orka-default' namespace  
-    orka3 regcred list  
-      
-    # Show additional information about each registry server in the specified namespace  
-    orka3 regcred list --output wide --namespace orka-test
-    
-
+```
+# List the OCI registry servers for which you have stored credentials in the 'orka-default' namespace  
+orka3 regcred list  
+  
+# Show additional information about each registry server in the specified namespace  
+orka3 regcred list --output wide --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 registrycredential remove
@@ -1358,31 +1363,31 @@ The server address of the registry must include the scheme, hostname and (option
 If '--namespace' is not set, removes the credentials from the 'orka-default' namespace.
     
     
-    orka3 registrycredential remove SERVER [flags]
-    
-
+```
+orka3 registrycredential remove SERVER [flags]
+```
 #### **Examples**
     
     
-    # Remove registry credentials for GitHub Packages in the 'orka-default' namespace  
-    orka3 regcred remove https://ghcr.io  
-      
-    # Remove registry credentials for a private server in the 'orka-test' namespace  
-    orka3 regcred remove http://10.221.188.5:30080 --namespace orka-test
-    
-
+```
+# Remove registry credentials for GitHub Packages in the 'orka-default' namespace  
+orka3 regcred remove https://ghcr.io  
+  
+# Remove registry credentials for a private server in the 'orka-test' namespace  
+orka3 regcred remove http://10.221.188.5:30080 --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for remove
-    
-
+```
+-h, --help   help for remove
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 remote-image
@@ -1403,15 +1408,15 @@ An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted
 Remote and local images are accessible from all namespaces.
     
     
-    orka3 remote-image [flags]
-    
-
+```
+orka3 remote-image [flags]
+```
 #### **Options**
     
     
-    -h, --help   help for remote-image
-    
-
+```
+-h, --help   help for remote-image
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -1440,35 +1445,35 @@ An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted
 Remote and local images are accessible from all namespaces.
     
     
-    orka3 remote-image list [IMAGE_NAME_1 [IMAGE_NAME_2 ...]] [--output wide|json] [flags]
-    
-
+```
+orka3 remote-image list [IMAGE_NAME_1 [IMAGE_NAME_2 ...]] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List the available images in the remote repository  
-    orka3 remote-image list  
-      
-    # Check if the specified image exists in the remote repository  
-    orka3 remote-image list 90gbventurassh.img  
-      
-    # Check if the specified images exist in the remote repository  
-    orka3 remote-image list 90gbventurassh.img 90gbventurassh.orkasi  
-      
-    # Search for all remote Intel-based images  
-    orka3 remote-image list | grep 'amd64'  
-      
-    # List the available images in the remote repository and print the output as JSON  
-    orka3 remote-image list --output json
-    
-
+```
+# List the available images in the remote repository  
+orka3 remote-image list  
+  
+# Check if the specified image exists in the remote repository  
+orka3 remote-image list 90gbventurassh.img  
+  
+# Check if the specified images exist in the remote repository  
+orka3 remote-image list 90gbventurassh.img 90gbventurassh.orkasi  
+  
+# Search for all remote Intel-based images  
+orka3 remote-image list | grep 'amd64'  
+  
+# List the available images in the remote repository and print the output as JSON  
+orka3 remote-image list --output json
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 []("" """")
 
 ## orka3 remote-image pull
@@ -1495,29 +1500,29 @@ An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted
 Remote and local images are accessible from all namespaces.
     
     
-    orka3 remote-image pull REMOTE_IMAGE_NAME [NEW_LOCAL_IMAGE] [--set-description 'DESCRIPTION'] [flags]
-    
-
+```
+orka3 remote-image pull REMOTE_IMAGE_NAME [NEW_LOCAL_IMAGE] [--set-description 'DESCRIPTION'] [flags]
+```
 #### **Examples**
     
     
-    # Pull the specified image from the remote repository  
-    orka3 remote-image pull 90gbventurassh.orkasi  
-      
-    # Pull '90gbventurassh.orkasi' from the remote repository and rename it to '90gbventurassh2023.orkasi'  
-    orka3 remote-image pull 90gbventurassh.orkasi 90gbventurassh2023.orkasi  
-      
-    # Pull '90gbventurassh.orkasi' from the remote repository and set a custom description  
-    orka3 remote-image pull 90gbventurassh.orkasi --description 'user@company.com pulled this image'
-    
-
+```
+# Pull the specified image from the remote repository  
+orka3 remote-image pull 90gbventurassh.orkasi  
+  
+# Pull '90gbventurassh.orkasi' from the remote repository and rename it to '90gbventurassh2023.orkasi'  
+orka3 remote-image pull 90gbventurassh.orkasi 90gbventurassh2023.orkasi  
+  
+# Pull '90gbventurassh.orkasi' from the remote repository and set a custom description  
+orka3 remote-image pull 90gbventurassh.orkasi --description 'user@company.com pulled this image'
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the new image. Defaults to 'Pulled from REMOTE_IMAGE'.  
-    -h, --help help for pull  
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the new image. Defaults to 'Pulled from REMOTE_IMAGE'.  
+-h, --help help for pull  
+```
 ## orka3 remote-iso
 
 List or pull ISOs from the remote repository
@@ -1531,15 +1536,15 @@ MacStadium maintains a remote repository with ISOs that you can use to perform a
 Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 remote-iso [flags]
-    
-
+```
+orka3 remote-iso [flags]
+```
 #### **Options**
     
     
-      -h, --help   help for remote-iso
-    
-
+```
+  -h, --help   help for remote-iso
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -1561,35 +1566,35 @@ MacStadium maintains a remote repository with ISOs that you can use to perform a
 Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 remote-iso list [ISO_NAME_1 [ISO_NAME_2 ...]] [--output wide|json] [flags]
-    
-
+```
+orka3 remote-iso list [ISO_NAME_1 [ISO_NAME_2 ...]] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List the available ISOs in the remote repository  
-    orka3 remote-iso list  
-      
-    # Check if the specified ISO exists in the remote repository  
-    orka3 remote-iso list ventura.iso  
-      
-    # Check if the specified ISOs exist in the remote repository  
-    orka3 remote-iso list ventura.iso monterey.iso  
-      
-    # Search for all remote ISOs that contain 'monterey' in the name  
-    orka3 remote-iso list | grep "monterey"  
-      
-    # List the available ISOs in the remote repository and print the output as JSON  
-    orka3 remote-iso list --output json
-    
-
+```
+# List the available ISOs in the remote repository  
+orka3 remote-iso list  
+  
+# Check if the specified ISO exists in the remote repository  
+orka3 remote-iso list ventura.iso  
+  
+# Check if the specified ISOs exist in the remote repository  
+orka3 remote-iso list ventura.iso monterey.iso  
+  
+# Search for all remote ISOs that contain 'monterey' in the name  
+orka3 remote-iso list | grep "monterey"  
+  
+# List the available ISOs in the remote repository and print the output as JSON  
+orka3 remote-iso list --output json
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 []("" """")
 
 ## orka3 remote-iso pull
@@ -1613,29 +1618,29 @@ MacStadium maintains a remote repository with ISOs that you can use to perform a
 Working with ISOs is applicable only to Intel-based VMs. Remote and local ISOs are accessible from all namespaces.
     
     
-    orka3 remote-iso pull REMOTE_ISO_NAME [LOCAL_ISO_NAME] [--set-description 'DESCRIPTION'] [flags]
-    
-
+```
+orka3 remote-iso pull REMOTE_ISO_NAME [LOCAL_ISO_NAME] [--set-description 'DESCRIPTION'] [flags]
+```
 #### **Examples**
     
     
-    # Pull the specified ISO from the remote repository  
-    orka3 remote-iso pull ventura.iso  
-      
-    # Pull 'ventura.iso' from the remote repository and rename it to 'ventura2023.iso'  
-    orka3 remote-iso pull ventura.iso ventura2023.iso  
-      
-    # Pull 'ventura.iso' from the remote repository and set a custom description  
-    orka3 remote-iso pull ventura.iso --description 'user@company.com pulled this ISO'
-    
-
+```
+# Pull the specified ISO from the remote repository  
+orka3 remote-iso pull ventura.iso  
+  
+# Pull 'ventura.iso' from the remote repository and rename it to 'ventura2023.iso'  
+orka3 remote-iso pull ventura.iso ventura2023.iso  
+  
+# Pull 'ventura.iso' from the remote repository and set a custom description  
+orka3 remote-iso pull ventura.iso --description 'user@company.com pulled this ISO'
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the new ISO. Defaults to 'Pulled from REMOTE_ISO'.  
-    -h, --help help for pull
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the new ISO. Defaults to 'Pulled from REMOTE_ISO'.  
+-h, --help help for pull
+```
 []("" """")
 
 ## orka3 rolebinding
@@ -1657,16 +1662,16 @@ All non-admin users have user access to the 'orka-default' namespace. To grant a
 Service accounts automatically have access to the namespace where they were created. To grant a service account access to a specific namespace, you need to add that service account as a subject to the rolebinding for the namespace.
     
     
-    orka3 rolebinding [flags]
-    
-
+```
+orka3 rolebinding [flags]
+```
 #### **Options**
     
     
-    -h, --help help for rolebinding  
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-h, --help help for rolebinding  
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -1687,42 +1692,42 @@ Add a subject to the rolebinding for the specified namespace. This grants the us
 If '--namespace' is not set, assumes that you're adding subjects to the rolebinding for the 'orka-default' namespace.
     
     
-    orka3 rolebinding add-subject --namespace TARGET_NAMESPACE --user EMAIL_1[,EMAIL_2,...] AND/OR --serviceaccount SA_NAMESPACE_1:SERVICE_ACCOUNT_1[,SA_NAMESPACE_2:SERVICE_ACCOUNT_2,...] [flags]
-    
-
+```
+orka3 rolebinding add-subject --namespace TARGET_NAMESPACE --user EMAIL_1[,EMAIL_2,...] AND/OR --serviceaccount SA_NAMESPACE_1:SERVICE_ACCOUNT_1[,SA_NAMESPACE_2:SERVICE_ACCOUNT_2,...] [flags]
+```
 #### **Examples**
     
     
-    # Grant 'user@company.com' access to the 'orka-test' namespace  
-    orka3 rb add-subject --namespace orka-test --user user@company.com  
-      
-    # Grant multiple users access to the 'orka-test' namespace  
-    orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@company.com  
-      
-    # Grant the 'sa-jenkins' service account, created in the 'orka-default' namespace, access to the 'orka-test' namespace  
-    orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins  
-      
-    # Grant multiple service accounts access to the 'orka-test' namespace  
-    orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds  
-      
-    # Grant multiple users and service accounts access to the 'orka-test' namespace  
-    orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
-    
-
+```
+# Grant 'user@company.com' access to the 'orka-test' namespace  
+orka3 rb add-subject --namespace orka-test --user user@company.com  
+  
+# Grant multiple users access to the 'orka-test' namespace  
+orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@company.com  
+  
+# Grant the 'sa-jenkins' service account, created in the 'orka-default' namespace, access to the 'orka-test' namespace  
+orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins  
+  
+# Grant multiple service accounts access to the 'orka-test' namespace  
+orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds  
+  
+# Grant multiple users and service accounts access to the 'orka-test' namespace  
+orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
+```
 #### **Options**
     
     
-    -h, --help help for add-subject  
-    -s, --serviceaccount strings One or more service accounts to add as subjects to the rolebinding. Should be in the NAMESPACE:SERVICE_ACCOUNT format. Accepts comma-separated values.  
-    -u, --user strings One or more users to add as subjects to the rolebinding. Should be an email address. Accepts comma-separated values.
-    
-
+```
+-h, --help help for add-subject  
+-s, --serviceaccount strings One or more service accounts to add as subjects to the rolebinding. Should be in the NAMESPACE:SERVICE_ACCOUNT format. Accepts comma-separated values.  
+-u, --user strings One or more users to add as subjects to the rolebinding. Should be an email address. Accepts comma-separated values.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 rolebinding list-subjects
@@ -1736,35 +1741,35 @@ List all rolebinding subjects, along with their kind, in the 'orka-default' name
 If '--namespace' is not set, operates in the 'orka-default' namespace.
     
     
-    orka3 rolebinding list-subjects [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 rolebinding list-subjects [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # List the subjects in the rolebinding for the 'orka-default' namespace  
-    orka3 rb list-subjects  
-      
-    # List the subjects in the rolebinding for the 'orka-test' namespace  
-    orka3 rb list-subjects --namespace orka-test  
-      
-    # List only subjects which are service accounts  
-    orka3 rb list-subjects | grep 'ServiceAccount'
-    
-
+```
+# List the subjects in the rolebinding for the 'orka-default' namespace  
+orka3 rb list-subjects  
+  
+# List the subjects in the rolebinding for the 'orka-test' namespace  
+orka3 rb list-subjects --namespace orka-test  
+  
+# List only subjects which are service accounts  
+orka3 rb list-subjects | grep 'ServiceAccount'
+```
 #### **Options**
     
     
-    -h, --help help for list-subjects  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list-subjects  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 rolebinding remove-subject
@@ -1778,42 +1783,42 @@ Remove a subject from a rolebinding. This revokes the user's or service account'
 If '--namespace' is not set, assumes that you're removing subjects from the rolebinding for the 'orka-default' namespace.
     
     
-    orka3 rolebinding remove-subject --user EMAIL_1[,EMAIL_2,...] AND/OR --serviceaccount SA_NAMESPACE_1:SERVICE_ACCOUNT_1[,SA_NAMESPACE_2:SERVICE_ACCOUNT_2,...] [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 rolebinding remove-subject --user EMAIL_1[,EMAIL_2,...] AND/OR --serviceaccount SA_NAMESPACE_1:SERVICE_ACCOUNT_1[,SA_NAMESPACE_2:SERVICE_ACCOUNT_2,...] [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Revoke access to the 'orka-test' namespace for 'user@company.com'  
-    orka3 rb remove-subject --namespace orka-test --user user@company.com  
-      
-    # Revoke access to the 'orka-test' namespace for multiple users  
-    orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@company.com  
-      
-    # Revoke access to the 'orka-test' namespace for the 'sa-jenkins' service account, created in the 'orka-default' namespace  
-    orka3 rb remove-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins  
-      
-    # Revoke access to the 'orka-test' namespace for multiple service accounts  
-    orka3 rb remove-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds  
-      
-    # Revoke access to the 'orka-test' namespace for multiple users and service accounts  
-    orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
-    
-
+```
+# Revoke access to the 'orka-test' namespace for 'user@company.com'  
+orka3 rb remove-subject --namespace orka-test --user user@company.com  
+  
+# Revoke access to the 'orka-test' namespace for multiple users  
+orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@company.com  
+  
+# Revoke access to the 'orka-test' namespace for the 'sa-jenkins' service account, created in the 'orka-default' namespace  
+orka3 rb remove-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins  
+  
+# Revoke access to the 'orka-test' namespace for multiple service accounts  
+orka3 rb remove-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds  
+  
+# Revoke access to the 'orka-test' namespace for multiple users and service accounts  
+orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
+```
 #### **Options**
     
     
-    -h, --help help for remove-subject  
-    -s, --serviceaccount strings One or more service accounts to remove from the rolebinding. Should be represented as NAMESPACE:SERVICE_ACCOUNT. Accepts comma-separated values.  
-    -u, --user strings One or more users to remove from the rolebinding. Should be an email address. Accepts comma-separated values.
-    
-
+```
+-h, --help help for remove-subject  
+-s, --serviceaccount strings One or more service accounts to remove from the rolebinding. Should be represented as NAMESPACE:SERVICE_ACCOUNT. Accepts comma-separated values.  
+-u, --user strings One or more users to remove from the rolebinding. Should be an email address. Accepts comma-separated values.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 serviceaccount
@@ -1829,16 +1834,16 @@ Service accounts are intended for use by CI/CD integrations. To use your cluster
 If '--namespace' is not set, creates the service account with access to the 'orka-default' namespace.
     
     
-    orka3 serviceaccount [flags]
-    
-
+```
+orka3 serviceaccount [flags]
+```
 #### **Options**
     
     
-    -h, --help help for serviceaccount  
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-h, --help help for serviceaccount  
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -1871,31 +1876,31 @@ orka3 sa token SERVICE_ACCOUNT_NAME
 If '--namespace' is not set, creates the service account with access to the 'orka-default' namespace.
     
     
-    orka3 serviceaccount create SERVICE_ACCOUNT_NAME [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 serviceaccount create SERVICE_ACCOUNT_NAME [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Create a service account in the 'orka-default' namespace  
-    orka3 sa create sa-jenkins  
-      
-    # Create a service account in the specified namespace  
-    orka3 sa create sa-jenkins-test --namespace orka-test
-    
-
+```
+# Create a service account in the 'orka-default' namespace  
+orka3 sa create sa-jenkins  
+  
+# Create a service account in the specified namespace  
+orka3 sa create sa-jenkins-test --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for create
-    
-
+```
+-h, --help   help for create
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 serviceaccount delete
@@ -1911,34 +1916,34 @@ CAUTION: Deleting the service account also invalidates any tokens associated wit
 If '--namespace' is not set, operates in the 'orka-default' namespace.
     
     
-    orka3 serviceaccount delete SERVICE_ACCOUNT_NAME [SERVICE_ACCOUNT_NAME_2 ...] [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 serviceaccount delete SERVICE_ACCOUNT_NAME [SERVICE_ACCOUNT_NAME_2 ...] [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Delete the specified service account in the 'orka-default' namespace  
-    orka3 sa delete sa-jenkins  
-      
-    # Delete the specified service account in the 'orka-test' namespace  
-    orka3 sa delete sa-jenkins --namespace orka-test  
-      
-    # Delete multiple service accounts  
-    orka3 sa delete sa-jenkins sa-jenkins-test
-    
-
+```
+# Delete the specified service account in the 'orka-default' namespace  
+orka3 sa delete sa-jenkins  
+  
+# Delete the specified service account in the 'orka-test' namespace  
+orka3 sa delete sa-jenkins --namespace orka-test  
+  
+# Delete multiple service accounts  
+orka3 sa delete sa-jenkins sa-jenkins-test
+```
 #### **Options**
     
     
-    -h, --help   help for delete
-    
-
+```
+-h, --help   help for delete
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")  -n, --namespace string   (Optional) If set, changes the namespace scope for the operation from &#x27;orka-default&#x27; to the specified namespace. (default &quot;orka-default&quot;)
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")  -n, --namespace string   (Optional) If set, changes the namespace scope for the operation from &#x27;orka-default&#x27; to the specified namespace. (default &quot;orka-default&quot;)
+```
 []("" """")
 
 ## orka3 serviceaccount list
@@ -1952,38 +1957,38 @@ List the service accounts in the 'orka-default' namespace or another specified n
 If '--namespace' is not set, operates in the 'orka-default' namespace.
     
     
-    orka3 serviceaccount list [SERVICE_ACCOUNT_NAME_1] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
-    
-
+```
+orka3 serviceaccount list [SERVICE_ACCOUNT_NAME_1] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List the existing service accounts in the 'orka-default' namespace  
-    orka3 sa list  
-      
-    # List the existing service accounts for the specified namespace  
-    orka3 sa list --namespace orka-test  
-      
-    # Check if the specified service account already exists in the 'orka-default' namespace  
-    orka3 sa list sa-jenkins  
-      
-    # Check if the specified service account already exists in the specified namespace  
-    orka3 sa list sa-jenkins --namespace orka-test
-    
-
+```
+# List the existing service accounts in the 'orka-default' namespace  
+orka3 sa list  
+  
+# List the existing service accounts for the specified namespace  
+orka3 sa list --namespace orka-test  
+  
+# Check if the specified service account already exists in the 'orka-default' namespace  
+orka3 sa list sa-jenkins  
+  
+# Check if the specified service account already exists in the specified namespace  
+orka3 sa list sa-jenkins --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 serviceaccount token
@@ -1998,36 +2003,36 @@ If '--duration' is not set, the token is valid for 8760 hours (1 year). Note tha
 If '--namespace' is not set, assumes that the specified service account is located in the 'orka-default' namespace.
     
     
-    orka3 serviceaccount token SERVICE_ACCOUNT_NAME [--duration DURATION] [--namespace TARGET_NAMESPACE] [flags]
-    
-
+```
+orka3 serviceaccount token SERVICE_ACCOUNT_NAME [--duration DURATION] [--namespace TARGET_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Obtain a token for the specified service account in the 'orka-default' namespace  
-    orka3 sa token sa-jenkins  
-      
-    # Obtain a token for the specified service account in the specified namespace  
-    orka3 sa token sa-jenkins-test --namespace orka-test  
-      
-    # Obtain a token for the specified service account with the specified duration (must be in minutes or hours)  
-    orka3 sa token sa-jenkins --duration 1h
-    
-
+```
+# Obtain a token for the specified service account in the 'orka-default' namespace  
+orka3 sa token sa-jenkins  
+  
+# Obtain a token for the specified service account in the specified namespace  
+orka3 sa token sa-jenkins-test --namespace orka-test  
+  
+# Obtain a token for the specified service account with the specified duration (must be in minutes or hours)  
+orka3 sa token sa-jenkins --duration 1h
+```
 #### **Options**
     
     
-    --duration duration If set, requests that the token is created with the specified lifetime (in minutes or hours). Orka might return a token with a longer or a shorter lifetime. (default 8760h0m0s)  
-    -h, --help help for token  
-    --no-expiration If set, requests that the token is created with no expiration. This flag is mutually exclusive with '--duration'.
-    
-
+```
+--duration duration If set, requests that the token is created with the specified lifetime (in minutes or hours). Orka might return a token with a longer or a shorter lifetime. (default 8760h0m0s)  
+-h, --help help for token  
+--no-expiration If set, requests that the token is created with no expiration. This flag is mutually exclusive with '--duration'.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 user
@@ -2041,9 +2046,9 @@ Manage your authentication with Orka.
 #### **Options**
     
     
-    -h, --help   help for user
-    
-
+```
+-h, --help   help for user
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -2065,22 +2070,22 @@ Print your authentication token
 If you are logged in, print your authentication token from your '~/.kube/config'. You can use the token to log in to the Web UI or work with the Orka API.
     
     
-    orka3 user get-token [flags]
-    
-
+```
+orka3 user get-token [flags]
+```
 #### **Examples**
     
     
-    # Print your authentication token from your '~/.kube/config'  
-    orka3 user get-token
-    
-
+```
+# Print your authentication token from your '~/.kube/config'  
+orka3 user get-token
+```
 #### **Options**
     
     
-    -h, --help   help for get-token
-    
-
+```
+-h, --help   help for get-token
+```
 []("" """")
 
 ## orka3 user login
@@ -2099,22 +2104,22 @@ Alternatively, you can log in with a valid authentication token (e.g., a service
 orka3 user set-token
     
     
-    orka3 user login [flags]
-    
-
+```
+orka3 user login [flags]
+```
 #### **Examples**
     
     
-    # Log in to your Orka cluster with your MacStadium Customer Portal credentials
-    orka3 user login
-    
-
+```
+# Log in to your Orka cluster with your MacStadium Customer Portal credentials
+orka3 user login
+```
 #### **Options**
     
     
-    -h, --help   help for login
-    
-
+```
+-h, --help   help for login
+```
 []("" """")
 
 ## orka3 user logout
@@ -2126,21 +2131,22 @@ Log out of the Orka cluster
 Log out of the Orka cluster.
     
     
-    orka3 user logout [flags]
-    
-
+```
+orka3 user logout [flags]
+```
 #### **Examples**
     
     
-    # Log out of your Orka cluster
-    orka3 user logout
-    
-
+```
+# Log out of your Orka cluster
+orka3 user logout
+```
 #### **Options**
     
     
-    -h, --help   help for logout
-
+```
+-h, --help   help for logout
+```
 []("" """")
 
 ## orka3 user set-token
@@ -2158,22 +2164,22 @@ Or, you can generate a valid service account token by running:
 orka3 serviceaccount token SERVICE_ACCOUNT_NAME
     
     
-    orka3 user set-token VALID_TOKEN [flags]
-    
-
+```
+orka3 user set-token VALID_TOKEN [flags]
+```
 #### **Examples**
     
     
-    # Log in with a valid authentication token
-    orka3 user set-token VALID_TOKEN
-    
-
+```
+# Log in with a valid authentication token
+orka3 user set-token VALID_TOKEN
+```
 #### **Options**
     
     
-    -h, --help   help for set-token
-    
-
+```
+-h, --help   help for set-token
+```
 []("" """")
 
 ## orka3 version
@@ -2185,22 +2191,22 @@ Print the current version of the Orka CLI
 Print the current version of the Orka CLI.
     
     
-    orka3 version [flags]
-    
-
+```
+orka3 version [flags]
+```
 #### **Examples**
     
     
-    # Print the current version of the Orka CLI
-    orka3 version
-    
-
+```
+# Print the current version of the Orka CLI
+orka3 version
+```
 #### **Options**
     
     
-    -h, --help   help for version
-    
-
+```
+-h, --help   help for version
+```
 []("" """")
 
 ## orka3 vm-config
@@ -2215,28 +2221,28 @@ To deploy a VM from a VM configuration, run:
 orka3 vm deploy VM_NAME --config VM_CONFIG
     
     
-    orka3 vm-config [flags]
-    
-
+```
+orka3 vm-config [flags]
+```
 #### **Examples**
     
     
-    # List extended information about the available VM configurations  
-    orka3 vmc list --output wide  
-      
-    # Create a template for a VM with 6CPU and using the 90gbventurassh image  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh --cpu 6  
-      
-    # Delete multiple VM configurations  
-    orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
-    
-
+```
+# List extended information about the available VM configurations  
+orka3 vmc list --output wide  
+  
+# Create a template for a VM with 6CPU and using the 90gbventurassh image  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh --cpu 6  
+  
+# Delete multiple VM configurations  
+orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
+```
 #### **Options**
     
     
-    -h, --help   help for vm-config
-    
-
+```
+-h, --help   help for vm-config
+```
 []("" """")
 
 ## orka3 vm-config create
@@ -2259,78 +2265,78 @@ To deploy a VM from a newly created VM configuration, run:
 orka3 vm deploy VM_NAME --config VM_CONFIG
     
     
-    orka3 vm-config create VM_CONFIGURATION_NAME [flags]
-    
-
+```
+orka3 vm-config create VM_CONFIGURATION_NAME [flags]
+```
 #### **Examples**
     
     
-    # Create a template for an Intel-based VM with 6CPU and using the '90gbventurassh.img' image  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --cpu 6  
-      
-    # Create a template for an Apple silicon-based VM using an OCI-compatible image from GitHub Packages  
-    orka3 vmc create -i ghcr.io/my-organization/orka-images/orka-arm:latest --cpu 4  
-      
-    # Create a template for an Apple silicon-based VM with 4CPU and using the '90gbventurassh.orkasi' image  
-    orka3 vmc create small-ventura-arm-vm --image 90gbventurassh.orkasi --cpu 4  
-      
-    # Create a template for a VM with 5GB RAM  
-    orka3 vmc create medium-ventura-arm-vm --image 90gbventurassh.orkasi --memory 5  
-      
-    # (Intel-only) Create a template for a blank VM ready for OS install from ISO  
-    orka3 vmc create fresh-ventura-vm --image 90gbempty.img --iso ventura.iso  
-      
-    # (Intel-only) Create a template for a VM with a custom valid serial number  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --system-serial A00BC123D4  
-      
-    # Create a template for a VM with flexible node affinity  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-builds --tag-required=false  
-      
-    # Create a template for a VM with strict node affinity  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-builds --tag-required=true  
-      
-    # Create a template for a VM that will use a custom scheduler for deployment (most-allocated)  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --scheduler most-allocated  
-      
-    # (Intel-only) Create a template for a VM with GPU passhtrough (GPU passthrough must be enabled on the environment)  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disable-vnc  
-      
-    # Create a template for a VM with disabled VNC (make sure that SSH or Apple Screen Sharing are already enabled on the image)  
-    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disable-vnc  
-      
-    # (Intel-only) Create a template for a VM, running macOS Monterey or earlier, with disabled network performance boost (Ventura VMs must have network boost enabled)  
-    orka3 vmc create medium-ventura-vm --image 90gbmontereyssh.img --disable-net-boost
-    
-
+```
+# Create a template for an Intel-based VM with 6CPU and using the '90gbventurassh.img' image  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --cpu 6  
+  
+# Create a template for an Apple silicon-based VM using an OCI-compatible image from GitHub Packages  
+orka3 vmc create -i ghcr.io/my-organization/orka-images/orka-arm:latest --cpu 4  
+  
+# Create a template for an Apple silicon-based VM with 4CPU and using the '90gbventurassh.orkasi' image  
+orka3 vmc create small-ventura-arm-vm --image 90gbventurassh.orkasi --cpu 4  
+  
+# Create a template for a VM with 5GB RAM  
+orka3 vmc create medium-ventura-arm-vm --image 90gbventurassh.orkasi --memory 5  
+  
+# (Intel-only) Create a template for a blank VM ready for OS install from ISO  
+orka3 vmc create fresh-ventura-vm --image 90gbempty.img --iso ventura.iso  
+  
+# (Intel-only) Create a template for a VM with a custom valid serial number  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --system-serial A00BC123D4  
+  
+# Create a template for a VM with flexible node affinity  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-builds --tag-required=false  
+  
+# Create a template for a VM with strict node affinity  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-builds --tag-required=true  
+  
+# Create a template for a VM that will use a custom scheduler for deployment (most-allocated)  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --scheduler most-allocated  
+  
+# (Intel-only) Create a template for a VM with GPU passhtrough (GPU passthrough must be enabled on the environment)  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disable-vnc  
+  
+# Create a template for a VM with disabled VNC (make sure that SSH or Apple Screen Sharing are already enabled on the image)  
+orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disable-vnc  
+  
+# (Intel-only) Create a template for a VM, running macOS Monterey or earlier, with disabled network performance boost (Ventura VMs must have network boost enabled)  
+orka3 vmc create medium-ventura-vm --image 90gbmontereyssh.img --disable-net-boost
+```
 #### **Options**
     
     
-    -c, --cpu int                  (Optional) The number of CPU cores for the VM. If not set, the default value is 3. (default 3)
-    --disable-net-boost            (Optional) (Intel-only) Disables network performance boost for your VMs.
-                                   Note that on Apple silicon-based VMs network boost is always enabled and cannot be disabled.
-    --disable-vnc                  (Optional) Disable VNC. Make sure that any deployed VMs will be accessible via SSH or Apple Screen Sharing or you will be locked out of the VM.
-                                   Note that if you've set '--gpu=true', you need to disable VNC.
-    -g, --gpu                      (Optional) (Intel-only) Applicable only to environments with enabled GPU passthrough.
-                                   Enable GPU passthrough for the deployed VM. When set, you also need to disable VNC ('--disable-vnc').
-                                   On Apple silicon-based VMs, GPU passthrough is always enabled and cannot be disabled.
-    -h, --help                     help for create
-    -i, --image string            (Required) The base image that you want to use for the VM. You can specify an Orka image stored locally in the cluster (by name) or an OCI-compatible ARM image from an OCI registry (by full path, including image name and image tag).
-    --iso string                  (Optional) (Intel-only) The name of the ISO to attach to the VM.
-                                   When set, make sure that you're using an empty base image as well.
-    -m, --memory float            (Optional) The number of gigabytes of memory for the VM.
-                                   Must not exceed 32GB on 32GB nodes, 60GB on 64GB, or 60GB on 128GB nodes.
-                                   If not set, defaults to a value based on the node with the least memory.
-    --scheduler string            (Optional) Sets which scheduler to use when deploying VMs from the VM configuration. Valid values are 'default' and 'most-allocated'.
-                                   When set to 'default', Orka deploys in such a way that it keeps the used and free resources balanced across nodes.
-                                   When set to 'most-allocated', Orka deploys the VMs in such a way that it uses up the resources of one node before moving on to the next.
-    --system-serial string        (Optional) (Intel-only) Sets a custom serial number for the VM.
-                                   You must own the serial number and it must be a valid serial number.
-    --tag string                  (Optional) Configures node affinity. When set, Orka first attempts to deploy to the node(s) with the specified tag.
-                                   Based on the '--tag-required' setting, Orka might attempt to deploy on other nodes if it cannot deploy on the tagged node(s).
-    --tag-required                (Optional) When 'true', Orka attempts to deploy only on nodes with the specified tag.
-                                   When 'false', Orka first attempts to deploy on the nodes with the specified tag. If the deployment fails, Orka will then attempt to deploy on the remaining nodes in the environment.
-    
-
+```
+-c, --cpu int                  (Optional) The number of CPU cores for the VM. If not set, the default value is 3. (default 3)
+--disable-net-boost            (Optional) (Intel-only) Disables network performance boost for your VMs.
+                               Note that on Apple silicon-based VMs network boost is always enabled and cannot be disabled.
+--disable-vnc                  (Optional) Disable VNC. Make sure that any deployed VMs will be accessible via SSH or Apple Screen Sharing or you will be locked out of the VM.
+                               Note that if you've set '--gpu=true', you need to disable VNC.
+-g, --gpu                      (Optional) (Intel-only) Applicable only to environments with enabled GPU passthrough.
+                               Enable GPU passthrough for the deployed VM. When set, you also need to disable VNC ('--disable-vnc').
+                               On Apple silicon-based VMs, GPU passthrough is always enabled and cannot be disabled.
+-h, --help                     help for create
+-i, --image string            (Required) The base image that you want to use for the VM. You can specify an Orka image stored locally in the cluster (by name) or an OCI-compatible ARM image from an OCI registry (by full path, including image name and image tag).
+--iso string                  (Optional) (Intel-only) The name of the ISO to attach to the VM.
+                               When set, make sure that you're using an empty base image as well.
+-m, --memory float            (Optional) The number of gigabytes of memory for the VM.
+                               Must not exceed 32GB on 32GB nodes, 60GB on 64GB, or 60GB on 128GB nodes.
+                               If not set, defaults to a value based on the node with the least memory.
+--scheduler string            (Optional) Sets which scheduler to use when deploying VMs from the VM configuration. Valid values are 'default' and 'most-allocated'.
+                               When set to 'default', Orka deploys in such a way that it keeps the used and free resources balanced across nodes.
+                               When set to 'most-allocated', Orka deploys the VMs in such a way that it uses up the resources of one node before moving on to the next.
+--system-serial string        (Optional) (Intel-only) Sets a custom serial number for the VM.
+                               You must own the serial number and it must be a valid serial number.
+--tag string                  (Optional) Configures node affinity. When set, Orka first attempts to deploy to the node(s) with the specified tag.
+                               Based on the '--tag-required' setting, Orka might attempt to deploy on other nodes if it cannot deploy on the tagged node(s).
+--tag-required                (Optional) When 'true', Orka attempts to deploy only on nodes with the specified tag.
+                               When 'false', Orka first attempts to deploy on the nodes with the specified tag. If the deployment fails, Orka will then attempt to deploy on the remaining nodes in the environment.
+```
 []("" """")
 
 ## orka3 vm-config delete
@@ -2344,25 +2350,25 @@ Delete the specified VM configuration(s) (template(s) for deploying virtual mach
 All VM configurations reside in the 'orka-default' namespace and are available to all users and service accounts with access to 'orka-default'.
     
     
-    orka3 vm-config delete VM_CONFIGURATION_NAME [VM_CONFIGURATION_NAME_2 ...] [flags]
-    
-
+```
+orka3 vm-config delete VM_CONFIGURATION_NAME [VM_CONFIGURATION_NAME_2 ...] [flags]
+```
 #### **Examples**
     
     
-    # Delete the VM configurations with the specified name
-    orka3 vmc delete small-ventura-arm-vm
-    
-    # Delete multiple VM configurations
-    orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
-    
+```
+# Delete the VM configurations with the specified name
+orka3 vmc delete small-ventura-arm-vm
 
+# Delete multiple VM configurations
+orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
+```
 #### **Options**
     
     
-    -h, --help   help for delete
-    
-
+```
+-h, --help   help for delete
+```
 []("" """")
 
 ### orka3 vm-config list
@@ -2382,44 +2388,44 @@ If '--output' is not set, prints only the essential information in a table forma
 You can also print an extended table or JSON.
     
     
-    orka3 vm-config list [VM_CONFIGURATION_1 [VM_CONFIGURATION_2 ...]] [--output wide|json] [flags]
-    
-
+```
+orka3 vm-config list [VM_CONFIGURATION_1 [VM_CONFIGURATION_2 ...]] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List basic information about the available VM configurations  
-    orka3 vmc list  
-      
-    # List extended information about the available VM configurations  
-    orka3 vmc list --output wide  
-      
-    # Find all VM configurations belonging to the specified owner  
-    orka3 vmc list --output wide | 'user@company.com'  
-      
-    # Show basic information about the specified VM configuration  
-    orka3 vmc list small-ventura-vm  
-      
-    # Show extended information about the specified VM configuration  
-    orka3 vmc list small-ventura-vm --output wide  
-      
-    # Show basic information about the specified multiple VM configurations (separated with a space)  
-    orka3 vmc list small-monterey small-ventura  
-      
-    # Show extended information about the specified multiple VM configurations (separated with a space)  
-    orka3 vmc list small-monterey-vm small-ventura-vm --output wide  
-      
-    # Return the output of the command as JSON  
-    orka3 vmc list --output json
-    
-
+```
+# List basic information about the available VM configurations  
+orka3 vmc list  
+  
+# List extended information about the available VM configurations  
+orka3 vmc list --output wide  
+  
+# Find all VM configurations belonging to the specified owner  
+orka3 vmc list --output wide | 'user@company.com'  
+  
+# Show basic information about the specified VM configuration  
+orka3 vmc list small-ventura-vm  
+  
+# Show extended information about the specified VM configuration  
+orka3 vmc list small-ventura-vm --output wide  
+  
+# Show basic information about the specified multiple VM configurations (separated with a space)  
+orka3 vmc list small-monterey small-ventura  
+  
+# Show extended information about the specified multiple VM configurations (separated with a space)  
+orka3 vmc list small-monterey-vm small-ventura-vm --output wide  
+  
+# Return the output of the command as JSON  
+orka3 vmc list --output json
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 []("" """")
 
 ## orka3 vm
@@ -2431,16 +2437,16 @@ Manage VMs
 Spin up or manage VMs in your Orka cluster.
     
     
-    orka3 vm [flags]
-    
-
+```
+orka3 vm [flags]
+```
 #### **Options**
     
     
-      -h, --help               help for vm
-      -n, --namespace string   (Optional) If set, changes the namespace scope for the operation from &#x27;orka-default&#x27; to the specified namespace. (default &quot;orka-default&quot;)
-    
-
+```
+  -h, --help               help for vm
+  -n, --namespace string   (Optional) If set, changes the namespace scope for the operation from &#x27;orka-default&#x27; to the specified namespace. (default &quot;orka-default&quot;)
+```
 ### **Sub-commands (quick glossary)**
 
   * **orka3** \- Manage Orka
@@ -2478,35 +2484,35 @@ orka3 image list IMAGE_NAME
 This operation restarts the VM.
     
     
-    orka3 vm commit VM_NAME [--namespace CURRENT_VM_NAMESPACE] [--description 'DESCRIPTION'] [flags]
-    
-
+```
+orka3 vm commit VM_NAME [--namespace CURRENT_VM_NAMESPACE] [--description 'DESCRIPTION'] [flags]
+```
 #### **Examples**
     
     
-    # Commit any changes from 'small-ventura-vm' to its original image  
-    orka3 vm commit small-ventura-vm  
-      
-    # Commit any changes from 'small-ventura-vm' running in the 'orka-test' namespace to its original image  
-    orka3 vm commit small-ventura-vm --namespace orka-test  
-      
-    # Commit any changes from 'small-ventura-vm' to its original image and set a new description for the image  
-    orka3 vm commit small-ventura-vm --description 'This image was updated by user@company.com'
-    
-
+```
+# Commit any changes from 'small-ventura-vm' to its original image  
+orka3 vm commit small-ventura-vm  
+  
+# Commit any changes from 'small-ventura-vm' running in the 'orka-test' namespace to its original image  
+orka3 vm commit small-ventura-vm --namespace orka-test  
+  
+# Commit any changes from 'small-ventura-vm' to its original image and set a new description for the image  
+orka3 vm commit small-ventura-vm --description 'This image was updated by user@company.com'
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the original image.  
-    -h, --help help for commit
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the original image.  
+-h, --help help for commit
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm delete
@@ -2522,31 +2528,31 @@ CAUTION: This operation cannot be undone. You will not be able to restore any un
 If '--namespace' is not set, operates in the 'orka-default' namespace.
     
     
-    orka3 vm delete VM_NAME [VM_NAME_2 ...] [--namespace CURRENT_VM_NAMESPACE] [flags]
-    
-
+```
+orka3 vm delete VM_NAME [VM_NAME_2 ...] [--namespace CURRENT_VM_NAMESPACE] [flags]
+```
 #### **Examples**
     
     
-    # Delete the specified VM from the 'orka-default' namespace  
-    orka3 vm delete small-ventura-vm  
-      
-    # Delete the specified VMs from the 'orka-test' namespace  
-    orka3 vm delete small-ventura-vm small-ventura-arm-vm --namespace orka-test
-    
-
+```
+# Delete the specified VM from the 'orka-default' namespace  
+orka3 vm delete small-ventura-vm  
+  
+# Delete the specified VMs from the 'orka-test' namespace  
+orka3 vm delete small-ventura-vm small-ventura-arm-vm --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for delete
-    
-
+```
+-h, --help   help for delete
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm deploy
@@ -2576,142 +2582,142 @@ If '--output' is not set, prints only the essential information about the newly 
 You can also print an extended table or JSON.
     
     
-    orka3 vm deploy [VM_NAME] --image IMAGE_NAME
-      orka3 vm deploy [VM_NAME] --config VM_CONFIGURATION_NAME [flags]
-    
-
+```
+orka3 vm deploy [VM_NAME] --image IMAGE_NAME
+  orka3 vm deploy [VM_NAME] --config VM_CONFIGURATION_NAME [flags]
+```
 #### **Examples**
     
     
-    ## Basic Deployments ##  
-      
-    # Deploy a VM from an Orka image stored locally in the cluster  
-    orka3 vm deploy -i 90gbventurassh.orkasi  
-      
-    # Deploy a VM from an OCI-compatible image in GitHub Packages  
-    orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:latest  
-      
-    # Deploy 'small-ventura-vm' with the specified image and CPU  
-    orka3 vm deploy small-ventura-vm -i 90gbventurassh.orkasi -c 4  
-      
-    # Deploy 'small-ventura-vm' with the specified image and request a uniquely generated suffix for the name (to avoid conflicts with any existing VMs)  
-    orka3 vm deploy small-ventura-vm -i 90gbventurassh.orkasi --generate-name  
-      
-    # Deploy a VM with the specified image and memory and a randomly generated name  
-    orka3 vm deploy -i 90gbventurassh.orkasi -m 10  
-      
-    # Deploy a VM and display extended information about the deployed VM  
-    orka3 vm deploy -i 90gbventurassh.orkasi --output wide  
-      
-    # Deploy a VM and change the output of the deployment information to JSON  
-    orka3 vm deploy -i 90gbventurassh.orkasi --output json  
-      
-    # Deploy a VM and change the default timeout of 10 minutes to 1 minute  
-    orka3 vm deploy -i 90gbventurassh.orkasi --timeout 1  
-      
-    ## Targeted Deployments ##  
-      
-    # Deploy a VM on a selected node in the 'orka-default' namespace  
-    orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14  
-      
-    # Deploy a VM on a selected node in the 'orka-test' namespace  
-    orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14 --namespace orka-test  
-      
-    # Deploy a VM in the 'orka-test' namespace  
-    orka3 vm deploy -i 90gbventurassh.orkasi --namespace orka-test  
-      
-    # Deploy a VM with flexible node affinity  
-    orka3 vm deploy -i 90gbventurassh.orkasi small-ventura-config 6 --tag jenkins-builds --tag-required=false  
-      
-    # Deploy a VM with strict node affinity  
-    orka3 vm deploy -i 90gbventurassh.orkasi --tag jenkins-builds --tag-required=true  
-      
-    # Deploy a VM that will use a custom scheduler for deployment ('most-allocated')  
-    orka3 vm deploy -i 90gbventurassh.orkasi --scheduler most-allocated  
-      
-    ## Advanced Deployments ##  
-      
-    # Deploy a VM with disabled VNC (make sure that SSH or Apple Screen Sharing are enabled on the image)  
-    orka3 vm deploy -i 90gbventurassh.img --disable-vnc  
-      
-    # Deploy a VM with custom metadata  
-    orka3 vm deploy -i 90gbventurassh.img --metadata 'foo=1,baz=https://example.com'  
-      
-    # Deploy a VM with custom port mapping (node port 9000 will be mapped to VM port 4000 and node port 9001 will be mapped to VM port 4001)  
-    orka3 vm deploy -i 90gbventurassh.img --ports 9000:4000,9001:4001  
-      
-    ## Intel-Only Deployments ##  
-      
-    # (Intel-only) Deploy a VM with an empty disk and an attached ISO for a fresh macOS install  
-    orka3 vm deploy -i emptydisk.img --iso ventura.iso  
-      
-    # (Intel-only) Deploy a VM with a custom valid serial number  
-    orka3 vm deploy -i 90gbventurassh.img --system-serial A00BC123D4  
-      
-    # (Intel-only) Deploy a VM with GPU passhtrough (GPU passthrough must be enabled on the environment)  
-    orka3 vm deploy -i 90gbventurassh.img --gpu=true --disable-vnc  
-      
-    # (Intel-only) Deploy a VM, running macOS Monterey or earlier, with disabled network performance boost (Ventura VMs must have network boost enabled)  
-    orka3 vm deploy -i 90gbmontereyssh.img --disable-net-boost  
-      
-    ## VM Configuration Deployments ##  
-      
-    # Deploy VM from an existing VM config with a randomly generated name  
-    orka3 vm deploy --config small-ventura-config  
-      
-    # Deploy VM from an existing VM config with the specified name  
-    orka3 vm deploy small-ventura-vm --config small-ventura-config  
-      
-    # Deploy VM from an existing VM config and override the CPU and memory settings  
-    orka3 vm deploy --config small-ventura-config -c 6 --memory 16
-    
-
+```
+## Basic Deployments ##  
+  
+# Deploy a VM from an Orka image stored locally in the cluster  
+orka3 vm deploy -i 90gbventurassh.orkasi  
+  
+# Deploy a VM from an OCI-compatible image in GitHub Packages  
+orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:latest  
+  
+# Deploy 'small-ventura-vm' with the specified image and CPU  
+orka3 vm deploy small-ventura-vm -i 90gbventurassh.orkasi -c 4  
+  
+# Deploy 'small-ventura-vm' with the specified image and request a uniquely generated suffix for the name (to avoid conflicts with any existing VMs)  
+orka3 vm deploy small-ventura-vm -i 90gbventurassh.orkasi --generate-name  
+  
+# Deploy a VM with the specified image and memory and a randomly generated name  
+orka3 vm deploy -i 90gbventurassh.orkasi -m 10  
+  
+# Deploy a VM and display extended information about the deployed VM  
+orka3 vm deploy -i 90gbventurassh.orkasi --output wide  
+  
+# Deploy a VM and change the output of the deployment information to JSON  
+orka3 vm deploy -i 90gbventurassh.orkasi --output json  
+  
+# Deploy a VM and change the default timeout of 10 minutes to 1 minute  
+orka3 vm deploy -i 90gbventurassh.orkasi --timeout 1  
+  
+## Targeted Deployments ##  
+  
+# Deploy a VM on a selected node in the 'orka-default' namespace  
+orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14  
+  
+# Deploy a VM on a selected node in the 'orka-test' namespace  
+orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14 --namespace orka-test  
+  
+# Deploy a VM in the 'orka-test' namespace  
+orka3 vm deploy -i 90gbventurassh.orkasi --namespace orka-test  
+  
+# Deploy a VM with flexible node affinity  
+orka3 vm deploy -i 90gbventurassh.orkasi small-ventura-config 6 --tag jenkins-builds --tag-required=false  
+  
+# Deploy a VM with strict node affinity  
+orka3 vm deploy -i 90gbventurassh.orkasi --tag jenkins-builds --tag-required=true  
+  
+# Deploy a VM that will use a custom scheduler for deployment ('most-allocated')  
+orka3 vm deploy -i 90gbventurassh.orkasi --scheduler most-allocated  
+  
+## Advanced Deployments ##  
+  
+# Deploy a VM with disabled VNC (make sure that SSH or Apple Screen Sharing are enabled on the image)  
+orka3 vm deploy -i 90gbventurassh.img --disable-vnc  
+  
+# Deploy a VM with custom metadata  
+orka3 vm deploy -i 90gbventurassh.img --metadata 'foo=1,baz=https://example.com'  
+  
+# Deploy a VM with custom port mapping (node port 9000 will be mapped to VM port 4000 and node port 9001 will be mapped to VM port 4001)  
+orka3 vm deploy -i 90gbventurassh.img --ports 9000:4000,9001:4001  
+  
+## Intel-Only Deployments ##  
+  
+# (Intel-only) Deploy a VM with an empty disk and an attached ISO for a fresh macOS install  
+orka3 vm deploy -i emptydisk.img --iso ventura.iso  
+  
+# (Intel-only) Deploy a VM with a custom valid serial number  
+orka3 vm deploy -i 90gbventurassh.img --system-serial A00BC123D4  
+  
+# (Intel-only) Deploy a VM with GPU passhtrough (GPU passthrough must be enabled on the environment)  
+orka3 vm deploy -i 90gbventurassh.img --gpu=true --disable-vnc  
+  
+# (Intel-only) Deploy a VM, running macOS Monterey or earlier, with disabled network performance boost (Ventura VMs must have network boost enabled)  
+orka3 vm deploy -i 90gbmontereyssh.img --disable-net-boost  
+  
+## VM Configuration Deployments ##  
+  
+# Deploy VM from an existing VM config with a randomly generated name  
+orka3 vm deploy --config small-ventura-config  
+  
+# Deploy VM from an existing VM config with the specified name  
+orka3 vm deploy small-ventura-vm --config small-ventura-config  
+  
+# Deploy VM from an existing VM config and override the CPU and memory settings  
+orka3 vm deploy --config small-ventura-config -c 6 --memory 16
+```
 #### **Options**
     
     
-    --config string             (Optional) The name of the VM template that you want to deploy.
-                                This will set the default values for the VM.
-                                All values can be overridden by the flags.
-    -c, --cpu int               (Optional) The number of CPU cores for the VM.
-    --disable-net-boost         (Optional) (Intel-only) Disables network performance boost for your VMs.
-                                Note that on Apple silicon-based VMs network boost is always enabled and cannot be disabled.
-    --disable-vnc               (Optional) Disable VNC. Make sure that any deployed VMs will be accessible via SSH or Apple Screen Sharing or you will be locked out of the VM.
-                                Note that if you've set '--gpu=true', you need to disable VNC.
-    --generate-name             (Optional) Generate a name for the VM starting with the provided 'VM_NAME'. If this flag is not set and a 'VM_NAME' is not provided, Orka generates a name starting with 'vm-'.
-    -g, --gpu                   (Optional) (Intel-only) Applicable only to environments with enabled GPU passthrough.
-                                Enable GPU passthrough for the deployed VM. When set, you also need to disable VNC ('--disable-vnc').
-                                On Apple silicon-based VMs, GPU passthrough is always enabled and cannot be disabled.
-    -h, --help                  help for deploy
-    -i, --image string          (Required) The base image that you want to use for the VM. You can specify an Orka image stored locally in the cluster (by name) or an OCI-compatible ARM image from an OCI registry (by full path, including image name and image tag).
-    --iso string                (Optional) (Intel-only) The name of the ISO to attach to the VM.
-                                When set, make sure that you're using an empty base image as well.
-    -m, --memory float          (Optional) The number of gigabytes of memory for the VM.
-                                Must not exceed 32GB on 32GB nodes, 60GB on 64GB, or 60GB on 128GB nodes.
-                                If not set, defaults to a value based on the node with the least memory.
-    --metadata stringToString   (Optional) Injects custom metadata to the VM in the following format: 'key1=value1,key2=value2'. IMPORTANT: Keys and values cannot contain commas (,) or equal signs (=). (default [])
-    --node string               (Optional) The node on which to deploy the VM.
-    -o, --output string         output format. One of: json|wide
-    -p, --ports strings         (Optional) Forwards traffic from the specified 'NODE_PORT' to the specified 'VM_PORT'.
-                                Provide the port mapping in the following format: '<NODE_PORT>:<VM_PORT>'.You can specify multiple ports by separating them with commas.
-                                IMPORTANT: Mapping the VM and node ports does not automatically open a port on your VM. You need to handle the incoming traffic on the VM separately.
-    --scheduler string          (Optional) Sets which scheduler to use when deploying VMs from the VM configuration. Valid values are 'default' and 'most-allocated'.
-                                When set to 'default', Orka deploys in such a way that it keeps the used and free resources balanced across nodes.
-                                When set to 'most-allocated', Orka deploys the VMs in such a way that it uses up the resources of one node before moving on to the next.
-    --system-serial string      (Optional) (Intel-only) Sets a custom serial number for the VM.
-                                You must own the serial number and it must be a valid serial number.
-    --tag string                (Optional) Configures node affinity. When set, Orka first attempts to deploy to the node(s) with the specified tag.
-                                Based on the '--tag-required' setting, Orka might attempt to deploy on other nodes if it cannot deploy on the tagged node(s).
-    --tag-required              (Optional) When 'true', Orka attempts to deploy only on nodes with the specified tag.
-                                When 'false', Orka first attempts to deploy on the nodes with the specified tag. If the deployment fails, Orka will then attempt to deploy on the remaining nodes in the environment.
-    --timeout int               (Optional) If set, indicates the length of time to wait for the deployment to complete. (default 10)
-    
-
+```
+--config string             (Optional) The name of the VM template that you want to deploy.
+                            This will set the default values for the VM.
+                            All values can be overridden by the flags.
+-c, --cpu int               (Optional) The number of CPU cores for the VM.
+--disable-net-boost         (Optional) (Intel-only) Disables network performance boost for your VMs.
+                            Note that on Apple silicon-based VMs network boost is always enabled and cannot be disabled.
+--disable-vnc               (Optional) Disable VNC. Make sure that any deployed VMs will be accessible via SSH or Apple Screen Sharing or you will be locked out of the VM.
+                            Note that if you've set '--gpu=true', you need to disable VNC.
+--generate-name             (Optional) Generate a name for the VM starting with the provided 'VM_NAME'. If this flag is not set and a 'VM_NAME' is not provided, Orka generates a name starting with 'vm-'.
+-g, --gpu                   (Optional) (Intel-only) Applicable only to environments with enabled GPU passthrough.
+                            Enable GPU passthrough for the deployed VM. When set, you also need to disable VNC ('--disable-vnc').
+                            On Apple silicon-based VMs, GPU passthrough is always enabled and cannot be disabled.
+-h, --help                  help for deploy
+-i, --image string          (Required) The base image that you want to use for the VM. You can specify an Orka image stored locally in the cluster (by name) or an OCI-compatible ARM image from an OCI registry (by full path, including image name and image tag).
+--iso string                (Optional) (Intel-only) The name of the ISO to attach to the VM.
+                            When set, make sure that you're using an empty base image as well.
+-m, --memory float          (Optional) The number of gigabytes of memory for the VM.
+                            Must not exceed 32GB on 32GB nodes, 60GB on 64GB, or 60GB on 128GB nodes.
+                            If not set, defaults to a value based on the node with the least memory.
+--metadata stringToString   (Optional) Injects custom metadata to the VM in the following format: 'key1=value1,key2=value2'. IMPORTANT: Keys and values cannot contain commas (,) or equal signs (=). (default [])
+--node string               (Optional) The node on which to deploy the VM.
+-o, --output string         output format. One of: json|wide
+-p, --ports strings         (Optional) Forwards traffic from the specified 'NODE_PORT' to the specified 'VM_PORT'.
+                            Provide the port mapping in the following format: '<NODE_PORT>:<VM_PORT>'.You can specify multiple ports by separating them with commas.
+                            IMPORTANT: Mapping the VM and node ports does not automatically open a port on your VM. You need to handle the incoming traffic on the VM separately.
+--scheduler string          (Optional) Sets which scheduler to use when deploying VMs from the VM configuration. Valid values are 'default' and 'most-allocated'.
+                            When set to 'default', Orka deploys in such a way that it keeps the used and free resources balanced across nodes.
+                            When set to 'most-allocated', Orka deploys the VMs in such a way that it uses up the resources of one node before moving on to the next.
+--system-serial string      (Optional) (Intel-only) Sets a custom serial number for the VM.
+                            You must own the serial number and it must be a valid serial number.
+--tag string                (Optional) Configures node affinity. When set, Orka first attempts to deploy to the node(s) with the specified tag.
+                            Based on the '--tag-required' setting, Orka might attempt to deploy on other nodes if it cannot deploy on the tagged node(s).
+--tag-required              (Optional) When 'true', Orka attempts to deploy only on nodes with the specified tag.
+                            When 'false', Orka first attempts to deploy on the nodes with the specified tag. If the deployment fails, Orka will then attempt to deploy on the remaining nodes in the environment.
+--timeout int               (Optional) If set, indicates the length of time to wait for the deployment to complete. (default 10)
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm get-push-status
@@ -2730,32 +2736,32 @@ For more information, run:
 orka3 vm push --help
     
     
-    orka3 vm get-push-status [JOB_NAME] [flags]
-    
-
+```
+orka3 vm get-push-status [JOB_NAME] [flags]
+```
 #### **Examples**
     
     
-    # View the status of all images being pushed
-    orka3 vm get-push-status
-    
-    # View the status for a specific image by job name
-    orka3 vm get-push-status vm-push-qxjjf
-    
+```
+# View the status of all images being pushed
+orka3 vm get-push-status
 
+# View the status for a specific image by job name
+orka3 vm get-push-status vm-push-qxjjf
+```
 #### **Options**
     
     
-    -h, --help help for get-push-status  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for get-push-status  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm list
@@ -2774,56 +2780,56 @@ You can also print an extended table or JSON.
 If '--namespace' is not set, operates in the 'orka-default' namespace.
     
     
-    orka3 vm list [VM_NAME_1 [VM_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
-    
-
+```
+orka3 vm list [VM_NAME_1 [VM_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+```
 #### **Examples**
     
     
-    # List all VMs in the 'orka-default' namespace  
-    orka3 vm list  
-      
-    # List all VMs in the specified namespace (extended table)  
-    orka3 vm list --output wide  
-      
-    # List all VMs deployed on a specific node in the 'orka-default' namespace  
-    orka3 vm list --output wide | grep 'mini-arm-14'  
-      
-    # List all VMs in the 'orka-test' namespace  
-    orka3 vm list --namespace orka-test  
-      
-    # List all VMs in the 'orka-test' namespace (extended table)  
-    orka3 vm list --namespace orka-test --output wide  
-      
-    # Show basic information about the specified VM  
-    orka3 vm list small-ventura-vm  
-      
-    # Show detailed information about the specified VM  
-    orka3 vm list small-ventura-vm --output wide  
-      
-    # Show basic information about the specified VMs  
-    orka3 vm list small-ventura-vm small-monterey-vm  
-      
-    # Show detailed information about the specified VMs  
-    orka3 vm list small-ventura-vm small-monterey-vm --output wide  
-      
-    # Print the information in JSON output format  
-    orka3 vm list --output json
-    
-
+```
+# List all VMs in the 'orka-default' namespace  
+orka3 vm list  
+  
+# List all VMs in the specified namespace (extended table)  
+orka3 vm list --output wide  
+  
+# List all VMs deployed on a specific node in the 'orka-default' namespace  
+orka3 vm list --output wide | grep 'mini-arm-14'  
+  
+# List all VMs in the 'orka-test' namespace  
+orka3 vm list --namespace orka-test  
+  
+# List all VMs in the 'orka-test' namespace (extended table)  
+orka3 vm list --namespace orka-test --output wide  
+  
+# Show basic information about the specified VM  
+orka3 vm list small-ventura-vm  
+  
+# Show detailed information about the specified VM  
+orka3 vm list small-ventura-vm --output wide  
+  
+# Show basic information about the specified VMs  
+orka3 vm list small-ventura-vm small-monterey-vm  
+  
+# Show detailed information about the specified VMs  
+orka3 vm list small-ventura-vm small-monterey-vm --output wide  
+  
+# Print the information in JSON output format  
+orka3 vm list --output json
+```
 #### **Options**
     
     
-    -h, --help help for list  
-    -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
-    
-
+```
+-h, --help help for list  
+-o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm push
@@ -2848,31 +2854,31 @@ Pushing an OCI image is an async operation. To check the status of the operation
 orka3 vm get-push-status JOB_NAME
     
     
-    orka3 vm push VM_NAME IMAGE[:TAG] [flags]
-    
-
+```
+orka3 vm push VM_NAME IMAGE[:TAG] [flags]
+```
 #### **Examples**
     
     
-    # Push an image to GitHub Packages from the running 'vm-5rjn4' VM  
-    orka3 vm push vm-5rjn4 ghcr.io/myorg/orka-images/base:latest  
-      
-    # Push an image to GitHub Packages from the running 'vm-fxwj5' VM in the 'orka-test' namespace  
-    orka3 vm push vm-fxwj5 ghcr.io/myorg/orka-images/base:latest --namespace orka-test
-    
-
+```
+# Push an image to GitHub Packages from the running 'vm-5rjn4' VM  
+orka3 vm push vm-5rjn4 ghcr.io/myorg/orka-images/base:latest  
+  
+# Push an image to GitHub Packages from the running 'vm-fxwj5' VM in the 'orka-test' namespace  
+orka3 vm push vm-fxwj5 ghcr.io/myorg/orka-images/base:latest --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for push
-    
-
+```
+-h, --help   help for push
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm resize
@@ -2896,36 +2902,36 @@ Resize always assumes you're working in GB.
 This operation restarts the VM.
     
     
-    orka3 vm resize VM_NAME NEW_DISK_SIZE [flags]
-    
-
+```
+orka3 vm resize VM_NAME NEW_DISK_SIZE [flags]
+```
 #### **Examples**
     
     
-    # Resize the disk of 'small-ventura-vm' to 100GB  
-    orka3 vm resize small-ventura-vm 100  
-      
-    # Resize the disk of 'small-ventura-vm', running in the 'orka-test' namespace, to 100GB  
-    orka3 vm resize my-vm --namespace orka-test 100  
-      
-    # (Intel-only) Resize the disk of the Intel-based 'small-intel-vm' to 100GB and repartition it automatically (requires credentials for SSH access to the VM)  
-    orka3 vm resize small-intel-vm 100 --user admin --password admin
-    
-
+```
+# Resize the disk of 'small-ventura-vm' to 100GB  
+orka3 vm resize small-ventura-vm 100  
+  
+# Resize the disk of 'small-ventura-vm', running in the 'orka-test' namespace, to 100GB  
+orka3 vm resize my-vm --namespace orka-test 100  
+  
+# (Intel-only) Resize the disk of the Intel-based 'small-intel-vm' to 100GB and repartition it automatically (requires credentials for SSH access to the VM)  
+orka3 vm resize small-intel-vm 100 --user admin --password admin
+```
 #### **Options**
     
     
-    -h, --help help for resize  
-    -p, --password string (Optional) (Intel-only) The SSH password used to connect to the VM for automatic repartition  
-    -u, --user string (Optional) (Intel-only) The SSH user used to connect to the VM for automatic repartition
-    
-
+```
+-h, --help help for resize  
+-p, --password string (Optional) (Intel-only) The SSH password used to connect to the VM for automatic repartition  
+-u, --user string (Optional) (Intel-only) The SSH user used to connect to the VM for automatic repartition
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm resume
@@ -2941,31 +2947,31 @@ INFO: Suspended VMs appear as 'Running' when listed with 'orka vm list VM_NAME'.
 The 'orka vm suspend' and 'orka vm resume' sequence acts as putting the VM on hold then resuming it.
     
     
-    orka3 vm resume VM_NAME [flags]
-    
-
+```
+orka3 vm resume VM_NAME [flags]
+```
 #### **Examples**
     
     
-    # Resume a suspended VM  
-    orka3 vm resume small-ventura-vm  
-      
-    # Resume a suspended VM deployed in the 'orka-test' namespace  
-    orka3 vm resume small-ventura-vm --namespace orka-test
-    
-
+```
+# Resume a suspended VM  
+orka3 vm resume small-ventura-vm  
+  
+# Resume a suspended VM deployed in the 'orka-test' namespace  
+orka3 vm resume small-ventura-vm --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for resume
-    
-
+```
+-h, --help   help for resume
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm revert
@@ -2979,31 +2985,31 @@ Revert VM to the latest state of its image. This operation restarts the VM. This
 CAUTION: This operation cannot be undone. You will lose any unsaved or uncommitted data and you will not be able to retrieve it.
     
     
-    orka3 vm revert VM_NAME [flags]
-    
-
+```
+orka3 vm revert VM_NAME [flags]
+```
 #### **Examples**
     
     
-    # Revert the specified VM  
-    orka3 vm revert small-ventura-vm  
-      
-    # Revert the specified VM deployed in the 'orka-test' namespace  
-    orka3 vm revert small-ventura-vm --namespace orka-test
-    
-
+```
+# Revert the specified VM  
+orka3 vm revert small-ventura-vm  
+  
+# Revert the specified VM deployed in the 'orka-test' namespace  
+orka3 vm revert small-ventura-vm --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for revert
-    
-
+```
+-h, --help   help for revert
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm save
@@ -3029,35 +3035,35 @@ This operation does not affect the original image of the VM.
 This operation restarts the VM.
     
     
-    orka3 vm save VM_NAME NEW_IMAGE_NAME [flags]
-    
-
+```
+orka3 vm save VM_NAME NEW_IMAGE_NAME [flags]
+```
 #### **Examples**
     
     
-    # Save a new image '120gbmodifiedventura' from the running 'medium-ventura-vm' VM  
-    orka3 vm save medium-ventura-vm 120gbmodifiedventura  
-      
-    # Save a new image '120gbmodifiedventura' from the 'medium-ventura-vm' VM running in the 'orka-test' namespace  
-    orka3 vm save medium-ventura-vm 120gbmodifiedventura --namespace orka-test  
-      
-    # Save a new image '120gbmodifiedventura' from the running 'medium-ventura-vm' VM and set a custom description for the image  
-    orka3 vm save medium-ventura-vm 120gbmodifiedventura --description 'This image was saved by user@company.com'
-    
-
+```
+# Save a new image '120gbmodifiedventura' from the running 'medium-ventura-vm' VM  
+orka3 vm save medium-ventura-vm 120gbmodifiedventura  
+  
+# Save a new image '120gbmodifiedventura' from the 'medium-ventura-vm' VM running in the 'orka-test' namespace  
+orka3 vm save medium-ventura-vm 120gbmodifiedventura --namespace orka-test  
+  
+# Save a new image '120gbmodifiedventura' from the running 'medium-ventura-vm' VM and set a custom description for the image  
+orka3 vm save medium-ventura-vm 120gbmodifiedventura --description 'This image was saved by user@company.com'
+```
 #### **Options**
     
     
-    -d, --description string (Optional) If set, changes the description of the new image. Defaults to 'Saved from VM_NAME in namespace NAMESPACE_NAME.'  
-    -h, --help help for save
-    
-
+```
+-d, --description string (Optional) If set, changes the description of the new image. Defaults to 'Saved from VM_NAME in namespace NAMESPACE_NAME.'  
+-h, --help help for save
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 ## []("" """")
 
 ## orka3 vm start
@@ -3073,31 +3079,31 @@ INFO: Stopped VMs appear as 'Running' when listed with 'orka vm list VM_NAME'.
 The 'orka vm stop' and 'orka vm start' sequence acts as a VM reboot.
     
     
-    orka3 vm start VM_NAME [flags]
-    
-
+```
+orka3 vm start VM_NAME [flags]
+```
 #### **Examples**
     
     
-    # Power ON a stopped VM  
-    orka3 vm start small-ventura-vm  
-      
-    # Power on a stopped VM deployed in the 'orka-test' namespace  
-    orka3 vm start small-ventura-vm --namespace orka-test
-    
-
+```
+# Power ON a stopped VM  
+orka3 vm start small-ventura-vm  
+  
+# Power on a stopped VM deployed in the 'orka-test' namespace  
+orka3 vm start small-ventura-vm --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for start
-    
-
+```
+-h, --help   help for start
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm stop
@@ -3113,31 +3119,31 @@ INFO: Stopped VMs appear as 'Running' when listed with 'orka vm list VM_NAME'.
 The 'orka vm stop' and 'orka vm start' sequence acts as a VM reboot.
     
     
-    orka3 vm stop VM_NAME [flags]
-    
-
+```
+orka3 vm stop VM_NAME [flags]
+```
 #### **Examples**
     
     
-    # Power off a running VM  
-    orka3 vm stop small-ventura-vm  
-      
-    # Power off a running VM deployed in the 'orka-test' namespace  
-    orka3 vm stop small-ventura-vm --namespace orka-test
-    
-
+```
+# Power off a running VM  
+orka3 vm stop small-ventura-vm  
+  
+# Power off a running VM deployed in the 'orka-test' namespace  
+orka3 vm stop small-ventura-vm --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for stop
-    
-
+```
+-h, --help   help for stop
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
-    
-
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
 []("" """")
 
 ## orka3 vm suspend
@@ -3153,26 +3159,28 @@ INFO: Suspended VMs appear as 'Running' when listed with 'orka vm list VM_NAME'.
 The 'orka vm suspend' and 'orka vm resume' sequence acts as putting the VM on hold then resuming it.
     
     
-    orka3 vm suspend VM_NAME [flags]
-    
-
+```
+orka3 vm suspend VM_NAME [flags]
+```
 #### **Examples**
     
     
-    # Suspend a running VM  
-    orka3 vm suspend small-ventura-vm  
-      
-    # Suspend a running VM deployed in the 'orka-test' namespace  
-    orka3 vm suspend small-ventura-vm --namespace orka-test
-    
-
+```
+# Suspend a running VM  
+orka3 vm suspend small-ventura-vm  
+  
+# Suspend a running VM deployed in the 'orka-test' namespace  
+orka3 vm suspend small-ventura-vm --namespace orka-test
+```
 #### **Options**
     
     
-    -h, --help   help for suspend
-    
-
+```
+-h, --help   help for suspend
+```
 **Options inherited from parent commands**
     
     
-    -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```
+-n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
+```

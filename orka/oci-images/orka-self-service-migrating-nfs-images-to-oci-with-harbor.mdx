@@ -40,7 +40,7 @@ If an upgrade is needed:
 
 Submit a support request for Harbor instance provisioning.
 
-  * Open a ticket at: <https://support.macstadium.com/hc/en-us/requests/new>
+  * Open a ticket at: \<https://support.macstadium.com/hc/en-us/requests/new>
   * Request: "Harbor OCI registry provisioning for Orka 3.5"
 
 
@@ -70,29 +70,32 @@ Access the [Harbor web interface](https://support.macstadium.com/hc/en-us/articl
 
     
     
-    orka3 regcred add \
-      -u <OCI.User> \
-      -p <OCI.Pass> \
-      <OCI.FQDN>
-
+```
+orka3 regcred add \
+  -u <OCI.User> \
+  -p <OCI.Pass> \
+  <OCI.FQDN>
+```
   * Verify your credentials using 
 
 
     
     
-    orka3 regcred list
-
+```
+orka3 regcred list
+```
   * **Note:** Registry credentials are namespace-specific. If you use namespaces other than `orka-default`, add credentials to each namespace: 
 
 
     
     
-    orka3 regcred add \
-      -u <user> \
-      -p <pass> \
-      <FQDN> \
-      --namespace <NAMESPACE>
-
+```
+orka3 regcred add \
+  -u <user> \
+  -p <pass> \
+  <FQDN> \
+  --namespace <NAMESPACE>
+```
 ### Step 4: Convert NFS Images to OCI Format
 
   * Confirm the image(s) you'd like to migrate by running `orka3 image list` and noting the image(s) to convert.
@@ -101,59 +104,67 @@ Access the [Harbor web interface](https://support.macstadium.com/hc/en-us/articl
 
     
     
-    orka3 vm deploy \
-      --image "<nfs-image-name>" \
-      --name "migration-temp-vm" \
-      --cpu 4 \
-      --memory 8G
-
+```
+orka3 vm deploy \
+  --image "<nfs-image-name>" \
+  --name "migration-temp-vm" \
+  --cpu 4 \
+  --memory 8G
+```
   * Wait for the VM to begin running 
 
 
     
     
-    orka3 vm list migration-temp-vm
-
+```
+orka3 vm list migration-temp-vm
+```
   * Push the VM as an OCI image to Harbor: 
         
-        orka3 vm push migration-temp-vm \
-          <Harbor-FQDN>/library/<new-image-name>:<tag>
-
+```
+    orka3 vm push migration-temp-vm \
+      <Harbor-FQDN>/library/<new-image-name>:<tag>
+```
   * Monitor push status using
 
 
     
     
-    orka3 vm get-push-status vm-push-temp-vm
-
+```
+orka3 vm get-push-status vm-push-temp-vm
+```
   * After pushing to Harbor, cache the new OCI image on your Orka nodes: 
 
 
     
     
-    orka3 imagecache add <Harbor-FQDN>/library/<image-name>:<tag> --all
-
+```
+orka3 imagecache add <Harbor-FQDN>/library/<image-name>:<tag> --all
+```
   * To cache the image on a specific node, run: 
 
 
     
     
-    orka3 imagecache add <Harbor-FQDN>/library/<image-name>:<tag> --nodes <node-name>
-
+```
+orka3 imagecache add <Harbor-FQDN>/library/<image-name>:<tag> --nodes <node-name>
+```
   * Monitor image caching status: 
 
 
     
     
-    orka3 imagecache info <Harbor-FQDN>/library/<image-name>:<tag>
-
+```
+orka3 imagecache info <Harbor-FQDN>/library/<image-name>:<tag>
+```
   * Clean up the temporary VM by running: 
 
 
     
     
-    orka3 vm delete migration-temp-vm
-
+```
+orka3 vm delete migration-temp-vm
+```
 To do so via the Harbor web UI:
 
   * Log in to the Harbor web interface
@@ -170,69 +181,77 @@ To do so via the Harbor web UI:
 Old workflow example:
     
     
-    name: Run build
-    uses: macstadium/orka-actions@v1
-    with:
-      image: ventura-base
-      cpu: 4
-
+```
+name: Run build
+uses: macstadium/orka-actions@v1
+with:
+  image: ventura-base
+  cpu: 4
+```
 New workflow example:
     
     
-    - name: Run build
-      uses: macstadium/orka-actions@v1
-      with:
-        image: 10.221.189.254/library/sequoia-base:v1.0
-        cpu: 4
-
+```
+- name: Run build
+  uses: macstadium/orka-actions@v1
+  with:
+    image: 10.221.189.254/library/sequoia-base:v1.0
+    cpu: 4
+```
 ### Jenkins
 
 Old Jenkinsfile example:
     
     
-    orkaVM(image: 'ventura-base', cpu: 4, memory: '8G') { 
-    // build steps 
-    }
-
+```
+orkaVM(image: 'ventura-base', cpu: 4, memory: '8G') { 
+// build steps 
+}
+```
 New Jenkinsfile example:
     
     
-    orkaVM(image: '10.221.189.254/library/sequoia-base:v1.0', cpu: 4, memory: '8G') { 
-    // build steps 
-    }
-
+```
+orkaVM(image: '10.221.189.254/library/sequoia-base:v1.0', cpu: 4, memory: '8G') { 
+// build steps 
+}
+```
 #### GitLab CI
 
 Old `.gitlab-ci.yml` example:
     
     
-    variables:
-      ORKA_IMAGE: ventura-base
-
+```
+variables:
+  ORKA_IMAGE: ventura-base
+```
 New `.gitlab-ci.yml` workflow example:
     
     
-    variables:
-      ORKA_IMAGE: 10.221.189.254/library/sequoia-base:v1.0
-
+```
+variables:
+  ORKA_IMAGE: 10.221.189.254/library/sequoia-base:v1.0
+```
 #### Packer Templates
 
 Old HCL:
     
     
-    source "macstadium-orka" "build" {
-      source_image = "sequoia-base"
-      image_name   = "custom-build"
-    }
-
+```
+source "macstadium-orka" "build" {
+  source_image = "sequoia-base"
+  image_name   = "custom-build"
+}
+```
 New HCL:
     
     
-    source "macstadium-orka" "build" {
-      source_image = "10.221.189.254/library/sequoia-base:v1.0"
-      image_name   = "10.221.189.254/library/custom-build:v1.0"
-    }
-
+```
+source "macstadium-orka" "build" {
+  source_image = "10.221.189.254/library/sequoia-base:v1.0"
+  image_name   = "10.221.189.254/library/custom-build:v1.0"
+}
+```
 Packer-built images should also be pushed to Harbor using the new OCI format.
 
 ### Validation and Testing
@@ -242,16 +261,18 @@ Packer-built images should also be pushed to Harbor using the new OCI format.
 
     
     
-    orka3 vm deploy \
-      --image "10.221.189.254/library/sequoia-base:v1.0" \
-      --name "validation-vm" \
-      --cpu 4 \
-      --memory 8G
-
+```
+orka3 vm deploy \
+  --image "10.221.189.254/library/sequoia-base:v1.0" \
+  --name "validation-vm" \
+  --cpu 4 \
+  --memory 8G
+```
   * Verify the VM boots successfully using 
         
-        orka3 vm list validation-vm 
-
+```
+    orka3 vm list validation-vm 
+```
   * Use `orka3 vm vnc validation-vm` to get the VNC connection information for the VM
   * Run any integration smoke tests your organization uses
   * Monitor Harbor storage
@@ -266,12 +287,14 @@ Packer-built images should also be pushed to Harbor using the new OCI format.
   * Maintain rollback capability
   * Use consistent, semantic naming conventions for images, such as: 
         
-        <Harbor-FQDN>/library/<os-version>-<tools>:<semantic-version> 
+```
+    <Harbor-FQDN>/library/<os-version>-<tools>:<semantic-version> 
 
-    * (e.g. `10.221.189.254/library/sequoia-xcode16:v1.0`)
+* (e.g. `10.221.189.254/library/sequoia-xcode16:v1.0`)
+```
   * Pre-cache frequently used images on all nodes 
   * Schedule image caching during off-peak hours 
 
 
 
-For more information on using Harbor with the Orka3 CLI, review our existing documentation at: <https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI>
+For more information on using Harbor with the Orka3 CLI, review our existing documentation at: \<https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI>

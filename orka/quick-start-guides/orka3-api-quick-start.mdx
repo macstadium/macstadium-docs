@@ -88,15 +88,17 @@ For all API calls, you need to provide the `Authorization: Bearer <TOKEN>` heade
 Orka lets you log in with your MacStadium Customer Portal credentials. Based on the role configured in the Customer Portal, you will have administrative or regular user privileges. By default, you will have access to the `orka-default` namespace. If you have been added to additional role bindings, you might be able to access additional namespaces.
     
     
-    orka3 login
-
+```
+orka3 login
+```
 Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run more `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
 
 You now need to get your Orka authentication token from your `~/.kube/config`:
     
     
-    orka3 user get-token
-
+```
+orka3 user get-token
+```
 ## Deploy your first VM instance
 
 Starting with Orka 3.0.0, you can use the built-in Swagger UI to execute API calls directly against your cluster.
@@ -110,47 +112,48 @@ In your browser, navigate to `<ORKA_API_URL>/api/v1/swagger`, click **AUthorize*
 **cURL**
     
     
-    curl -X 'GET' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/nodes' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
-    
-    
-    **Response**  
-    {  
-    "items": [  
-    {  
-    "name": "macpro-4",  
-    "namespace": "orka-default",  
-    "nodeIP": "10.221.189.11",  
-    "availableCpu": 12,  
-    "availableMemory": "31.23G",  
-    "availableGpu": 0,  
-    "allocatableCpu": 12,  
-    "allocatableMemory": "31.23G",  
-    "allocatableGpu": 0,  
-    "nodeType": "WORKER",  
-    "phase": "READY",  
-    "orkaTags": []  
-    },  
-    {  
-    "name": "mini-arm-13",  
-    "namespace": "orka-default",  
-    "nodeIP": "10.221.189.13",  
-    "availableCpu": 5,  
-    "availableMemory": "11.20G",  
-    "availableGpu": 0,  
-    "allocatableCpu": 8,  
-    "allocatableMemory": "16.00G",  
-    "allocatableGpu": 0,  
-    "nodeType": "WORKER",  
-    "phase": "READY",  
-    "orkaTags": []  
-    }  
-    ]  
-    }  
-    This API call provides an overview of your nodes. It shows the actual IP, the state, and the available resources on each node.
+```
+curl -X 'GET' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/nodes' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
 
+
+**Response**  
+{  
+"items": [  
+{  
+"name": "macpro-4",  
+"namespace": "orka-default",  
+"nodeIP": "10.221.189.11",  
+"availableCpu": 12,  
+"availableMemory": "31.23G",  
+"availableGpu": 0,  
+"allocatableCpu": 12,  
+"allocatableMemory": "31.23G",  
+"allocatableGpu": 0,  
+"nodeType": "WORKER",  
+"phase": "READY",  
+"orkaTags": []  
+},  
+{  
+"name": "mini-arm-13",  
+"namespace": "orka-default",  
+"nodeIP": "10.221.189.13",  
+"availableCpu": 5,  
+"availableMemory": "11.20G",  
+"availableGpu": 0,  
+"allocatableCpu": 8,  
+"allocatableMemory": "16.00G",  
+"allocatableGpu": 0,  
+"nodeType": "WORKER",  
+"phase": "READY",  
+"orkaTags": []  
+}  
+]  
+}  
+This API call provides an overview of your nodes. It shows the actual IP, the state, and the available resources on each node.
+```
 **Glossary: Node**
 
 A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads.
@@ -170,18 +173,20 @@ The resources within a namespace are completely isolated from one another and ca
 **cURL**
     
     
-    curl -X 'GET' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
-
+```
+curl -X 'GET' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```
 **Response**
     
     
-    {  
-    "items": []  
-    }
-
+```
+{  
+"items": []  
+}
+```
 This API call lists all VM instances in the `orka-default` namespace. If nothing prints, no one has created any VM instances yet.
 
   3. List the available base images that you can use to deploy a VM.
@@ -189,11 +194,12 @@ This API call lists all VM instances in the `orka-default` namespace. If nothing
 
     
     
-    curl -X 'GET' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/images' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
-
+```
+curl -X 'GET' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/images' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```
 You will likely see a `sonoma-90gb-orka3-arm` item in the response. It is a fully installed and configured macOS Sonoma image with a 90GB disk size. It also has an admin user configured and SSH and Apple Screen Sharing access enabled.
 
 Glossary: Image
@@ -209,28 +215,29 @@ A disk image that represents VM storage. Base images are bootable disk images th
 **cURL**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "image": "sonoma-90gb-orka3-arm"  
-    }'
-    
-    
-    **Response**  
-    {  
-    "name": "vm-cznfv",  
-    "node": "mini-arm-13",  
-    "memory": "4.80Gi",  
-    "ip": "10.221.189.13",  
-    "ssh": 8822,  
-    "vnc": 5999,  
-    "screenshare": 5901,  
-    "status": "Running"  
-    }
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"image": "sonoma-90gb-orka3-arm"  
+}'
 
+
+**Response**  
+{  
+"name": "vm-cznfv",  
+"node": "mini-arm-13",  
+"memory": "4.80Gi",  
+"ip": "10.221.189.13",  
+"ssh": 8822,  
+"vnc": 5999,  
+"screenshare": 5901,  
+"status": "Running"  
+}
+```
 The bare minimum required argument is `image`.
 
 Orka creates a simple VM with the specified image and 3 CPU, and assigns a randomly generated name to it.
@@ -242,29 +249,31 @@ So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest S
 **cURL**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "image": "ghcr.io/macstadium/orka-images/sonoma:latest"  
-    }'
-
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"image": "ghcr.io/macstadium/orka-images/sonoma:latest"  
+}'
+```
 **Response**
     
     
-    {  
-    "name": "vm-cznfv",  
-    "node": "mini-arm-13",  
-    "memory": "4.80Gi",  
-    "ip": "10.221.189.13",  
-    "ssh": 8822,  
-    "vnc": 5999,  
-    "screenshare": 5901,  
-    "status": "Running"  
-    }
-
+```
+{  
+"name": "vm-cznfv",  
+"node": "mini-arm-13",  
+"memory": "4.80Gi",  
+"ip": "10.221.189.13",  
+"ssh": 8822,  
+"vnc": 5999,  
+"screenshare": 5901,  
+"status": "Running"  
+}
+```
   5. What happens if you list your VMs again now?
 
 
@@ -272,33 +281,35 @@ So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest S
 **cURL**
     
     
-    curl -X 'GET' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
-
+```
+curl -X 'GET' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```
 **Response**
     
     
-    {  
-    "items": [  
-    {  
-    "name": "vm-l4qgb",  
-    "ip": "10.221.189.13",  
-    "cpu": 3,  
-    "deployDate": "2023-10-10T19:56:21Z",  
-    "image": "sonoma-90gb-orka3-arm",  
-    "gpuPassthrough": false,  
-    "memory": "4.80Gi",  
-    "node": "mini-arm-13",  
-    "screenshare": 5901,  
-    "ssh": 8822,  
-    "status": "Running",  
-    "vnc": 5999  
-    }  
-    ]  
-    }
-
+```
+{  
+"items": [  
+{  
+"name": "vm-l4qgb",  
+"ip": "10.221.189.13",  
+"cpu": 3,  
+"deployDate": "2023-10-10T19:56:21Z",  
+"image": "sonoma-90gb-orka3-arm",  
+"gpuPassthrough": false,  
+"memory": "4.80Gi",  
+"node": "mini-arm-13",  
+"screenshare": 5901,  
+"ssh": 8822,  
+"status": "Running",  
+"vnc": 5999  
+}  
+]  
+}
+```
 The API now returns information about your running VM.
 
 The `GET /resources/vm/list` call is powerful. It shows a lot of system information for the VM, along with its IP, and several connection ports. Note that even though `Screenshare` and `SSH` are always listed and configured for every VM, you won't be able to use them unless the respective connection type is enabled in the macOS as well. This behavior is a security limitation of the OS.
@@ -314,11 +325,12 @@ When you have a lot of VMs, the response of `GET /resources/vm/list` might becom
 **cURL**
     
     
-    curl -X 'GET' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/nodes' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
-
+```
+curl -X 'GET' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/nodes' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```
 ## Experience your VM instance
 
   1. Look at the last output of `GET /namespaces/orka-default/vms` again. Get that IP and `screenshare` port.
@@ -348,12 +360,13 @@ If you're using another image as your starting point or if you are installing yo
 
     
     
-    brew install orka-vm-tools  
-      
-    OR  
-      
-    brew upgrade orka-vm-tools
-
+```
+brew install orka-vm-tools  
+  
+OR  
+  
+brew upgrade orka-vm-tools
+```
 This action ensures that your VM is running the latest version of the [Orka VM Tools](https://support.macstadium.com/hc/en-us/articles/28340435787163). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables vital features, such as [shared VM storage](https://support.macstadium.com/hc/en-us/articles/28340384486683).
 
 If your cluster is not running the latest Orka version, download and install an [Orka VM Tools](https://support.macstadium.com/hc/en-us/articles/28340435787163) that matches the version of your cluster.
@@ -389,50 +402,52 @@ Return to the command line on your local machine and run the following command. 
 **cURL**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/commit' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "description": "Committed from <VM_NAME>"  
-    }'  
-      
-    OR  
-      
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/save' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "description": "Saved from <VM_NAME>",  
-    "imageName": "<NEW_IMAGE_NAME>"  
-    }'  
-      
-    OR  
-      
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/push' \  
-    -H 'accept: application/json' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "imageReference": "<REGISTRY>/<IMAGE>:<TAG>"  
-    }'
-
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/commit' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"description": "Committed from <VM_NAME>"  
+}'  
+  
+OR  
+  
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/save' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"description": "Saved from <VM_NAME>",  
+"imageName": "<NEW_IMAGE_NAME>"  
+}'  
+  
+OR  
+  
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/push' \  
+-H 'accept: application/json' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"imageReference": "<REGISTRY>/<IMAGE>:<TAG>"  
+}'
+```
 **Response**
     
     
-    {  
-    "statusUrl": "/api/v1/namespaces/orka-default/images/sonoma-90gb-orka3-arm"  
-    }  
-      
-    OR  
-      
-    {  
-    "jobName": "<PUSH_JOB_ID>"  
-    }
-
+```
+{  
+"statusUrl": "/api/v1/namespaces/orka-default/images/sonoma-90gb-orka3-arm"  
+}  
+  
+OR  
+  
+{  
+"jobName": "<PUSH_JOB_ID>"  
+}
+```
   2. See how the changes are preserved for yourself. Deploy a new VM instance from your image:
 
 
@@ -440,15 +455,16 @@ Return to the command line on your local machine and run the following command. 
 **cURL**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "image": "<IMAGE_NAME>"  
-    }'
-
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"image": "<IMAGE_NAME>"  
+}'
+```
   3. Launch Apple Screen Sharing and connect to the newly deployed VM instance. Use the updated admin credentials to log in.
 
 
@@ -464,11 +480,12 @@ When your VM instances have served their purpose, you can `delete` them.
 **cURL**
     
     
-    curl -X 'DELETE' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
-
+```
+curl -X 'DELETE' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```
   2. List your VMs again.
 
 
@@ -476,7 +493,9 @@ When your VM instances have served their purpose, you can `delete` them.
 **cURL**
     
     
-    curl -X 'DELETE' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
+```
+curl -X 'DELETE' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```

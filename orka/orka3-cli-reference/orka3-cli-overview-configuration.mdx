@@ -18,18 +18,21 @@ suggested_new_path: "/orka/orka3-cli-reference/orka3-cli-overview-configuration"
 The Orka3 CLI follows a consistent command structure:
     
     
-    orka3 [command] [subcommand] [flags]
-
+```
+orka3 [command] [subcommand] [flags]
+```
 **Global Help**
     
     
-    orka3 --help
-
+```
+orka3 --help
+```
 **Available Options**
     
     
-    -h, --help   Display help for orka3
-
+```
+-h, --help   Display help for orka3
+```
 **Main Command Groups**
 
   * `orka3 completion` \- Generate autocompletion scripts for your shell
@@ -61,8 +64,9 @@ Set the Orka service URL for your environment.
 **Syntax:**
     
     
-    orka3 config set --api-url ORKA_SERVICE_URL [flags]
-
+```
+orka3 config set --api-url ORKA_SERVICE_URL [flags]
+```
 **Determining Your Service URL:**
 
   * For environments initially deployed with **Orka 2.1 or later** : typically `http://10.221.188.20`
@@ -75,24 +79,26 @@ You can also use the built-in Orka domain (COMPANY.orka.app) or an external cust
 **Options:**
     
     
-    -a, --api-url string   (Required) The Orka service URL
-    -h, --help             Display help for set
-
+```
+-a, --api-url string   (Required) The Orka service URL
+-h, --help             Display help for set
+```
 **Examples:**
     
     
-    # Set your Orka service URL to 10.221.188.20 (Orka 2.1+)
-    orka3 config set --api-url http://10.221.188.20
-    
-    # Set your Orka service URL to 10.221.188.100 (pre-Orka 2.1)
-    orka3 config set --api-url http://10.221.188.100
-    
-    # Set your Orka service URL to your built-in Orka domain
-    orka3 config set --api-url https://company.orka.app
-    
-    # Set your Orka service URL to an external custom domain
-    orka3 config set --api-url https://company.com
+```
+# Set your Orka service URL to 10.221.188.20 (Orka 2.1+)
+orka3 config set --api-url http://10.221.188.20
 
+# Set your Orka service URL to 10.221.188.100 (pre-Orka 2.1)
+orka3 config set --api-url http://10.221.188.100
+
+# Set your Orka service URL to your built-in Orka domain
+orka3 config set --api-url https://company.orka.app
+
+# Set your Orka service URL to an external custom domain
+orka3 config set --api-url https://company.com
+```
 **orka3 config view**
 
 View the current local Orka CLI configuration.
@@ -100,19 +106,22 @@ View the current local Orka CLI configuration.
 **Syntax:**
     
     
-    orka3 config view [flags]
-
+```
+orka3 config view [flags]
+```
 **Options:**
     
     
-    -h, --help   Display help for view
-
+```
+-h, --help   Display help for view
+```
 **Examples:**
     
     
-    # Print your current Orka CLI configuration
-    orka3 config view
-
+```
+# Print your current Orka CLI configuration
+orka3 config view
+```
 ## Shell Completion Setup
 
 The Orka CLI can generate autocompletion scripts for your shell, making it easier to discover commands and options.
@@ -129,15 +138,17 @@ The Orka CLI can generate autocompletion scripts for your shell, making it easie
 **Generate Completion Script**
     
     
-    orka3 completion [shell]
-
+```
+orka3 completion [shell]
+```
 See each sub-command's help for details on how to use the generated script.
 
 **Options:**
     
     
-    -h, --help   Display help for completion
-
+```
+-h, --help   Display help for completion
+```
 **Bash Completion**
 
 This script depends on the bash-completion package. If it is not installed, install it via your OS's package manager.
@@ -145,106 +156,123 @@ This script depends on the bash-completion package. If it is not installed, inst
 _Load completions in the current shell session:_
     
     
-    source <(orka3 completion bash)
-
+```
+source <(orka3 completion bash)
+```
 _Load completions for every new session (Linux):_
     
     
-    orka3 completion bash > /etc/bash_completion.d/orka3
-
+```
+orka3 completion bash > /etc/bash_completion.d/orka3
+```
  _Load completions for every new session (macOS):_
     
     
-    orka3 completion bash > $(brew --prefix)/etc/bash_completion.d/orka3
-
+```
+orka3 completion bash > $(brew --prefix)/etc/bash_completion.d/orka3
+```
 A new shell must be started for this setup to take effect.
 
 **Options:**
     
     
-    -h, --help              Display help for bash
-    --no-descriptions       Disable completion descriptions
-
+```
+-h, --help              Display help for bash
+--no-descriptions       Disable completion descriptions
+```
 **Fish Completion**
 
  _Load completions in the current shell session:_
     
     
-    orka3 completion fish | source
-
+```
+orka3 completion fish | source
+```
  _Load completions for every new session:_
     
     
-    orka3 completion fish > ~/.config/fish/completions/orka3.fish
-
+```
+orka3 completion fish > ~/.config/fish/completions/orka3.fish
+```
 A new shell must be started for this setup to take effect.
 
 **Syntax:**
     
     
-    orka3 completion fish [flags]
-
+```
+orka3 completion fish [flags]
+```
 **Options:**
     
     
-    -h, --help              Display help for fish
-    --no-descriptions       Disable completion descriptions
-
+```
+-h, --help              Display help for fish
+--no-descriptions       Disable completion descriptions
+```
 **PowerShell Completion**
 
  _Load completions in your current shell session:_
     
     
-    orka3 completion powershell | Out-String | Invoke-Expression
-
+```
+orka3 completion powershell | Out-String | Invoke-Expression
+```
 To load completions for every new session, add the output of the above command to your PowerShell profile.
 
 **Syntax:**
     
     
-    orka3 completion powershell [flags]
-
+```
+orka3 completion powershell [flags]
+```
 **Options:**
     
     
-    -h, --help              Display help for powershell
-    --no-descriptions       Disable completion descriptions
-
+```
+-h, --help              Display help for powershell
+--no-descriptions       Disable completion descriptions
+```
 **Zsh Completion**
 
 If shell completion is not already enabled in your environment, enable it first:
     
     
-    echo "autoload -U compinit; compinit" >> ~/.zshrc
-
+```
+echo "autoload -U compinit; compinit" >> ~/.zshrc
+```
  _Load completions in the current shell session:_
     
     
-    source <(orka3 completion zsh)
-
+```
+source <(orka3 completion zsh)
+```
 _Load completions for every new session (Linux):_
     
     
-    orka3 completion zsh > "${fpath[1]}/_orka3"
-
+```
+orka3 completion zsh > "${fpath[1]}/_orka3"
+```
 _Load completions for every new session (macOS):_
     
     
-    orka3 completion zsh > $(brew --prefix)/share/zsh/site-functions/_orka3
-
+```
+orka3 completion zsh > $(brew --prefix)/share/zsh/site-functions/_orka3
+```
 A new shell must be started for this setup to take effect.
 
 **Syntax:**
     
     
-    orka3 completion zsh [flags]
-
+```
+orka3 completion zsh [flags]
+```
 **Options:**
     
     
-    -h, --help              Display help for zsh
-    --no-descriptions       Disable completion descriptions
-
+```
+-h, --help              Display help for zsh
+--no-descriptions       Disable completion descriptions
+```
 ## Checking CLI Version
 
 **orka3 version**
@@ -254,17 +282,20 @@ Print the current version of the Orka CLI.
 **Syntax:**
     
     
-    orka3 version [flags]
-
+```
+orka3 version [flags]
+```
 **Options:**
     
     
-    -h, --help   Display help for version
-
+```
+-h, --help   Display help for version
+```
 **Examples:**
     
     
-    # Print the current version of the Orka CLI
-    orka3 version
-
+```
+# Print the current version of the Orka CLI
+orka3 version
+```
 The version output includes information about the CLI build and compatibility with your Orka cluster.

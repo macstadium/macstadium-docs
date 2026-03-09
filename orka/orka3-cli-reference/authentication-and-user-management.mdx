@@ -24,19 +24,22 @@ After you log in successfully, Orka generates an authentication token and stores
 **Syntax:**
     
     
-    orka3 login [flags]
-
+```
+orka3 login [flags]
+```
 **Options:**
     
     
-    -h, --help   Display help for login
-
+```
+-h, --help   Display help for login
+```
 **Examples:**
     
     
-    # Log in to your Orka cluster with your MacStadium Customer Portal credentials
-    orka3 login
-
+```
+# Log in to your Orka cluster with your MacStadium Customer Portal credentials
+orka3 login
+```
 **orka3 user login**
 
 Alternative command for logging in. Functions identically to `orka3 login`.
@@ -44,14 +47,16 @@ Alternative command for logging in. Functions identically to `orka3 login`.
 **Syntax:**
     
     
-    orka3 user login [flags]
-
+```
+orka3 user login [flags]
+```
 **Examples:**
     
     
-    # Log in to your Orka cluster
-    orka3 user login
-
+```
+# Log in to your Orka cluster
+orka3 user login
+```
 **orka3 user logout**
 
 Log out of the Orka cluster.
@@ -59,19 +64,22 @@ Log out of the Orka cluster.
 **Syntax:**
     
     
-    orka3 user logout [flags]
-
+```
+orka3 user logout [flags]
+```
 **Options:**
     
     
-    -h, --help   Display help for logout
-
+```
+-h, --help   Display help for logout
+```
 **Examples:**
     
     
-    # Log out of your Orka cluster
-    orka3 user logout
-
+```
+# Log out of your Orka cluster
+orka3 user logout
+```
 ## Managing Tokens
 
 **orka3 user get-token**
@@ -81,19 +89,22 @@ Print your authentication token from `~/.kube/config`. You can use this token to
 **Syntax:**
     
     
-    orka3 user get-token [flags]
-
+```
+orka3 user get-token [flags]
+```
 **Options:**
     
     
-    -h, --help   Display help for get-token
-
+```
+-h, --help   Display help for get-token
+```
 **Examples:**
     
     
-    # Print your authentication token from your ~/.kube/config
-    orka3 user get-token
-
+```
+# Print your authentication token from your ~/.kube/config
+orka3 user get-token
+```
 **orka3 user set-token**
 
 Log in with a valid authentication token. This operation lets you bypass logging in through the browser.
@@ -108,19 +119,22 @@ You can obtain a token by:
 **Syntax:**
     
     
-    orka3 user set-token VALID_TOKEN [flags]
-
+```
+orka3 user set-token VALID_TOKEN [flags]
+```
 **Options:**
     
     
-    -h, --help   Display help for set-token
-
+```
+-h, --help   Display help for set-token
+```
 **Examples:**
     
     
-    # Log in with a valid authentication token
-    orka3 user set-token VALID_TOKEN
-
+```
+# Log in with a valid authentication token
+orka3 user set-token VALID_TOKEN
+```
 ## Service Accounts
 
 Service accounts are intended for use by CI/CD integrations and automation. To use the cluster with one of the available Orka integrations, create a service account, obtain an authentication token for it, and configure the token in your preferred integration.
@@ -145,31 +159,35 @@ Create a service account with the specified name in the orka-default namespace o
 After creating a service account, obtain a token for it:
     
     
-    orka3 serviceaccount token SERVICE_ACCOUNT_NAME
-
+```
+orka3 serviceaccount token SERVICE_ACCOUNT_NAME
+```
 **Syntax:**
     
     
-    orka3 serviceaccount create SERVICE_ACCOUNT_NAME [--namespace TARGET_NAMESPACE] [flags]
-
+```
+orka3 serviceaccount create SERVICE_ACCOUNT_NAME [--namespace TARGET_NAMESPACE] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for create
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for create
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # Create a service account in the 'orka-default' namespace
-    orka3 serviceaccount create sa-jenkins
-    
-    # Shorter alias
-    orka3 sa create sa-jenkins
-    
-    # Create a service account in the specified namespace
-    orka3 sa create sa-jenkins-test --namespace orka-test
+```
+# Create a service account in the 'orka-default' namespace
+orka3 serviceaccount create sa-jenkins
 
+# Shorter alias
+orka3 sa create sa-jenkins
+
+# Create a service account in the specified namespace
+orka3 sa create sa-jenkins-test --namespace orka-test
+```
 **orka3 serviceaccount list**
 
 List the service accounts in the orka-default namespace or another specified namespace. You can also use this command to check if a specific service account already exists.
@@ -177,30 +195,33 @@ List the service accounts in the orka-default namespace or another specified nam
 **Syntax:**
     
     
-    orka3 serviceaccount list [SERVICE_ACCOUNT_NAME] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
-
+```
+orka3 serviceaccount list [SERVICE_ACCOUNT_NAME] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for list
-    -o, --output string      (Optional) Output format: table (default)|wide|json
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for list
+-o, --output string      (Optional) Output format: table (default)|wide|json
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # List the existing service accounts in the 'orka-default' namespace
-    orka3 sa list
-    
-    # List the existing service accounts for the specified namespace
-    orka3 sa list --namespace orka-test
-    
-    # Check if the specified service account already exists
-    orka3 sa list sa-jenkins
-    
-    # Check if the specified service account exists in a specific namespace
-    orka3 sa list sa-jenkins --namespace orka-test
+```
+# List the existing service accounts in the 'orka-default' namespace
+orka3 sa list
 
+# List the existing service accounts for the specified namespace
+orka3 sa list --namespace orka-test
+
+# Check if the specified service account already exists
+orka3 sa list sa-jenkins
+
+# Check if the specified service account exists in a specific namespace
+orka3 sa list sa-jenkins --namespace orka-test
+```
 **orka3 serviceaccount token**
 
 Obtain an authentication token for the specified service account name.
@@ -213,31 +234,34 @@ Obtain an authentication token for the specified service account name.
 **Syntax:**
     
     
-    orka3 serviceaccount token SERVICE_ACCOUNT_NAME [--duration DURATION] [--namespace TARGET_NAMESPACE] [flags]
-
+```
+orka3 serviceaccount token SERVICE_ACCOUNT_NAME [--duration DURATION] [--namespace TARGET_NAMESPACE] [flags]
+```
 **Options:**
     
     
-    --duration duration      Token lifetime in minutes or hours (default 8760h0m0s)
-    -h, --help               Display help for token
-    --no-expiration          Create token with no expiration (mutually exclusive with --duration)
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+--duration duration      Token lifetime in minutes or hours (default 8760h0m0s)
+-h, --help               Display help for token
+--no-expiration          Create token with no expiration (mutually exclusive with --duration)
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # Obtain a token for the specified service account
-    orka3 sa token sa-jenkins
-    
-    # Obtain a token for a service account in a specific namespace
-    orka3 sa token sa-jenkins-test --namespace orka-test
-    
-    # Obtain a token with a custom duration (must be in minutes or hours)
-    orka3 sa token sa-jenkins --duration 1h
-    
-    # Create a token with no expiration
-    orka3 sa token sa-jenkins --no-expiration
+```
+# Obtain a token for the specified service account
+orka3 sa token sa-jenkins
 
+# Obtain a token for a service account in a specific namespace
+orka3 sa token sa-jenkins-test --namespace orka-test
+
+# Obtain a token with a custom duration (must be in minutes or hours)
+orka3 sa token sa-jenkins --duration 1h
+
+# Create a token with no expiration
+orka3 sa token sa-jenkins --no-expiration
+```
 **orka3 serviceaccount delete**
 
 Delete one or more service accounts in the orka-default namespace or another specified namespace.
@@ -247,22 +271,26 @@ Delete one or more service accounts in the orka-default namespace or another spe
 **Syntax:**
     
     
-    orka3 serviceaccount delete SERVICE_ACCOUNT_NAME [SERVICE_ACCOUNT_NAME_2 ...] [--namespace TARGET_NAMESPACE] [flags]
-
+```
+orka3 serviceaccount delete SERVICE_ACCOUNT_NAME [SERVICE_ACCOUNT_NAME_2 ...] [--namespace TARGET_NAMESPACE] [flags]
+```
 **Options:**
     
     
-    -h, --help               Display help for delete
-    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
-
+```
+-h, --help               Display help for delete
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
 **Examples:**
     
     
-    # Delete the specified service account in the 'orka-default' namespace
-    orka3 sa delete sa-jenkins
-    
-    # Delete the specified service account in the 'orka-test' namespace
-    orka3 sa delete sa-jenkins --namespace orka-test
-    
-    # Delete multiple service accounts
-    orka3 sa delete sa-jenkins sa-jenkins-test
+```
+# Delete the specified service account in the 'orka-default' namespace
+orka3 sa delete sa-jenkins
+
+# Delete the specified service account in the 'orka-test' namespace
+orka3 sa delete sa-jenkins --namespace orka-test
+
+# Delete multiple service accounts
+orka3 sa delete sa-jenkins sa-jenkins-test
+```

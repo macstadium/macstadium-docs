@@ -66,15 +66,15 @@ Default metadata key | Description
 
     
     
-    curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{namespace}/vms' \
-    --header 'Content-Type: application/json' \
-    --header 'Authorization: Bearer <TOKEN>' \
-    --data-raw '{
-        "orka_vm_name": "<VM_NAME>",
-        "vm_metadata": { "items": [{"key": "<MY_METADATA_KEY>", "value": "<MY_METADATA_VALUE>" }] }
-    }'
-    
-
+```
+curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{namespace}/vms' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <TOKEN>' \
+--data-raw '{
+    "orka_vm_name": "<VM_NAME>",
+    "vm_metadata": { "items": [{"key": "<MY_METADATA_KEY>", "value": "<MY_METADATA_VALUE>" }] }
+}'
+```
 ## Retrieve VM metadata
 
 > **📘 IMPORTANT**
@@ -92,9 +92,9 @@ The server returns the metadata in a JSON format.
 
     
     
-    curl http://169.254.169.254/metadata/
-    
-
+```
+curl http://169.254.169.254/metadata/
+```
 The IP address `169.254.169.254` is a [link-local address](https://en.wikipedia.org/wiki/Link-local_address) and is accessible only from within the VM. All metadata values are defined as sub-paths below this root URL.
 
   4. To retrieve a specific VM metadata value for a specific key, pass the following request:
@@ -102,10 +102,10 @@ The IP address `169.254.169.254` is a [link-local address](https://en.wikipedia.
 
     
     
-    curl http://169.254.169.254/metadata/<DEFAULT_ORKA_KEY>
-    curl http://169.254.169.254/metadata/<MY_METADATA_KEY>
-    
-
+```
+curl http://169.254.169.254/metadata/<DEFAULT_ORKA_KEY>
+curl http://169.254.169.254/metadata/<MY_METADATA_KEY>
+```
 > **👍 Using special characters in your keys?**
 > 
 > Replace special characters in your key names with their correct encoded versions in your request. For example, run `curl 169.254.169.254/metadata/my%20key` instead of `curl 169.254.169.254/metadata/my key`.

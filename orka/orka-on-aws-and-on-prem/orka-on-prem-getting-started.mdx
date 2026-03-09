@@ -62,30 +62,31 @@ Orka uses OIDC for user authentication. Make sure to configure the MacStadium OI
 This can be done by setting the following values for your Kubernetes API Server:
     
     
-      --oidc-issuer-url={{ kube_oidc_url }} # Provided by MacStadium
-      --oidc-client-id={{ kube_oidc_client_id }} # Provided by MacStadium
-      --oidc-username-claim=email
-      --oidc-groups-claim=cognito:groups
-      --oidc-username-prefix=-
-      '--oidc-groups-prefix=oidc:'
-
+```
+  --oidc-issuer-url={{ kube_oidc_url }} # Provided by MacStadium
+  --oidc-client-id={{ kube_oidc_client_id }} # Provided by MacStadium
+  --oidc-username-claim=email
+  --oidc-groups-claim=cognito:groups
+  --oidc-username-prefix=-
+  '--oidc-groups-prefix=oidc:'
+```
 If you are using kubeadm to set up your cluster, you can pass these values as extra args to the apiServer property in the ClusterConfiguration resource:
     
     
-    apiVersion: kubeadm.k8s.io/v1beta3
-    kind: ClusterConfiguration
-    ...
-    apiServer:
-      extraArgs:
-        oidc-issuer-url: "{{ kube_oidc_url }}" # Provided by MacStadium
-        oidc-client-id: "{{ kube_oidc_client_id }}" # Provided by MacStadium
-        oidc-username-claim: "email"
-        oidc-groups-claim: "cognito:groups"
-        oidc-username-prefix: "-"
-        oidc-groups-prefix: "oidc:"
-    ...
-    
-
+```
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+...
+apiServer:
+  extraArgs:
+    oidc-issuer-url: "{{ kube_oidc_url }}" # Provided by MacStadium
+    oidc-client-id: "{{ kube_oidc_client_id }}" # Provided by MacStadium
+    oidc-username-claim: "email"
+    oidc-groups-claim: "cognito:groups"
+    oidc-username-prefix: "-"
+    oidc-groups-prefix: "oidc:"
+...
+```
 Alternatively, you could also add these manually as ApiServer arguments by editing the ApiServer config file (usually /etc/kubernetes/manifests/kube-apiserver.yaml)
 
 ### Obtaining an Orka License Key
@@ -102,7 +103,7 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 5\. Activate the license: ``orka-engine license set --key YOUR_KEY``
 
-Download Orka Engine directly at: <https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
+Download Orka Engine directly at: \<https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
 
 ### Installing the Orka Cluster Services[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#installing-the-orka-cluster-services)
 
@@ -112,55 +113,58 @@ You will need an environment with outbound internet access to connect to AWS and
 
   1. Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) in an environment that has outbound access to the internet to connect to AWS and download the installers. Ideally, the same environment will be used to connect to the Kubernetes API and have admin access to the Kubernetes Cluster. If not make sure to move the downloaded Ansible image to an environment that has the appropriate connectivity.
 
-     1. Create or update the `~/.aws/config` file to contain the default and runner profile information that can be filled in with additional key and ARN info provided by the MacStadium Support team. The profile runner will be used to pull the Ansible image in the next step. More details about the AWS CLI profiles can be found in their [documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
-    
-    [profile runner-credentials]
-    aws_access_key_id= # Provided by MacStadium
-    aws_secret_access_key= # Provided by MacStadium
-    
-    [profile runner]
-    role_arn= # Provided by MacStadium
-    source_profile = runner-credentials
-    role_session_name = ansible-runner-session
-    
+```
+ 1. Create or update the `~/.aws/config` file to contain the default and runner profile information that can be filled in with additional key and ARN info provided by the MacStadium Support team. The profile runner will be used to pull the Ansible image in the next step. More details about the AWS CLI profiles can be found in their [documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 
+[profile runner-credentials]
+aws_access_key_id= # Provided by MacStadium
+aws_secret_access_key= # Provided by MacStadium
+
+[profile runner]
+role_arn= # Provided by MacStadium
+source_profile = runner-credentials
+role_session_name = ansible-runner-session
+```
   2. Next, download the Ansible image. Ensure the Ansible runner is set up correctly:
      1. The Ansible runner must have connectivity to the cluster API.
      2. The Ansible runner must have Cluster Admin privileges to set up the cluster (i.e. a kube config with admin privileges
   3. Authenticate to ECR so you can pull the Ansible image provided by MacStadium
          
-         aws ecr get-login-password --region us-east-1 --profile runner | docker login --username AWS --password-stdin 519920272850.dkr.ecr.us-east-1.amazonaws.com
-
+```
+     aws ecr get-login-password --region us-east-1 --profile runner | docker login --username AWS --password-stdin 519920272850.dkr.ecr.us-east-1.amazonaws.com
+```
 where `<profile_name>` is the name of the profile you defined.
 
   4. On the host create a file called `cluster.yml`. This file will contain Ansible variables needed for the Orka setup. Add the following content:
          
-         k8s_api_address: # The address to the K8s API of your cluster. Must start with the protocol (https:// or http://)
-         kube_oidc_client_id: # Provided by MacStadium
-         aws_access_key_id: # Provided by MacStadium
-         aws_secret_access_key: # Provided by MacStadium
-         add_ecr_registry_role_arn: # Provided by MacStadium
-         aws_s3_access_role_arn: # Provided by MacStadium
-         orka_engine_license_key: # Provided by MacStadium
-                                                                                                    
-         ## Optionally - Configure tolerations and selectors
-         ## This is needed to get the Orka services deployed on the control plane nodes
-         
-         # configure_orka_tolerations:
-         #   - key: node-role.kubernetes.io/control-plane
-         #     effect: NoSchedule
-         #     operator: Exists
-         
-         # orka_node_selector: |
-         #   node-role.kubernetes.io/control-plane: ""
-
+```
+     k8s_api_address: # The address to the K8s API of your cluster. Must start with the protocol (https:// or http://)
+     kube_oidc_client_id: # Provided by MacStadium
+     aws_access_key_id: # Provided by MacStadium
+     aws_secret_access_key: # Provided by MacStadium
+     add_ecr_registry_role_arn: # Provided by MacStadium
+     aws_s3_access_role_arn: # Provided by MacStadium
+     orka_engine_license_key: # Provided by MacStadium
+                                                                                                
+     ## Optionally - Configure tolerations and selectors
+     ## This is needed to get the Orka services deployed on the control plane nodes
+     
+     # configure_orka_tolerations:
+     #   - key: node-role.kubernetes.io/control-plane
+     #     effect: NoSchedule
+     #     operator: Exists
+     
+     # orka_node_selector: |
+     #   node-role.kubernetes.io/control-plane: ""
+```
   5. Run the Ansible container:
 
 
     
     
-    docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
-
+```
+docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
+```
 where` <kube_config_location>` is the location of the kube config file on the host. Typically `~/.kube/config`. And `cluster.yml` is the file created in the previous step.
 
   6. Make sure you are in the `/ansible` directory
@@ -169,8 +173,9 @@ where` <kube_config_location>` is the location of the kube config file on the ho
 
     
     
-    ansible-playbook site.yml
-
+```
+ansible-playbook site.yml
+```
 ### Exposing the Orka API Service[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#exposing-the-orka-api-service)
 
 To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins).
@@ -201,26 +206,29 @@ To set up the Mac Nodes:
   1. Ensure the `cluster.yml` file is present and the values are correct
   2. Create a new file called nodes.yml with the following content:
          
-         host_password: # The password of the user setup on the Mac nodes
-         ansible_user: # The user setup on the Mac nodes
-
+```
+     host_password: # The password of the user setup on the Mac nodes
+     ansible_user: # The user setup on the Mac nodes
+```
   3. Create an inventory file called `hosts` with the following content:
          
-         [arm-nodes]
-         # Add the IPs of the nodes that need to be configured
-         # One IP per line
-         # (Optional) You can set osx_node_hostname={hostname} next to the IP to set a custom name of the node
-         # (Optional) You can set osx_node_kubelet_node_ip={host_ip} Needed if you want to set a specific IP or the virtual kubelet is unable to resolve it automatically
-         # Example:
-         # 10.221.188.30 osx_node_hostname=mini-1 osx_node_kubelet_node_ip=10.221.188.30
-
+```
+     [arm-nodes]
+     # Add the IPs of the nodes that need to be configured
+     # One IP per line
+     # (Optional) You can set osx_node_hostname={hostname} next to the IP to set a custom name of the node
+     # (Optional) You can set osx_node_kubelet_node_ip={host_ip} Needed if you want to set a specific IP or the virtual kubelet is unable to resolve it automatically
+     # Example:
+     # 10.221.188.30 osx_node_hostname=mini-1 osx_node_kubelet_node_ip=10.221.188.30
+```
   4. Run the same Ansible image that was used to configure the Orka services:
 
 
     
     
-    docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml -v ./nodes.yml:/ansible/group_vars/arm-nodes/nodes.yml -v ./hosts:/ansible/hosts -v <mac_ssh_key_location>:/root/.ssh/id_rsa 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
-
+```
+docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml -v ./nodes.yml:/ansible/group_vars/arm-nodes/nodes.yml -v ./hosts:/ansible/hosts -v <mac_ssh_key_location>:/root/.ssh/id_rsa 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
+```
 where `<mac_ssh_key_location>` is the location of the SSH key used to connect to the Mac nodes.
 
   5. Ensure you are in the `/ansible` directory
@@ -229,8 +237,9 @@ where `<mac_ssh_key_location>` is the location of the SSH key used to connect to
 
     
     
-    ansible-playbook configure-arm.yml -i hosts --ask-become-pass
-
+```
+ansible-playbook configure-arm.yml -i hosts --ask-become-pass
+```
 You will be asked for the ansible_user password. This is needed to that Ansible can setup autologin for the hosts. This is needed so you can run Sequoia VMs.
 
 ## Setting Up Backups[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#setting-up-backups)
@@ -264,22 +273,22 @@ To use the MacStadium provided functionality you need to:
   1. Create an AWS S3 bucket and generate AWS access id and secret access key that provide permissions to write to the bucket
   2. Run the Ansible image provided by MacStadium and mount a backup.yml file with the following content
          
-         aws_access_key_id_backup: # The creds that allow access to the S3 bucket  
-         aws_secret_access_key_backup: # The creds that allow access to the S3 bucket  
-         service_account: admin-user # You can also provide another service account here. It needs cluster-wide admin permissions  
-         s3_backup_path: # path to your s3 bucket. For example s3://my-backup-bucket
-
+```
+     aws_access_key_id_backup: # The creds that allow access to the S3 bucket  
+     aws_secret_access_key_backup: # The creds that allow access to the S3 bucket  
+     service_account: admin-user # You can also provide another service account here. It needs cluster-wide admin permissions  
+     s3_backup_path: # path to your s3 bucket. For example s3://my-backup-bucket
+```
   3. Run the container
          
-         docker run -it -v \<kube_config_location>:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash  
-
+```
+     docker run -it -v \<kube_config_location>:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash  
+```
   4. Run the backup playbook inside the `/ansible` folder
          
-         ansible-playbook backup.yml
-
-
-
-
+```
+     ansible-playbook backup.yml
+```
 ### Implementing Your Own Backup[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#implementing-your-own-backup)
 
 The recommended way to backup Orka resources is via a CronJob, similar to what MacStadium provides out of the box.
@@ -288,23 +297,19 @@ The resources you need to backup are:
 
   1. All namespaces with the label orka.macstadium.com/namespace
          
-         kubectl get namespaces -l orka.macstadium.com/namespace=true -o yaml \
-            | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.annotations, .items[].metadata.spec, .items[].metadata.generation, .items[].status, .items[].spec)'
-
-
-
-
+```
+     kubectl get namespaces -l orka.macstadium.com/namespace=true -o yaml \
+        | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.annotations, .items[].metadata.spec, .items[].metadata.generation, .items[].status, .items[].spec)'
+```
 Note - we are removing some metadata as otherwise restore would fail.
 
   2. OrkaNodes, VirtualMachineConfigs, ServiceAccounts, Rolebindings from these namespaces  
 Note - you need to remove some metadata from these resources. To do that, run the following:
          
-         kubectl get "$resource" -n "$namespace" -o yaml \ 
-            yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)' 
-
-
-
-
+```
+     kubectl get "$resource" -n "$namespace" -o yaml \ 
+        yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)' 
+```
 These resources can be stored in an yml file, which you can archive and store somewhere.
 
 # Logging, Monitoring, and Alerting[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#logging-monitoring-and-alerting)

@@ -29,91 +29,92 @@ You can use the configuration template provided below and fill in the missing in
 This is a template configuration that you can use to complete the setup of your GCP-MacStadium site-to-site VPN connection.
     
     
-    ! #1: Placeholders  
-    !  
-    ! { gcp_network_address } - The address of the GCP local network that needs to have access to MacStadium.  
-    ! { gcp_network_mask } - The subnet mask of the GCP local network that needs to have access to MacStadium.  
-    ! { gcp_vpn_ip } - The public IP address of the cloud VPN gateway in GCP.  
-    ! { macstadium_network_name } - The name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
-    ! { macstadium_network_address } - The IP address of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
-    ! { macstadium_network_mask } - The subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
-    ! { macstadium_public_ip } - The IP address of the public network of your MacStadium private cloud. By default, this is FW1-Outside.  
-    ! { macstadium_outside_interface } - The name of the outside interface of your Cisco ASA/ASAv device. By default, this is Outside.  
-    ! { shared_key } - The IPSec pre-shared key used when creating the VPN connection in GCP.  
-    !  
-    ! #2: NAT exemption  
-    !  
-    ! The name "GCP-NET" must be unique for the Cisco ASA/ASAv device.  
-    !  
-    object-group network GCP-NET  
-    description GCP Virtual Network  
-    network-object { gcp_network_address } { gcp_network_mask }  
-      
-    ! The name "ONPREM-NET" must be unique for the Cisco ASA/ASAv device.  
-      
-    object-group network ONPREM-NET  
-    description OnPrem Network  
-    network-object { macstadium_network_address } { macstadium_network_mask }  
-      
-    ! The names "gcp-in", "gcp-acl", and "gcp-filter" must be unique for the Cisco ASA/ASAv device.  
-      
-    access-list gcp-in extended permit ip host { gcp_vpn_ip } host { macstadium_public_ip }  
-    access-list gcp-acl extended permit ip any4 object-group GCP-NET  
-    access-list gcp-filter extended permit ip object-group GCP-NET object-group ONPREM-NET  
-      
-    nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET  
-      
-    ! #3: IKE & IPSec configuration  
-    !  
-    ! The name "gcp" must be unique for the Cisco ASA/ASAv device.  
-      
-    crypto ipsec ikev2 ipsec-proposal gcp  
-    protocol esp encryption aes-256  
-    protocol esp integrity sha-1  
-      
-    ! The name "gcp-vpn-map" must be unique for the Cisco ASA/ASAv device.  
-      
-    crypto map gcp-vpn-map 1 match address gcp-acl  
-    crypto map gcp-vpn-map 1 set pfs group14  
-    crypto map gcp-vpn-map 1 set peer { gcp_vpn_ip }  
-    crypto map gcp-vpn-map 1 set ikev2 ipsec-proposal gcp  
-      
-    crypto map gcp-vpn-map interface { macstadium_outside_interface }  
-    crypto ikev2 policy 100  
-    encryption aes-256  
-    integrity sha512  
-    group 14  
-    prf sha  
-    lifetime seconds 36000  
-    exit  
-      
-    crypto ikev2 enable { macstadium_outside_interface }  
-    crypto ipsec security-association lifetime seconds 10800  
-    crypto ipsec security-association replay window-size 128  
-    crypto ipsec security-association pmtu-aging infinite  
-    crypto isakmp identity address  
-    crypto isakmp disconnect-notify  
-    no crypto isakmp nat-traversal  
-    crypto ipsec df-bit clear-df Outside  
-    group-policy gcp internal  
-    group-policy gcp attributes  
-    vpn-filter value gcp-filter  
-    vpn-tunnel-protocol ikev2  
-    tunnel-group { gcp_vpn_ip } type ipsec-l2l  
-    tunnel-group { gcp_vpn_ip } general-attributes  
-    default-group-policy gcp  
-    tunnel-group { gcp_vpn_ip } ipsec-attributes  
-    isakmp keepalive threshold 10 retry 3  
-    ikev2 remote-authentication pre-shared-key { shared_key }  
-    ikev2 local-authentication pre-shared-key { shared_key }
-
+```
+! #1: Placeholders  
+!  
+! { gcp_network_address } - The address of the GCP local network that needs to have access to MacStadium.  
+! { gcp_network_mask } - The subnet mask of the GCP local network that needs to have access to MacStadium.  
+! { gcp_vpn_ip } - The public IP address of the cloud VPN gateway in GCP.  
+! { macstadium_network_name } - The name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
+! { macstadium_network_address } - The IP address of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
+! { macstadium_network_mask } - The subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
+! { macstadium_public_ip } - The IP address of the public network of your MacStadium private cloud. By default, this is FW1-Outside.  
+! { macstadium_outside_interface } - The name of the outside interface of your Cisco ASA/ASAv device. By default, this is Outside.  
+! { shared_key } - The IPSec pre-shared key used when creating the VPN connection in GCP.  
+!  
+! #2: NAT exemption  
+!  
+! The name "GCP-NET" must be unique for the Cisco ASA/ASAv device.  
+!  
+object-group network GCP-NET  
+description GCP Virtual Network  
+network-object { gcp_network_address } { gcp_network_mask }  
+  
+! The name "ONPREM-NET" must be unique for the Cisco ASA/ASAv device.  
+  
+object-group network ONPREM-NET  
+description OnPrem Network  
+network-object { macstadium_network_address } { macstadium_network_mask }  
+  
+! The names "gcp-in", "gcp-acl", and "gcp-filter" must be unique for the Cisco ASA/ASAv device.  
+  
+access-list gcp-in extended permit ip host { gcp_vpn_ip } host { macstadium_public_ip }  
+access-list gcp-acl extended permit ip any4 object-group GCP-NET  
+access-list gcp-filter extended permit ip object-group GCP-NET object-group ONPREM-NET  
+  
+nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET  
+  
+! #3: IKE & IPSec configuration  
+!  
+! The name "gcp" must be unique for the Cisco ASA/ASAv device.  
+  
+crypto ipsec ikev2 ipsec-proposal gcp  
+protocol esp encryption aes-256  
+protocol esp integrity sha-1  
+  
+! The name "gcp-vpn-map" must be unique for the Cisco ASA/ASAv device.  
+  
+crypto map gcp-vpn-map 1 match address gcp-acl  
+crypto map gcp-vpn-map 1 set pfs group14  
+crypto map gcp-vpn-map 1 set peer { gcp_vpn_ip }  
+crypto map gcp-vpn-map 1 set ikev2 ipsec-proposal gcp  
+  
+crypto map gcp-vpn-map interface { macstadium_outside_interface }  
+crypto ikev2 policy 100  
+encryption aes-256  
+integrity sha512  
+group 14  
+prf sha  
+lifetime seconds 36000  
+exit  
+  
+crypto ikev2 enable { macstadium_outside_interface }  
+crypto ipsec security-association lifetime seconds 10800  
+crypto ipsec security-association replay window-size 128  
+crypto ipsec security-association pmtu-aging infinite  
+crypto isakmp identity address  
+crypto isakmp disconnect-notify  
+no crypto isakmp nat-traversal  
+crypto ipsec df-bit clear-df Outside  
+group-policy gcp internal  
+group-policy gcp attributes  
+vpn-filter value gcp-filter  
+vpn-tunnel-protocol ikev2  
+tunnel-group { gcp_vpn_ip } type ipsec-l2l  
+tunnel-group { gcp_vpn_ip } general-attributes  
+default-group-policy gcp  
+tunnel-group { gcp_vpn_ip } ipsec-attributes  
+isakmp keepalive threshold 10 retry 3  
+ikev2 remote-authentication pre-shared-key { shared_key }  
+ikev2 local-authentication pre-shared-key { shared_key }
+```
 ## Fill in the configuration blanks
 
 You need to manually replace the placeholders in the configuration template with the values for your GCP and MacStadium configurations.
 
 ### Get the configuration values
 
-**{ gcp_network_address }**
+**\{ gcp_network_address }**
 
 This is the IP address of the GCP local network that needs to have access to MacStadium.
 
@@ -131,7 +132,7 @@ This is the IP address of the GCP local network that needs to have access to Mac
 
 
 
-**{ gcp_network_mask }**
+**\{ gcp_network_mask }**
 
 This is the subnet mask the GCP local network that needs to have access to MacStadium.
 
@@ -149,7 +150,7 @@ This is the subnet mask the GCP local network that needs to have access to MacSt
 
 
 
-**{ gcp_vpn_ip }**
+**\{ gcp_vpn_ip }**
 
 This is the public IP address of the cloud VPN gateway in GCP.
 
@@ -163,7 +164,7 @@ This is the public IP address of the cloud VPN gateway in GCP.
 
 
 
-**{ macstadium_network_name }**
+**\{ macstadium_network_name }**
 
 This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.
 
@@ -171,23 +172,23 @@ This is the name of the private network in MacStadium that needs to be accessed 
 
 
 
-**{ macstadium_network_address }**
+**\{ macstadium_network_address }**
 
 This is the IP address of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.
 
-**{ macstadium_network_mask }**
+**\{ macstadium_network_mask }**
 
 This is the subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.
 
-**{ macstadium_public_ip }**
+**\{ macstadium_public_ip }**
 
 This is the IP address of the public network of your MacStadium private cloud. By default, this is FW1-Outside.
 
-**{ macstadium_outside_interface }**
+**\{ macstadium_outside_interface }**
 
 This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Outside.
 
-**{ shared_key }**
+**\{ shared_key }**
 
 This is the IPSec pre-shared key used when creating the VPN connection in GCP. You must have this key saved separately.
 

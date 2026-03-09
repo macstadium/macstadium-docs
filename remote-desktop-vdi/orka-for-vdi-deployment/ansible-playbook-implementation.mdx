@@ -33,11 +33,12 @@ A playbook contains one or more "plays," each targeting specific hosts and execu
 An example of an inventory file:
     
     
-    [hosts]
-    10.0.0.31
-    10.0.0.32
-    10.0.0.33
-
+```
+[hosts]
+10.0.0.31
+10.0.0.32
+10.0.0.33
+```
 Playbooks eliminate manual work by automating repetitive tasks, ensuring consistency, rapid recovery, providing audit trails, and simplifying updates. Each task in a playbook runs sequentially, and if any task fails, Ansible reports the error and stops execution, preventing partial deployments.
 
 ### Core Ansible Playbook Examples
@@ -45,31 +46,35 @@ Playbooks eliminate manual work by automating repetitive tasks, ensuring consist
 #### VM Deploy
     
     
-    # Plan deployment (dry-run)
-    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" --tags plan
-    
-    # Execute deployment
-    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" 
+```
+# Plan deployment (dry-run)
+ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" --tags plan
 
+# Execute deployment
+ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" 
+```
 #### Delete a single VM 
     
     
-    ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
-
+```
+ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
+```
 #### Delete multiple VMs matching a specific naming convention
     
     
-    # Plan deletion (dry-run)
-    ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5" --tags plan
-    
-    # Execute deletion
-    ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5"
+```
+# Plan deletion (dry-run)
+ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5" --tags plan
 
+# Execute deletion
+ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5"
+```
 Note: This deletes a defined number of VMs from the group with that name. To delete a VM on a specific host, use:
     
     
-    ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent" --limit 10.0.100.10
-
+```
+ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent" --limit 10.0.100.10
+```
 Create backup file(s) before deleting a VM  
   
 Note: This implementation does not have a dedicated backup Ansible playbook. To preserve VM configurations:
@@ -92,8 +97,9 @@ Note: This implementation does not have a dedicated backup Ansible playbook. To 
 #### Create a VM Image
     
     
-    ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
-
+```
+ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
+```
 Before running:
 
 1\. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
@@ -103,15 +109,17 @@ Before running:
 3\. Example scripts:
     
     
-    - 01_install_dotnet.sh 
-    - 02_install_citrix_vda.sh 
-    - 03_configure_system.sh
-
+```
+- 01_install_dotnet.sh 
+- 02_install_citrix_vda.sh 
+- 03_configure_system.sh
+```
 #### Cache a VM Image
     
     
-    ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" 
-
+```
+ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" 
+```
 Note: `pull_image.yml` automatically caches the image on all hosts in the inventory.
 
 #### Recreate a VM Image
@@ -119,8 +127,9 @@ Note: `pull_image.yml` automatically caches the image on all hosts in the invent
 This implementation doesn’t have a dedicated playbook. To refresh VMs with a new image:
     
     
-    ansible-playbook -i inventory vm.yml "vm_name=citrix-vda-abc123" -e "desired_state=absent"
-
+```
+ansible-playbook -i inventory vm.yml "vm_name=citrix-vda-abc123" -e "desired_state=absent"
+```
 **VM recreation playbook workflow:**
 
   1. Delete existing VM
@@ -139,10 +148,11 @@ The Ansible playbook examples referenced throughout this document will require a
 Create a `group_vars/all.yml` file with the following settings as an example:
     
     
-    ansible_user: admin
-    vm_image: registry.example.com/citrix-vda/sonoma-finance:latest
-    max_vms_per_host: 2
-
+```
+ansible_user: admin
+vm_image: registry.example.com/citrix-vda/sonoma-finance:latest
+max_vms_per_host: 2
+```
 ### Test Basic VM Lifecycle Operations
 
 Before deploying to production, validate all playbook operations in a test environment.
@@ -173,4 +183,6 @@ Before deploying to production, validate all playbook operations in a test envir
 
     
     
-    ansible-playbook -i inventory create_orka_vm.yml -vvv -e "vm_name=test-vm-debug" -e "image_source=sonoma-test"
+```
+ansible-playbook -i inventory create_orka_vm.yml -vvv -e "vm_name=test-vm-debug" -e "image_source=sonoma-test"
+```

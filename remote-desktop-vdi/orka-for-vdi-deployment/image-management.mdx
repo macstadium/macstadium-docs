@@ -24,8 +24,9 @@ Golden images serve as templates for rapid VM deployment. A well-crafted golden 
 #### Create a VM Image
     
     
-    ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
-
+```
+ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
+```
 Before running:
 
 1\. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
@@ -35,30 +36,33 @@ Before running:
 3\. Example scripts:
     
     
-    scripts=(
-      01_install_dotnet.sh
-      02_install_citrix_vda.sh
-      03_configure_system.sh
-    )
-
+```
+scripts=(
+  01_install_dotnet.sh
+  02_install_citrix_vda.sh
+  03_configure_system.sh
+)
+```
 #### Update a VM to a New Image
 
 This implementation doesn’t have a dedicated playbook. To refresh VMs with a new image:
     
     
-    # Step 1: Delete the existing VM
-    ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
-    
-    # Step 2: Deploy a replacement VM from the new image version 
-    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
+```
+# Step 1: Delete the existing VM
+ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
 
+# Step 2: Deploy a replacement VM from the new image version 
+ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
+```
 ### Cache management
 
 #### Cache a VM Image
     
     
-    ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0"
-
+```
+ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+```
 Note: `pull_image.yml` automatically caches the image on all hosts in the inventory.
 
 ### Version control best practices
@@ -79,26 +83,29 @@ Note: `pull_image.yml` automatically caches the image on all hosts in the invent
 
   8. Define your image retention policy by addressing the following questions:
 
-     1. How long will you keep old image versions?
+```
+ 1. How long will you keep old image versions?
 
-     2. Which images will you always want to retain for rollback purposes?
+ 2. Which images will you always want to retain for rollback purposes?
 
-     3. When will you delete older image versions to free space if needed?
+ 3. When will you delete older image versions to free space if needed?
 
-     4. Will you store major image versions indefinitely? (This is strongly recommended for auditing/compliance)
+ 4. Will you store major image versions indefinitely? (This is strongly recommended for auditing/compliance)
 
-     5. When will you delete images tagged as dev/staging?
-
+ 5. When will you delete images tagged as dev/staging?
+```
   9. Test before promoting images to production
 
   10. Communicate image updates
 
-     1. Notify all impacted stakeholders about updates to VM images
+```
+ 1. Notify all impacted stakeholders about updates to VM images
 
-     2. Announce new versions as needed in team channels
+ 2. Announce new versions as needed in team channels
 
-     3. Document breaking changes
+ 3. Document breaking changes
 
-     4. Schedule production deployments to take place during maintenance windows
+ 4. Schedule production deployments to take place during maintenance windows
 
-     5. Before updating an image, provide stakeholders with a rollback plan
+ 5. Before updating an image, provide stakeholders with a rollback plan
+```

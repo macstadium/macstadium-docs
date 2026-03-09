@@ -87,9 +87,10 @@ Orka clusters now require authentication via Single Sign-On or via service accou
 Service accounts are intended for use with CI/CD integrations. They don't require username/password credentials to log in and let CI/CD integrations bypass the browser login via the Orka3 CLI. The tokens for service accounts also have an extended duration of 1 year.
     
     
-    orka3 sa create <SERVICE_ACCOUNT_NAME>  
-    orka3 sa token <SERVICE_ACCOUNT_NAME>
-
+```
+orka3 sa create <SERVICE_ACCOUNT_NAME>  
+orka3 sa token <SERVICE_ACCOUNT_NAME>
+```
 Grab the token from the response and use it to authenticate the CI/CD integration with the Orka cluster.
 
 These commands create a service account in the `orka-default` namespace and obtain a valid token for it. If you need your CI/CD integration to be able to work in additional namespaces, you need to create the service account in the respective namespace or [configure the respective role bindings](https://support.macstadium.com/hc/en-us/articles/28333357279387).
@@ -101,15 +102,17 @@ These commands create a service account in the `orka-default` namespace and obta
 
     
     
-    orka3 vm-config list
-
+```
+orka3 vm-config list
+```
   2. List the available base images that you can use to create a VM config.
 
 
     
     
-    orka3 image list
-
+```
+orka3 image list
+```
 You will likely see a `sonoma-90gb-orka3-arm` item. It is a fully installed and configured Apple Silicon-based macOS Sonoma image with a 90GB disk size. It also has an admin user configured, SSH and Apple Screen Sharing access enabled, and Orka VM Tools installed.
 
 **Glossary: Image**
@@ -133,8 +136,9 @@ Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible re
 So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest Sonoma image from GitHub packages. 
     
     
-    orka3 vmc create <NAME> --image ghcr.io/macstadium/orka-images/sonoma:latest --cpu 4
-
+```
+orka3 vmc create <NAME> --image ghcr.io/macstadium/orka-images/sonoma:latest --cpu 4
+```
 **VM configuration name limitations**
 
 The name you specify under `VM Name` must meet the following requirements:

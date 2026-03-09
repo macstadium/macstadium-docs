@@ -18,18 +18,19 @@ suggested_new_path: "/orka/orka3-cli-reference/output-formats-and-getting-help"
 Every command in the Orka CLI has built-in help documentation that you can access using the `--help` or `-h` flag.
     
     
-    # Get help for the main command
-    orka3 --help
-    
-    # Get help for a specific command
-    orka3 vm --help
-    
-    # Get help for a sub-command
-    orka3 vm deploy --help
-    
-    # Get help for configuration commands
-    orka3 config --help
+```
+# Get help for the main command
+orka3 --help
 
+# Get help for a specific command
+orka3 vm --help
+
+# Get help for a sub-command
+orka3 vm deploy --help
+
+# Get help for configuration commands
+orka3 config --help
+```
 **Command Structure**
 
 The help output for each command typically includes:
@@ -47,20 +48,22 @@ The help output for each command typically includes:
 Start with the main help to browse available command groups:
     
     
-    orka3 --help
-
+```
+orka3 --help
+```
 Then drill down into specific command groups:
     
     
-    # View all VM-related commands
-    orka3 vm --help
-    
-    # View all image-related commands
-    orka3 image --help
-    
-    # View all node-related commands
-    orka3 node --help
+```
+# View all VM-related commands
+orka3 vm --help
 
+# View all image-related commands
+orka3 image --help
+
+# View all node-related commands
+orka3 node --help
+```
 ## Understanding Output Formats
 
 Many Orka CLI commands support multiple output formats to suit different use cases.
@@ -77,18 +80,19 @@ Format | Flag | Description | Best For
 **Using Output Formats**
     
     
-    # Default table output
-    orka3 vm list
-    
-    # Extended table with more details
-    orka3 vm list --output wide
-    
-    # JSON output for scripting
-    orka3 vm list --output json
-    
-    # Short form
-    orka3 vm list -o json
+```
+# Default table output
+orka3 vm list
 
+# Extended table with more details
+orka3 vm list --output wide
+
+# JSON output for scripting
+orka3 vm list --output json
+
+# Short form
+orka3 vm list -o json
+```
 **Commands Supporting Output Formats**
 
 The following command groups support the `--output` flag:
@@ -112,58 +116,62 @@ The following command groups support the `--output` flag:
 JSON output is particularly useful for automation and scripting. You can use tools like `jq` to parse and filter the results:
     
     
-    # Get all VM names
-    orka3 vm list -o json | jq -r '.items[].name'
-    
-    # Get VMs with more than 4 CPUs
-    orka3 vm list -o json | jq '.items[] | select(.cpu > 4)'
-    
-    # Count total VMs
-    orka3 vm list -o json | jq '.items | length'
-    
-    # Get node IPs
-    orka3 node list -o json | jq -r '.items[].ip'
+```
+# Get all VM names
+orka3 vm list -o json | jq -r '.items[].name'
 
+# Get VMs with more than 4 CPUs
+orka3 vm list -o json | jq '.items[] | select(.cpu > 4)'
+
+# Count total VMs
+orka3 vm list -o json | jq '.items | length'
+
+# Get node IPs
+orka3 node list -o json | jq -r '.items[].ip'
+```
 ## Common Help Patterns
 
 **Discovering Available Commands**
     
     
-    # List all main command groups
-    orka3 --help
-    
-    # List all VM commands
-    orka3 vm --help
-    
-    # List all image commands
-    orka3 image --help
+```
+# List all main command groups
+orka3 --help
 
+# List all VM commands
+orka3 vm --help
+
+# List all image commands
+orka3 image --help
+```
 **Understanding Flags**
     
     
-    # See all flags for a command
-    orka3 vm deploy --help
-    
-    # See namespace-related options
-    orka3 vm list --help | grep namespace
-    
-    # See output format options
-    orka3 node list --help | grep output
+```
+# See all flags for a command
+orka3 vm deploy --help
 
+# See namespace-related options
+orka3 vm list --help | grep namespace
+
+# See output format options
+orka3 node list --help | grep output
+```
 **Finding Examples**
 
 Most command help includes an "Examples" section with common use cases:
     
     
-    # View examples for VM deployment
-    orka3 vm deploy --help
-    
-    # View examples for image management
-    orka3 image copy --help
-    
-    # View examples for namespace management
-    orka3 namespace create --help
+```
+# View examples for VM deployment
+orka3 vm deploy --help
 
+# View examples for image management
+orka3 image copy --help
+
+# View examples for namespace management
+orka3 namespace create --help
+```
 ## Quick Tips
 
 **Command Aliases**

@@ -64,15 +64,17 @@ Orka lets you log in with your MacStadium Customer Portal credentials. Your acce
 > The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
     
     
-    orka3 login
-
+```
+orka3 login
+```
 Orka will launch a new browser tab (or window) and let you log in via the SSO-enabled form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
 
 You now need to get your Orka authentication token from your `~/.kube/config`:
     
     
-    orka3 user get-token
-
+```
+orka3 user get-token
+```
 ## 3\. Launch the Orka UI
 
   * In your browser, navigate to your Orka API URL.
@@ -223,12 +225,13 @@ The good news is that `sonoma-90gb-orka3-arm` is already preconfigured for you, 
 
     
     
-    brew install orka-vm-tools  
-      
-    OR  
-      
-    brew upgrade orka-vm-tools
-
+```
+brew install orka-vm-tools  
+  
+OR  
+  
+brew upgrade orka-vm-tools
+```
 This action ensures that your VM (Virtual Machine) is running the latest version of the [Orka VM Tools](https://orkadocs.macstadium.com/docs/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs (Virtual Machines) more efficiently and enables vital features, such as [shared VM storage](https://orkadocs.macstadium.com/docs/shared-vm-storage).
 
 If your cluster is not running the latest Orka version, download and install an [Orka VM Tools](https://orkadocs.macstadium.com/docs/downloads#orka-vm-tools-for-arm-vms) that matches the version of your cluster.

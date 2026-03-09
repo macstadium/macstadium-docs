@@ -24,24 +24,26 @@ Before you can push an image to an OCI-compatible registry, you need to have the
 #### **Orka CLI**
     
     
-    orka3 vm push <VM_NAME> <SERVER_ADDRESS>/<IMAGE>[:<TAG>]  
-      
-    OR (if the VM is deployed in a namespace that is not 'orka-default')  
-      
-    orka3 vm push <VM_NAME> <SERVER_ADDRESS>/<IMAGE>[:<TAG>] --namespace <NAMESPACE>
-
+```
+orka3 vm push <VM_NAME> <SERVER_ADDRESS>/<IMAGE>[:<TAG>]  
+  
+OR (if the VM is deployed in a namespace that is not 'orka-default')  
+  
+orka3 vm push <VM_NAME> <SERVER_ADDRESS>/<IMAGE>[:<TAG>] --namespace <NAMESPACE>
+```
 #### **Orka API**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms/<VM_NAME>/push' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "imageReference": "<SERVER_ADDRESS>/<IMAGE>[:<TAG>]"  
-    }'
-
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms/<VM_NAME>/push' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"imageReference": "<SERVER_ADDRESS>/<IMAGE>[:<TAG>]"  
+}'
+```
 Note that you need to provide the registry path to the image name and optionally its tag. For example: ghcr.io/my-organization/orka-images/orka-arm:latest.
 
 This is an async operation. It returns a push job ID (in the vm-push- format) which you can use to check the status of the operation. Note that the push job ID is valid for 1 hour after the operation completes. Note that this check is not available with the Orka3 API.
@@ -49,12 +51,13 @@ This is an async operation. It returns a push job ID (in the vm-push- format) wh
 #### **Orka CLI**
     
     
-    orka3 vm get-push-status <PUSH_JOB_ID>  
-      
-    OR (if the VM is deployed in a namespace that is not 'orka-default')  
-      
-    orka3 vm get-push-status <PUSH_JOB_ID> --namespace <NAMESPACE>
-
+```
+orka3 vm get-push-status <PUSH_JOB_ID>  
+  
+OR (if the VM is deployed in a namespace that is not 'orka-default')  
+  
+orka3 vm get-push-status <PUSH_JOB_ID> --namespace <NAMESPACE>
+```
 ## Save changes as a new locally stored image
 
 If you don't want to push your changes to an OCI-compatible registry, you can save a new image locally to your cluster.
@@ -62,35 +65,40 @@ If you don't want to push your changes to an OCI-compatible registry, you can sa
 #### **Orka CLI**
     
     
-    orka3 vm save <VM_NAME> <IMAGE_NAME>  
-      
-    OR (if the VM is deployed in a namespace that is not 'orka-default')  
-      
-    orka3 vm save <VM_NAME> <IMAGE_NAME> --namespace <NAMESPACE>
-
+```
+orka3 vm save <VM_NAME> <IMAGE_NAME>  
+  
+OR (if the VM is deployed in a namespace that is not 'orka-default')  
+  
+orka3 vm save <VM_NAME> <IMAGE_NAME> --namespace <NAMESPACE>
+```
 #### **Orka API**
     
     
-    curl -X 'POST' \  
-    '<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms/<VM_NAME>/save' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>' \  
-    -H 'Content-Type: application/json' \  
-    -d '{  
-    "imageName": "<IMAGE_NAME>"  
-    }'
-
+```
+curl -X 'POST' \  
+'<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms/<VM_NAME>/save' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>' \  
+-H 'Content-Type: application/json' \  
+-d '{  
+"imageName": "<IMAGE_NAME>"  
+}'
+```
 This is an async operation. To check the status of the operation, run:
 
 #### **Orka CLI**
     
     
-    orka3 image list <IMAGE_NAME>
-
+```
+orka3 image list <IMAGE_NAME>
+```
 #### **Orka API**
     
     
-    curl -X 'GET' \  
-    '<ORKA_API_URL>/api/v1/namespaces/orka-default/images/<IMAGE_NAME>' \  
-    -H 'accept: application/json' \  
-    -H 'Authorization: Bearer <TOKEN>'
+```
+curl -X 'GET' \  
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/images/<IMAGE_NAME>' \  
+-H 'accept: application/json' \  
+-H 'Authorization: Bearer <TOKEN>'
+```

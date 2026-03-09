@@ -47,8 +47,9 @@ Orka VM Tools 2.2.0 introduce a breaking change to the Shared VM Storage feature
 ## Shared Storage in Intel-based VMs
     
     
-    sudo mount_9p orka
-
+```
+sudo mount_9p orka
+```
 The volume will be mounted at /Volumes/orka. The first time you attempt to access the filesystem via Terminal, you will be asked to grant the Terminal application permissions to access files on a network volume:
 
 ![fe2b601-Screen_Shot_2021-07-23_at_5.07.33_PM.png](https://support.macstadium.com/hc/article_attachments/28340384462491)
@@ -63,53 +64,59 @@ Instead of mounting the shared storage manually after every OS restart, you can 
 
   1. Connect to your VM via SSH. 
          
-         ssh <macOS_user>@<VM_IP> -p <SSH_PORT>
-
+```
+     ssh <macOS_user>@<VM_IP> -p <SSH_PORT>
+```
   2. Make sure that /Volumes/orka is already mounted on the VM. 
          
-         ls /Volumes
-
+```
+     ls /Volumes
+```
   3. If not already mounted, mount the shared VM storage. 
          
-         sudo mount_9p orka
-
+```
+     sudo mount_9p orka
+```
   4. Navigate to /Library/LaunchDaemons and create a com.mount9p.plist file. 
          
-         cd /Library/LaunchDaemons  
-           
-         ls  
-           
-         sudo vim com.mount9p.plist
-
+```
+     cd /Library/LaunchDaemons  
+       
+     ls  
+       
+     sudo vim com.mount9p.plist
+```
   5. Copy the following contents and paste them in Vim. Type :wq to save and exit.  
 com.mount9p.plist 
          
-         <?xml version="1.0" encoding="UTF-8"?>  
-         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">  
-         <plist version="1.0">  
-         <dict>  
-         <key>Label</key>  
-         <string>com.mount9p.plist</string>  
-         <key>RunAtLoad</key>  
-         <true/>  
-         <key>StandardErrorPath</key>  
-         <string>/var/log/mount_9p_error.log</string>  
-         <key>StandardOutPath</key>  
-         <string>/var/log/mount_9p.log</string>  
-         <key>ProgramArguments</key>  
-         <array>  
-         <string>/bin/bash</string>  
-         <string>-c</string>  
-         <string>mkdir -p /Volumes/orka && mount_9p orka</string>  
-         </array>  
-         </dict>  
-         </plist>
-
+```
+     <?xml version="1.0" encoding="UTF-8"?>  
+     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">  
+     <plist version="1.0">  
+     <dict>  
+     <key>Label</key>  
+     <string>com.mount9p.plist</string>  
+     <key>RunAtLoad</key>  
+     <true/>  
+     <key>StandardErrorPath</key>  
+     <string>/var/log/mount_9p_error.log</string>  
+     <key>StandardOutPath</key>  
+     <string>/var/log/mount_9p.log</string>  
+     <key>ProgramArguments</key>  
+     <array>  
+     <string>/bin/bash</string>  
+     <string>-c</string>  
+     <string>mkdir -p /Volumes/orka && mount_9p orka</string>  
+     </array>  
+     </dict>  
+     </plist>
+```
   6. Change the ownership and permissions for com.mount9p.plist. 
          
-         sudo chown root:wheel /Library/LaunchDaemons/com.mount9p.plist  
-         sudo chmod 600 /Library/LaunchDaemons/com.mount9p.plist
-
+```
+     sudo chown root:wheel /Library/LaunchDaemons/com.mount9p.plist  
+     sudo chmod 600 /Library/LaunchDaemons/com.mount9p.plist
+```
   7. Reboot the VM and save or commit the VM image.
 
 
@@ -123,11 +130,12 @@ You may encounter permissions issues when reading or writing data to the shared 
 If you need to give a specific user read and write access to files, you can add that user to the group 107. For example, if your CI user is called machine-user create the group ci:
     
     
-    sudo dscl . create /Groups/ci  
-    sudo dscl . create /Groups/ci gid 107  
-    sudo dscl . create /Groups/ci passwd '*'  
-    sudo dscl . create /Groups/ci GroupMembership machine-user
-
+```
+sudo dscl . create /Groups/ci  
+sudo dscl . create /Groups/ci gid 107  
+sudo dscl . create /Groups/ci passwd '*'  
+sudo dscl . create /Groups/ci GroupMembership machine-user
+```
 Confirm the above changes were made with the command dscl . read /Groups/ci. Reboot the virtual machine and save or commit the VM image to persist these changes.
 
 **IMPORTANT**

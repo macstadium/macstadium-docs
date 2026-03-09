@@ -57,21 +57,20 @@ Configures how users access desktops and what permissions they have within the O
 
   * Configure assignment type:
 
-    * Static: "Assign to specific user" to map users to specific VMs
+```
+* Static: "Assign to specific user" to map users to specific VMs
 
-    * Pooled: "Assign randomly" means users get the next available VM
-
+* Pooled: "Assign randomly" means users get the next available VM
+```
   * Add users or groups:
 
-    * Assign Active Directory security groups
+```
+* Assign Active Directory security groups
 
-    * Assign Azure AD groups
+* Assign Azure AD groups
 
-    * Add individual users for testing
-
-
-
-
+* Add individual users for testing
+```
 ##### Example assignment strategy
 
   * Delivery group: Finance-Standard-VDI
@@ -147,27 +146,26 @@ Configure HDX policies to enable/disable features as needed.
 
   * Finance team
 
-    * Clipboard: Enabled (unidirectional, client to VM only)
+```
+* Clipboard: Enabled (unidirectional, client to VM only)
 
-    * File transfer: Disabled
+* File transfer: Disabled
 
-    * Printing: Enabled
+* Printing: Enabled
 
-    * USB: Disabled
-
+* USB: Disabled
+```
   * Engineering team
 
-    * Clipboard: Bidirectional
+```
+* Clipboard: Bidirectional
 
-    * File transfer: Enabled
+* File transfer: Enabled
 
-    * Printing: Enabled
+* Printing: Enabled
 
-    * USB: Enabled (specific devices only)
-
-
-
-
+* USB: Enabled (specific devices only)
+```
 #### User communication:
 
 Before production rollout, communicate to users:
@@ -199,43 +197,46 @@ Host-level monitoring example:
 
     
     
-    # Check disk space for Orka storage
-    ansible hosts -i inventory -m shell -a "df -h /opt/orka"
-    
-    # Check CPU usage
-    ansible hosts -i inventory -m shell -a "top -l 1 | grep 'CPU usage'"
-    
-    # Check memory statistics
-    ansible hosts -i inventory -m shell -a "vm_stat"
+```
+# Check disk space for Orka storage
+ansible hosts -i inventory -m shell -a "df -h /opt/orka"
 
+# Check CPU usage
+ansible hosts -i inventory -m shell -a "top -l 1 | grep 'CPU usage'"
+
+# Check memory statistics
+ansible hosts -i inventory -m shell -a "vm_stat"
+```
 You may also wish to consider creating an Ansible playbook to run periodic health checks on your infrastructure layer:
     
     
-    ---
-    - name: Infrastructure Health Check
-      hosts: hosts
-      tasks:
-        - name: Check Orka Engine running
-          shell: pgrep orka-engine
-          register: orka_status
-          failed_when: orka_status.rc != 0
-    
-        - name: Check VM count per host
-          shell: /usr/local/bin/orka-engine vm list | wc -l
-          register: vm_count
-    
-        - name: Check disk space
-          shell: df -h | grep -v tmpfs
-          register: disk_status
+```
+---
+- name: Infrastructure Health Check
+  hosts: hosts
+  tasks:
+    - name: Check Orka Engine running
+      shell: pgrep orka-engine
+      register: orka_status
+      failed_when: orka_status.rc != 0
 
+    - name: Check VM count per host
+      shell: /usr/local/bin/orka-engine vm list | wc -l
+      register: vm_count
+
+    - name: Check disk space
+      shell: df -h | grep -v tmpfs
+      register: disk_status
+```
 VDA-level health checks (service status, log inspection) should be reviewed via Citrix Cloud Monitor or directly from within individual VMs. For host-level checks, use the Infrastructure Health Check playbook on a schedule.
 
 Citrix VDA service health and log monitoring should be observed via Citrix Cloud Monitor (Citrix Cloud Console → Monitor tab). For deeper log inspection, connect directly to the VM and run: 
     
     
-    sudo launchctl list | grep citrix
-    grep -i 'crash\|error\|fatal' /Library/Application\ Support/Citrix/VDA/Logs/vda.log | tail -20
-
+```
+sudo launchctl list | grep citrix
+grep -i 'crash\|error\|fatal' /Library/Application\ Support/Citrix/VDA/Logs/vda.log | tail -20
+```
 You can also use Citrix Cloud Monitor (built-in) to track:
 
   * Session launch success rate
@@ -257,35 +258,35 @@ You will also want to clearly define an alerting strategy with your team. As an 
 
   * Critical alerts (requiring immediate response)
 
-    * VDA registration drops below a certain percentage of expected count
+```
+* VDA registration drops below a certain percentage of expected count
 
-    * All VMs in a Delivery Group are “Unavailable”
+* All VMs in a Delivery Group are “Unavailable”
 
-    * Orka host disk space is >90% full
+* Orka host disk space is >90% full
 
-    * Orka Engine service has crashed
-
+* Orka Engine service has crashed
+```
   * Warning alerts (respond within 1-3 hours)
 
-    * Session launch failures over a certain percentage within 15 minutes
+```
+* Session launch failures over a certain percentage within 15 minutes
 
-    * Host CPU sustained at >80% for 10+ minutes
+* Host CPU sustained at >80% for 10+ minutes
 
-    * Disk space is >75% full
+* Disk space is >75% full
 
-    * VM deployments are failing
-
+* VM deployments are failing
+```
   * Informational alerts (review daily/as needed)
 
-    * Session launch time exceeds baseline by 50%
+```
+* Session launch time exceeds baseline by 50%
 
-    * Network latency increases
+* Network latency increases
 
-    * Users log out without proper shutdown
-
-
-
-
+* Users log out without proper shutdown
+```
 You will want to discuss with your team how you wish to structure your alerting tools and dashboards. This includes email or Slack/Teams notifications, PagerDuty or similar services for critical outage alerts, custom scripts, AI agents, or Ansible playbooks that send notifications to system administrators on failures.
 
 Dashboard configuration is helpful for teams to visualize the current availablity and uptime of the service. This may consist of certain attributes such as the total number of deployed VMs vs. available machines, current active sessions, session launch success rates, host resource utilization, recent alerts or incidents, and capacity utilization. Tools such as Grafana, Datadog, or Citrix Director can be used to create visualizations and dashboards.
@@ -362,9 +363,10 @@ Deploy new VMs from the backup image version using cron scheduling:
 VM image backup consists of ensuring your golden images are pushed to a secondary or off-site OCI registry. You can schedule this by running pull_image.yml against a backup registry destination on a cron schedule. For example, to re-tag and push an existing image to a backup registry:
     
     
-    # Pull latest golden image to local hosts (as a cache/backup step)
-    ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:latest" 
-
+```
+# Pull latest golden image to local hosts (as a cache/backup step)
+ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:latest" 
+```
 For persistent VM user data, backup procedures depend on your organization's existing storage infrastructure and are outside the scope of the Orka orchestration tooling.
 
 In the event of Orka host failure, take the following steps for system recovery:
@@ -553,18 +555,20 @@ As your user base grows, you may wish to add more Orka hosts:
   5. Add these new hosts to your existing Ansible inventory:  
 
          
-         [hosts]
-         10.0.100.10
-         10.0.100.11
-         10.0.100.12
-         10.0.100.13  # New host
-         10.0.100.14  # New host
-
+```
+     [hosts]
+     10.0.100.10
+     10.0.100.11
+     10.0.100.12
+     10.0.100.13  # New host
+     10.0.100.14  # New host
+```
   6. Cache golden images on new hosts:  
 
          
-         ansible-playbook -i inventory pull_image.yml --limit 10.0.100.13,10.0.100.14 -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"
-
+```
+     ansible-playbook -i inventory pull_image.yml --limit 10.0.100.13,10.0.100.14 -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"
+```
   7. Deploy VMs on new hosts:  
 
 
@@ -572,8 +576,9 @@ As your user base grows, you may wish to add more Orka hosts:
 
     
     
-    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=40" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
-
+```
+ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=40" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+```
 **Vertical scaling (increase VM resources):**
 
 If users need more powerful desktops, upgrade to higher-spec Macs:

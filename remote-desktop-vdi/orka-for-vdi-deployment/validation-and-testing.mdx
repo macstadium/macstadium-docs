@@ -33,21 +33,20 @@ Before beginning the testing and validation process, ensure:
 
   * Network configuration:
 
-    * VMs deployed with bridged networking OR
+```
+* VMs deployed with bridged networking OR
 
-    * Proper NAT/firewall configuration for VDA communication
-
-
-
-
+* Proper NAT/firewall configuration for VDA communication
+```
 #### End-to-end connectivity test via Citrix Workspace
 
 This test validates the complete user journey from authentication to desktop usage.
 
   1. Deploy 2-3 test VMs from your golden image, for example:
          
-         ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-test" -e "desired_vms=3" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
-
+```
+     ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-test" -e "desired_vms=3" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+```
   2. Verify VDA registration via the Citrix Cloud Console. Navigate to Manage → Virtual Apps and Desktops → Delivery Groups and confirm the VMs appear with a Registered status.
 
 
@@ -63,19 +62,17 @@ This test validates the complete user journey from authentication to desktop usa
 
   * Verify multi-factor authentication (if enabled)
 
-    * Expected result: Successful authentication, workspace dashboard loads
+```
+* Expected result: Successful authentication, workspace dashboard loads
 
-    * Common issues:
+* Common issues:
 
-      * Authentication fails: Verify user exists in identity provider and is assigned to the correct Delivery Group
+  * Authentication fails: Verify user exists in identity provider and is assigned to the correct Delivery Group
 
-      * MFA problems: Check MFA configuration in Citrix Cloud
+  * MFA problems: Check MFA configuration in Citrix Cloud
 
-      * Workspace URL incorrect: Confirm workspace URL matches Citrix Cloud tenant
-
-
-
-
+  * Workspace URL incorrect: Confirm workspace URL matches Citrix Cloud tenant
+```
 #### Desktop visibility testing in Citrix Workspace
 
   1. Navigate to the ‘Desktops’ tab in Citrix Workspace
@@ -86,21 +83,19 @@ This test validates the complete user journey from authentication to desktop usa
 **Expected result:** Desktop(s) visible with correct name from Delivery Group  
 **Common issues:**
 
-     1. No desktops appear:
+```
+ 1. No desktops appear:
 
-        1. Check user assignment in the Delivery Group
+    1. Check user assignment in the Delivery Group
 
-        2. Verify VMs are registered in Citrix Cloud Console
+    2. Verify VMs are registered in Citrix Cloud Console
 
-        3. Confirm VMs are in an “Available” state (not “In Use” or “Unregistered”)
+    3. Confirm VMs are in an “Available” state (not “In Use” or “Unregistered”)
 
-     2. Wrong desktop name
+ 2. Wrong desktop name
 
-        1. Update the desktop display name in Delivery Group settings
-
-
-
-
+    1. Update the desktop display name in Delivery Group settings
+```
 #### Session launch testing in Citrix Workspace
 
   1. Click on desktop to launch
@@ -111,20 +106,23 @@ This test validates the complete user journey from authentication to desktop usa
 **Expected result:** Desktop launches successfully within 15-30 seconds, macOS login screen or desktop appears  
 **Common issues:**
 
-     * Connection timeout
-
+```
+ * Connection timeout
+```
 Check network connectivity from client to Citrix Cloud
 
 Verify the Rendezvous connectivity from within a running VDA session by opening Terminal and running:
            
-           curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected
-
+```
+       curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected
+```
 2\. Confirm firewall allows HDX ports (1494, 2598)
 
 3\. If you see a black screen, the VDA service may not be running, restart the VDA service from within the VM:
            
-           sudo launchctl kickstart -k system/com.citrix.vda
-
+```
+       sudo launchctl kickstart -k system/com.citrix.vda
+```
 4\. Slow to launch: Check VM resource allocation and host performance
 
 
@@ -177,15 +175,13 @@ Verify the Rendezvous connectivity from within a running VDA session by opening 
 
   1. Test Clipboard (Copy/Paste) functionality
 
-     1. Copy text from client device → paste into VM
+```
+ 1. Copy text from client device → paste into VM
 
-     2. Copy text from VM → paste into client device
+ 2. Copy text from VM → paste into client device
 
-     3. Test the ability to copy/paste formatted text, images, and files
-
-
-
-
+ 3. Test the ability to copy/paste formatted text, images, and files
+```
 ##### File transfers
 
   1. Drag a file from the client to the VM desktop
@@ -367,9 +363,9 @@ These operations form the foundation of desktop pool management with Orka for VD
 
   1. Deploy VM from a golden image:
          
-         ansible-playbook -i inventory deploy.yml -e "vm_group=lifecycle-test" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
-
-  
+```
+     ansible-playbook -i inventory deploy.yml -e "vm_group=lifecycle-test" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+```
 After the VM has been deployed, you will want to confirm the VM has recieved an IP address from DHCP, it is accessible via SSH, the VDA service has started automatically and has been registered with Citrix Cloud, the desktop appears in Citrix Workspace, and users can successfully launch a session. You may also wish to record the amount of time it takes to complete this workflow from the time launch commands are executed to desktop availability.  
 
 
@@ -377,27 +373,27 @@ After the VM has been deployed, you will want to confirm the VM has recieved an 
   
 **Start a VM:**
          
-         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=running"
-
-  
+```
+     ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=running"
+```
 You will want to confirm that the VM boots successfully, the VDA service restarts automatically, the VDA re-registers with Citrix Cloud, desktop returns to “Available” state, and that users can successfully launch a new session.  
   
 **Stop a VM:**
          
-         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=stopped"
-
-  
+```
+     ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=stopped"
+```
 You will want to confirm that the VM stops gracefully (clean shutdown), that the VM state changes to “Stopped” in Orka for VDI, the desktop becomes unavailable in Citrix Workspace, and that no active sessions remain.  
   
 **Restart a VM (stop then start):**
          
-         # Stop the VM
-         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=stopped"
-         
-         # Start the VM
-         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=running"
-
-  
+```
+     # Stop the VM
+     ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=stopped"
+     
+     # Start the VM
+     ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=running"
+```
 You will want to confirm that the VM restarts cleanly and without corruption, that boot time is reasonable, all services start correctly, and the desktop is available after restarting.  
   
 **Recover a VM:** Note: This implementation does not have a dedicated recovery playbook.   
@@ -409,16 +405,16 @@ To recover a VM:
   
 Example: 
          
-         ansible-playbook -i inventory deploy.yml -e "vm_group=recovered-vm" -e "desired_vms=1" -e "vm_image=registry.example.com/backups/sonoma-finance:2025-01-15"
-
-  
+```
+     ansible-playbook -i inventory deploy.yml -e "vm_group=recovered-vm" -e "desired_vms=1" -e "vm_image=registry.example.com/backups/sonoma-finance:2025-01-15"
+```
 You will want to confirm that the VM has been recovered from backup, retains its configuration from the backup point, the VDA re-registers successfully, and the desktop is functional.  
   
 **Delete a VM:**
          
-         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=absent"
-
-  
+```
+     ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=absent"
+```
 You will want to confirm the VM has been deleted from Orka for VDI, the VM has been unregistered from Citrix Cloud, the desktop is removed from Citrix Workspace, resources have been freed on the Orka host.
 
 
@@ -432,40 +428,46 @@ Some metrics to consider measuring are:
 
   1. VM deployment time
 
-     1. How long does it take from playbook execution to the time a VDA is registered?
+```
+ 1. How long does it take from playbook execution to the time a VDA is registered?
 
-        1. To establish a baseline, you may wish to record the average, minimum, and maximum time this takes across 10+ deployments and establish an acceptable target (e.g. <5 minutes for cached images)
-
+    1. To establish a baseline, you may wish to record the average, minimum, and maximum time this takes across 10+ deployments and establish an acceptable target (e.g. <5 minutes for cached images)
+```
   2. Session launch time
 
-     1. How long does it take after clicking a desktop in Citrix Workspace to having a usable desktop?
+```
+ 1. How long does it take after clicking a desktop in Citrix Workspace to having a usable desktop?
 
-        1. To establish a baseline, you may want to test from multiple client locations such as office, remote, or mobile. An example target baseline metric may be <15 seconds for Rendezvous, and <10 seconds for a direct connection.
-
+    1. To establish a baseline, you may want to test from multiple client locations such as office, remote, or mobile. An example target baseline metric may be <15 seconds for Rendezvous, and <10 seconds for a direct connection.
+```
   3. HDX session quality
 
-     1. Record the average framerate during normal desktop use
+```
+ 1. Record the average framerate during normal desktop use
 
-     2. If there is input lag from keyboard/mouse to on-screen updates, how long does it take to resolve? Does the behavior persist upon restart?
+ 2. If there is input lag from keyboard/mouse to on-screen updates, how long does it take to resolve? Does the behavior persist upon restart?
 
-     3. How long does it take to launch an application within a desktop session?
+ 3. How long does it take to launch an application within a desktop session?
 
-     4. Is video playback quality acceptable?
-
+ 4. Is video playback quality acceptable?
+```
   4. Network latency
 
-     1. What is the round-trip time from client to VM?
+```
+ 1. What is the round-trip time from client to VM?
 
-        1. You can measure this using `ping` or HDX diagnostics
+    1. You can measure this using `ping` or HDX diagnostics
 
-        2. Test network latency under various conditions and configurations
-
+    2. Test network latency under various conditions and configurations
+```
   5. Resource utilization
 
-     1. What is the host CPU usage when VMs are running?
+```
+ 1. What is the host CPU usage when VMs are running?
 
-     2. What is the average memory consumption per VM?
+ 2. What is the average memory consumption per VM?
 
-     3. What disk I/O patterns are observed?
+ 3. What disk I/O patterns are observed?
 
-     4. What is the average network bandwidth per session?
+ 4. What is the average network bandwidth per session?
+```

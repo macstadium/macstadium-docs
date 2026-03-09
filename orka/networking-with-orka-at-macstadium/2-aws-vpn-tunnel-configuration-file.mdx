@@ -82,8 +82,9 @@ Placeholder | Value | Description | More information
 
     
     
-    object network obj-SrcNet subnet 0.0.0.0 0.0.0.0
-
+```
+object network obj-SrcNet subnet 0.0.0.0 0.0.0.0
+```
 Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). If you choose to modify this line, **do not** configure the `<sla_monitor_address>` value.
 
   5. Change `nat (inside,outside)` to `nat (Private-1,Outside)`.

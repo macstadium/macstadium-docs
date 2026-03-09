@@ -173,14 +173,15 @@ During setup, choose the customer gateway and the virtual private gateway to use
   7. Select the Routing Options: 
      * Static manually specifies the destination subnets of the VPN.  
 
-       * Select static routing and provide in Static IP Prefixes the CIDR notation for the private network listed in Appendix A of the IP Plan (by default, the Private-1 network). To convert the subnet mask to a CIDR notation, use a CIDR calculator. Example: 10.221.254.0/24
+```
+   * Select static routing and provide in Static IP Prefixes the CIDR notation for the private network listed in Appendix A of the IP Plan (by default, the Private-1 network). To convert the subnet mask to a CIDR notation, use a CIDR calculator. Example: 10.221.254.0/24
 
-     * Dynamic (requires BGP) and dynamically exchanges routes between AWS and MacStadium environments.  
+ * Dynamic (requires BGP) and dynamically exchanges routes between AWS and MacStadium environments.  
 
-       * Select dynamic routing to keep the default values and proceed to the next step.
+   * Select dynamic routing to keep the default values and proceed to the next step.
 
-       * **NOTE** : For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).
-
+   * **NOTE** : For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).
+```
   8. Do not edit the Tunnel Options section.
   9. Click Create VPN Connection.  
 ![089ae6a-image.png](https://support.macstadium.com/hc/article_attachments/28280561577499)
@@ -240,15 +241,17 @@ Placeholder Example | Description | More Information | Example
 ---|---|---|---  
       
     
-    <vpc_subnet>
-
+```
+<vpc_subnet>
+```
 | The IPv4 address of the Amazon VPC (without the subnet mask bit notation). | This value can be found by logging in to the AWS  
 Management Console and navigating to the VPC  
 dashboard. Select the VPC and checking the Description at the bottom of the screen. | 172.31.0.0  
       
     
-    <vpc_subnet_mask>
-
+```
+<vpc_subnet_mask>
+```
 | The subnet mask for the Amazon VPC. | This value can be found by logging in to the AWS  
 Management Console, and navigating to the VPC dashboard. Select the VPC, and check the Details at the bottom of the screen. Then convert the subnet mask bit notation to the  
 correct subnet mask  
@@ -256,19 +259,22 @@ correct subnet mask
 subnet mask). | 255.255.0.0  
       
     
-    <amzn_vpn_map>
-
+```
+<amzn_vpn_map>
+```
 | A unique name for the crypto map. If there is already a crypto maps configured, then change the mapping number. | [Cisco Documentation: Configuring Crypto Maps](https://www.cisco.com/c/en/us/td/docs/security/vpn_modules/6342/vpn_cg/6342site3.html#wp1036915) | amzn_vpn_map  
       
     
-    <sla_monitor_address>
-
+```
+<sla_monitor_address>
+```
 | An IP address in the Amazon VPC that can serve as an SLA monitor keeping the Site-To-Site tunnel alive. | Set this an available host in the  
 AWS VPC. The host must reply to ICMP echo requests | 172.31.0.5  
       
     
-    <local_subnet>
-
+```
+<local_subnet>
+```
 | The IP address for the internal private network of the MacStadium cloud as provided in Appendix A of your IP Plan.  
 By default, this is the Private-1 network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | 10.221.254.0  
   
@@ -280,16 +286,17 @@ By default, this is the Private-1 network. | [The IP Plan](https://support.macst
      * To uncomment, remove ! at the start of the line.
      * Keep the following line to ensure the SLA monitor works as expected. 
        * `object network obj-SrcNet subnet 0.0.0.0 0.0.0.0`
-       * **WARNING** : Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the <sla_monitor_address> value.
+       * **WARNING** : Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the \<sla_monitor_address> value.
   6. On the following line, change 0.0.0.0 0.0.0.0 to a combination of the IP address and the subnet mask for your Amazon VPC. 
      * These values are in the AWS Management Console. Navigate to the VPC dashboard and select the VPC, and check the Description at the bottom of the screen.
      * Convert the subnet mask bit notation to the correct subnet mask (for example, the /16 notation converts to a 255.255.0.0 subnet mask).
      * For example: 
        * object network obj-amzn subnet 0.0.0.0 0.0.0.0
 
-       * change to:
-       * object network obj-amzn subnet 192.168.0.0 255.255.0.0
-
+```
+   * change to:
+   * object network obj-amzn subnet 192.168.0.0 255.255.0.0
+```
   7. On the following line, change inside and outside to the names of the internal private network and the outside interface of the MacStadium private cloud, respectively, as provided in Appendix A of the IP Plan. By default, these are Private-1 and Outside, respectively. 
      * nat (inside,outside) 1 source static obj-SrcNet obj-SrcNet destination static obj-amzn obj-amzn 
 
@@ -307,27 +314,31 @@ Placeholder Examples | Description | More Information |  Example
 ---|---|---|---  
       
     
-    ‹outside_interface>
-
+```
+‹outside_interface>
+```
 | The name of the outside interface of the Cisco ASA/ASAv device as provided in Appendix A of your IP  
 Plan.  
 By default, the value is Outside. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | Outside  
       
     
-    <local_subnet>
-
+```
+<local_subnet>
+```
 |  The IP address for the internal private network of your  
 MacStadium cloud as provided in  
 Appendix A of your IP Plan. By default, this is the Private-1 network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | 10.221.254.0  
       
     
-    <local_subnet_mask>
-
+```
+<local_subnet_mask>
+```
 |  The subnet mask for the internal private LAN of the MacStadium cloud as provided in Appendix A of the IP Plan. By default, this is the Private-1 network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | 255.255.255.0  
       
     
-    <vpc_subnet>
-
+```
+<vpc_subnet>
+```
 | The IPv4 address of the Amazon  
 VPC (without the subnet mask bit notation). | This value can be found by logging in to the AWS  
 Management Console, and navigate to your VPC dashboard.  
@@ -338,13 +349,14 @@ screen. | 172.31.0.0
 
   2. Open the configuration file.
 
-  3. Replace the placeholders with their respective values. Currently, only the placeholder <outside_interface> is available in the AWS script. Use Table 1: Configuration parameters for reference.
+  3. Replace the placeholders with their respective values. Currently, only the placeholder \<outside_interface> is available in the AWS script. Use Table 1: Configuration parameters for reference.
 
   4. Change the name of the tunnel interfaces. Example:
 
-     * interface tunnel 100 nameif aws-vpn-1 interface tunnel 200 nameif aws-vpn-2
-
-  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network <local_subnet> mask <local_subnet_mask>
+```
+ * interface tunnel 100 nameif aws-vpn-1 interface tunnel 200 nameif aws-vpn-2
+```
+  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network \<local_subnet> mask \<local_subnet_mask>
 
   6. Replace the placeholders with their respective values.
 
@@ -353,35 +365,39 @@ screen. | 172.31.0.0
 Placeholder Example | Description | More Information | Example  
 ---|---|---|---  
            
-         ‹acl-state-bypass>
-
+```
+     ‹acl-state-bypass>
+```
 | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation:  
 Access Control Lists | acl-state-bypass  
            
-         <cm_state-bypass>
-
+```
+     <cm_state-bypass>
+```
 | A unique name for the Class-map. | Cisco Documentation:  
 TCP State Bypass | cm-state-bypass  
            
-         <pm-state-bypass>
-
+```
+     <pm-state-bypass>
+```
 | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation:  
 TCP State Bypass | pm-state-bypass  
-     * Define the Access list with the source and destination networks: access-list <acl-state-bypass> extended permit ip 
-       * <local_subnet> <local_subnet_mask> <vpc_subnet> <vpc_subnet_mask>
+     * Define the Access list with the source and destination networks: access-list \<acl-state-bypass> extended permit ip 
+       * \<local_subnet> \<local_subnet_mask> \<vpc_subnet> \<vpc_subnet_mask>
 
-     * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection: 
-       * class-map <cm-state-bypass>
+```
+ * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection: 
+   * class-map <cm-state-bypass>
 
-     * Enter the match parameter command to specify the traffic of interest within the class map: 
-       * match access-list <acl-state-bypass>
+ * Enter the match parameter command to specify the traffic of interest within the class map: 
+   * match access-list <acl-state-bypass>
 
-     * Enter the policy-map name command to assign the actions to be taken in regards to the specified class map traffic: 
-       * policy-map <pm-state-bypass> class <cm-state-bypass> set connection advanced-options tcp-state-bypass
+ * Enter the policy-map name command to assign the actions to be taken in regards to the specified class map traffic: 
+   * policy-map <pm-state-bypass> class <cm-state-bypass> set connection advanced-options tcp-state-bypass
 
-     * Enter the service-policy command in global configuration mode to activate the policy map on the targeted interface: 
-       * service-policy <pm-state-bypass> interface <private_interface>
-
+ * Enter the service-policy command in global configuration mode to activate the policy map on the targeted interface: 
+   * service-policy <pm-state-bypass> interface <private_interface>
+```
   8. Save changes
 
 

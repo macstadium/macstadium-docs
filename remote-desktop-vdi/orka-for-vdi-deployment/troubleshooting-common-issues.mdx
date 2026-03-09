@@ -28,31 +28,32 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   * Check VDA service status
         
-        ansible mac_vms -i inventory \
-          -m shell \
-          -a "sudo launchctl list | grep citrix"
-
+```
+    ansible mac_vms -i inventory \
+      -m shell \
+      -a "sudo launchctl list | grep citrix"
+```
   * Verify network connectivity
         
-        ansible mac_vms -i inventory \
-          -m shell \
-          -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
-
+```
+    ansible mac_vms -i inventory \
+      -m shell \
+      -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
+```
   * Review VDA logs
         
-        ansible mac_vms -i inventory \
-          -m shell \
-          -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
-
+```
+    ansible mac_vms -i inventory \
+      -m shell \
+      -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
+```
   * Restart VDA service
         
-        ansible mac_vms -i inventory \
-          -m shell \
-          -a "sudo launchctl kickstart -k system/com.citrix.vda"
-
-
-
-
+```
+    ansible mac_vms -i inventory \
+      -m shell \
+      -a "sudo launchctl kickstart -k system/com.citrix.vda"
+```
 **Common causes:**
 
   * Expired enrollment token
@@ -85,41 +86,43 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   * Verify VM is powered on
         
-        ansible-playbook -i inventory list_orka_vms.yml
-
+```
+    ansible-playbook -i inventory list_orka_vms.yml
+```
   * Check Citrix Cloud console
 
-    * Machine state should be “Registered” and “Available”
+```
+* Machine state should be “Registered” and “Available”
 
-    * Machine state should not be “Unregistered”, “Maintenance”, or “In Use”
-
+* Machine state should not be “Unregistered”, “Maintenance”, or “In Use”
+```
   * Test Rendezvous connectivity (if using)
         
-        ansible mac_vms -i inventory \
-          -m shell \
-          -a "curl -v https://*.*.nssvc.net 2>&1 | grep Connected"
-
+```
+    ansible mac_vms -i inventory \
+      -m shell \
+      -a "curl -v https://*.*.nssvc.net 2>&1 | grep Connected"
+```
   * Verify HDX ports are open
 
-    * Client → VM: TCP 1494, TCP 2598, UDP 1494, UDP 2598
+```
+* Client → VM: TCP 1494, TCP 2598, UDP 1494, UDP 2598
 
-    * Test with 
-          
-          nc -zv <vm-ip> 1494
-
+* Test with 
+      
+      nc -zv <vm-ip> 1494
+```
   * Check client side for issues
 
-    * Update Citrix Workspace app to the latest version
+```
+* Update Citrix Workspace app to the latest version
 
-    * Clear Citrix Workspace app cache
+* Clear Citrix Workspace app cache
 
-    * Try different client devices to help identify the problem
+* Try different client devices to help identify the problem
 
-    * If available, test from a different network to rule out network restrictions
-
-
-
-
+* If available, test from a different network to rule out network restrictions
+```
 **Common causes:**
 
   * VM powered ‘Off’, or crashed
@@ -154,43 +157,45 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   * Check host resource utilization
         
-        ansible hosts -i inventory \
-          -m shell \
-          -a "top -l 1 | grep 'CPU usage'"
-
+```
+    ansible hosts -i inventory \
+      -m shell \
+      -a "top -l 1 | grep 'CPU usage'"
+```
   * Check VM resource allocation
 
-    * Ensure VM has adequate CPU/RAM allocated
+```
+* Ensure VM has adequate CPU/RAM allocated
 
-    * Compare allocation to baseline requirements to ensure minimums are met
-
+* Compare allocation to baseline requirements to ensure minimums are met
+```
   * Check network latency with 
         
-        ping <vm-ip>
+```
+    ping <vm-ip>
 
-    * Test bandwidth availability
+* Test bandwidth availability
 
-    * Check for packet loss
-
+* Check for packet loss
+```
   * Review HDX policies
 
-    * Check Citrix policies for codec settings
+```
+* Check Citrix policies for codec settings
 
-    * Verify compression settings are appropriate for the connection
+* Verify compression settings are appropriate for the connection
 
-    * Ensure adaptive transport is enabled
-
+* Ensure adaptive transport is enabled
+```
   * Application specific issues
 
-    * Some applications may not perform well over HDX
+```
+* Some applications may not perform well over HDX
 
-    * Check Citrix compatibility for specific software
+* Check Citrix compatibility for specific software
 
-    * Consider GPU acceleration needs, if any
-
-
-
-
+* Consider GPU acceleration needs, if any
+```
 **Common causes:**
 
   * Insufficient VM resources
@@ -223,31 +228,32 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   * Check HDX policies in Citrix Cloud
 
-    * Navigate to Policies → HDX Settings
+```
+* Navigate to Policies → HDX Settings
 
-    * Verify that “Client clipboard redirection” is enabled
+* Verify that “Client clipboard redirection” is enabled
 
-    * Verify that “Client drive redirection” is enabled
-
+* Verify that “Client drive redirection” is enabled
+```
   * Restart the session
 
-    * Log out and back in (sometimes, policies don’t apply until a new session has been started)
-
+```
+* Log out and back in (sometimes, policies don’t apply until a new session has been started)
+```
   * Update Citrix Workspace application
 
-    * Ensure the latest version is installed, as older versions may have bugs when using the Clipboard
-
+```
+* Ensure the latest version is installed, as older versions may have bugs when using the Clipboard
+```
   * Test with different types of content
 
-    * Try plain text first
+```
+* Try plain text first
 
-    * Then try formatted text, images, or files
+* Then try formatted text, images, or files
 
-    * Isolate what’s working vs. what’s not working
-
-
-
-
+* Isolate what’s working vs. what’s not working
+```
 **Common causes:**
 
   * HDX policy is blocking the clipboard/file transfer
@@ -278,60 +284,66 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   * Check Orka Engine status
         
-        ansible hosts -i inventory \
-          -m shell \
-          -a "orka-engine --version"
-
+```
+    ansible hosts -i inventory \
+      -m shell \
+      -a "orka-engine --version"
+```
   * Verify the image exists and is valid
 
 
 
     
     
-    ansible hosts -i inventory \
-      -m shell \
-      -a "orka-engine image list"
-
+```
+ansible hosts -i inventory \
+  -m shell \
+  -a "orka-engine image list"
+```
   * Check available disk space
 
 
 
     
     
-    ansible hosts -i inventory \
-      -m shell \
-      -a "df -h /var/orka"
-
+```
+ansible hosts -i inventory \
+  -m shell \
+  -a "df -h /var/orka"
+```
   * Review Orka logs
 
 
 
     
     
-    ansible hosts -i inventory \
-      -m shell \
-      -a "sudo tail -100 /var/log/orka-engine.log"
-
+```
+ansible hosts -i inventory \
+  -m shell \
+  -a "sudo tail -100 /var/log/orka-engine.log"
+```
   * Attempt to manually deploy
 
-    * SSH to Orka host
+```
+* SSH to Orka host
 
-    * Manually run
-          
-          orka-engine vm create
+* Manually run
+      
+      orka-engine vm create
 
-    * Observe error messages
-
+* Observe error messages
+```
   * Force VM shutdown if VM is still stuck
 
 
 
     
     
-    ansible-playbook -i inventory stop_orka_vm.yml \
-      -e "vm_name=stuck-vm" \
-      -e "force=true"
-
+```
+ansible-playbook -i inventory stop_orka_vm.yml \
+  -e "vm_name=stuck-vm" \
+  -e "force=true"
+```
 **Common causes:**
 
   * Insufficient disk space for VM creation
@@ -364,37 +376,39 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   * Test registry connectivity
         
-        ansible hosts -i inventory \
-          -m shell \
-          -a "curl -v https://registry.example.com"
-
+```
+    ansible hosts -i inventory \
+      -m shell \
+      -a "curl -v https://registry.example.com"
+```
   * Verify registry credentials
 
-    * Check Ansible Vault contains correct credentials
+```
+* Check Ansible Vault contains correct credentials
 
-    * Test authentication manually
-
+* Test authentication manually
+```
   * Check available disk space
         
-        ansible hosts -i inventory \
-          -m shell \
-          -a "df -h /var/orka"
-
+```
+    ansible hosts -i inventory \
+      -m shell \
+      -a "df -h /var/orka"
+```
   * Review image size
 
-    * Images larger than 20GB may timeout on slow networks
+```
+* Images larger than 20GB may timeout on slow networks
 
-    * Consider optimizing images as needed
-
+* Consider optimizing images as needed
+```
   * Test with a smaller image
         
-        ansible-playbook -i inventory pull_orka_image.yml \
-          -e "remote_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
-          -e "local_name=test-pull"
-
-
-
-
+```
+    ansible-playbook -i inventory pull_orka_image.yml \
+      -e "remote_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
+      -e "local_name=test-pull"
+```
 **Common causes:**
 
   * Network timeout (large image + slow connection)
@@ -418,12 +432,14 @@ suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting
 
   3. Use verbose output when running playbooks for debugging
          
-         ansible-playbook -i inventory <playbook.yml> -vvv
-
+```
+     ansible-playbook -i inventory <playbook.yml> -vvv
+```
   4. Test on a single host before assuming an issue is widespread
          
-         ansible-playbook -i inventory <playbook.yml> --limit mac-node-1
-
+```
+     ansible-playbook -i inventory <playbook.yml> --limit mac-node-1
+```
   5. Document resolutions to issues for future reference, and add them to your internal company troubleshooting documentation
 
   6. Monitor logs proactively, and set up alerts as needed

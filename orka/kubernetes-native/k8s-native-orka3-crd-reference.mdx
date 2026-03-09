@@ -45,28 +45,30 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 Create simple VM config
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: VirtualMachineConfig  
-    metadata:  
-    name: my-orka-vm  
-    namespace: orka-default  
-    spec:  
-    cpu: 3  
-    image: sonoma-90gb-orka3-arm
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: VirtualMachineConfig  
+metadata:  
+name: my-orka-vm  
+namespace: orka-default  
+spec:  
+cpu: 3  
+image: sonoma-90gb-orka3-arm
+```
 Create VM config with attached ISO
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: VirtualMachineConfig  
-    metadata:  
-    name: my-orka-vm  
-    namespace: orka-default  
-    spec:  
-    cpu: 4  
-    image: empty-90gb-orka3-amd  
-    iso: sonoma.iso
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: VirtualMachineConfig  
+metadata:  
+name: my-orka-vm  
+namespace: orka-default  
+spec:  
+cpu: 4  
+image: empty-90gb-orka3-amd  
+iso: sonoma.iso
+```
 ## virtualmachineinstances.orka.macstadium.com
 
 ### Definitions
@@ -106,30 +108,32 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 **Deploy basic VM**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: VirtualMachineInstance  
-    metadata:  
-    name: my-orka-vm  
-    spec:  
-    image: ghcr.io/macstadium/orka-images/sonoma:latest
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: VirtualMachineInstance  
+metadata:  
+name: my-orka-vm  
+spec:  
+image: ghcr.io/macstadium/orka-images/sonoma:latest
+```
 **Deploy complex VM**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: VirtualMachineInstance  
-    metadata:  
-    name: my-advanced-orka-vm  
-    spec:  
-    cpu: 4  
-    gpuPassthrough: false  
-    image: sonoma-90gb-orka3-arm  
-    netBoost: true  
-    scheduler: default-scheduler  
-    vncConsole: true  
-    tag: my-tag  
-    tagRequired: false
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: VirtualMachineInstance  
+metadata:  
+name: my-advanced-orka-vm  
+spec:  
+cpu: 4  
+gpuPassthrough: false  
+image: sonoma-90gb-orka3-arm  
+netBoost: true  
+scheduler: default-scheduler  
+vncConsole: true  
+tag: my-tag  
+tagRequired: false
+```
 ## images.orka.macstadium.com
 
 ### Definitions
@@ -154,83 +158,88 @@ Field | Type | Description
 **Existing Apple silicon-based image**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Image  
-    metadata:  
-    annotations:  
-    orka.macstadium.com/description: sonoma-90gb-orka3-arm  
-    creationTimestamp: "2023-10-16T09:55:25Z"  
-    generation: 1  
-    labels:  
-    kubernetes.io/arch: arm64  
-    name: sonoma-90gb-orka3-arm  
-    namespace: orka-default  
-    resourceVersion: "3064"  
-    uid: f42805a1-7c71-4eaa-b61a-6206b59c0e97  
-    spec:  
-    size: 90G  
-    status:  
-    lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
-    state: Ready
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Image  
+metadata:  
+annotations:  
+orka.macstadium.com/description: sonoma-90gb-orka3-arm  
+creationTimestamp: "2023-10-16T09:55:25Z"  
+generation: 1  
+labels:  
+kubernetes.io/arch: arm64  
+name: sonoma-90gb-orka3-arm  
+namespace: orka-default  
+resourceVersion: "3064"  
+uid: f42805a1-7c71-4eaa-b61a-6206b59c0e97  
+spec:  
+size: 90G  
+status:  
+lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
+state: Ready
+```
 **Existing Intel-based image**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Image  
-    metadata:  
-    annotations:  
-    orka.macstadium.com/description: 90GBVenturaSSH.img  
-    creationTimestamp: "2023-10-16T09:55:25Z"  
-    generation: 1  
-    labels:  
-    kubernetes.io/arch: amd64  
-    name: 90gbventurassh.img  
-    namespace: orka-default  
-    resourceVersion: "3032"  
-    uid: e329b4e4-90e5-4b3c-9c2c-8651923d87ed  
-    spec:  
-    size: 90G  
-    status:  
-    lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
-    state: Ready
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Image  
+metadata:  
+annotations:  
+orka.macstadium.com/description: 90GBVenturaSSH.img  
+creationTimestamp: "2023-10-16T09:55:25Z"  
+generation: 1  
+labels:  
+kubernetes.io/arch: amd64  
+name: 90gbventurassh.img  
+namespace: orka-default  
+resourceVersion: "3032"  
+uid: e329b4e4-90e5-4b3c-9c2c-8651923d87ed  
+spec:  
+size: 90G  
+status:  
+lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
+state: Ready
+```
 **Generate empty image**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Image  
-    metadata:  
-    name: empty-90gb-orka3-amd  
-    namespace: orka-default  
-    spec:  
-    size: 90G  
-    sourceType: generated
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Image  
+metadata:  
+name: empty-90gb-orka3-amd  
+namespace: orka-default  
+spec:  
+size: 90G  
+sourceType: generated
+```
 **Copy local image**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Image  
-    metadata:  
-    name: copy-sonoma-90gb-orka3-arm  
-    namespace: orka-default  
-    spec:  
-    sourceType: local  
-    source: sonoma-90gb-orka3-arm
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Image  
+metadata:  
+name: copy-sonoma-90gb-orka3-arm  
+namespace: orka-default  
+spec:  
+sourceType: local  
+source: sonoma-90gb-orka3-arm
+```
 **Pull remote image**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Image  
-    metadata:  
-    name: pulled-ventura-orka3-arm  
-    namespace: orka-default  
-    spec:  
-    sourceType: remote  
-    source: 90gbventurassh.orkasi
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Image  
+metadata:  
+name: pulled-ventura-orka3-arm  
+namespace: orka-default  
+spec:  
+sourceType: remote  
+source: 90gbventurassh.orkasi
+```
 ## isos.orka.macstadium.com
 
 ### Definitions
@@ -249,47 +258,50 @@ Field | Type | Description
 **Existing ISO**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Iso  
-    metadata:  
-    annotations:  
-    orka.macstadium.com/description: Ventura.iso  
-    creationTimestamp: "2023-10-16T09:55:25Z"  
-    generation: 1  
-    name: ventura.iso  
-    namespace: orka-default  
-    resourceVersion: "3079"  
-    uid: 1c6f8e5c-fc0b-449b-ba03-2351d41d8d34  
-    spec:  
-    size: 2G  
-    status:  
-    lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
-    state: Ready
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Iso  
+metadata:  
+annotations:  
+orka.macstadium.com/description: Ventura.iso  
+creationTimestamp: "2023-10-16T09:55:25Z"  
+generation: 1  
+name: ventura.iso  
+namespace: orka-default  
+resourceVersion: "3079"  
+uid: 1c6f8e5c-fc0b-449b-ba03-2351d41d8d34  
+spec:  
+size: 2G  
+status:  
+lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
+state: Ready
+```
 **Copy local ISO**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Iso  
-    metadata:  
-    name: copy-big-sur.iso  
-    namespace: orka-default  
-    spec:  
-    sourceType: local  
-    source: big-sur.iso
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Iso  
+metadata:  
+name: copy-big-sur.iso  
+namespace: orka-default  
+spec:  
+sourceType: local  
+source: big-sur.iso
+```
 **Pull remote ISO**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: Iso  
-    metadata:  
-    name: pulled-ventura.iso  
-    namespace: orka-default  
-    spec:  
-    sourceType: remote  
-    source: ventura.iso
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: Iso  
+metadata:  
+name: pulled-ventura.iso  
+namespace: orka-default  
+spec:  
+sourceType: remote  
+source: ventura.iso
+```
 ## remoteimages.orka.macstadium.com
 
 ### Definitions
@@ -304,21 +316,22 @@ Field | Type | Description
 **Existing remote image**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: RemoteImage  
-    metadata:  
-    creationTimestamp: "2023-10-16T09:55:25Z"  
-    generation: 1  
-    labels:  
-    kubernetes.io/arch: amd64  
-    name: 90gbventurassh.img  
-    namespace: orka-default  
-    resourceVersion: "3095"  
-    uid: 29d907bc-e284-487b-8352-8466f89c8568  
-    spec:  
-    imageName: 90GBVenturaSSH.img  
-    size: 90G
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: RemoteImage  
+metadata:  
+creationTimestamp: "2023-10-16T09:55:25Z"  
+generation: 1  
+labels:  
+kubernetes.io/arch: amd64  
+name: 90gbventurassh.img  
+namespace: orka-default  
+resourceVersion: "3095"  
+uid: 29d907bc-e284-487b-8352-8466f89c8568  
+spec:  
+imageName: 90GBVenturaSSH.img  
+size: 90G
+```
 ## remoteisos.orka.macstadium.com
 
 ### Definitions
@@ -333,19 +346,20 @@ Field | Type | Description
 **Existing remote iso**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: RemoteIso  
-    metadata:  
-    creationTimestamp: "2023-10-16T09:55:25Z"  
-    generation: 1  
-    name: ventura.iso  
-    namespace: orka-default  
-    resourceVersion: "3092"  
-    uid: 25de0e37-e99d-4dde-9931-c5d6a872166e  
-    spec:  
-    isoName: Ventura.iso  
-    size: 16G
-
+```
+apiVersion: orka.macstadium.com/v1  
+kind: RemoteIso  
+metadata:  
+creationTimestamp: "2023-10-16T09:55:25Z"  
+generation: 1  
+name: ventura.iso  
+namespace: orka-default  
+resourceVersion: "3092"  
+uid: 25de0e37-e99d-4dde-9931-c5d6a872166e  
+spec:  
+isoName: Ventura.iso  
+size: 16G
+```
 ## orkanodes.orka.macstadium.com
 
 ### Definitions
@@ -369,34 +383,36 @@ Field | Type | Description
 **Existing node**
     
     
-    apiVersion: orka.macstadium.com/v1  
-    kind: OrkaNode  
-    metadata:  
-    creationTimestamp: "2023-10-16T09:55:25Z"  
-    generation: 1  
-    labels:  
-    kubernetes.io/arch: amd64  
-    name: mini-25  
-    namespace: orka-default  
-    ownerReferences:  
-    - apiVersion: v1  
-    blockOwnerDeletion: true  
-    controller: true  
-    kind: Node  
-    name: mini-25  
-    uid: 5bde48ba-a951-46c6-814e-6147cca52dca  
-    resourceVersion: "3052"  
-    uid: dade0833-c06e-45ac-86ec-67abba759d96  
-    spec:  
-    namespace: orka-default  
-    tags: []  
-    status:  
-    allocatableCpu: 12  
-    allocatableGpu: 0  
-    allocatableMemory: 62.56G  
-    availableCpu: 12  
-    availableGpu: 0  
-    availableMemory: 62.56G  
-    nodeIP: 10.221.188.35  
-    nodeType: WORKER  
-    phase: READY
+```
+apiVersion: orka.macstadium.com/v1  
+kind: OrkaNode  
+metadata:  
+creationTimestamp: "2023-10-16T09:55:25Z"  
+generation: 1  
+labels:  
+kubernetes.io/arch: amd64  
+name: mini-25  
+namespace: orka-default  
+ownerReferences:  
+- apiVersion: v1  
+blockOwnerDeletion: true  
+controller: true  
+kind: Node  
+name: mini-25  
+uid: 5bde48ba-a951-46c6-814e-6147cca52dca  
+resourceVersion: "3052"  
+uid: dade0833-c06e-45ac-86ec-67abba759d96  
+spec:  
+namespace: orka-default  
+tags: []  
+status:  
+allocatableCpu: 12  
+allocatableGpu: 0  
+allocatableMemory: 62.56G  
+availableCpu: 12  
+availableGpu: 0  
+availableMemory: 62.56G  
+nodeIP: 10.221.188.35  
+nodeType: WORKER  
+phase: READY
+```

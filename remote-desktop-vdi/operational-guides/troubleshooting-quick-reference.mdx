@@ -682,12 +682,14 @@ Quick diagnostic:
 
   2. Ask the user to run: [](https://speedtest.net/)[Speedtest by Ookla - The Global Broadband Speed Test](https://speedtest.net/)
 
-     1. < 5 Mbps indicates the user is experiencing low bandwidth issues
-
+```
+ 1. < 5 Mbps indicates the user is experiencing low bandwidth issues
+```
   3. Check the user’s HDX Visual Quality policy by navigating to: Citrix Cloud Console → Policies.
 
-     1. Find the user's policy in → HDX Settings → Visual Quality
-
+```
+ 1. Find the user's policy in → HDX Settings → Visual Quality
+```
   4. Test bandwidth/performance with Citrix HDX Monitor (if available), as this shows real-time HDX metrics
 
   5. Check the user’s connection type (Are they connecting remotely/via VPN? On wifi? Wired?)
@@ -718,23 +720,23 @@ Quick diagnostic:
 
   1. Measure login time components
 
-     1. Time for desktop to appear in Workspace: Citrix delivery time
+```
+ 1. Time for desktop to appear in Workspace: Citrix delivery time
 
-     2. Time from click to login prompt: VM boot time (if stopped)
+ 2. Time from click to login prompt: VM boot time (if stopped)
 
-     3. Time from login to desktop: User profile load time
-
+ 3. Time from login to desktop: User profile load time
+```
   2. Check if VM had to boot `ansible-playbook -i dev/inventory list.yml | grep <vm-name>`
 
-     1. If VM was stopped, boot time is included
-
+```
+ 1. If VM was stopped, boot time is included
+```
   3. Check user profile size (if using roaming profiles)
 
-     1. VNC to VM after user login: `du -sh /Users/<username>`
-
-
-
-
+```
+ 1. VNC to VM after user login: `du -sh /Users/<username>`
+```
 4\. Monitor VM resources during login: Watch Activity Monitor during the login process
 
 **Cause** |  **How to verify** |  **Solution**  
@@ -758,27 +760,28 @@ Quick diagnostic:
 
   1. Test from within the VM directly
 
-     1. VNC to the VM
+```
+ 1. VNC to the VM
 
-     2. Launch the app; and time the launch
-
+ 2. Launch the app; and time the launch
+```
   2. Check if the app is on network share vs. local storage
 
-     1. Applications on network drives are slower
-
+```
+ 1. Applications on network drives are slower
+```
   3. Check VM disk I/O
 
-     1. Activity Monitor → Disk tab during application launch
-
+```
+ 1. Activity Monitor → Disk tab during application launch
+```
   4. Check available memory
 
-     1. Activity Monitor → Memory tab
+```
+ 1. Activity Monitor → Memory tab
 
-     2. Look for increased memory pressure
-
-
-
-
+ 2. Look for increased memory pressure
+```
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
 Apps installed on network share | App path shows network/UNC location | Install applications locally in golden image; update image; redeploy VMs  
@@ -802,12 +805,14 @@ Quick diagnostic:
 
   2. Check for runaway processes
 
-     1. Look for: Spotlight indexing (mds), kernel_task, unexpected processes
-
+```
+ 1. Look for: Spotlight indexing (mds), kernel_task, unexpected processes
+```
   3. Check for malware (unlikely but possible)
 
-     1. Run security scan if suspicious
-
+```
+ 1. Run security scan if suspicious
+```
   4. Monitor over time: Is the CPU spike temporary or sustained?
 
 
@@ -840,19 +845,19 @@ Quick diagnostic:
 
   2. Test user login capabilities with a known-good account
 
-     1. Use an admin account or test account to attempt logging in
-
+```
+ 1. Use an admin account or test account to attempt logging in
+```
   3. Check if the issue is specific to one VM or is impacting all VMs
 
-     1. Try launching a different desktop in the pool
-
+```
+ 1. Try launching a different desktop in the pool
+```
   4. Check VDA domain binding (if using AD)
 
-     1. VNC into the VM: System Preferences → Citrix VDA → Check domain binding status
-
-
-
-
+```
+ 1. VNC into the VM: System Preferences → Citrix VDA → Check domain binding status
+```
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
 User account disabled in AD/IdP | Check Active Directory or identity provider status | Re-enable user account; verify account is active  
@@ -873,25 +878,26 @@ Quick diagnostic:
 
   1. Check the user's group memberships
 
-     1. VNC into the VM:
+```
+ 1. VNC into the VM:
 
-     2. In the Terminal, enter: `groups <username>` or `dscl . -read /Users/<username> GroupMembership`
-
+ 2. In the Terminal, enter: `groups <username>` or `dscl . -read /Users/<username> GroupMembership`
+```
   2. Verify user permissions on restricted resources
 
-     1. Check file/folder permissions
-
+```
+ 1. Check file/folder permissions
+```
   3. Test with a known-good user from the same group
 
-     1. Do other users have the correct group access?
-
+```
+ 1. Do other users have the correct group access?
+```
   4. Check GPO application (if using AD)
 
-     1. In the Terminal, enter: `sudo gpupdate --user`
-
-
-
-
+```
+ 1. In the Terminal, enter: `sudo gpupdate --user`
+```
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
 User not in required AD groups | `groups` command doesn't show expected group | Add user to appropriate Active Directory security groups  
@@ -913,23 +919,24 @@ Quick diagnostic:
 
   1. Check Citrix Workspace SSO configuration
 
-     1. Ask the user to log into Citrix Workspace → Preferences → and verify their SSO settings
-
+```
+ 1. Ask the user to log into Citrix Workspace → Preferences → and verify their SSO settings
+```
   2. Verify Citrix Gateway/SSO configuration is correct
 
-     1. If using Citrix Gateway: Check pass-through authentication settings
-
+```
+ 1. If using Citrix Gateway: Check pass-through authentication settings
+```
   3. Test SSO login capability with manual credentials
 
-     1. Does SSO login work if the user enters their credentials manually?
-
+```
+ 1. Does SSO login work if the user enters their credentials manually?
+```
   4. Check the user's SSO/company omain login
 
-     1. Are they logged in with the correct SSO/company domain account?
-
-
-
-
+```
+ 1. Are they logged in with the correct SSO/company domain account?
+```
 Likely causes and solutions:
 
 **Cause** |  **How to verify** |  **Solution**  
@@ -952,11 +959,9 @@ Quick diagnostic:
 
   1. Try using a different browser
 
-     1. Some browsers cache authentication differently
-
-
-
-
+```
+ 1. Some browsers cache authentication differently
+```
 2\. Clear browser cookies and cache, then try logging in again
 
 3\. Verify your admin account is not locked, check with Citrix support or another admin
@@ -990,11 +995,9 @@ Quick diagnostic:
 
   3. Check inventory file `cat dev/inventory`
 
-     1. Verify host IP addresses are correct
-
-
-
-
+```
+ 1. Verify host IP addresses are correct
+```
 4\. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
 
 Likely causes and solutions:
@@ -1024,11 +1027,9 @@ Quick diagnostic:
 
   3. Check inventory file `cat dev/inventory`
 
-     1. Verify host IP addresses are correct
-
-
-
-
+```
+ 1. Verify host IP addresses are correct
+```
 4\. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
 
 Likely causes and solutions:
@@ -1092,11 +1093,9 @@ Quick diagnostic:
 
   3. Check if the task requires a long time to complete
 
-     1. Note that image pulls and VM deployments can take more time than initially anticipated
-
-
-
-
+```
+ 1. Note that image pulls and VM deployments can take more time than initially anticipated
+```
 4\. Monitor host resources during tasks by running:   
 `ssh admin@<host-ip> `  
 `top`
@@ -1124,11 +1123,9 @@ Quick diagnostic:
 
   1. Check command syntax
 
-     1. Verify `-e` flags are formatted correctly
-
-
-
-
+```
+ 1. Verify `-e` flags are formatted correctly
+```
 2\. Run with verbose output:   
 `ansible-playbook -i dev/inventory <playbook> \ `  
 `-e "var1=value1" \ `  

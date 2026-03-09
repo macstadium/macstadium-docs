@@ -177,39 +177,43 @@ After creating the Site-to Site VPN connection, configure the Cisco firewall to 
   3. Add the MacStadium private network and mask.  
 
          
-         router bgp 65516   
-         bgp log-neighbor-changes   
-         bgp graceful-restart   
-         bgp router-id 169.254.21.1   
-         address-family ipv4 unicast  
-           
-         neighbor 10.0.1.254 remote-as 65515 neighbor 10.0.1.254 ebgp-multihop 255 neighbor 10.0.1.254 activate  
-           
-         ! NOTE: THE LOCAL NETWORKS TO BE ADDED STATICALLY TO THIS BGP ROUTER NEED TO GO HERE BELOW:  
-           
-         ! NOTE: You can add more local on-premises network ranges statically here as well, using the "network" command just like above.  
-           
-         !etc...  
-           
-         ! network 10.221.188.0 mask 255.255.254.0  
-           
-         no auto-summary no synchronization exit-address-family
+```
+     router bgp 65516   
+     bgp log-neighbor-changes   
+     bgp graceful-restart   
+     bgp router-id 169.254.21.1   
+     address-family ipv4 unicast  
+       
+     neighbor 10.0.1.254 remote-as 65515 neighbor 10.0.1.254 ebgp-multihop 255 neighbor 10.0.1.254 activate  
+       
+     ! NOTE: THE LOCAL NETWORKS TO BE ADDED STATICALLY TO THIS BGP ROUTER NEED TO GO HERE BELOW:  
+       
+     ! NOTE: You can add more local on-premises network ranges statically here as well, using the "network" command just like above.  
+       
+     !etc...  
+       
+     ! network 10.221.188.0 mask 255.255.254.0  
+       
+     no auto-summary no synchronization exit-address-family
 
-     * **NOTE** : Find the MacStadium Private Network by checking that section in Appendix A of the IP Plan.
-     * **NOTE** : Make sure the name of the interface being used for the VPN connection is Outside as this is the name of the interface in the script downloaded from Azure. If there is a different interface name for the VPN, then make sure to replace all sections where the Outside interface is referenced in the script by the actual interface name being used.
-     * **WARNING** : Ignore the section, STATIC ROUTING SETUP FOR AZURE, and do not configure any static routes, as BGP will be used instead.
-
+ * **NOTE** : Find the MacStadium Private Network by checking that section in Appendix A of the IP Plan.
+ * **NOTE** : Make sure the name of the interface being used for the VPN connection is Outside as this is the name of the interface in the script downloaded from Azure. If there is a different interface name for the VPN, then make sure to replace all sections where the Outside interface is referenced in the script by the actual interface name being used.
+ * **WARNING** : Ignore the section, STATIC ROUTING SETUP FOR AZURE, and do not configure any static routes, as BGP will be used instead.
+```
   4. Access the firewall through SSH using the credentials available in the IP Plan.
   5. Paste the ASA configuration script and confirm all commands were accepted.
   6. Use the following commands to confirm if the VPN has been successfully established:  
 
          
-         show vpn-sessiondb l2l show crypto ipsec sa
+```
+     show vpn-sessiondb l2l show crypto ipsec sa
 
-     * **NOTE** : For more information, see: [Cisco Secure Firewall ASA Series Command Reference, S Commands](https://www.cisco.com/c/en/us/td/docs/security/asa/asa-cli-reference/S/asa-command-ref-S/show-cr-to-show-cz-commands.html).
-
+ * **NOTE** : For more information, see: [Cisco Secure Firewall ASA Series Command Reference, S Commands](https://www.cisco.com/c/en/us/td/docs/security/asa/asa-cli-reference/S/asa-command-ref-S/show-cr-to-show-cz-commands.html).
+```
   7. Save the configuration with the ASA CLI command: write memory.  
 
-     * Access to the Azure environment from the MacStadium host is now possible (and vice-versa).
+```
+ * Access to the Azure environment from the MacStadium host is now possible (and vice-versa).
 
-     * **NOTE** : To feed the complete configuration into your Cisco ASA/ASAv, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+ * **NOTE** : To feed the complete configuration into your Cisco ASA/ASAv, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+```
