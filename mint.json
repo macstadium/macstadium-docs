@@ -34,7 +34,7 @@
           ]
         },
         {
-          "group": "Account Management and SAML",
+          "group": "Account Management",
           "pages": [
             "macstadium/account-management-and-saml/first-time-sso-login-to-macstadium-portal",
             "macstadium/account-management-and-saml/troubleshooting-credential-issues",
@@ -44,16 +44,6 @@
             "macstadium/account-management-and-saml/enable-saml-sso-with-okta",
             "macstadium/account-management-and-saml/enable-saml-sso-with-azure-active-directory",
             "macstadium/account-management-and-saml/enable-saml-sso-with-google-workspace-federation"
-          ]
-        },
-        {
-          "group": "Support",
-          "pages": [
-            "macstadium/support/support",
-            "macstadium/support/macstadium-support-tiers",
-            "macstadium/support/creating-slack-tickets",
-            "macstadium/support/mac-configuration-assistance",
-            "macstadium/support/remote-hands-service"
           ]
         },
         {
@@ -75,12 +65,31 @@
             "macstadium/legal-and-compliance/copyright-and-trademark-policy",
             "macstadium/legal-and-compliance/security"
           ]
+        },
+        {
+          "group": "Support",
+          "pages": [
+            "macstadium/support/support",
+            "macstadium/support/macstadium-support-tiers",
+            "macstadium/support/creating-slack-tickets",
+            "macstadium/support/mac-configuration-assistance",
+            "macstadium/support/remote-hands-service"
+          ]
         }
       ]
     },
     {
       "group": "Orka",
       "pages": [
+        {
+          "group": "Overview",
+          "pages": [
+            "orka/orka-overview/orka-overview",
+            "orka/orka-overview/tools-integrations",
+            "orka/orka-overview/compatibility-matrix",
+            "orka/orka-overview/licensing-faq"
+          ]
+        },
         {
           "group": "Quick Start Guides",
           "pages": [
@@ -91,93 +100,7 @@
           ]
         },
         {
-          "group": "Orka Overview",
-          "pages": [
-            "orka/orka-overview/orka-overview",
-            "orka/orka-overview/tools-integrations",
-            "orka/orka-overview/compatibility-matrix",
-            "orka/orka-overview/licensing-faq"
-          ]
-        },
-        {
-          "group": "Orka Cluster Migration from 2.4->3.x",
-          "pages": [
-            "orka/orka-cluster-migration-from-24-3x/24x-and-30x-to-31x-and-above-backward-compatibility",
-            "orka/orka-cluster-migration-from-24-3x/24x-to-300-what-persists",
-            "orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration",
-            "orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping",
-            "orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping"
-          ]
-        },
-        {
-          "group": "Orka DevOps Integrations",
-          "pages": [
-            "orka/orka-devops-integrations/jenkins",
-            "orka/orka-devops-integrations/github-actions",
-            "orka/orka-devops-integrations/gitlab",
-            "orka/orka-devops-integrations/buildkite",
-            "orka/orka-devops-integrations/teamcity",
-            "orka/orka-devops-integrations/packer",
-            "orka/orka-devops-integrations/base-images"
-          ]
-        },
-        {
-          "group": "Orka on AWS and On-Prem",
-          "pages": [
-            "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
-            "orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
-            "orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws",
-            "orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started",
-            "orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350"
-          ]
-        },
-        {
-          "group": "Orka Upgrades and Release Notes",
-          "pages": [
-            "orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-35-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-34-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-33-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-32-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-31-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-30-release-notes",
-            "orka/orka-upgrades-and-release-notes/orka-upgrades"
-          ]
-        },
-        {
-          "group": "Orka3 CLI Reference",
-          "pages": [
-            "orka/orka3-cli-reference/orka3-cli-overview-configuration",
-            "orka/orka3-cli-reference/authentication-and-user-management",
-            "orka/orka3-cli-reference/image-management",
-            "orka/orka3-cli-reference/oci-registry-integration",
-            "orka/orka3-cli-reference/vm-deployment-and-configuration",
-            "orka/orka3-cli-reference/vm-lifecycle-management",
-            "orka/orka3-cli-reference/node-management",
-            "orka/orka3-cli-reference/namespace-management",
-            "orka/orka3-cli-reference/role-based-access-control-rbac",
-            "orka/orka3-cli-reference/command-quick-reference",
-            "orka/orka3-cli-reference/output-formats-and-getting-help"
-          ]
-        },
-        {
-          "group": "Orka Resources",
-          "pages": [
-            "orka/orka-resources/orka3-cli-command-reference",
-            "orka/orka-resources/working-with-vm-metadata",
-            "orka/orka-resources/image-caching",
-            "orka/orka-resources/shared-vm-storage",
-            "orka/orka-resources/burst",
-            "orka/orka-resources/apple-silicon-based-support",
-            "orka/orka-resources/orka-required-url-rules-for-filtering",
-            "orka/orka-resources/vm-tools",
-            "orka/orka-resources/cluster-configurations",
-            "orka/orka-resources/consuming-metrics-from-prometheus",
-            "orka/orka-resources/resiliency-high-availability-and-disaster-recovery"
-          ]
-        },
-        {
-          "group": "Orka Cluster Access",
+          "group": "Cluster Access",
           "pages": [
             "orka/orka-cluster-access/cluster-access-management-overview",
             "orka/orka-cluster-access/customer-portal-manage-account-users",
@@ -187,7 +110,7 @@
           ]
         },
         {
-          "group": "Networking with Orka at MacStadium",
+          "group": "Networking",
           "pages": [
             "orka/networking-with-orka-at-macstadium/vpn-connection",
             "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
@@ -207,9 +130,15 @@
           ]
         },
         {
-          "group": "Orka Configuration",
+          "group": "DevOps Integrations",
           "pages": [
-            "orka/orka-configuration/performance-gpu-passthrough"
+            "orka/orka-devops-integrations/jenkins",
+            "orka/orka-devops-integrations/github-actions",
+            "orka/orka-devops-integrations/gitlab",
+            "orka/orka-devops-integrations/buildkite",
+            "orka/orka-devops-integrations/teamcity",
+            "orka/orka-devops-integrations/packer",
+            "orka/orka-devops-integrations/base-images"
           ]
         },
         {
@@ -224,6 +153,52 @@
           ]
         },
         {
+          "group": "Kubernetes",
+          "pages": [
+            "orka/kubernetes-native/k8s-native-overview",
+            "orka/kubernetes-native/k8s-native-persistent-volumes",
+            "orka/kubernetes-native/k8s-native-orka3-crd-reference"
+          ]
+        },
+        {
+          "group": "CLI Reference",
+          "pages": [
+            "orka/orka3-cli-reference/orka3-cli-overview-configuration",
+            "orka/orka3-cli-reference/authentication-and-user-management",
+            "orka/orka3-cli-reference/image-management",
+            "orka/orka3-cli-reference/oci-registry-integration",
+            "orka/orka3-cli-reference/vm-deployment-and-configuration",
+            "orka/orka3-cli-reference/vm-lifecycle-management",
+            "orka/orka3-cli-reference/node-management",
+            "orka/orka3-cli-reference/namespace-management",
+            "orka/orka3-cli-reference/role-based-access-control-rbac",
+            "orka/orka3-cli-reference/command-quick-reference",
+            "orka/orka3-cli-reference/output-formats-and-getting-help"
+          ]
+        },
+        {
+          "group": "Resources",
+          "pages": [
+            "orka/orka-resources/orka3-cli-command-reference",
+            "orka/orka-resources/working-with-vm-metadata",
+            "orka/orka-resources/image-caching",
+            "orka/orka-resources/shared-vm-storage",
+            "orka/orka-resources/burst",
+            "orka/orka-resources/apple-silicon-based-support",
+            "orka/orka-resources/orka-required-url-rules-for-filtering",
+            "orka/orka-resources/vm-tools",
+            "orka/orka-resources/cluster-configurations",
+            "orka/orka-resources/consuming-metrics-from-prometheus",
+            "orka/orka-resources/resiliency-high-availability-and-disaster-recovery"
+          ]
+        },
+        {
+          "group": "Configuration",
+          "pages": [
+            "orka/orka-configuration/performance-gpu-passthrough"
+          ]
+        },
+        {
           "group": "Compatibility",
           "pages": [
             "orka/compatibility/feature-parity-apple-hardware",
@@ -232,54 +207,58 @@
           ]
         },
         {
-          "group": "Kubernetes Native",
-          "pages": [
-            "orka/kubernetes-native/k8s-native-overview",
-            "orka/kubernetes-native/k8s-native-persistent-volumes",
-            "orka/kubernetes-native/k8s-native-orka3-crd-reference"
-          ]
-        },
-        {
-          "group": "Orka Desktop",
+          "group": "Desktop",
           "pages": [
             "orka/orka-desktop/orka-desktop-310-release-notes",
             "orka/orka-desktop/welcome-to-orka-desktop-30"
           ]
         },
         {
-          "group": "Orka Engine",
+          "group": "Engine",
           "pages": [
             "orka/orka-engine/orka-engine-30"
+          ]
+        },
+        {
+          "group": "On AWS and On-Prem",
+          "pages": [
+            "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
+            "orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
+            "orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws",
+            "orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started",
+            "orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350"
+          ]
+        },
+        {
+          "group": "Cluster Migration",
+          "pages": [
+            "orka/orka-cluster-migration-from-24-3x/24x-and-30x-to-31x-and-above-backward-compatibility",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-what-persists",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping"
+          ]
+        },
+        {
+          "group": "Release Notes",
+          "pages": [
+            "orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-35-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-34-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-33-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-32-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-31-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-30-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-upgrades"
           ]
         }
       ]
     },
     {
-      "group": "Remote Desktop (VDI)",
+      "group": "Remote Desktop",
       "pages": [
         {
-          "group": "Operational Guides",
-          "pages": [
-            "remote-desktop-vdi/operational-guides/ansible-quick-reference",
-            "remote-desktop-vdi/operational-guides/day-2-operations-guide",
-            "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
-          ]
-        },
-        {
-          "group": "Cloud Access (Legacy)",
-          "pages": [
-            "remote-desktop-vdi/cloud-access-legacy/cloud-access",
-            "remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access",
-            "remote-desktop-vdi/cloud-access-legacy/cloud-access-customer-environment-tips",
-            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn",
-            "remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting",
-            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh",
-            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-windows",
-            "remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect"
-          ]
-        },
-        {
-          "group": "Orka for VDI Deployment",
+          "group": "Orka for VDI",
           "pages": [
             "remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
             "remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
@@ -290,6 +269,14 @@
             "remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
             "remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
             "remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues"
+          ]
+        },
+        {
+          "group": "Operational Guides",
+          "pages": [
+            "remote-desktop-vdi/operational-guides/ansible-quick-reference",
+            "remote-desktop-vdi/operational-guides/day-2-operations-guide",
+            "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
           ]
         },
         {
@@ -306,6 +293,19 @@
             "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
             "remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers"
           ]
+        },
+        {
+          "group": "Cloud Access (Legacy)",
+          "pages": [
+            "remote-desktop-vdi/cloud-access-legacy/cloud-access",
+            "remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access",
+            "remote-desktop-vdi/cloud-access-legacy/cloud-access-customer-environment-tips",
+            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn",
+            "remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting",
+            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh",
+            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-windows",
+            "remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect"
+          ]
         }
       ]
     },
@@ -313,18 +313,10 @@
       "group": "IaaS",
       "pages": [
         {
-          "group": "IaaS Overview",
+          "group": "Overview",
           "pages": [
             "iaas/iaas-overview/infrastructure-as-a-service-iaas",
             "iaas/iaas-overview/data-center-locations"
-          ]
-        },
-        {
-          "group": "Connecting to Other Clouds",
-          "pages": [
-            "iaas/connecting-to-other-clouds/other-clouds",
-            "iaas/connecting-to-other-clouds/private-cloud-networking-setup",
-            "iaas/connecting-to-other-clouds/site-to-site-vpn-config"
           ]
         },
         {
@@ -343,16 +335,6 @@
           "group": "Networking",
           "pages": [
             "iaas/networking/networking-overview"
-          ]
-        },
-        {
-          "group": "AWS",
-          "pages": [
-            "iaas/aws/aws-troubleshooting",
-            "iaas/aws/aws-networking-setup",
-            "iaas/aws/site-to-site-vpn-configuration-with-aws",
-            "iaas/aws/aws-vpn-config-for-cisco-asaasav",
-            "iaas/aws/verify-aws"
           ]
         },
         {
@@ -377,16 +359,6 @@
           ]
         },
         {
-          "group": "Azure",
-          "pages": [
-            "iaas/azure/azure-networking-setup",
-            "iaas/azure/azure-troubleshooting",
-            "iaas/azure/site-to-site-vpn-configuration-with-azure",
-            "iaas/azure/azure-vpn-config-for-cisco-asaasav",
-            "iaas/azure/verify-azure"
-          ]
-        },
-        {
           "group": "Storage",
           "pages": [
             "iaas/storage/private-cloud-network-attached-storage",
@@ -394,7 +366,7 @@
           ]
         },
         {
-          "group": "x86 VMs (Private Cloud VMs)",
+          "group": "Private Cloud VMs",
           "pages": [
             "iaas/x86-vms-private-cloud-vms/private-cloud-x86-vms",
             "iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation",
@@ -402,6 +374,26 @@
             "iaas/x86-vms-private-cloud-vms/creating-a-new-vm-manually",
             "iaas/x86-vms-private-cloud-vms/manual-windows-installation",
             "iaas/x86-vms-private-cloud-vms/windows-2022-installation"
+          ]
+        },
+        {
+          "group": "AWS",
+          "pages": [
+            "iaas/aws/aws-troubleshooting",
+            "iaas/aws/aws-networking-setup",
+            "iaas/aws/site-to-site-vpn-configuration-with-aws",
+            "iaas/aws/aws-vpn-config-for-cisco-asaasav",
+            "iaas/aws/verify-aws"
+          ]
+        },
+        {
+          "group": "Azure",
+          "pages": [
+            "iaas/azure/azure-networking-setup",
+            "iaas/azure/azure-troubleshooting",
+            "iaas/azure/site-to-site-vpn-configuration-with-azure",
+            "iaas/azure/azure-vpn-config-for-cisco-asaasav",
+            "iaas/azure/verify-azure"
           ]
         },
         {
@@ -415,7 +407,15 @@
           ]
         },
         {
-          "group": "IaaS FAQs",
+          "group": "Connecting to Other Clouds",
+          "pages": [
+            "iaas/connecting-to-other-clouds/other-clouds",
+            "iaas/connecting-to-other-clouds/private-cloud-networking-setup",
+            "iaas/connecting-to-other-clouds/site-to-site-vpn-config"
+          ]
+        },
+        {
+          "group": "FAQs",
           "pages": [
             "iaas/iaas-faqs/troubleshooting-connectivity-issues",
             "iaas/iaas-faqs/macstadium-api",
