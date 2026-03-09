@@ -1,0 +1,68 @@
+---
+title: "2.4.x to 3.0.0: CLI Mapping"
+zendesk_id: 28346199889179
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28346199889179-2-4-x-to-3-0-0-CLI-Mapping"
+section: "Orka Cluster Migration from 2.4->3.x"
+category: "Orka"
+created_at: "2024-08-16T19:47:46Z"
+updated_at: "2024-09-18T21:45:52Z"
+promoted: false
+labels: ["orka", "api", "mapping", "2.4", "cli"]
+suggested_new_path: "/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping"
+---
+
+How do Orka 2.4.x CLI commands map to Orka 3.0.0?
+
+Use the following mapping to figure out how to migrate your CLI-based custom automation to Orka 3.0.0.
+
+Orka 2.4.x CLI | Orka3 CLI  
+---|---  
+`orka config` | `orka3 cofig`  
+`orka login` | `orka3 login`  
+`orka logout` | `orka3 user logout`  
+`orka version` | `orka3 version`  
+`orka user <command>` | Removed. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).  
+`orka user group` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28298534785435).  
+`orka node list` | `orka3 node list`  
+`orka node status` | `orka3 node list <NODE> -o wide`  
+`orka node sandbox` | Removed. Sandboxing is now handled via namespaces.  
+`orka node unsandbox` | Removed. Sandboxing is now handled via namespaces.  
+`orka node tag` | `orka3 node tag <NODE> <TAG>`  
+`orka node untag` | `orka3 node untag <NODE> <TAG>`  
+`orka node group` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).  
+`orka vm list` | `orka3 vm list`  
+`orka vm configs` | `orka3 vm-config list`  
+`orka vm status` | `orka3 vm list <VM_NAME> -o wide`  
+`orka vm create-config` | `orka3 vm-config create`  
+`orka vm create` | Removed. You can now deploy VMs without a VM config.  
+`orka vm deploy` | `orka3 vm deploy`  
+`orka vm list-disks` | Removed. Attached disks are no longer available.  
+`orka vm attach-disk` | Removed. Attached disks are no longer available.  
+`orka vm save-state` | Removed. VM states are no longer available.  
+`orka vm delete-state` | Removed. VM states are no longer available.  
+`orka vm {start|stop}` | `orka3 vm {start|stop}`  
+`orka vm {resume|suspend}` | `orka3 vm {resume|suspend}`  
+`orka vm delete` | `orka3 vm delete`  
+`orka vm purge` | `orka3 vm delete <VM_NAME> && orka3 vm-config delete <VM_CONFIG_NAME>`  
+`orka vm revert` | `orka3 vm revert`  
+`orka image list` | `orka3 image list`  
+`orka image list-remote` | `orka3 remote-image list`  
+`orka image pull` | `orka3 remote-image pull`  
+`orka image generate` | `orka3 image generate`  
+`orka image rename` | Removed. Use `orka3 image set-description` to set a user-friendly custom description instead.  
+`orka image copy` | `orka3 image copy`  
+`orka image save` | `orka3 vm save`  
+`orka image commit` | `orka3 vm commit`  
+`orka image resize` | `orka3 vm resize`  
+`orka image upload` | `POST /api/v1/namespaces/{namespace}/upload/image`  
+`orka image download` | `GET /api/v1/namespaces/{namespace}/images/{image}/download`  
+`orka iso list` | `orka3 iso list`  
+`orka iso list-remote` | `orka3 remote-iso list`  
+`orka iso pull` | `orka3 remote-iso pull`  
+`orka iso upload` | `POST /api/v1/namespaces/{namespace}/upload/iso`  
+`orka iso rename` | Removed. Use `orka3 iso set-description` to set a user-friendly custom description instead.  
+`orka iso copy` | `orka3 iso copy`  
+`orka iso delete` | `orka3 iso delete`  
+`orka kube <command>` | Removed.  
+  
+##

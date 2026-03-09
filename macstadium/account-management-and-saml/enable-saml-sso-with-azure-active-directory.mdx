@@ -1,0 +1,70 @@
+---
+title: "Enable SAML SSO with Azure Active Directory"
+zendesk_id: 28263129284251
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28263129284251-Enable-SAML-SSO-with-Azure-Active-Directory"
+section: "Account Management and SAML"
+category: "MacStadium"
+created_at: "2024-08-14T14:00:13Z"
+updated_at: "2025-06-12T17:54:04Z"
+promoted: false
+labels: ["sso", "saml", "azure", "active directory"]
+suggested_new_path: "/macstadium/account-management-and-saml/enable-saml-sso-with-azure-active-directory"
+---
+
+## About
+
+SAML SSO is a paid offering.
+
+📘 Please contact the account team through the Customer Portal for more information.
+
+👍 Log into the Portal by going to <https://portal.macstadium.com/login>.
+
+⚠️ We do not currently support IdP-initiated logins. After SSO is configured with MacStadium, all users will use the below link to log into your account using an ID that will be provided to you by the MacStadium team.
+
+<https://portal.macstadium.com/sso>
+
+## Overview
+
+SAML SSO with Azure AD , allowa customers to:
+
+  * Enable users to be automatically signed in to MacStadium using their Azure Ad accounts.
+  * Manage accounts in one central location – Azure AD.
+
+
+
+## Getting Started
+
+  1. Open **Entra ID admin**.
+  2. Navigate to **Enterprise applications**.  
+![556cc3a-1.png](https://support.macstadium.com/hc/article_attachments/28263129254811)
+  3. Create a new application by clicking **New Application**.  
+![e33c8bc-2.png](https://support.macstadium.com/hc/article_attachments/28263097031963)
+  4. Create an application by clicking **Create your own application**.  
+![fe84fac-3.png](https://support.macstadium.com/hc/article_attachments/28263097033755)
+     * Enter a name (for example **MacStadium-Portal**).
+     * Select **Integrate any other application you don’t find in the gallery (Non-gallery).**  
+![25af6b6-4.png](https://support.macstadium.com/hc/article_attachments/28263097036187)
+  5. Click **Single sign-on**.  
+![cfd045e-5.png](https://support.macstadium.com/hc/article_attachments/28263129264411)
+  6. Select **SAML**.  
+![529d208-6.png](https://support.macstadium.com/hc/article_attachments/28263129266459)
+  7. Click **Edit** on the _Basic SAML settings._  
+![6385eeb-7.png](https://support.macstadium.com/hc/article_attachments/28263129267739)
+  8. Configure SAML (Steps 11 to 15)
+
+     * Identifier (Entity ID): `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
+     * Reply URL (Assertion Consumer Service URL): `https://idp.macstadium.com/saml2/idpresponse`
+     * Logout URL (Optional): `https://idp.macstadium.com/saml2/logout`
+     * **Save**  
+![37d0f10-8.png](https://support.macstadium.com/hc/article_attachments/28263129269275)
+  9. **IMPORTANT** : Next, edit the Attributes & Claims for your SAML app. You will need the email field to be mapped to user.mail.  
+![Email Claim.png](https://support.macstadium.com/hc/article_attachments/37939325807643)  
+
+
+Once configured properly, section 2 of your SAML app should look like the below screenshot.  
+![7e62c093469038659ac8103a855f5733d3e624e8393302c9dec0aea94a81827a-Screenshot_2025-03-13_at_1.21.41_PM.png](https://support.macstadium.com/hc/article_attachments/37939280894619)  
+  
+
+
+  10. Once the attributes & claims are updated, please provide our support team with the app federation metadata URL. You can copy the federation metadata URL in section 3 of your SAML app, as shown in the below screenshot.  
+![3e8d1e1054192f0db9775be7c6569d9e8f5e402c25d8cd900789b5592d737897-Screenshot_2025-03-13_at_1.22.55_PM.png](https://support.macstadium.com/hc/article_attachments/37939325810971)

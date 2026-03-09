@@ -1,0 +1,402 @@
+---
+title: "K8s Native: Orka3 CRD Reference"
+zendesk_id: 28335237180443
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28335237180443-K8s-Native-Orka3-CRD-Reference"
+section: "Kubernetes Native"
+category: "Orka"
+created_at: "2024-08-16T15:44:57Z"
+updated_at: "2024-09-18T21:47:44Z"
+promoted: false
+labels: ["orka", "api", "k8", "k8s", "crd", "kubernetes"]
+suggested_new_path: "/orka/kubernetes-native/k8s-native-orka3-crd-reference"
+---
+
+**Disclaimer**
+
+The recommended way to work with Orka resources is via the Orka3 CLI, Orka3 API, or the Orka Web UI.
+
+You can still use kubectl instead. However, exercise caution and consider managing only VMs and VM configs via YAML. Working with images, ISOs, or nodes directly via YAML requires both advanced Orka3 CRD and Kubernetes knowledge, and might result in unexpected issues.
+
+## virtualmachineconfigs.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `cpu` | `integer` | The number of CPU cores to allocate to `VirtualMachineInstances` created from the `VirtualMachineConfig`.  
+`spec` > `gpuPassthrough` | `boolean` | Boolean setting if GPU passthrough is enabled. When enabled, `VncConsole` must be disabled.  
+`spec` > `image` | `string` | The name of the Image to use for the `VirtualMachineInstances` created from the `VirtualMachineConfig`.  
+`spec` > `iso` | `string` | (Intel-only) Attaches the specified ISO (by name) to let you install macOS from scratch on a `VirtualMachineInstance` created from the `VirtualMachineConfig`. When specified, make sure that the `Image` field uses an empty disk generated with the respective operation.  
+`spec` > `memory` | `number` | Memory in GiB. Rounded to the nearest 0.1 GiB. If not specified, will be automatically calculated based on the number of CPU cores.  
+`spec` > `netBoost` | `boolean` | Boolean setting if Network boost is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`.  
+`spec` > `nodeName` | `string` | The name of the node where you want the `VirtualMachineInstance` to run. If not specified, the `VirtualMachineInstance` will run on the first available node that matches the criteria (e.g., available CPU and memory, tags, groups, etc.)  
+`spec` > `scheduler` | `string` | The scheduler to use for the deployment of `VirtualMachineInstances` created from the `VirtualMachineConfig`. One of `default`, `most-allocated`.  
+  
+When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNodes` having most of their resources allocated. The default setting keeps used vs free resources balanced between `OrkaNodes`.  
+`spec` > `systemSerial` | `string` | A custom serial number for the `VirtualMachineInstances` created from the `VirtualMachineConfig`. The provided serial number must be a valid Mac serial number.  
+`spec` > `tag` | `string` | When specified, `VirtualMachineInstances` created from the `VirtualMachineConfig` will be scheduled for deployment on `OrkaNodes` labeled with the same `Tag`.  
+`spec` > `tagRequired` | `boolean` | Boolean setting if the `Tag` is required. When `true`, `VirtualMachineInstances` will be deployed only on nodes matching the specified `Tag`.  
+`spec` > `vncConsole` | `boolean` | Boolean setting if the VNC console is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`. When enabled, `GPUPassthrough` must be disabled.  
+  
+### 
+
+### Examples
+
+Create simple VM config
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: VirtualMachineConfig  
+    metadata:  
+    name: my-orka-vm  
+    namespace: orka-default  
+    spec:  
+    cpu: 3  
+    image: sonoma-90gb-orka3-arm
+
+Create VM config with attached ISO
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: VirtualMachineConfig  
+    metadata:  
+    name: my-orka-vm  
+    namespace: orka-default  
+    spec:  
+    cpu: 4  
+    image: empty-90gb-orka3-amd  
+    iso: sonoma.iso
+
+## virtualmachineinstances.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `cpu` | `integer` | The number of CPU cores to allocate to `VirtualMachineInstance`.  
+`spec` > `customVMMetadata` | `object` | Custom metadata to be passed to the `VirtualMachineInstance`.  
+`spec` > `gpuPassthrough` | `boolean` | Boolean setting if GPU passthrough is enabled. When enabled, `VncConsole` must be disabled.  
+`spec` > `image` | `string` | The name of the Image to use for the `VirtualMachineInstance`.  
+`spec` > `iso` | `string` | (Intel-only) Attaches the specified ISO (by name) to let you install macOS from scratch. When specified, make sure that the `Image` field uses an empty disk generated with the respective operation.  
+`spec` > `memory` | `number` | Memory in GiB. Rounded to the nearest 0.1 GiB. If not specified, the `VirtualMachineInstance` will use the default memory value set in the Orka configuration or will be automatically calculated based on the number of CPU cores.  
+`spec` > `netBoost` | `boolean` | Boolean setting if Network boost is enabled.  
+`spec` > `nodeName` | `string` | The name of the node where you want the `VirtualMachineInstance` to run. If not specified, the `VirtualMachineInstance` will run on the first available node that matches the criteria (e.g., available CPU and memory, tags, etc.)  
+`spec` > `reservedPorts` | `string` | A custom port pairing to enable traffic forwarding. Must be provided in the `<NODE_PORT>:<VM_PORT>` format (e.g., `1337:3000`).  
+`spec` > `scheduler` | `string` | The scheduler to use for the deployment. One of `default`, `most-allocated`.  
+  
+When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNodes` having most of their resources allocated. The default setting keeps used vs free resources balanced between `OrkaNodes`.  
+`spec` > `systemSerial` | `string` | A custom serial number for the `VirtualMachineInstance`. The provided serial number must be a valid Mac serial number.  
+`spec` > `tag` | `string` | When specified, the `VirtualMachineInstance` will be scheduled for deployment on `OrkaNodes` labeled with the same `Tag`.  
+`spec` > `tagRequired` | `boolean` | Boolean setting if the `Tag` is required. When `true`, `VirtualMachineInstances` will be deployed only on nodes matching the specified `Tag`.  
+`spec` > `vncConsole` | `boolean` | Boolean setting if the VNC console is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`. When enabled, `GPUPassthrough` must be disabled.  
+`status`>`errorMessage` | `string` | The error message if the deployment failed.  
+`status` > `hostIP` | `string` | The IP of the `OrkaNode` on which the `VirtualMachineInstance` is running.  
+`status` > `memory` | `string` | The amount of memory allocated to the `VirtualMachineInstance`.  
+`status` > `nodeName` | `string` | The name of the `OrkaNode` on which the `VirtualMachineInstance` is running.  
+`status` > `phase` | `string` | The state of the `VirtualMachineInstance` deployment.  
+`status` > `portWarnings` | `string` | Any port warnings that have occurred during the deployment.  
+`status` > `screenSharePort` | `integer` | The Screen Sharing port assigned to the `VirtualMachineInstance`.  
+`status` > `sshPort` | `integer` | The SSH port assigned to the `VirtualMachineInstance`.  
+`status` > `vncPort` | `integer` | The VNC port assigned to the `VirtualMachineInstance`.  
+  
+### 
+
+### Examples
+
+**Deploy basic VM**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: VirtualMachineInstance  
+    metadata:  
+    name: my-orka-vm  
+    spec:  
+    image: ghcr.io/macstadium/orka-images/sonoma:latest
+
+**Deploy complex VM**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: VirtualMachineInstance  
+    metadata:  
+    name: my-advanced-orka-vm  
+    spec:  
+    cpu: 4  
+    gpuPassthrough: false  
+    image: sonoma-90gb-orka3-arm  
+    netBoost: true  
+    scheduler: default-scheduler  
+    vncConsole: true  
+    tag: my-tag  
+    tagRequired: false
+
+## images.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `checksum` | `string` | (amd64-only) The automatically calculated MD5 checksum of the image file represented by the Image. Orka populates Checksum only after you explicitly request the checksum.  
+`spec` > `destination` | `string` | A new name for the Image resulting from the Image save operation. Leave empty for commit operations.  
+`spec` > `owner` | `string` | The user who initially created the image file represented y the Image.  
+`spec` > `size` |  `string` or `integer` | The size of the image file in formatted bytes.  
+`spec` > `source` | `string` | The name of an `Image`, `RemoteImage` or `VirtualMachineInstance` to use as a source for a specific Image operation. Must match the `SourceType`.  
+`spec` > `sourceNamespace` | `string` | The namespace of the source VM (for commit and save). Uses `orka-default` if not specified.  
+`spec` > `sourceType` | `string` | Modifier used for Image operations. One of `generated` (for generate), `local` (for copy), `remote` (for pull), `vm` (for commit and save).  
+`status` > `errorMessage` | `string` | The error message from the last failed operation with this `Image`.  
+`status` > `lastUpdatedTimestamp` | `string` | The timestamp for the last `Image` update (in the ISO 8601 format).  
+`status` > `state` | `string` | The current state of the image. One of `Ready`, `Updating`, `Failed`.  
+  
+### 
+
+### Examples
+
+**Existing Apple silicon-based image**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Image  
+    metadata:  
+    annotations:  
+    orka.macstadium.com/description: sonoma-90gb-orka3-arm  
+    creationTimestamp: "2023-10-16T09:55:25Z"  
+    generation: 1  
+    labels:  
+    kubernetes.io/arch: arm64  
+    name: sonoma-90gb-orka3-arm  
+    namespace: orka-default  
+    resourceVersion: "3064"  
+    uid: f42805a1-7c71-4eaa-b61a-6206b59c0e97  
+    spec:  
+    size: 90G  
+    status:  
+    lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
+    state: Ready
+
+**Existing Intel-based image**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Image  
+    metadata:  
+    annotations:  
+    orka.macstadium.com/description: 90GBVenturaSSH.img  
+    creationTimestamp: "2023-10-16T09:55:25Z"  
+    generation: 1  
+    labels:  
+    kubernetes.io/arch: amd64  
+    name: 90gbventurassh.img  
+    namespace: orka-default  
+    resourceVersion: "3032"  
+    uid: e329b4e4-90e5-4b3c-9c2c-8651923d87ed  
+    spec:  
+    size: 90G  
+    status:  
+    lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
+    state: Ready
+
+**Generate empty image**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Image  
+    metadata:  
+    name: empty-90gb-orka3-amd  
+    namespace: orka-default  
+    spec:  
+    size: 90G  
+    sourceType: generated
+
+**Copy local image**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Image  
+    metadata:  
+    name: copy-sonoma-90gb-orka3-arm  
+    namespace: orka-default  
+    spec:  
+    sourceType: local  
+    source: sonoma-90gb-orka3-arm
+
+**Pull remote image**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Image  
+    metadata:  
+    name: pulled-ventura-orka3-arm  
+    namespace: orka-default  
+    spec:  
+    sourceType: remote  
+    source: 90gbventurassh.orkasi
+
+## isos.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `size` |  `string` or `integer` | The size of the ISO file in formatted bytes.  
+`spec` > `source` | `string` | The name of an `Iso` or `RemoteIso` to use as a source for a specific Iso operation.  
+`spec` > `sourceType` | `string` | Modifier used for Iso operations. One of `local` (for copy) or `remote` (for pull).  
+`status` > `errorMessage` | `string` | The error message from the last failed operation with this `Iso`.  
+`status` > `lastUpdatedTimestamp` | `string` | The timestamp for the last `Iso` update (in the ISO 8601 format).  
+`status` > `state` | `string` | The current state of the Iso. One of `Ready`, `Updating`, `Failed`.  
+  
+### Examples
+
+**Existing ISO**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Iso  
+    metadata:  
+    annotations:  
+    orka.macstadium.com/description: Ventura.iso  
+    creationTimestamp: "2023-10-16T09:55:25Z"  
+    generation: 1  
+    name: ventura.iso  
+    namespace: orka-default  
+    resourceVersion: "3079"  
+    uid: 1c6f8e5c-fc0b-449b-ba03-2351d41d8d34  
+    spec:  
+    size: 2G  
+    status:  
+    lastUpdatedTimestamp: "2023-10-16T09:55:25Z"  
+    state: Ready
+
+**Copy local ISO**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Iso  
+    metadata:  
+    name: copy-big-sur.iso  
+    namespace: orka-default  
+    spec:  
+    sourceType: local  
+    source: big-sur.iso
+
+**Pull remote ISO**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: Iso  
+    metadata:  
+    name: pulled-ventura.iso  
+    namespace: orka-default  
+    spec:  
+    sourceType: remote  
+    source: ventura.iso
+
+## remoteimages.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `imageName` | `string` | The name of the image file represented by the `Image`.  
+`spec` > `size` |  `string` or `integer` | The size of the image file in formatted bytes.  
+  
+### Examples
+
+**Existing remote image**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: RemoteImage  
+    metadata:  
+    creationTimestamp: "2023-10-16T09:55:25Z"  
+    generation: 1  
+    labels:  
+    kubernetes.io/arch: amd64  
+    name: 90gbventurassh.img  
+    namespace: orka-default  
+    resourceVersion: "3095"  
+    uid: 29d907bc-e284-487b-8352-8466f89c8568  
+    spec:  
+    imageName: 90GBVenturaSSH.img  
+    size: 90G
+
+## remoteisos.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `isoName` | `string` | The name of the ISO file represented by the `Iso`.  
+`spec` > `size` |  `string` or `integer` | The size of the ISO file in formatted bytes.  
+  
+### Examples
+
+**Existing remote iso**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: RemoteIso  
+    metadata:  
+    creationTimestamp: "2023-10-16T09:55:25Z"  
+    generation: 1  
+    name: ventura.iso  
+    namespace: orka-default  
+    resourceVersion: "3092"  
+    uid: 25de0e37-e99d-4dde-9931-c5d6a872166e  
+    spec:  
+    isoName: Ventura.iso  
+    size: 16G
+
+## orkanodes.orka.macstadium.com
+
+### Definitions
+
+Field | Type | Description  
+---|---|---  
+`spec` > `namespace` | `string` | The name of a specific namespace to which a node is assigned. Only users with appropriate access to that namespace will have the ability to deploy `VirtualMachineInstances` on that `OrkaNode`.  
+`spec` > `tags` |  `array` of `string` items | One or more tags setting node affinity. Node affinity indicates that the tagged `OrkaNode` is preferred for the deployment of `VirtualMachineInstances` with the same tag.  
+`status` > `allocatableCpu` | `integer` | The complete amount of CPU cores on the node when no `VirtualMachineInstances` are deployed.  
+`status` > `allocatableGpu` | `integer` | The complete amount of GPU cores on the node when no `VirtualMachineInstances` are deployed.  
+`status` > `allocatableMemory` | `string` | The complete amount of memory (in GiB) on the node when no `VirtualMachineInstances` are deployed.  
+`status` > `availableCpu` | `integer` | The amount of available CPU on the node.  
+`status` > `availableGpu` | `integer` | The amount of available GPU on the node.  
+`status` > `availableMemory` | `string` | The amount of available Memory on the node.  
+`status` > `nodeIP` | `string` | The IP of the `OrkaNode`.  
+`status` > `nodeType` | `string` | The type of the `OrkaNode`. Usually, `WORKER`.  
+`status` > `phase` | `string` | The status of the OrkaNode. One of `READY`, `NOT READY`.  
+  
+### Examples
+
+**Existing node**
+    
+    
+    apiVersion: orka.macstadium.com/v1  
+    kind: OrkaNode  
+    metadata:  
+    creationTimestamp: "2023-10-16T09:55:25Z"  
+    generation: 1  
+    labels:  
+    kubernetes.io/arch: amd64  
+    name: mini-25  
+    namespace: orka-default  
+    ownerReferences:  
+    - apiVersion: v1  
+    blockOwnerDeletion: true  
+    controller: true  
+    kind: Node  
+    name: mini-25  
+    uid: 5bde48ba-a951-46c6-814e-6147cca52dca  
+    resourceVersion: "3052"  
+    uid: dade0833-c06e-45ac-86ec-67abba759d96  
+    spec:  
+    namespace: orka-default  
+    tags: []  
+    status:  
+    allocatableCpu: 12  
+    allocatableGpu: 0  
+    allocatableMemory: 62.56G  
+    availableCpu: 12  
+    availableGpu: 0  
+    availableMemory: 62.56G  
+    nodeIP: 10.221.188.35  
+    nodeType: WORKER  
+    phase: READY

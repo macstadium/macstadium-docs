@@ -1,0 +1,40 @@
+---
+title: "Compatibility: Performance Improving Features"
+zendesk_id: 28336079584155
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28336079584155-Compatibility-Performance-Improving-Features"
+section: "Compatibility"
+category: "Orka"
+created_at: "2024-08-16T16:05:11Z"
+updated_at: "2024-09-18T21:47:44Z"
+promoted: false
+labels: ["orka", "api", "performance", "compatibility"]
+suggested_new_path: "/orka/compatibility/compatibility-performance-improving-features"
+---
+
+## Compatibility based on Apple hardware
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Use saved state (optimizes startup) | ✅ | ❌  
+GPU passthrough | ✅ | ✅*  
+I/O boost* | ✅ | ✅*  
+Network boost* | ✅ | ✅*  
+  
+* GPU passthrough, I/O boost, and Network boost are always enabled for Apple silicon-based nodes and VMs. You cannot manually disable or override these settings on the VM config or VM level.
+
+## (Intel-only) Compatibility based on macOS version
+
+macOS version | I/O boost | Network boost | GPU passthrough  
+---|---|---|---  
+macOS 10.14 (Mojave) | ✅* | ❌** | ✅***  
+macOS 10.15 (Catalina) | ✅ | ❌** | ✅***  
+macOS 11 (Big Sur) | ✅ | ✅ | ✅***  
+macOS 12 (Monterey) | ✅ | ✅ | ✅***  
+macOS 13 (Ventura) | ✅ | ✅ | ✅***  
+macOS 14 (Sonoma) | ✅ | ✅ | ✅***  
+  
+* I/O boost is supported on macOS 10.14.5 and later.
+
+** Always disable the feature for Intel-based VMs running the respective macOS version.
+
+*** By default, GPU passthrough is disabled for VM configurations and VMs. When you enable GPU passthrough for an Intel VM, this automatically disables VNC for the VM. Make sure that you will be able to access the VM by SSH or Apple Screen Sharing before enabling GPU passthrough.

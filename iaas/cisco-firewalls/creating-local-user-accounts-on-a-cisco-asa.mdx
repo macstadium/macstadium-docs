@@ -1,0 +1,211 @@
+---
+title: "Creating Local User Accounts on a Cisco ASA"
+zendesk_id: 28269093228187
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28269093228187-Creating-Local-User-Accounts-on-a-Cisco-ASA"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T16:28:47Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "cisco", "account", "asa", "local", "user"]
+suggested_new_path: "/iaas/cisco-firewalls/creating-local-user-accounts-on-a-cisco-asa"
+---
+
+## Overview
+
+Creating local user accounts on a Cisco Adaptive Security Appliance (ASA) is an essential task for Network Administrators, and is done to secure their network resources.
+
+Local user accounts are useful for managing user access to the ASA and to the resources behind the ASA, through the use of a VPN client, such as Cisco AnyConnect.
+
+This document describes how to create local user accounts on the Cisco ASA, using both the command-line interface (CLI) and the Adaptive Security Device Manager (ASDM). This document is intended for those who are managing the subscribed Cisco ASA appliance and want to learn how to create local user accounts.
+
+The details in this document are based on a Cisco ASA virtual firewall that runs ASA code version 9.14(3)18 and ASDM version 7.18.(1)152, and was created from these devices in a specific lab environment.
+
+**NOTE** : The device used in this document started with a cleared (default) configuration.
+
+**WARNING** : For a live network, consider the potential impact before executing any commands.
+
+MacStadium configured a shared user account for customers to use for accessing the firewall. It was also used for authentication for the environment behind the firewall, and used a Remote Access VPN (RAVPN) client. This user account was configured with the highest access level.
+
+## Getting Started
+
+To begin the steps on how to create additional local user accounts, obtain the existing account information from the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+
+## Install Options
+
+Updating the Cisco Adaptive Security Appliance (ASA) can be done two different ways:
+
+**Via Command Line Interface (CLI)**
+
+Using a CLI allows the user to write script changes in a notepad, and have those changes reviewed by someone before running those scripts. This method is good for users writing scripts.
+
+**Via Cisco Adaptive Security Device Manager (ASDM)**
+
+Using a ASDM allows the user to make line by line changes, while using a graphical user interface (GUI).
+
+## Via Command Line Interface (CLI)
+
+  1. Establish a VPN connection to the MacStadium environment.
+  2. Connect to the Cisco ASA using SSH. 
+     * _For more information, see the section Connect to the Cisco ASA using SSH._
+
+  3. Use the credential documented in the IP Plan to authenticate; when prompted, enter a username and password.
+  4. Enter global configuration mode by typing the command `configure terminal`
+  5. Create the new user account by typing the command in the following format: `username username password password privilege priv_level`
+     * **NOTES:**
+
+       * The username username keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
+       * The password password keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
+       * The privilege priv_level keyword sets the privilege level for the created user account. The priv_level is a numeric value ranging from 0 to 15.
+       * By default, a user account has a privilege level of 2.
+       * A level of 15 grants the user account the highest level of access.
+       * An example of the CLI command is `ciscoasa(config)# username exampleuser1 password examplepassword privilege 1`
+
+  6. Save the configuration with the command `write memory`
+  7. Type the exit or end command to return to privileged mode of the ASA.
+
+
+
+To confirm the creation of the user account, enter the command show `running-config username`
+
+This command displays all the user accounts configured on the ASA.
+
+`ciscoasa# show running-config username username exampleuser1 password ***** pbkdf2 privilege 1 username clientuser1 password ***** pbkdf2 privilege 15 username admin password ***** pbkdf2 privilege 15 ciscoasa#`
+
+When a password is defined in the username command, the ASA creates an MD5 hash of it when it is saved for security purposes. When verifying configuration with the show running-config command, the username command does not show the actual password; it shows the encrypted password followed by the encrypted keyword.
+
+### Testing a Newly Created Account
+
+  1. In privilege mode, enter the command `disable`
+  2. Enter the command `login`
+  3. At the Username prompt, enter the created username.
+  4. At the Password prompt, enter the created password.
+
+
+
+If the authentication is successful, then proceed to test the level of access for the user account either at the ASA or at the RAVPN client.
+
+`ciscoasa # disable ciscoasa > login Username: exampleuser1 Password: *************** ciscoasa > enablePassword: ********* Password: ***************`
+
+**Unsuccessful Authentication**
+
+`[ exampleuser1 ]` You do NOT have Admin Rights to the console !
+
+**Password**
+
+To remove a user account, use `no version` with the username that is being removed.
+
+**Removing a User Account**
+
+  1. Log into the firewall with an account different from the account being removed.
+  2. Enter global configuration mode by typing the command `configure terminal`
+  3. Enter the `no version` of the username command.
+  4. Enter the `exit` or `end command` to return to privilege mode.
+  5. Save the configuration with the command `write memory`
+  6. Verify the changes made with the command `show running-config username`.
+
+
+
+`ciscoasa# configure terminal ciscoasa(config)# no username exampleuser1 ciscoasa(config)# end ciscoasa# write memory Building configuration... Cryptochecksum: b327981a 7a0e4ca2 ba149024 d05c9ab5 24790 bytes copied in 0.60 secs [OK] ciscoasa# show run ciscoasa# show running-config username username admin password ***** pbkdf2 privilege 15 username clientuser1 password ***** pbkdf2 privilege 15`
+
+## Via Cisco Adaptive Security Device Manager (ASDM)
+
+**Creating a Local User Account with ASDM**
+
+  1. Open the ASDM and connect to the Cisco Adaptive Security Appliance (ASA).
+  2. Click Configuration.  
+![4c42e77-image.png](https://support.macstadium.com/hc/article_attachments/28269076765723)
+  3. Click Device Management.  
+![c121439-image.png](https://support.macstadium.com/hc/article_attachments/28269093217051)
+  4. Click Users/AAA.  
+![a2714fa-image.png](https://support.macstadium.com/hc/article_attachments/28269093218075)
+  5. Click Add to create a new user account.
+  6. In the Add User Account window, confirm that Identity is selected at the left of the window and then enter the username and password for the new user account. 
+     * **NOTE** : Specify a Access Restriction by selecting an option in the section below.  
+![8dded1a-image.png](https://support.macstadium.com/hc/article_attachments/28269093219099)
+
+  7. Click OK to save the new user account
+  8. Click Apply located at the bottom of the ASDM
+  9. Click Save
+
+
+
+**NOTE:** Test the new account by logging out of the ASDM and then logging back in with the new credentials.
+
+#### **Removing an Account from the Local Database**
+
+  1. Under the User Accounts of the ASDM, select the user account to be removed.
+  2. Click Delete
+  3. Click Apply
+  4. Click Save
+
+
+
+**NOTE:** For information on Advanced Options for user account creations and management, see the following guides:
+
+<https://www.cisco.com/c/en/us/td/docs/security/asa/asa918/asdm718/general/asdm-718-general-config/aaa-local.html>
+
+<https://www.cisco.com/c/en/us/td/docs/security/asa/asa914/configuration/general/asa-914-general-config/aaa-local.html>
+
+## Connect to the Cisco ASA using SSH
+
+  1. Configure aaa to use local database for ssh and console  
+
+     * `ciscoasa# aaa authentication ssh console LOCAL`
+     * **NOTE** : aaa = authentication (permitting access), authorization (specify commands when granted access), accounting (keeps track of utilization reports of users after logged in and generate accounting reports for billing)  
+LOCAL = local database
+  2. Create admin username with privilege 15 (username, P@ssw0rd)  
+
+     * `ciscoasa# username username password P@ssw0rd priv 15`
+     * **NOTE** : priv 15 = top privilege level (full superuser, can give different command access to different privilege levels)
+  3. Turn on password for enable.  
+
+     * `ciscoasa# aaa authentication enable console LOCAL`
+     * This forces a password for the enable prompt.
+  4. Turn on serial console authentication.  
+
+     * `ciscoasa# aaa authentication serial console LOCAL`
+     * This turns on user/pass for serial access.
+  5. Save changes  
+
+     * `ciscoasa# write mem`
+  6. Log out console and verify access.  
+
+
+`ciscoasa(config)# end`
+
+`ciscoasa# exit`
+
+`Username: username`
+
+`Logoff`
+
+`Password: ********`
+
+  7. Generate ssh key pair.  
+
+     * `ciscoasa# crypto key generate rsa modulus 4096`
+
+     * The name for the keys will be:
+
+       * Keypair generation process begin. Please wait…
+
+       * ciscoasa(config)#
+
+     * SSH is an encrypted protocol, uses RSA to generate public and private key
+
+     * 4096 = block size
+
+     * rsa = encryption algorithm
+
+  8. Allow access to the inside interface.  
+
+     * `ciscoasa# ssh 0.0.0.0 0.0.0.0 inside`
+     * This enables ssh access to the inside interface from any IPv4
+  9. Force ssh version 2.  
+
+     * `ciscoasa# ssh version 2`
+  10. Add timeout of 15 min to ssh.  
+
+     * `ciscoasa# ssh timeout 15`
+  11. Verify login with ssh through 192.168.1.1 in putty.

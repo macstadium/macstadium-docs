@@ -1,0 +1,54 @@
+---
+title: "VNC Clients"
+zendesk_id: 28213326050843
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28213326050843-VNC-Clients"
+section: "Bare Metal Macs"
+category: "IaaS"
+created_at: "2024-08-12T19:50:49Z"
+updated_at: "2024-10-08T16:20:29Z"
+promoted: false
+labels: ["vnc", "virtualization", "clients", "orka", "client"]
+suggested_new_path: "/iaas/bare-metal-macs/vnc-clients"
+---
+
+# Remotely controlling your Mac mini server
+
+So you have a MacStadium hosted server and you're all ready to do something with it. The first question on your mind is probably...How do I control this thing?
+
+Nearly all modern servers are "headless" (meaning they have no dedicated monitor, keyboard or mouse) and are controlled over a network using remote desktop software. This article will cover four popular (and free!) remote control programs as well as the pros and cons of using each of them.
+
+## VNC
+
+macOS X comes equipped with Virtual Network Connection (VNC) capabilities. Although this feature is disabled according to factory presets, MacStadium engineers will have enabled this feature on your Mac mini before you receive your IP address to connect remotely.
+
+A **VNC client** running on a Mac or PC can easily connect to a **VNC server** running on your remote Mac mini.
+
+> ##  🚧VNC Compatibility
+> 
+> Mac-to-Mac sessions are inherently reliable, because they're using the same version of VNC code on both sides of the connection.
+> 
+> PC or Linux to Mac connections have been known to occasionally exhibit buggy behavior, but in most cases you will have no trouble if your software is up to date.
+
+VNC is based on open source software, which is why there are several versions that have been developed independently from the same starting point (i.e. the open source version). This means that each of the following VNC clients (which will allow your local computer to talk to your remote Mac mini) share similar capabilities, although there are some differences as well. Moreover, each offers a free and a paid service tier -- with certain features only offered via the paid tier.
+
+## RealVNC
+
+**Encryption is only offered in the paid service tier.** In practice (and especially when connecting to another computer on your own local network) this is not such a great danger, but where data must be transmitted over the public Internet, and where security is a primary concern, this sort of unencrypted communication should be avoided.
+
+**All connections to MacStadium will have to traverse the Internet.** So, best practice dictates that you will either need to secure your connection in another way, or you can choose the paid service tier.
+
+## UltraVNC
+
+UltraVNC is a newer fork of the original VNC codebase that adds video compression to improve performance, a nifty graphical toolbar and an optional encryption module. It also seems to be a bit more stable than RealVNC. If you don’t already have the RealVNC client installed, this version is preferable to RealVNC just for these few additional features.
+
+> ##  🚧Note:
+> 
+> The encryption module will not work with the pre-installed OS X server though – you would need to install a different VNC server (such as Vine) on the Mac mini in order to take advantage of that feature.
+
+## TeamViewer
+
+**If security is a primary concern then TeamViewer is definitely the best choice for you.** TeamViewer is commercial software that is free for personal use. The developer has thoughtfully included numerous nag screens to make sure you remember that commercial use is not allowed, but they still operate on the honor system and they make no attempt to verify the nature of your use.
+
+The standout features of TeamViewer include automatic firewall traversal, a contact list, and built-in video chat, but the feature that really sets it apart from the rest of the programs in this lineup is the end-to-end encryption of every keystroke, screen image and mouse movement that goes across the network.
+
+Unfortunately the additional CPU overhead of encryption makes the video performance of this tool visibly worse than the others, as you can see in the video. For applications that require high frame rates such as playing video or games, this program may not be ideal.

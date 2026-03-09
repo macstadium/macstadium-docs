@@ -1,0 +1,163 @@
+---
+title: "1. AWS Side of the VPN Tunnel"
+zendesk_id: 28401777655707
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28401777655707-1-AWS-Side-of-the-VPN-Tunnel"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-19T16:30:45Z"
+updated_at: "2024-09-18T21:43:49Z"
+promoted: false
+labels: ["orka", "api", "aws", "vpn", "networking", "tunnel"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel"
+---
+
+How to configure the AWS side of your VPN tunnel between AWS and Orka.
+
+> #### **You need:**
+> 
+>   * The IP address for the `FW1-Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). Most likely: `10.221.188.0/24`.
+> 
+
+
+To establish a stable, persistent connection between an Amazon Virtual Private Cloud (Amazon VPC) and your Orka cluster, you need to configure an IPsec site-to-site VPN (VPN tunnel) between the two.
+
+Routing from Amazon to Orka is static.
+
+## Step 1: Log in to your VPC service
+
+  1. Log in to your AWS Management Console and access your VPC service. In the top right corner of the screen, make sure that you're working in the correct region.
+  2. In the **Find Services** bar, type `VPC` and navigate to the service.
+
+
+
+![43b914e-find-services-vpc.png](https://support.macstadium.com/hc/article_attachments/28401763351067)
+
+## Step 2: Create a customer gateway
+
+In Amazon, the [customer gateway](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN) represents the Orka end of the tunnel.
+
+  1. In the VPC service sidebar, locate the **Virtual Private Network** menu and select **Customer Gateways**.
+
+
+
+![a8193dd-select-customer-gateway.png](https://support.macstadium.com/hc/article_attachments/28401763352219)
+
+  2. Click **Create Customer Gateway**.
+
+
+
+![10e7b3a-click-create-customer-gateway.png](https://support.macstadium.com/hc/article_attachments/28401777600795)
+
+  3. Fill in the form. 
+     1. Provide a **Name**. Set a name that helps you identify the gateway easily.
+     2. Select **Static** routing.
+     3. In the **IP Address** text box, provide the IP address for the `FW1-Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+     4. Ignore the remaining settings.
+
+
+
+![42acf51-create-customer-gateway.png](https://support.macstadium.com/hc/article_attachments/28401763358107)
+
+  4. Click **Create Customer Gateway**.
+
+
+
+![29e9e01-customer-gateway-success.png](https://support.macstadium.com/hc/article_attachments/28401763363995)
+
+## Step 3: Set up a virtual private gateway
+
+In Amazon, the [virtual private gateway](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN) represents the Amazon end of the tunnel.
+
+  1. In the VPC service sidebar, locate the **Virtual Private Network** menu and select **Virtual Private Gateways**.
+
+
+
+![48dc4aa-select-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28401763366043)
+
+  2. Click **Create Virtual Private Gateway**.
+
+
+
+![84ad5b2-click-create-vpg.png](https://support.macstadium.com/hc/article_attachments/28401763368347)
+
+  3. Fill in the form. 
+     1. Provide a **Name tag**. Set a name that helps you identify the gateway easily.
+     2. Select **Amazon default ASN**
+     3. Click **Create Virtual Private Gateway**.
+
+
+
+![5e294d4-create-virtual-private-gateway-2.png](https://support.macstadium.com/hc/article_attachments/28401777617051)
+
+  4. On the **Virtual Private Gаteways** dashboard, right-click the newly created virtual private gateway and select **Attach to VPC**.
+
+
+
+![c28aca1-attach-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28401763373595)
+
+  5. Select your VPC from the drop-down menu and click **Yes, Attach**.
+
+
+
+![3990736-attach-to-vpc.png](https://support.macstadium.com/hc/article_attachments/28401777624475)
+
+Next, you need to manually enable [route propagation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html) for the virtual private gateway.
+
+  1. In the VPC service sidebar, locate the **Virtual Private Cloud** menu and select **Route Tables**.
+
+
+
+![8412767-select-route-tables.png](https://support.macstadium.com/hc/article_attachments/28401763377691)
+
+  2. In the list of routing tables, select the main route table for your VPC.
+  3. At the bottom of the screen, select **Route Propagation**. If your virtual private gateway is not listed, make sure that it's attached to the VPC.
+  4. Click **Edit route propagation**.
+
+
+
+![4b2cb41-route-propagation.png](https://support.macstadium.com/hc/article_attachments/28401763378843)
+
+  5. Select the **Propagate** checkbox and click **Save**.
+
+
+
+## Step 4: Create the tunnel
+
+After you have a customer gateway and a virtual private gateway in place, you can configure the tunnel.
+
+  1. In the VPC service sidebar, locate the **Virtual Private Network** menu and select **Site-to-Site VPN Connections**.
+
+
+
+![9554f7a-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28401777633563)
+
+  2. Click **Create VPN Connection**.
+
+
+
+![487d7f8-click-create-vpn.png](https://support.macstadium.com/hc/article_attachments/28401763385883)
+
+  3. Fill in the form. 
+     1. Provide **Name tag**.
+     2. For **Target Gateway Type** , select **Virtual Private Gateway** , and from the **Virtual Private Gateway** drop-down menu, select the virtual private gateway you created earlier.
+     3. Select that you want to use an **Existing** customer gateway, and from the **Customer Gateway ID** drop-down menu, select the customer gateway that you created earlier.
+     4. For **Routing Options** , select **Static**.
+     5. In **Static IP Prefixes** , provide the [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for your `Private-1` network. Most likely: `10.221.188.0/24`.
+     6. Ignore the remaining options (not shown on the screenshot).
+
+
+
+![9f41216-us-east-2_console_aws_amazon_com_vpc_home_region_us-east-2.png](https://support.macstadium.com/hc/article_attachments/28401763388315)
+
+  4. Click **Create VPN Connection**.
+
+
+
+![283f047-create-vpn-success.png](https://support.macstadium.com/hc/article_attachments/28401777645083)
+
+## Step 5: Ensure that AWS allows inbound traffic
+
+Based on your requirements and current setup, you might need to enable inbound traffic from Orka to AWS.
+
+See [Amazon VPC Documentation: Security Groups for Your VPC](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html) and [Amazon VPC Documentation: Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html).

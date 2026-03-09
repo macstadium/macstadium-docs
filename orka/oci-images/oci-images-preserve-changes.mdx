@@ -1,0 +1,96 @@
+---
+title: "OCI Images: Preserve Changes"
+zendesk_id: 28334328975643
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28334328975643-OCI-Images-Preserve-Changes"
+section: "OCI Images"
+category: "Orka"
+created_at: "2024-08-16T15:19:18Z"
+updated_at: "2026-01-15T15:51:26Z"
+promoted: false
+labels: ["api", "change", "image", "images", "oci", "preserve", "changes"]
+suggested_new_path: "/orka/oci-images/oci-images-preserve-changes"
+---
+
+Often in your workloads, you might need to modify the underlying OS configuration or file system of the VM. You might need to preserve these changes for future deployments.
+
+When working with OCI-compatible images, you can preserve changes by saving a new image locally in the cluster or pushing your changes to a registry. Note that you cannot push changes to the official images, maintained by MacStadium, unless you are pushing a version to your own registry.
+
+**Did you know?**
+
+Starting with Orka 3.0, all VM disks are OCI-compatible. So, even if you have deployed from a locally stored image, you can push your VM as an image to an OCI-compatible registry.
+
+Before you can push an image to an OCI-compatible registry, you need to have the [registry credentials configured in the respective namespace](https://support.macstadium.com/hc/en-us/articles/28334114762907) before attempting to push the changes.
+
+#### **Orka CLI**
+    
+    
+    orka3 vm push <VM_NAME> <SERVER_ADDRESS>/<IMAGE>[:<TAG>]  
+      
+    OR (if the VM is deployed in a namespace that is not 'orka-default')  
+      
+    orka3 vm push <VM_NAME> <SERVER_ADDRESS>/<IMAGE>[:<TAG>] --namespace <NAMESPACE>
+
+#### **Orka API**
+    
+    
+    curl -X 'POST' \  
+    '<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms/<VM_NAME>/push' \  
+    -H 'accept: application/json' \  
+    -H 'Authorization: Bearer <TOKEN>' \  
+    -H 'Content-Type: application/json' \  
+    -d '{  
+    "imageReference": "<SERVER_ADDRESS>/<IMAGE>[:<TAG>]"  
+    }'
+
+Note that you need to provide the registry path to the image name and optionally its tag. For example: ghcr.io/my-organization/orka-images/orka-arm:latest.
+
+This is an async operation. It returns a push job ID (in the vm-push- format) which you can use to check the status of the operation. Note that the push job ID is valid for 1 hour after the operation completes. Note that this check is not available with the Orka3 API.
+
+#### **Orka CLI**
+    
+    
+    orka3 vm get-push-status <PUSH_JOB_ID>  
+      
+    OR (if the VM is deployed in a namespace that is not 'orka-default')  
+      
+    orka3 vm get-push-status <PUSH_JOB_ID> --namespace <NAMESPACE>
+
+## Save changes as a new locally stored image
+
+If you don't want to push your changes to an OCI-compatible registry, you can save a new image locally to your cluster.
+
+#### **Orka CLI**
+    
+    
+    orka3 vm save <VM_NAME> <IMAGE_NAME>  
+      
+    OR (if the VM is deployed in a namespace that is not 'orka-default')  
+      
+    orka3 vm save <VM_NAME> <IMAGE_NAME> --namespace <NAMESPACE>
+
+#### **Orka API**
+    
+    
+    curl -X 'POST' \  
+    '<ORKA_API_URL>/api/v1/namespaces/<NAMESPACE>/vms/<VM_NAME>/save' \  
+    -H 'accept: application/json' \  
+    -H 'Authorization: Bearer <TOKEN>' \  
+    -H 'Content-Type: application/json' \  
+    -d '{  
+    "imageName": "<IMAGE_NAME>"  
+    }'
+
+This is an async operation. To check the status of the operation, run:
+
+#### **Orka CLI**
+    
+    
+    orka3 image list <IMAGE_NAME>
+
+#### **Orka API**
+    
+    
+    curl -X 'GET' \  
+    '<ORKA_API_URL>/api/v1/namespaces/orka-default/images/<IMAGE_NAME>' \  
+    -H 'accept: application/json' \  
+    -H 'Authorization: Bearer <TOKEN>'

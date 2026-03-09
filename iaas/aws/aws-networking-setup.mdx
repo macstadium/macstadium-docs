@@ -1,0 +1,115 @@
+---
+title: "AWS Networking Setup"
+zendesk_id: 28294500691739
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28294500691739-AWS-Networking-Setup"
+section: "AWS"
+category: "IaaS"
+created_at: "2024-08-15T12:42:12Z"
+updated_at: "2024-09-18T21:48:45Z"
+promoted: false
+labels: ["network", "aws", "networking"]
+suggested_new_path: "/iaas/aws/aws-networking-setup"
+---
+
+To establish a stable, persistent connection between Amazon Virtual Private Cloud (Amazon VPC) and your MacStadium private cloud, you need to configure an IPsec site-to-site VPN between the two clouds.
+
+Currently, Amazon lets you create a site-to-site VPN where at all times one tunnel is active (up) and one is passive (down). A monitoring service checks frequently if the active tunnel is up and, if not, brings the passive tunnel up instead. This ensures minimal downtime.
+
+Routing from Amazon to MacStadium is static.
+
+To create a site-to-site VPN from your Amazon VPC to your MacStadium private cloud, you need to go through the following high-level steps:
+
+  1. Log in to your VPC service
+  2. Create a customer gateway
+  3. Set up a virtual private gateway
+  4. Create the site-to-site VPN connection
+  5. Ensure that AWS allows inbound traffic
+
+
+
+## Log in to your VPC service
+
+  1. Log in to your AWS Management Console and access your VPC service.
+  2. In the top right corner of the screen, make sure that you're working in the correct region.
+
+
+
+## Create a customer gateway
+
+In Amazon, the customer gateway represents the MacStadium endpoint of the site-to-site VPN connection. When you configure the customer gateway, you need to use the networking information for your public network. By default, this is the FW1-Outside network. You can find the networking information for this network in Appendix B of your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+
+For more information about the customer gateway, see [Amazon VPC Documentation: Components of Your Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN).
+
+  1. In the VPC service sidebar, locate the Virtual Private Network menu and select Customer Gateways.  
+![49f8c5c-select-customer-gateway.png](https://support.macstadium.com/hc/article_attachments/28294500664987)
+  2. Click Create Customer Gateway.  
+![2fc7463-create-customer-gateway.png](https://support.macstadium.com/hc/article_attachments/28294500668187)
+  3. Provide a Name. 
+     * Set a name that helps you identify the gateway easily.
+  4. Select Static routing.
+  5. In the IP Address text box, provide the IP address of the public network listed in Appendix B of the IP Plan. 
+     * By default, this is the FW1-Outside network.
+  6. Click Create Customer Gateway.
+
+
+
+## Set up a virtual private gateway
+
+In Amazon, the virtual private gateway represents the Amazon endpoint of the site-to-site VPN connection.
+
+![e59358a-attach-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28294515711515)
+
+For more information about the virtual private gateway, see [Amazon VPC Documentation: Components of Your Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN).
+
+  1. In the VPC service sidebar, locate the Virtual Private Network menu and select Virtual Private Gateways.
+
+  2. Click Create Virtual Private Gateway.  
+![d91a7fa-create-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28294500683163)
+
+  3. Provide a Name tag. 
+     * Set a name that helps you identify the gateway easily.
+  4. Select Amazon default ASN and click Create Virtual Private Gateway.
+  5. On the Virtual Private Gаteways dashboard, right-click the newly created virtual private gateway and select Attach to VPC.  
+![0ef8aa0-attach-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28294515715227)
+
+
+
+Next, you need to manually enable route propagation for the virtual private gateway. For more information about VPN routing, see [Amazon VPC Documentation: Site-to-Site VPN Routing Options](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html).
+
+  1. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
+![16b5a00-select-route-tables.png](https://support.macstadium.com/hc/article_attachments/28294515716507)
+  2. In the list of routing tables, select the main route table for your VPC.
+  3. At the bottom of the screen, select Route Propagation. 
+     * If your virtual private gateway is not listed, make sure that it's attached to the VPC.
+  4. Click Edit route propagation.  
+![747405e-route-propagation.png](https://support.macstadium.com/hc/article_attachments/28294515717403)
+  5. Select the Propagate checkbox and click Save.
+
+
+
+## Create the site-to-site VPN connection
+
+After you have a customer gateway and a virtual private gateway in place, you can configure the site-to-site VPN connection. During setup, you need to choose the customer gateway and the virtual private gateway that you want to use and configure routing. You need to route traffic to your internal, private network. By default, this is the Private-1 network. You can find the networking information for this network in **Appendix B** of your IP Plan.
+
+  1. In the VPC service sidebar, locate the Virtual Private Network menu and select Site-to-Site VPN Connections.  
+![06bea70-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28294515718299)
+  2. Click Create VPN Connection.  
+![ed8e88c-us-east-2_console_aws_amazon_com_vpc_home_region_us-east-2-2.png](https://support.macstadium.com/hc/article_attachments/28294500685339)
+  3. Provide Name tag.
+  4. For Target Gateway Type, select Virtual Private Gateway, and from the Virtual Private Gateway drop-down menu, select the virtual private gateway you created earlier.
+  5. Select that you want to use an Existing customer gateway, and from the Customer Gateway ID drop-down menu, select the customer gateway that you created earlier.
+  6. For Routing Options, select Static.
+  7. In Static IP Prefixes, provide the CIDR notation for the private network listed in Appendix A of the IP Plan (by default, the Private-1 network). 
+     * For more information about CIDR notations, see [Understanding IP Addresses, Subnets, and CIDR Notation for Networking](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation). You can also use a CIDR calculator such as this [CIDR/Netmask Lookup Tool](https://www.ultratools.com/tools/netMask).
+  8. Do not edit the Tunnel Options section.
+  9. Click Create VPN Connection.
+
+
+
+## Ensure that AWS allows inbound traffic
+
+Based on your requirements and current setup, you might need to enable inbound traffic from MacStadium to AWS. For more information, see [Amazon VPC Documentation: Security Groups for Your VPC](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html) and [Amazon VPC Documentation: Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html).
+
+## Next steps
+
+If you are ready to proceed with the [MacStadium side of the configuration](https://support.macstadium.com/hc/en-us/articles/28280625682587).

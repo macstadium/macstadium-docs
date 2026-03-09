@@ -1,0 +1,184 @@
+---
+title: "Role-Based Access Control (RBAC)"
+zendesk_id: 42515046091291
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/42515046091291-Role-Based-Access-Control-RBAC"
+section: "Orka3 CLI Reference"
+category: "Orka"
+created_at: "2025-10-23T22:08:54Z"
+updated_at: "2025-10-23T22:18:18Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka3-cli-reference/role-based-access-control-rbac"
+---
+
+**Admin Only:** All rolebinding operations require administrative privileges.
+
+## Understanding RBAC in Orka
+
+Orka relies on RBAC (role-based access control) for the management of user access to resources. In Orka, RBAC consists of the following elements:
+
+  * **Roles:** A set of permissions. Roles are managed by MacStadium.
+  * **Subjects:** Users and service accounts which can be bound to a role. Subjects are managed by Orka users with administrative privileges.
+  * **Namespaces:** Groups of resources dedicated to specific users or service accounts. Namespaces are managed by Orka users with administrative privileges.
+  * **Rolebindings:** K8s objects describing which subjects belong to which role and which subjects can access which namespaces. Rolebindings are managed by Orka users with administrative privileges.
+
+
+
+**Default Access:**
+
+  * All admin users have access to all namespaces
+  * All non-admin users have user access to the `orka-default` namespace
+
+
+
+**Granting Access:**
+
+  * To grant a user access to a specific namespace, add that user as a subject to the rolebinding for the namespace
+  * Service accounts automatically have access to the namespace where they were created
+  * To grant a service account access to a specific namespace, add that service account as a subject to the rolebinding for the namespace
+
+
+
+If `--namespace` is not set, rolebinding commands operate in the `orka-default` namespace. The shorthand alias for `rolebinding` is `rb`.
+
+## Managing Rolebindings
+
+**orka3 rolebinding add-subject**
+
+Add a subject to the rolebinding for the specified namespace. This grants the user or the service account access to the specified namespace.
+
+**Syntax:**
+    
+    
+    orka3 rolebinding add-subject --namespace TARGET_NAMESPACE --user EMAIL_1[,EMAIL_2,...] AND/OR --serviceaccount SA_NAMESPACE_1:SERVICE_ACCOUNT_1[,SA_NAMESPACE_2:SERVICE_ACCOUNT_2,...] [flags]
+
+**Options:**
+    
+    
+    -h, --help                     Display help for add-subject
+    -s, --serviceaccount strings   Service accounts (NAMESPACE:SERVICE_ACCOUNT format, comma-separated)
+    -u, --user strings             Users (email addresses, comma-separated)
+    -n, --namespace string         (Optional) Target namespace (default "orka-default")
+
+**Examples:**
+    
+    
+    # Grant a user access to a namespace
+    orka3 rb add-subject --namespace orka-test --user user@company.com
+    
+    # Grant multiple users access to a namespace
+    orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@company.com
+    
+    # Grant a service account access to a namespace
+    orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins
+    
+    # Grant multiple service accounts access
+    orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
+    
+    # Grant multiple users and service accounts access
+    orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
+
+**orka3 rolebinding list-subjects**
+
+List all rolebinding subjects, along with their kind, in the orka-default namespace or another specified namespace.
+
+**Syntax:**
+    
+    
+    orka3 rolebinding list-subjects [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for list-subjects
+    -o, --output string      (Optional) Output format: table (default)|wide|json
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # List subjects in the 'orka-default' namespace rolebinding
+    orka3 rb list-subjects
+    
+    # List subjects in a specific namespace rolebinding
+    orka3 rb list-subjects --namespace orka-test
+    
+    # List only service account subjects
+    orka3 rb list-subjects | grep 'ServiceAccount'
+
+**orka3 rolebinding remove-subject**
+
+Remove a subject from a rolebinding. This revokes the user or service account access to the specified namespace.
+
+**Syntax:**
+    
+    
+    orka3 rolebinding remove-subject --user EMAIL_1[,EMAIL_2,...] AND/OR --serviceaccount SA_NAMESPACE_1:SERVICE_ACCOUNT_1[,SA_NAMESPACE_2:SERVICE_ACCOUNT_2,...] [--namespace TARGET_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help                     Display help for remove-subject
+    -s, --serviceaccount strings   Service accounts to remove (NAMESPACE:SERVICE_ACCOUNT format, comma-separated)
+    -u, --user strings             Users to remove (email addresses, comma-separated)
+    -n, --namespace string         (Optional) Target namespace (default "orka-default")
+
+**Examples:**
+    
+    
+    # Revoke access to a namespace for a user
+    orka3 rb remove-subject --namespace orka-test --user user@company.com
+    
+    # Revoke access for multiple users
+    orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@company.com
+    
+    # Revoke access for a service account
+    orka3 rb remove-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins
+    
+    # Revoke access for multiple service accounts
+    orka3 rb remove-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
+    
+    # Revoke access for multiple users and service accounts
+    orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@company.com --serviceaccount orka-default:sa-jenkins,orka-production:sa-release-builds
+
+## Adding and Removing Access
+
+**Common Workflow:**
+
+  1. **Create a namespace:**
+         
+         orka3 namespace create orka-test
+
+  2. **Move nodes to the namespace:**
+         
+         orka3 node namespace mini-1 orka-test
+         orka3 node namespace mini-2 orka-test
+
+  3. **Grant users access:**
+         
+         orka3 rb add-subject --namespace orka-test --user user@company.com
+
+  4. **Grant service accounts access:**
+         
+         orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins
+
+  5. **Verify access:**
+         
+         orka3 rb list-subjects --namespace orka-test
+
+
+
+
+**Service Account Access:**
+
+Service accounts are automatically granted access to the namespace where they are created. To grant a service account access to additional namespaces, use the rolebinding commands:
+    
+    
+    # Create service account in orka-default
+    orka3 sa create sa-jenkins
+    
+    # Grant access to orka-test namespace
+    orka3 rb add-subject --namespace orka-test --serviceaccount orka-default:sa-jenkins
+    
+    # Grant access to orka-production namespace
+    orka3 rb add-subject --namespace orka-production --serviceaccount orka-default:sa-jenkins

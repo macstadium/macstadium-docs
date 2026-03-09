@@ -1,0 +1,133 @@
+---
+title: "Customer Environment Tips"
+zendesk_id: 40640583440539
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/40640583440539-Customer-Environment-Tips"
+section: "Supporting Documentation"
+category: "Remote Desktop (VDI)"
+created_at: "2025-09-02T16:57:27Z"
+updated_at: "2025-12-10T19:28:24Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/supporting-documentation/customer-environment-tips"
+---
+
+This guide outlines best practices and common pitfalls to avoid when deploying and managing Citrix VDI on MacStadium infrastructure. Following these recommendations will help ensure a secure, stable, and high-performance user experience.![Shape](https://support.macstadium.com/hc/article_attachments/40640608063003)
+
+## Security & Encryption:
+
+### DO
+
+  * Disable **FileVault** unless required by policy. If FileVault is enabled and the machine powers down, MacStadium Data Center Technicians (DCT) must manually intervene to decrypt the drive.
+  * If encryption is required, coordinate with MacStadium to implement **secure restart scripts** that automate reboots and recovery.
+  * Use **Apple Business Manager (ABM)** for automated enrollment and enforcement of enterprise security baselines.
+
+
+
+### DON’T
+
+  * Rely solely on the Secure Enclave for recovery. Remote unlock may not be feasible without hands-on access.
+  * Allow unmanaged users to enable FileVault without central IT approval.
+
+
+
+![Shape](https://support.macstadium.com/hc/article_attachments/40640608063003)
+
+## Networking & Connectivity:
+
+### DO
+
+  * Configure **firewall rules and VPNs** to allow Citrix traffic. Ensure required ports (TCP/UDP 1494, 2598, 443, and HDX adaptive ports) are open.
+  * Whitelist trusted Citrix and MacStadium service endpoints.
+  * Disable packet inspection or SSL interception on Citrix HDX sessions where possible to improve performance.
+  * Provide users with **backup access methods** (e.g., VNC or MacStadium-provided remote tools) in case the Citrix VDI session becomes inaccessible.
+
+
+
+### DON’T
+
+  * Route sessions through unnecessary **network hops** or proxy chains. Each jump increases latency and lowers session quality.
+  * Overlook bandwidth planning:
+    * Coding / general productivity: ~2–3 Mbps per user
+    * Graphic design: ~5–10 Mbps per user
+    * Video editing / high-performance: ~15–25 Mbps per user
+
+
+
+![Shape](https://support.macstadium.com/hc/article_attachments/40640608063003)
+
+## User Experience Tuning:
+
+### DO
+
+  * Disable **desktop animations and transparency effects** on macOS to improve responsiveness over HDX.
+  * Configure Citrix Workspace client per Citrix guidelines ([Citrix Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.citrix.com.mcas.ms%2Fen-us%2Fcitrix-workspace-app-for-mac%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)).
+  * Disable lock screen timers to prevent session loss if a user is disconnected.
+  * Optimize power settings by disabling Wi-Fi power saving and ensuring stable NIC performance.
+
+
+
+### DON’T
+
+  * Leave defaults enabled that cause session interruptions (screen savers, hot corners, or lock timers).
+  * Forget to test client tuning across different OS versions and hardware configurations.
+
+
+
+![Shape](https://support.macstadium.com/hc/article_attachments/40640608063003)
+
+## Management & Policy:
+
+### DO
+
+  * Define **MDM policies** clearly:
+    * **Must be enabled** : Automated enrollment, system integrity protection, screen sharing off, disable end-user restart/shutdown buttons.
+    * **Should be enabled** : Password complexity, firewall on, Gatekeeper enabled, software update enforcement.
+    * **Cannot be enabled** : User lockout policies that require local hands-on recovery.
+
+
+
+### DON’T
+
+  * Allow end users to bypass MDM profiles or disable supervision.
+  * Apply policies that conflict with Citrix session stability (e.g., auto-sleep or aggressive idle timeouts).![Shape](https://support.macstadium.com/hc/article_attachments/40640608064795)
+
+
+
+## Backup & Recovery:
+
+### DO
+
+  * Maintain secondary connection paths such as VNC or MacStadium secure console for administrative recovery.
+  * Ensure power management policies keep machines in a **“always on” or “wake on network access”** state.
+  * Enable backups using the macOS Time Machine utility on a schedule that meets your needs and corporate policies.
+
+
+
+### DON’T
+
+  * Rely solely on user-initiated restarts or shutdowns—disable those options at the MDM level.
+  * Forget to back up user data; Citrix and MacStadium sessions are not substitutes for enterprise backup solutions.![Shape](https://support.macstadium.com/hc/article_attachments/40640608063003)
+
+
+
+## Automated Enrollment & Scalability:
+
+### DO
+
+  * Use **Apple Business Manager (ABM)** \+ MDM for zero-touch enrollment of macOS instances.
+  * Automate provisioning of new Citrix VDA-enabled macOS workloads through Orka or bare-metal orchestration (see [MacStadium Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.macstadium.com.mcas.ms%2Fdocs%2Fhome%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)).
+
+
+
+### DON’T
+
+  * Attempt to manually configure large numbers of machines without ABM integration—this is error-prone and hard to scale.  
+
+
+
+
+## Quick Reference:
+
+  * **Apple Security Guide:** [Apple Platform Security](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fhelp.apple.com.mcas.ms%2Fpdf%2Fsecurity%2Fen_US%2Fapple-platform-security-guide.pdf%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)
+  * **Citrix Workspace App for Mac:** [Citrix Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.citrix.com.mcas.ms%2Fen-us%2Fcitrix-workspace-app-for-mac%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)
+  * **MacStadium Documentation:** [MacStadium Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.macstadium.com.mcas.ms%2Fdocs%2Fhome%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)

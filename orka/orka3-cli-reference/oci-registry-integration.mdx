@@ -1,0 +1,166 @@
+---
+title: "OCI Registry Integration"
+zendesk_id: 42514571440155
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/42514571440155-OCI-Registry-Integration"
+section: "Orka3 CLI Reference"
+category: "Orka"
+created_at: "2025-10-23T21:56:23Z"
+updated_at: "2025-10-23T22:18:18Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka3-cli-reference/oci-registry-integration"
+---
+
+## About OCI Images in Orka
+
+OCI (Open Container Initiative) registry credentials are required to push and pull OCI-compatible Apple silicon-based Orka images to or from private repositories.
+
+**Important:** OCI images are available only for Apple silicon-based VMs. This is the recommended modern approach for image storage and management.
+
+**Common OCI Registries:**
+
+  * GitHub Container Registry (ghcr.io)
+  * Docker Hub
+  * Harbor
+  * Private registries
+
+
+
+**Working with OCI Images:**
+
+  * To deploy a VM using an OCI image: `orka3 vm deploy --image server.com/repository/image:tag`
+  * To push an image to an OCI registry: `orka3 vm push VM_NAME server.com/repository/image:tag`
+
+
+
+## Managing Registry Credentials
+
+**Admin Only:** All registry credential operations require administrative privileges.
+
+If `--namespace` is not set, operations default to the `orka-default` namespace. The shorthand alias for `registrycredential` is `regcred`.
+
+**orka3 registrycredential add**
+
+Add credentials for the specified OCI registry server in the orka-default namespace or the specified namespace. Use this to add new credentials for a new server, or replace existing credentials for an existing server.
+
+**Server Address Requirements:**
+
+  * Must include the scheme, hostname and (optionally) port
+  * Examples: `https://ghcr.io` or `https://10.221.188.5:30080`
+
+
+
+If insecure communication is allowed, requests to the registry server will fall back to HTTP when HTTPS is unavailable (disabled by default).
+
+**Syntax:**
+    
+    
+    orka3 registrycredential add SERVER --username USERNAME {--password PASSWORD | --password-stdin} [--replace] [--allow-insecure] [--namespace TARGET_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    --allow-insecure         (Optional) Falls back to HTTP if HTTPS is unavailable
+    -h, --help               Display help for add
+    -p, --password string    Password for registry authentication
+    --password-stdin         Read the password from stdin
+    --replace                (Optional) Replaces credentials for the specified server
+    -u, --username string    (Required) Username for registry authentication
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Add registry credentials for GitHub Packages in a specific namespace
+    orka3 regcred add https://ghcr.io --username whoami --password ghp_*** --namespace orka-test
+    
+    # Read the password from stdin
+    echo -n "$PASSWORD" | orka3 regcred add https://ghcr.io --username whoami --password-stdin
+    
+    # Read the password from file over stdin
+    orka3 regcred add https://ghcr.io --username whoami --password-stdin < password.txt
+    
+    # Add credentials for an insecure server
+    orka3 regcred add --allow-insecure http://10.221.188.5:30080 --username admin --password p@ssw0rd
+    
+    # Replace existing credentials for GitHub Packages
+    orka3 regcred add --replace https://ghcr.io --username whoami --password ghp_***
+
+ **orka3 registrycredential list**
+
+List the OCI registry servers that have stored credentials in the orka-default namespace or the specified namespace.
+
+**Syntax:**
+    
+    
+    orka3 registrycredential list [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for list
+    -o, --output string      (Optional) Output format: table (default)|wide|json
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # List OCI registry servers in the 'orka-default' namespace
+    orka3 regcred list
+    
+    # Show additional information about each registry server
+    orka3 regcred list --output wide --namespace orka-test
+
+**orka3 registrycredential remove**
+
+Remove the authentication credentials for the specified registry server in the orka-default namespace or the specified namespace.
+
+**Syntax:**
+    
+    
+    orka3 registrycredential remove SERVER [--namespace TARGET_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for remove
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Remove registry credentials for GitHub Packages in 'orka-default'
+    orka3 regcred remove https://ghcr.io
+    
+    # Remove registry credentials for a private server in a specific namespace
+    orka3 regcred remove http://10.221.188.5:30080 --namespace orka-test
+
+## Working with OCI Images
+
+**Deploying VMs from OCI Images**
+
+When deploying a VM, you can specify an OCI image by its full path:
+    
+    
+    # Deploy a VM from an OCI-compatible image in GitHub Packages
+    orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:latest
+    
+    # Deploy a VM from a specific tagged version
+    orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:14.0
+
+**Pushing Images to OCI Registries**
+
+The state of a running VM can be saved and pushed to an OCI-compatible registry. This operation is applicable only to Apple silicon-based VMs.
+
+For more information, see the [VM Lifecycle Management](https://www.claudeusercontent.com/?domain=claude.ai&errorReportingMode=parent#) article.
+
+**Caching OCI Images**
+
+You can cache OCI images directly on cluster nodes without pulling them to local storage first:
+    
+    
+    # Cache an OCI image on specific nodes
+    orka3 imagecache add ghcr.io/my-organization/orka-images/orka-arm:latest --nodes mini-arm-10
+    
+    # Check caching status of an OCI image
+    orka3 imagecache info ghcr.io/my-organization/orka-images/orka-arm:latest

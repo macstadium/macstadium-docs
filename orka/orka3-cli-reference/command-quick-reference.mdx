@@ -1,0 +1,170 @@
+---
+title: "Command Quick Reference"
+zendesk_id: 42515134370459
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/42515134370459-Command-Quick-Reference"
+section: "Orka3 CLI Reference"
+category: "Orka"
+created_at: "2025-10-23T22:11:40Z"
+updated_at: "2025-10-23T22:18:47Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka3-cli-reference/command-quick-reference"
+---
+
+## All Commands by Category
+
+**Configuration & Setup**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 config set` | Set the Orka service URL |   
+`orka3 config view` | View current CLI configuration |   
+`orka3 completion` | Generate shell autocompletion |   
+`orka3 version` | Print CLI version |   
+  
+**Authentication**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 login` | Log in to Orka cluster |   
+`orka3 user login` | Log in to Orka cluster |   
+`orka3 user logout` | Log out of Orka cluster |   
+`orka3 user get-token` | Print authentication token |   
+`orka3 user set-token` | Log in with token |   
+  
+**Image Management**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 image list` | List local images |   
+`orka3 image copy` | Copy an image |   
+`orka3 image generate` | (Intel-only) Generate empty image |   
+`orka3 image delete` | Delete images |   
+`orka3 image set-description` | Set image description |   
+`orka3 imagecache add` | Cache image on nodes | `ic`  
+`orka3 imagecache info` | View image caching status | `ic`  
+`orka3 imagecache list` | List cached images | `ic`  
+  
+**ISO Management (Intel Only)**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 iso list` | List local ISOs |   
+`orka3 iso copy` | Copy an ISO |   
+`orka3 iso delete` | Delete ISOs |   
+`orka3 iso set-description` | Set ISO description |   
+  
+**VM Operations**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 vm deploy` | Deploy a VM |   
+`orka3 vm list` | List VMs |   
+`orka3 vm delete` | Delete VMs |   
+`orka3 vm save` | Save new image from VM |   
+`orka3 vm commit` | Update image from VM |   
+`orka3 vm resize` | Resize VM disk |   
+`orka3 vm push` | (ARM-only) Push to OCI registry |   
+`orka3 vm get-push-status` | (ARM-only) View push status |   
+`orka3 vm start` | (Intel-only) Power ON VM |   
+`orka3 vm stop` | (Intel-only) Power OFF VM |   
+`orka3 vm suspend` | (Intel-only) Suspend VM |   
+`orka3 vm resume` | (Intel-only) Resume VM |   
+`orka3 vm revert` | (Intel-only) Revert VM to image |   
+  
+**VM Configuration Templates**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 vm-config create` | Create VM configuration template | `vmc`  
+`orka3 vm-config list` | List VM configurations | `vmc`  
+`orka3 vm-config delete` | Delete VM configurations | `vmc`  
+  
+**Infrastructure Management (Admin)**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 node list` | List nodes |   
+`orka3 node tag` | (Admin) Tag node for affinity |   
+`orka3 node untag` | (Admin) Remove node tag |   
+`orka3 node namespace` | (Admin) Move node to namespace |   
+`orka3 namespace create` | (Admin) Create namespace |   
+`orka3 namespace list` | (Admin) List namespaces |   
+`orka3 namespace delete` | (Admin) Delete namespace |   
+  
+**Access Control (Admin)**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 serviceaccount create` | (Admin) Create service account | `sa`  
+`orka3 serviceaccount list` | (Admin) List service accounts | `sa`  
+`orka3 serviceaccount token` | (Admin) Get service account token | `sa`  
+`orka3 serviceaccount delete` | (Admin) Delete service account | `sa`  
+`orka3 rolebinding add-subject` | (Admin) Grant namespace access | `rb`  
+`orka3 rolebinding list-subjects` | (Admin) List namespace access | `rb`  
+`orka3 rolebinding remove-subject` | (Admin) Revoke namespace access | `rb`  
+  
+**OCI Registry Integration (Admin)**
+
+Command | Description | Alias  
+---|---|---  
+`orka3 registrycredential add` | (Admin) Add registry credentials | `regcred`  
+`orka3 registrycredential list` | (Admin) List registry credentials | `regcred`  
+`orka3 registrycredential remove` | (Admin) Remove registry credentials | `regcred`  
+  
+## Common Flags & Options
+
+**Global Flags**
+
+Flag | Description  
+---|---  
+`-h, --help` | Display help for any command  
+`-n, --namespace` | Specify namespace (default: orka-default)  
+`-o, --output` | Output format: table (default), wide, or json  
+  
+**VM Deployment Flags**
+
+Flag | Description  
+---|---  
+`-i, --image` | Base image (required)  
+`-c, --cpu` | Number of CPU cores  
+`-m, --memory` | RAM in gigabytes  
+`--node` | Specific node for deployment  
+`--tag` | Node affinity tag  
+`--tag-required` | Require tagged nodes  
+`--config` | VM configuration template  
+`--generate-name` | Generate unique name with suffix  
+  
+## Architecture-Specific Commands
+
+**Intel Only (amd64)**
+
+  * `orka3 image generate` \- Generate empty images
+  * `orka3 iso` commands - Manage ISOs
+  * `orka3 vm start/stop` \- Power control
+  * `orka3 vm suspend/resume` \- Suspend state
+  * `orka3 vm revert` \- Revert to image
+  * `--iso` flag - Attach ISO during deployment
+  * `--gpu` flag - Enable GPU passthrough
+  * `--system-serial` flag - Custom serial number
+  * `--disable-net-boost` flag - Disable network boost
+
+
+
+**Apple Silicon Only (arm64)**
+
+  * `orka3 vm push` \- Push to OCI registry
+  * `orka3 vm get-push-status` \- Check push status
+  * `orka3 imagecache` commands - Image caching on nodes
+  * OCI image support - Deploy from OCI registries
+
+
+
+## Deprecated Commands
+
+**Note:** The following commands are deprecated and will be removed in future releases. Use OCI registries and `orka3 imagecache` instead.
+
+  * `orka3 remote-image list`
+  * `orka3 remote-image pull`
+  * `orka3 remote-iso list`
+  * `orka3 remote-iso pull`

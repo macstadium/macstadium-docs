@@ -1,0 +1,36 @@
+---
+title: "TeamCity"
+zendesk_id: 28398738308251
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28398738308251-TeamCity"
+section: "Orka DevOps Integrations"
+category: "Orka"
+created_at: "2024-08-19T15:25:44Z"
+updated_at: "2025-07-29T17:27:30Z"
+promoted: false
+labels: ["orka", "api", "teamcity"]
+suggested_new_path: "/orka/orka-devops-integrations/teamcity"
+---
+
+How to use TeamCity with your Orka environment.
+
+MacStadium provides seamless **integration between Orka and[TeamCity](https://www.jetbrains.com/teamcity/)**. The TeamCity plugin automatically spins up and destroys ephemeral agents.
+
+> **IMPORTANT**
+> 
+> Orka 3.1.x and above requires version [2.0.0+](https://plugins.jetbrains.com/plugin/13662-orka-by-macstadium/edit/versions/stable/433857) of the plugin.
+
+## Set up the integration
+
+> **IMPORTANT**
+> 
+> Make sure that your TeamCity server is connected to your Orka environment through VPN. You can use a [VPN client](https://orkadocs.macstadium.com/docs/vpn-connect) to establish temporary connectivity, or you can create a [site-to-site VPN tunnel](https://support.macstadium.com/hc/en-us/articles/28398327991707) to keep the connection alive at all times.
+
+MacStadium provides a TeamCity plugin that you need to install and configure. To get the plugin, **[contact us](https://portal.macstadium.com/)**.
+
+For the latest information about how to set up the TeamCity plugin, see [Orka by MacStadium TeamCity Plugin Setup](https://github.com/macstadium/orka-teamcity-plugin/blob/master/wiki/setup.md).
+
+For the latest information about how to use the TeamCity plugin, see [Orka by MacStadium TeamCity Plugin Usage](https://github.com/macstadium/orka-teamcity-plugin/blob/master/wiki/usage.md).
+
+## Known issues
+
+  * You might experience a timeout when deploying an Apple ARM-based agent from a VM config for the first time on a node. Every subsequent deployment on the same ARM-based node though will be successful.

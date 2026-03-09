@@ -1,0 +1,101 @@
+---
+title: "Performance: GPU Passthrough"
+zendesk_id: 28337172185755
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28337172185755-Performance-GPU-Passthrough"
+section: "Orka Configuration"
+category: "Orka"
+created_at: "2024-08-16T16:29:34Z"
+updated_at: "2025-07-29T17:50:52Z"
+promoted: false
+labels: ["configuration", "api", "passthrough", "performance", "gpu"]
+suggested_new_path: "/orka/orka-configuration/performance-gpu-passthrough"
+---
+
+(Intel-only) How to enable GPU passthrough for your Orka VMs.
+
+#### **Known limitation**
+
+This guide is applicable only to Intel-based VMs. GPU passthrough is always enabled on Apple silicon VMs and cannot be disabled.
+
+For more information, see [Feature Parity: Apple Hardware](https://support.macstadium.com/hc/en-us/articles/28336418107931) and [Compatibility: Performance Improving Features](https://support.macstadium.com/hc/en-us/articles/28336079584155).
+
+Quick command summary
+
+**Orka CLI**
+    
+    
+    orka3 vm deploy  
+    orka3 vm deploy --gpu
+
+**Orka API**
+    
+    
+    POST /api/v1/namespaces/{namespace}/vms
+
+When GPU Passthrough is enabled for the cluster, VMs with enabled GPU Passthrough will be able to access and utilize the host GPU for their workloads.
+
+**Before you begin, make sure that your Orka environment is updated to Orka 1.5.0 or later and that GPU passthrough is enabled in the cluster.**
+
+## Defaults
+
+Even if GPU Passthrough is enabled in your environment, GPU Passthrough is disabled on the VM level for Intel-based VMs. If you want to enable GPU Passthrough for your Intel-based VMs, you need to do it when deploying a VM.
+
+## Limitations
+
+  * You can deploy only one VM utilizing GPU Passthrough per Intel-based node at a time.
+  * GPU Passthrough is disabled for both Intel-based nodes and Intel-based VMs. Starting with Orka 1.5.0, you can request that GPU Passthrough is enabled on your Intel-based nodes. This will let you enable GPU Passthrough for VMs deployed on those nodes. Contact the [MacStadium team](https://portal.macstadium.com/) for more information.
+  * GPU Passthrough is always enabled for Apple silicon-based nodes and Apple silicon-based VMs and you cannot disable it.
+  * For Orka clusters comprised of 2013 Mac Pro nodes, MacStadium will enable GPU passthrough for the respective node only if the host contains dual AMD FirePro D500 cards. Both cards on the host will be passed to the VM utilizing GPU Passthrough at the moment.
+  * For Intel-based VMs, GPU Passthrough and VNC cannot work together. Enabling GPU Passthrough automatically disables the VNC console. Make sure that you will still be able to access the VM via SSH or Apple Screen Sharing before enabling GPU Passthrough.
+
+
+
+## Enable GPU Passthrough for new VM configurations
+
+For all Intel-based VMs, GPU Passthrough is disabled by default and you need to enable it. You can later override the setting during the vm deploy operation.
+
+**Orka CLI**
+    
+    
+    orka3 vmc create gpu-config -i <IMAGE> --gpu
+
+**Orka API**
+    
+    
+    curl --location --request POST 'http://<ORKA_API_IP>/resources/vm/create' \  
+    --header 'Content-Type: application/json' \  
+    --header 'Authorization: Bearer <TOKEN>' \  
+    --data-raw '{  
+    "orka_vm_name": "<VM_NAME>",  
+    "orka_base_image": "<IMAGE>",  
+    "orka_image": "<VM_NAME>",  
+    "orka_cpu_core": <CPU_AMOUNT>,  
+    "vcpu_count": <VCPU_AMOUNT>,  
+    "gpu_passthrough": true,  
+    "vnc_console": false  
+    }'
+
+## Override GPU Passthrough during deployment
+
+For all Intel-based VMs, you can enable or disable GPU Passthrough at the time of deployment. This lets you override the existing GPU Passthrough settings of your VM configurations.
+
+**Orka CLI**
+    
+    
+    orka3 vm deploy --config gpu-config --gpu  
+      
+    OR  
+      
+    orka3 vm deploy --config gpu-config --gpu=no
+
+**Orka API**
+    
+    
+    curl --location --request POST 'http://<ORKA_API_IP>/resources/vm/deploy' \  
+    --header 'Content-Type: application/json' \  
+    --header 'Authorization: Bearer <TOKEN>' \  
+    --data-raw '{  
+    "orka_vm_name": "<VM_NAME>",  
+    "gpu_passthrough": true,  
+    "vnc_console": false  
+    }'

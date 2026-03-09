@@ -1,0 +1,58 @@
+---
+title: "Other Clouds"
+zendesk_id: 28307845176475
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28307845176475-Other-Clouds"
+section: "Connecting to Other Clouds"
+category: "IaaS"
+created_at: "2024-08-15T18:24:05Z"
+updated_at: "2024-10-08T13:22:07Z"
+promoted: false
+labels: ["cloud", "clouds"]
+suggested_new_path: "/iaas/connecting-to-other-clouds/other-clouds"
+---
+
+## Connect a third-party cloud to your MacStadium environment if:
+
+You need to share files between the two clouds.
+
+You need to share the cloud infrastructure.
+
+You need to access the virtual machines from one cloud on the other.
+
+You need to run a more complex CI/CD setup where the macOS part of the pipeline is hosted in  
+MacStadium and the remaining pipeline is hosted in another cloud.
+
+## Step 1 Setup Third-Party Site-to-Site Config
+
+Choose the third-party provider you would like to connect your Mac Cloud to, and  
+follow the setup instructions provided.
+
+  * [AWS Networking Setup](https://support.macstadium.com/hc/en-us/articles/28294500691739)
+  * [Azure Networking Setup](https://support.macstadium.com/hc/en-us/articles/28279691634075)
+  * [Google Cloud Platform Networking Setup](https://support.macstadium.com/hc/en-us/articles/28300901563163)
+  * [Private Cloud Networking Setup](https://support.macstadium.com/hc/en-us/articles/28307653163419)
+
+
+
+## Step 2 Prepare for MacStadium (Cisco ASA/ASAv) Config
+
+Follow the associated guide provided below as you prepare the VPN configuration for input  
+into the Cisco ASA/ASAv.
+
+  * [AWS Cisco Config Guide](https://support.macstadium.com/hc/en-us/articles/28280625682587)
+  * [Azure Cisco Config Guide](https://support.macstadium.com/hc/en-us/articles/28299207547547)
+  * [GCP Cisco Config Guide](https://support.macstadium.com/hc/en-us/articles/28301505752219)
+
+
+
+## Step 3 Setup MacStadium Site-to-Site Config
+
+Now you will need to configure the MacStadium end of things.
+
+Configure MacStadium's End of the Site-to-Site VPN
+
+## Step 4 (Optional) Verify Connection
+
+  * [Verify AWS Connection](https://support.macstadium.com/hc/en-us/articles/28298236512539)
+  * [Verify Azure Connection](https://support.macstadium.com/hc/en-us/articles/28298534785435)
+  * [Verify GCP Connection](https://support.macstadium.com/hc/en-us/articles/28298738716699)

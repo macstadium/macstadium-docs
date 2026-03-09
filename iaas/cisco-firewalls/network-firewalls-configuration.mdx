@@ -1,0 +1,107 @@
+---
+title: "Network Firewalls Configuration"
+zendesk_id: 28267671197339
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28267671197339-Network-Firewalls-Configuration"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T15:54:58Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "firewalls", "network", "configuration", "config"]
+suggested_new_path: "/iaas/cisco-firewalls/network-firewalls-configuration"
+---
+
+Every MacStadium private cloud deploys with a dedicated Cisco firewall to protect and secure the entire infrastructure. MacStadium dedicated firewalls provide admins with root access to the firewall and the ability to configure settings to their specifications. This guide describes some of the most popular configuration and customization options available to MacStadium customers.
+
+## Getting Started:
+
+**NOTE:** Many customers simply submit a ticket via the [MacStadium portal](https://portal.macstadium.com/) with their firewall configuration requests.
+
+### Cisco Adaptive Security Virtual Appliance (ASAv)
+
+MacStadium offers Cisco Adaptive Security Virtual Appliance (ASAv), which runs the same software as physical Cisco ASAs. This means that we are able to deliver full ASA firewall and VPN capabilities to cloud environments that help safeguard traffic and maltitenant architectures. Optimized for data center deployments, the ASAv is designed to work as a virtual machine. The advantage for MacStadium customers of using a virtual firewall comes from faster deployments and easier upgrades. We recommend ASAv firewalls for all use cases that have sustained throughput demands of less than 500 Mbps (125 Mbps Encrypted) as it delivers exceptional security and performance at a great price.
+
+With a Cisco ASAv protecting their MacStadium private cloud, customers can:
+
+  * Implement uniform security across multiple physical and virtual domains
+  * Accelerate provisioning with predetermined configurations
+  * Simplify management by using representational state transfer (REST) APIs to manage the device, easily introduce Cisco ASAv into software-defined networking (SDN) environments, and incorporate ASAv into custom policy-orchestration systems.
+
+
+
+The virtual appliance supports the same site-to-site VPN, remote-access VPN, and client-less VPN functionalities that physical ASA devices do. Most of the features that are supported on a physical ASA by Cisco software are also supported on the virtual appliance, with the notable exceptions of Cisco not supporting clustering and multiple contexts support (that is to say, having multiple separate _virtual _firewalls on the same hardware) on ASAv implementations.
+
+### Cisco Adaptive Security Appliance (ASA)
+
+MacStadium also offers physical ASA hardware devices for customers who require those capabilities or need more throughput than a virtual firewall can handle. The standard appliance MacStadium offers is a Cisco ASA 5500 series firewall, and is for any customer who needs a dedicated, physical security appliance to protect their host environment.
+
+When customers need even more power for inspection and protection, MacStadium also offers Cisco Firepower 2100 NGFW series appliances. The main difference between the two appliances is in an increase of 10 gigs per second in speed, connections and packets per second for the 2100 series.
+
+Both the Cisco 5500 and 2100 series deliver:
+
+Market-proven security capabilities that integrate multiple full-featured, high-performance security services, including application-aware firewall, SSL and IPsec VPN, IPS, antivirus, anti-spam, anti-phishing, and web filtering services.
+
+Comprehensive management interfaces including the graphical Cisco Adaptive Security Device Manager (ASDM), a comprehensive command line interface (CLI), verbose syslog, and Simple Network Management Protocol (SNMP) support that round out a rich complement of management options.
+
+For more information, please contact MacStadium Support or Sales.
+
+**NOTE** : Hardware firewalls are not typically available during free trials or POC periods.
+
+## Other Options:
+
+There are several firewall options for users who do not want to leverage Cisco ASA technology.
+
+### Software Firewalls
+
+By default, MacStadium gives the maximum flexibility by leaving all ports open to the internet. Because of this, it is highly recommend to implement another form of defense when not using the MacStadium dedicated Cisco firewall. There is a comprehensive list of third party software firewalls, including feature and price comparisons, at Mac Security: Firewalls.
+
+Please be advised that MacStadium does not offer support for third party software firewall solutions. Also, please take the time to understand the potential impacts of enabling a third-party firewall. If errors exist in the configuration, then there is an increased risk of a data breach. As always, keep the credentials in a safe place.
+
+### macOS X Firewall
+
+Apple also includes a serviceable firewall with OSX. Information on its capabilities and how to enable it can be found at OS X: About the application firewall.
+
+#### Customized and Hybrid Deployments:
+
+We understand that many customers have unique security requirements and may wish to host their own firewalls in our data centers. Our engineering team has detailed experience with many other security appliances and can assist your team in implementing your best possible network security configuration.
+
+Firewall add-ons like these are accessible within the customer dashboard under the Add-Ons tab within the details of your subscription(s).
+
+Please contact Sales for more information.
+
+### Configuring Access
+
+After submitting a private cloud request, the MacStadium provisioning team creates a ticket accessible via the MacStadium portal that contains the connection information.
+
+The IP plan contains necessary information including how to gain access to the private cloud, instructions for accessing vCenter client (unless it is a bare metal implementation), IP allocation, and host assignments.
+
+Setting up Access with a Remote Access Virtual Private Network (VPN)
+
+For security reasons, outside access to the firewall is blocked by default. The recommended method, and the one most MacStadium customers follow, is to access private cloud via a Remote Access Virtual Private Network (VPN).
+
+![627600a-5bbd093a876b7ef49ec1462e_ipplan.png](https://support.macstadium.com/hc/article_attachments/28267654397723)
+
+VPN is the easiest way to securely connect to MacStadium private cloud. The recommended method of doing this is via the AnyConnect client. Instructions for configuring and connecting are here:
+
+Configure Cisco AnyConnect Secure Mobility Client
+
+If the connection information mentions Group Authentication, them configure an IPSec VPN connection. Instructions for doing so on macOS and Windows installations follow:
+
+![fc1a857-5bbd0a02876b7e5876c146dc_ipplan3.png](https://support.macstadium.com/hc/article_attachments/28267654400923)
+
+This tutorial (images only) display how to deploy a virtual machine using the VMware web client. For more information concerning VMware and the VMware vCenter Server Virtual Appliance (vCSA), see the VMware Quick Start Guide.
+
+### IP Allocation and Host Assignments
+
+![a4721e1-5be45d861ec311056ee262a5_ipallocation.png](https://support.macstadium.com/hc/article_attachments/28267669060379)
+
+MacStadium defines four basic interface types for customer use:
+
+  1. Outside: External firewall management addresses
+  2. Inside: /28 range
+  3. ESXi-MGMT: Reserved for vCenter & ESXi hosts (should not have public IP addresses)
+  4. Private: Random private range assigned for your use – by default no outside access allowed
+
+
+
+What interfaces appear in the initial connection information on the MacStadium portal depends on your private cloud configuration request. For instance, for a bare metal implementation, there is no information concerning ESXi management and vCenter.

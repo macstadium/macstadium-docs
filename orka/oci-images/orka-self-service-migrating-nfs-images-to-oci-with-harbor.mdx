@@ -1,0 +1,277 @@
+---
+title: "Orka Self-Service: Migrating NFS Images to OCI with Harbor"
+zendesk_id: 45409919351067
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/45409919351067-Orka-Self-Service-Migrating-NFS-Images-to-OCI-with-Harbor"
+section: "OCI Images"
+category: "Orka"
+created_at: "2026-01-13T18:38:05Z"
+updated_at: "2026-01-16T15:58:05Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor"
+---
+
+This guide walks you through the process of migrating your existing NFS-based images to OCI using Harbor storage in Orka 3.5.
+
+### Prerequisites:
+
+  * Orka cluster upgraded to version 3.5.0 or later
+  * Harbor instance provisioned by MacStadium
+  * Harbor credentials (URL, username, password) from your IP Plan
+  * VPN connection configured per your IP plan
+  * List of existing NFS images to migrate
+  * Inventory of all integrations currently using these images
+
+
+
+### Step 1: Upgrade to Orka 3.5+
+
+You can verify your Orka version using the Orka3 CLI command `orka3 version`
+
+If an upgrade is needed:
+
+  * [Contact MacStadium Support](https://support.macstadium.com/hc/en-us/requests/new) to schedule the upgrade
+  * Review the Orka v3.5 (or later) [release notes](https://support.macstadium.com/hc/en-us/sections/39571643377051-Orka-Upgrades-and-Release-Notes) to better understand how upgrading may impact you
+  * Plan for your scheduled upgrade maintenance window
+
+
+
+### Step 2: Provision Harbor OCI Registry
+
+Submit a support request for Harbor instance provisioning.
+
+  * Open a ticket at: <https://support.macstadium.com/hc/en-us/requests/new>
+  * Request: "Harbor OCI registry provisioning for Orka 3.5"
+
+
+
+Once the request is complete, you will receive the following:
+
+  * A Harbor instance URL (Usually the last IP in your Orka subnet, e.g., `https://10.221.189.254`)
+  * Harbor metrics URL (e.g., `http://10.221.189.254:9090/metrics`)
+  * Project Admin username + password
+  * Default project name (usually this is set to `library`)
+
+
+
+Access the [Harbor web interface](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI):
+
+  * Connect to VPN (per your IP plan)
+  * Navigate to your Harbor instance URL in your browser
+  * Log in using the credentials provided in your IP Plan
+  * Verify you can access your project dashboard
+
+
+
+### Step 3: Configure Orka to Connect to Harbor
+
+  * Add your Harbor registry credentials to Orka using the Orka3 CLI: 
+
+
+    
+    
+    orka3 regcred add \
+      -u <OCI.User> \
+      -p <OCI.Pass> \
+      <OCI.FQDN>
+
+  * Verify your credentials using 
+
+
+    
+    
+    orka3 regcred list
+
+  * **Note:** Registry credentials are namespace-specific. If you use namespaces other than `orka-default`, add credentials to each namespace: 
+
+
+    
+    
+    orka3 regcred add \
+      -u <user> \
+      -p <pass> \
+      <FQDN> \
+      --namespace <NAMESPACE>
+
+### Step 4: Convert NFS Images to OCI Format
+
+  * Confirm the image(s) you'd like to migrate by running `orka3 image list` and noting the image(s) to convert.
+  * Deploy a VM from the specified NFS image: 
+
+
+    
+    
+    orka3 vm deploy \
+      --image "<nfs-image-name>" \
+      --name "migration-temp-vm" \
+      --cpu 4 \
+      --memory 8G
+
+  * Wait for the VM to begin running 
+
+
+    
+    
+    orka3 vm list migration-temp-vm
+
+  * Push the VM as an OCI image to Harbor: 
+        
+        orka3 vm push migration-temp-vm \
+          <Harbor-FQDN>/library/<new-image-name>:<tag>
+
+  * Monitor push status using
+
+
+    
+    
+    orka3 vm get-push-status vm-push-temp-vm
+
+  * After pushing to Harbor, cache the new OCI image on your Orka nodes: 
+
+
+    
+    
+    orka3 imagecache add <Harbor-FQDN>/library/<image-name>:<tag> --all
+
+  * To cache the image on a specific node, run: 
+
+
+    
+    
+    orka3 imagecache add <Harbor-FQDN>/library/<image-name>:<tag> --nodes <node-name>
+
+  * Monitor image caching status: 
+
+
+    
+    
+    orka3 imagecache info <Harbor-FQDN>/library/<image-name>:<tag>
+
+  * Clean up the temporary VM by running: 
+
+
+    
+    
+    orka3 vm delete migration-temp-vm
+
+To do so via the Harbor web UI:
+
+  * Log in to the Harbor web interface
+  * Navigate to 'Projects' -> 'Library'
+  * Click 'Repositories'
+  * Verify your image appears with the correct tag, repeating the process for each NFS image to migrate
+
+
+
+### Step 5: Update CI/CD Integrations
+
+#### GitHub Actions
+
+Old workflow example:
+    
+    
+    name: Run build
+    uses: macstadium/orka-actions@v1
+    with:
+      image: ventura-base
+      cpu: 4
+
+New workflow example:
+    
+    
+    - name: Run build
+      uses: macstadium/orka-actions@v1
+      with:
+        image: 10.221.189.254/library/sequoia-base:v1.0
+        cpu: 4
+
+### Jenkins
+
+Old Jenkinsfile example:
+    
+    
+    orkaVM(image: 'ventura-base', cpu: 4, memory: '8G') { 
+    // build steps 
+    }
+
+New Jenkinsfile example:
+    
+    
+    orkaVM(image: '10.221.189.254/library/sequoia-base:v1.0', cpu: 4, memory: '8G') { 
+    // build steps 
+    }
+
+#### GitLab CI
+
+Old `.gitlab-ci.yml` example:
+    
+    
+    variables:
+      ORKA_IMAGE: ventura-base
+
+New `.gitlab-ci.yml` workflow example:
+    
+    
+    variables:
+      ORKA_IMAGE: 10.221.189.254/library/sequoia-base:v1.0
+
+#### Packer Templates
+
+Old HCL:
+    
+    
+    source "macstadium-orka" "build" {
+      source_image = "sequoia-base"
+      image_name   = "custom-build"
+    }
+
+New HCL:
+    
+    
+    source "macstadium-orka" "build" {
+      source_image = "10.221.189.254/library/sequoia-base:v1.0"
+      image_name   = "10.221.189.254/library/custom-build:v1.0"
+    }
+
+Packer-built images should also be pushed to Harbor using the new OCI format.
+
+### Validation and Testing
+
+  * Example test VM deployment from an OCI image
+
+
+    
+    
+    orka3 vm deploy \
+      --image "10.221.189.254/library/sequoia-base:v1.0" \
+      --name "validation-vm" \
+      --cpu 4 \
+      --memory 8G
+
+  * Verify the VM boots successfully using 
+        
+        orka3 vm list validation-vm 
+
+  * Use `orka3 vm vnc validation-vm` to get the VNC connection information for the VM
+  * Run any integration smoke tests your organization uses
+  * Monitor Harbor storage
+
+
+
+### Migration Best Practices
+
+  * Keep NFS images available during transition 
+  * Migrate integrations gradually (not all at once) 
+  * Test OCI images thoroughly before removing NFS versions 
+  * Maintain rollback capability
+  * Use consistent, semantic naming conventions for images, such as: 
+        
+        <Harbor-FQDN>/library/<os-version>-<tools>:<semantic-version> 
+
+    * (e.g. `10.221.189.254/library/sequoia-xcode16:v1.0`)
+  * Pre-cache frequently used images on all nodes 
+  * Schedule image caching during off-peak hours 
+
+
+
+For more information on using Harbor with the Orka3 CLI, review our existing documentation at: <https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI>

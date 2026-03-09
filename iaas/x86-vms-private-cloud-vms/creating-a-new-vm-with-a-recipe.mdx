@@ -1,0 +1,141 @@
+---
+title: "Creating a New VM with a Recipe"
+zendesk_id: 29992540673051
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/29992540673051-Creating-a-New-VM-with-a-Recipe"
+section: "x86 VMs (Private Cloud VMs)"
+category: "IaaS"
+created_at: "2024-10-11T12:31:40Z"
+updated_at: "2025-12-01T23:39:30Z"
+promoted: false
+labels: []
+suggested_new_path: "/iaas/x86-vms-private-cloud-vms/creating-a-new-vm-with-a-recipe"
+---
+
+Users can create a new VM using a predefined recipe. Recipes are VM image templates that allow the automated creation of a new preconfigured VM with the selected operating system, applications, and configuration information. Recipes are quick and convenient, and may be preloaded with various software configurations.
+
+To enable configuration, recipes include questions about each instance, such as the desired network configuration, username and password, in addition to standard VM parameters such as drive size or amount of RAM.
+
+MacStadium recommends using a recipe when deploying a new VM, especially for users new to this process. Recipes ensure that VMs are configured optimally for operation within Private Cloud, and are much faster to install and deploy when compared to manual VM creation.
+
+1\. Select **Machines Dashboard → Virtual Machines.**
+
+2\. Click **New VM**.
+
+![Screenshot 2024-10-11 at 8.35.49 AM.png](https://support.macstadium.com/hc/article_attachments/29993884590491)
+
+_New VM_
+
+3\. The _Select Type_ tab opens. The left-hand side of the screen contains a list of options (Operating Systems, Services, and so on.) The right-hand side of the screen contains a list of recipes.
+
+![Screenshot 2024-10-11 at 8.37.43 AM.png](https://support.macstadium.com/hc/article_attachments/29993853779739)
+
+_EXAMPLE - > Existing Recipe, for Ubuntu Server (recommended)_
+
+MacStadium recommends using a preexisting recipe if a recipe exists for the OS required. Recipes always install the latest version of the selected OS in an optimal configuration with minimal post-installation configuration required. If there is not an OS recipe that the user needs, then select New VM and use the template to create a new recipe for that OS.
+
+4\. In the example, the user selected the recipe for**Ubuntu Server 24.04** ; click**Next.**
+
+5\. The _Virtual Machine Setting_ tab opens. 
+
+![Screenshot 2024-10-11 at 8.39.52 AM.png](https://support.macstadium.com/hc/article_attachments/29993884595867)_Virtual Machine Settings Tab_
+
+  6. In the _VM Recipe Instance_ box, complete the following fields: 
+
+
+
+  * **Name** \- the machine name used for management inside Private Cloud 
+
+  * **Cores** \- specifies the number of vCPUs allocated to this machine 
+
+  * **RAM** \- specifies the amount of RAM allocated to this machine 
+
+  * **Cluster** \- specifies the compute cluster to deploy the machine to. This should be left as _Default_. 
+
+  * **Hostname** \- the network hostname for the machine
+
+
+
+
+![Screenshot 2024-10-11 at 8.40.39 AM.png](https://support.macstadium.com/hc/article_attachments/29993884598555)
+
+_VM Recipe Instance_
+
+  7. In the Network box, users must select **Static** from the dropdown box. Users must also select the correct **Network** from the dropdown list in order to ensure connectivity to existing MacStadium infrastructure. Otherwise, Private Cloud will provision a new isolated network for the VM. 
+
+
+
+
+![Screenshot 2024-10-11 at 8.41.29 AM.png](https://support.macstadium.com/hc/article_attachments/29993887342619)
+
+_Network_
+
+Do not use DHCP as the IP Address Type when connecting VMs to existing networks. While DHCP is the default setting for IP Address Type, MacStadium Mac infrastructure is deployed with static IPs, and no DHCP server is present. **In order for network connectivity to work for deployed VMs on MacStadium networks, an IP must be set manually using the Static IP Address Type.**
+
+8\. In the _Static IP Configuration_ box, all fields must be completed. However, the **auto** option in the IP Address field does not work. Complete the following fields: 
+
+  * **IP Address** – Specifies the IP address of the server. The default is **auto, this is an invalid option for the static IP**. Consult the IP Plan in your MacStadium Portal account to determine an IP Address that doesn’t conflict with existing machines. 
+
+  * **Subnet Mask** – Specifies the range used for the subnet. This is in CIDR notation. The most common selection is ‘/24’ 
+
+  * **Default Gateway** – Specifies the IP to use for routed external traffic. This should be listed in the IP Plan 
+
+  * **Nameservers** – Specifies the DNS servers to use for name resolution. This is not optional, and must be completed in order to resolve hostnames. 
+
+
+
+
+The default IP Address is Auto, however, this option does not work. **Users must select an IP Address that is not currently being used by their machine, in the subnet of the network they are connected to.** Please consult the MacStadium _IP Plan_.  the private subnet, the client can have on reserver, addresses near the end of the subnet. A subnet of 10.254.232.0/24, for example, can reserve address range, 10.254.232.200 through 10.254.232.250 for VMs. 
+
+This only works for customers who will not use the entire subnet for bare metal hosts. In the Drives box, select the _OS Drive Size_ and _OS Drive Tier_. The _OS Drive Tier_ specifies the tier of storage to deploy to, currently, only Tier 2 is available. 
+
+![Screenshot 2024-10-11 at 8.49.43 AM.png](https://support.macstadium.com/hc/article_attachments/29993884605339)
+
+ _Drives_
+
+9\. In the User Configuration box, complete the following fields:
+
+  * **User Name** – the desired username for the default user on the server
+  * **Password** – the desired password for the default user on the server
+  * **Confirm Password**
+
+
+
+Or
+
+  * **Provide an SSH Key** – optional, enables SSH key authentication for the default user
+
+
+
+![Screenshot 2024-10-11 at 8.50.42 AM.png](https://support.macstadium.com/hc/article_attachments/29993887346971)
+
+ _User Configuration_
+
+10\. Click **Submit**.
+
+11\. The new VM screen (_Ubuntu Server_ , in this case) opens and the drives will begin to initialize. This may take a few minutes to complete, as Private Cloud will fetch the latest disk image for the selected operating system if an update is available. During this time, the Drive status will be listed as _Importing_.
+
+![Screenshot 2024-10-11 at 8.52.20 AM.png](https://support.macstadium.com/hc/article_attachments/29993887349019)_New VM Screen_
+
+12\. Once the drive has finished importing, the status will change to _Offline._ At this point, the machine is initialized and ready to be powered on.
+
+![Screenshot 2024-10-11 at 8.53.28 AM.png](https://support.macstadium.com/hc/article_attachments/29993887351451)_Offline = Ready to Launch_
+
+13\. Click the **Power** button and the _Confirmation box_ opens. Click **Power On**.
+
+![Screenshot 2024-10-11 at 8.56.04 AM.png](https://support.macstadium.com/hc/article_attachments/29993884625051)
+
+_Power On_
+
+14\. Open the Console by clicking the **Console** button.
+
+![Screenshot 2024-10-11 at 8.58.39 AM.png](https://support.macstadium.com/hc/article_attachments/29993884627483)
+
+Console Button
+
+15\. When the Console opens, the disk boots and stops at a login prompt. Shortly after, the machine will start to download the latest available software updates.
+
+![Screenshot 2024-10-11 at 9.13.23 AM.png](https://support.macstadium.com/hc/article_attachments/29993884630811)
+
+Console
+
+For the majority of Linux virtual machine recipes, the Console is configured to appear as a text terminal. This makes copy/pasting text much easier, and enables easy access to terminal history.

@@ -1,0 +1,91 @@
+---
+title: "2. AWS VPN Tunnel Configuration File"
+zendesk_id: 28401474359835
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28401474359835-2-AWS-VPN-Tunnel-Configuration-File"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-19T16:24:05Z"
+updated_at: "2024-09-18T21:43:48Z"
+promoted: false
+labels: ["configuration", "orka", "api", "aws", "vpn", "config", "tunnel"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file"
+---
+
+Download the VPN configuration file from Amazon and fill it in with your Orka network configuration.
+
+> #### **You need:**
+> 
+>   * The name `Outside` from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The IP address for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The subnet mask for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The IPv4 address of your Amazon VPC.
+>   * The subnet mask for your Amazon VPC converted from its CIDR notation (i.e. `255.255.0.0` instead of `/16`).
+> 
+
+
+After you [have created your VPN tunnel in Amazon](https://support.macstadium.com/hc/en-us/articles/28401777655707), you need to configure your Cisco firewall to recognize the connection and let traffic into your Orka cluster.
+
+Amazon provides a semi-prefilled configuration file with very detailed instructions. First, you need to download the configuration file and provide the missing information indicated by placeholders. Next, you'll need to [feed the configuration](https://support.macstadium.com/hc/en-us/articles/28401305336475) into your Cisco ASAv to complete the setup.
+
+## Step 1: Download the file from Amazon
+
+  1. Verify that you are logged in your AWS Management Console and you're working in the correct region.
+  2. [Verify that you have created a tunnel in Amazon.](https://support.macstadium.com/hc/en-us/articles/28401777655707)
+  3. Navigate to your VPC service. In the VPC service sidebar, locate the **Virtual Private Network** menu and select **Site-to-Site VPN Connections**.
+
+
+
+![5be93da-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28401474329883)
+
+  4. In the list, select your newly created VPN connection and click **Download Configuration**.
+
+
+
+![744e152-download-configuration.png](https://support.macstadium.com/hc/article_attachments/28401443700635)
+
+  5. Fill in the form and click **Download**. 
+     1. For **Vendor** , select **Cisco Systems, Inc.**.
+     2. For **Platform** , select **ASA 5500 Series**.
+     3. For **Software** , select **ASA 9.x** for a policy-based VPN OR **ASA 9.7 + VTI** for a route-based VPN.
+
+
+
+![e40c41c-Screenshot_2020-08-19_at_14.47.33.png](https://support.macstadium.com/hc/article_attachments/28401443701915)
+
+## Step 2: Fill in the configuration file
+
+> #### **CAUTION**
+> 
+> Unless you have extensive experience with AWS and ASAv configurations, follow the instructions in the configuration file to the letter. Otherwise, your site-to-site VPN might not work as expected.
+
+  1. Open the configuration file in a text editor.
+  2. Replace all placeholders with their respective values.
+
+
+
+Placeholder | Value | Description | More information  
+---|---|---|---  
+`<outside_interface>` | `Outside` | The **name** of the outside interface of your Cisco ASAv device (the `Outside` network). | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)  
+`<outside_access_in>` | (Sample) `outside_access_in` | Any unique name. This will be the name for the access control list that permits the creation of the tunnel and the traffic over it. | [Cisco Documentation: Cisco Access Control Lists](https://www.cisco.com/c/en/us/support/docs/security/ios-firewall/23602-confaccesslists.html)  
+`<vpc_subnet>` | (Sample) `192.168.0.0` | The IPv4 address of your Amazon VPC (without the subnet mask bit notation). | You can get this value by selecting your VPC in AWS > VPC dashboard and checking the **Details** at the bottom of the screen.  
+`<vpc_subnet_mask>` | (Sample) `255.255.0.0` | The subnet mask for your Amazon VPC, converted from its CIDR notation. | You can get this value by selecting your VPC in AWS > VPC dashboard and checking the **Description** at the bottom of the screen. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the `/16` notation converts to a `255.255.0.0` subnet mask).  
+`<amzn_vpn_map>` | (Sample) `amzn_vpn_map` | Any unique name for the crypto map. It must not be already in use by any other crypto maps you might have configured. | [Cisco Doumentation: Configuring Crypto Maps](https://www.cisco.com/c/en/us/td/docs/security/vpn_modules/6342/vpn_cg/6342site3.html#wp1036915)  
+`<sla_monitor_address>` | (Sample) `192.168.0.1` | An IP address in your Amazon VPC that can serve as an SLA monitor keeping the site-to-site tunnel alive. | You can set this to the `<vpc_subnet>` address plus one.  
+`<local_subnet>` | `10.221.188.0` | The IP address for the `Private-1` network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)  
+`<local_subnet_mask>` | `255.255.255.0` | The subnet mask for the `Private-1` network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)  
+  
+  3. Uncomment the following lines. To uncomment, remove `! `at the start of the line. 
+     * `access-list amzn-filter extended permit ip ...`
+     * `object`\- and `nat`-related configuration at the end of the config file.
+  4. Keep the following line. This ensures the SLA monitor works as expected.
+
+
+    
+    
+    object network obj-SrcNet subnet 0.0.0.0 0.0.0.0
+
+Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). If you choose to modify this line, **do not** configure the `<sla_monitor_address>` value.
+
+  5. Change `nat (inside,outside)` to `nat (Private-1,Outside)`.
+  6. (Optional) Delete the remaining commented lines to clean up the file. Commented lines are indicated by `! `at the beginning of the line.
+  7. Save your changes.

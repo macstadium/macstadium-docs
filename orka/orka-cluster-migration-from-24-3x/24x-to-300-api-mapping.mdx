@@ -1,0 +1,95 @@
+---
+title: "2.4.x to 3.0.0: API Mapping"
+zendesk_id: 28346085154971
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28346085154971-2-4-x-to-3-0-0-API-Mapping"
+section: "Orka Cluster Migration from 2.4->3.x"
+category: "Orka"
+created_at: "2024-08-16T19:46:09Z"
+updated_at: "2024-09-18T21:45:52Z"
+promoted: false
+labels: ["orka", "api", "mapping", "2.4"]
+suggested_new_path: "/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping"
+---
+
+How do Orka 2.4.x API endpoints map to Orka 3.0.0?
+
+Use the following mapping to figure out how to migrate your API-based custom automation to Orka 3.0.0.
+
+Orka 2.4.x API | Orka3 API  
+---|---  
+`{GET|POST|DELETE|PUT} /users` | Removed. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).  
+`POST /users/password` | Removed. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).  
+`POST /users/groups/myUserGroup` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).  
+`POST /users/groups/$ungrouped` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://support.macstadium.com/hc/en-us/articles/28333357279387).  
+`POST /token` | For a user: `orka3 user get-token`  
+For a service account: `POST /api/v1/namespaces/{namespace}/serviceaccounts/{serviceaccount}/token`  
+`DELETE /token` | Removed.  
+Tokens are invalidated at the end of their duration (1 hour for users, or 1 year or custom for service accounts).  
+OR  
+Tokens are invalidated when the respective user or service account is removed from the cluster.  
+`GET /resources/vm/list` |  `GET /api/v1/namespaces/{namespace}/vms`  
+`GET /api/v1/namespaces/{namespace}/vmconfigs`  
+`GET /resources/vm/list/all` | Removed. `GET /api/v1/namespaces/{namespace}/vms` and `GET /api/v1/namespaces/{namespace}/vmconfigs` now list all VMs and VM configurations for all users in the namespace.  
+`GET /resources/vm/list/{user}` | Removed. `GET /api/v1/namespaces/{namespace}/vms` and `GET /api/v1/namespaces/{namespace}/vmconfigs` now list all VMs and VM configurations for all users in the namespace.  
+`GET /resources/vm/status/{vm}` | `GET /api/v1/namespaces/{namespace}/vms/{vm}`  
+`GET /resources/vm/configs` | `GET /api/v1/namespaces/{namespace}/vmconfigs`  
+`GET /resources/vm/configs/myorkavm` | `GET /api/v1/namespaces/{namespace}/vmconfigs/{vmconfig}`  
+`POST /resources/vm/create` | `POST /api/v1/namespaces/{namespace}/vmconfigs`  
+`POST /resources/vm/deploy` | `POST /api/v1/namespaces/{namespace}/vms`  
+`DELETE /resources/vm/delete` | `DELETE /api/v1/namespaces/{namespace}/vms/{vm}`  
+`DELETE /resources/vm/purge` |  `DELETE /api/v1/namespaces/{namespace}/vms/{vm}`  
+`DELETE /api/v1/namespaces/{namespace}/vmconfigs/{vmconfig}`  
+`POST /resources/vm/exec/start`  
+`POST /resources/vm/exec/stop`  
+`POST /resources/vm/exec/resume`  
+`POST /resources/vm/exec/suspend` | `POST /api/v1/namespaces/{namespace}/vms/{vm}/exec`  
+`POST /resources/vm/exec/revert` | `POST /api/v1/namespaces/{namespace}/vms/{vm}/exec`  
+`POST /resources/vm/list-disks` | Removed. Attached disks are no longer available.  
+`POST /resources/vm/attach-disk` | Removed. Attached disks are no longer available.  
+`POST /resources/vm/configs/save-state` | Removed. VM states are no longer available.  
+`POST /resources/vm/configs/myorkavm/delete-state` | Removed. VM states are no longer available.  
+`GET /resources/node/list` | `GET /api/v1/namespaces/{namespace}/nodes`  
+`GET /resources/node/list/all` | Removed.  
+`GET /resources/node/status/{node}` | Removed.  
+Use `GET /api/v1/namespaces/{namespace}/nodes` instead.  
+`GET /resources/ports` | Removed.  
+`POST /resources/node/sandbox` | Removed. Sandboxing is now handled via namespaces.  
+`DELETE /resources/node/sandbox` | Removed. Sandboxing is now handled via namespaces.  
+`POST /resources/node/groups/myUserGroup` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://orkadocs.macstadium.com/docs/orka-cluster-resource-access).  
+`POST /resources/node/groups/$ungrouped` | Removed. Grouping is now handled via namespaces and role bindings. See [Orka Cluster: Manage Access to Resources](https://orkadocs.macstadium.com/docs/orka-cluster-resource-access).  
+`POST /resources/node/tag/{tag}` | `POST /api/v1/namespaces/{namespace}/nodes/{name}/tag`  
+`DELETE /resources/node/tag/{tag}` | `POST /api/v1/namespaces/{namespace}/nodes/{name}/untag`  
+`GET /resources/image/list` | `GET /api/v1/namespaces/{namespace}/images`  
+`POST /resources/image/rename` | Removed. Use `POST /api/v1/namespaces/{namespace}/images/{image}/description` to set a user-friendly custom description instead.  
+`POST /resources/image/copy` | `POST /api/v1/namespaces/{namespace}/images/{image}/copy`  
+`GET /resources/image/list-remote` | `GET /api/v1/namespaces/{namespace}/remoteimages`  
+`POST /resources/image/pull` | `POST /api/v1/namespaces/{namespace}/remoteimages/{remoteimage}/pull`  
+`POST /resources/image/delete` | `DELETE /api/v1/namespaces/{namespace}/images/{image}`  
+`POST /resources/image/commit` | `POST /api/v1/namespaces/{namespace}/vms/{vm}/commit`  
+`POST /resources/image/save` | `POST /api/v1/namespaces/{namespace}/vms/{vm}/save`  
+`POST /resources/image/resize` | No API endpoint is available. Use `orka3 vm resize` instead.  
+`POST /resources/image/generate` | `POST /api/v1/namespaces/{namespace}/images`  
+`POST /resources/image/upload` | `POST /api/v1/namespaces/{namespace}/upload/image`  
+`GET /resources/image/download/{image}` | `GET /api/v1/namespaces/{namespace}/images/{image}/download`  
+`GET /resources/image/checksum/{image}` | No API endpoint is available.  
+`GET /resources/iso/list` | `GET /api/v1/namespaces/{namespace}/isos`  
+`GET /resources/iso/list-remote` | `GET /api/v1/namespaces/{namespace}/remoteimages`  
+`POST /resources/iso/pull` | `POST /api/v1/namespaces/{namespace}/remoteisos/{remoteiso}/pull`  
+`POST /resources/iso/rename` | Removed. Use `POST /api/v1/namespaces/{namespace}/isos/{iso}/description` to set a user-friendly custom description instead  
+`POST /resources/iso/copy` | `POST /api/v1/namespaces/{namespace}/isos/{iso}/copy`  
+`POST /resources/iso/delete` | `DELETE /api/v1/namespaces/{namespace}/isos/{iso}`  
+`POST /resources/iso/upload` | `POST /api/v1/namespaces/{namespace}/upload/iso`  
+`{GET|POST|DELETE} /resources/kube-account` | Removed.  
+`POST /resources/kube-account/regenerate` | Removed.  
+`GET /resources/kube-account/download` | Removed.  
+`POST /logs/query?limit=10` | Removed.  
+`DELETE /logs` | Removed.  
+`POST /logs/query?logs20=true` | Removed.  
+`GET /token` | Removed.  
+`GET /health-check` | Removed.  
+`GET /version` | Removed.  
+`GET /version/?all=true` | Removed.  
+`GET /validation-requirements` | Removed. User credentials are handled via the MacStadium Customer Portal.  
+`GET /validate-license-key` | Removed. License keys are obsolete.  
+`GET /default-base-image` | Removed.  
+`POST /resources/cert/set` | `POST /api/v1/upload/cert`

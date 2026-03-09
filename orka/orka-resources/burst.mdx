@@ -1,0 +1,75 @@
+---
+title: "Burst"
+zendesk_id: 39255044972571
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39255044972571-Burst"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2025-07-23T14:18:50Z"
+updated_at: "2025-08-01T14:02:57Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-resources/burst"
+---
+
+# Overview
+
+Orka Burst provides users with dedicated, on-demand access to elastic cluster capacity when needed. It’s designed to grow your cluster size during heavy workloads, without the commitment of annual contracts. When required, you can enable burst capacity directly from your MacStadium Admin Portal.
+
+Orka Burst requires a one-time setup maintenance window to provision and configure the burst nodes. Once configured (you’ll see which nodes are burst-enabled in your IP Plan), additional burst nodes are available within 15 minutes and billed only for the time used.
+
+# Key Concepts
+
+  * A burst node is an on-demand, contractually provisioned node you can add to your cluster during high-workload periods.
+  * Only users with administrator roles can start and stop burst nodes via the MacStadium Admin Portal.
+  * Burst nodes are powered on/off manually by an admin user in the portal.
+  * Clients cannot manage burst nodes directly within the Kubernetes cluster; node management commands are restricted for security.
+  * Orka tags (similar to Kubernetes labels) can be used for monitoring burst nodes via Prometheus (`kube-node-labels` metric) or other tools.
+
+
+
+# First Time Setup
+
+  * Contact your MacStadium sales team to enable Orka Burst on your cluster.
+  * Log in to the MacStadium Admin Portal with an admin-level account.
+  * Click the “Enable Burst” toggle and confirm to provision your burst nodes.
+
+![9fa9d690a05137248478557d88b3d074bcdfe58f21ce2e9c1355d87ef57e6306-Screenshot_2025-06-03_at_10.24.20_AM.png](https://support.macstadium.com/hc/article_attachments/39255000675867)
+
+  * Click ‘Confirm’ to accept the use of the contracted service Orka Burst.
+
+
+
+![ae5890a31782680642f7ca8c3b3d11aa37a2a572615ecf84f6a56a26f640cf44-Screenshot_2025-06-03_at_10.24.09_AM.png](https://support.macstadium.com/hc/article_attachments/39255044966171)
+
+  * When all scheduled burst workloads have completed and no remaining CI jobs are scheduled on burst runners, manually drain the Orka Burst nodes and move them to a different namespace.
+  * After the empty Orka Burst nodes have been successfully moved to a different namespace, navigate back to the Macstadium Portal and click ‘Disable Burst’.
+
+![0645ba2c847d954139c9d7bb0ef35894aaaf47165cdf507b1a1ce0cf78002daf-DisableBurst.png](https://support.macstadium.com/hc/article_attachments/39255044969627)
+
+# Enable/Disable Burst
+
+## **Enable Orka Burst**
+
+After MacStadium support configures your burst nodes, you can turn them on via the portal. Enabling burst powers on the nodes and adds them to your cluster (this typically completes within 15 minutes).
+
+## **Disable Orka Burst**
+
+**❗️ Important Note**
+
+> Orka Burst has no knowledge of currently executing workloads, and as a result, any currently running jobs will fail and need to be rescheduled by the calling applications. You may need to clean up failed workloads if the nodes are executing when Orka Burst is being disabled.
+
+Orka Burst has no knowledge of currently executing workloads, and as a result, any currently running jobs will fail and need to be rescheduled by the preferred scheduler controller. You may need to clean up failed workloads if the scheduled workloads are executing on disabled burst nodes, as Orka Burst is being disabled.
+
+When Burst is disabled, the nodes are powered down and removed from the cluster.
+
+Plan to disable burst during a period of low cluster utilization, and coordinate with your engineering team to drain or move any active workloads first.
+
+If your burst nodes are in the same Namespace as your normal Orka nodes, we recommend moving them to a separate Namespace before disabling Orka Burst. Moving a dedicated namespace allows the node to be sandboxed, so you can sequester it and ensure that no additional workloads will be scheduled on it. The client is responsible for monitoring the usage of your burst nodes and moving nodes when a workload is not being run against them. Once your cluster has passed its highest peak of utilization, work with your engineering team to identify a period of low resource utilization to start moving burst machines to a separate namespace that aren’t running builds.
+
+## **Removing Failing Workloads**
+
+  1. Identify the failing workload: `kubectl get <RESOURCE> --namespace=<NAMESPACE>` and look for pods in CrashLoopBackoff, Failed, or Error status.
+  2. Delete the workload: `kubectl delete pod <pod-name> --namespace=<NAMESPACE>`
+     * Graceful deletion: use a `preStop` hook to allow pods to clean up before `SIGTERM`.
+     * Forced deletion: add `--force --grace-period=0` to the delete command.
+  3. Confirm cleanup and reschedule your CI jobs once burst nodes are back online.

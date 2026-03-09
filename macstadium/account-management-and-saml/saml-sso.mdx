@@ -1,0 +1,60 @@
+---
+title: "SAML SSO"
+zendesk_id: 28263569637275
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28263569637275-SAML-SSO"
+section: "Account Management and SAML"
+category: "MacStadium"
+created_at: "2024-08-14T14:09:32Z"
+updated_at: "2024-09-18T21:49:32Z"
+promoted: false
+labels: ["sso", "saml"]
+suggested_new_path: "/macstadium/account-management-and-saml/saml-sso"
+---
+
+## Introduction
+
+The MacStadium SAML Single Sign-On (SSO) integration provides a secure and seamless way for your organization to manage user authentication and access within your MacStadium account. By integrating your MacStadium account with your existing Identity Provider (IdP), such as Okta or Azure AD, you achieve the following benefits:
+
+  * Centralized User Management: Leverage your existing IdP to manage user accounts across your organization, including access to MacStadium services.
+  * Streamlined Login Experience: Users authenticate once with your IdP and gain access to MacStadium resources without needing separate credentials.
+  * Enhanced Security: SAML-based authentication adds robust security. Enforce security policies like MFA (Multi-Factor Authentication) from your IdP.
+
+
+
+SAML SSO is a paid offering. Please contact your account team through the portal for more information.
+
+## Key Components
+
+The MacStadium SAML SSO integration involves these key components:
+
+  * MacStadium SSO Service: Our dedicated SSO service handles user management functions (login, password reset, etc.) and facilitates communication between your MacStadium account and your IdP.
+  * MacStadium Portal: Remains the front-end interface for users, interacting with the SSO service.
+  * acStadium Portal is used for managing user roles. Orka 3.0 login actions also rely on the MacStadium Portal.
+  * External Identity Provider (IdP): Your chosen IdP (ex: Okta, Azure AD) handles user authentication.
+
+
+
+## How It Works
+
+  1. **Configuration** : Your IdP Admin will configure your IdP to integrate with MacStadium and provide some metadata to our support staff to complete the integration. Refer to our detailed docs for steps
+  2. **User Login** : A user attempts to access MacStadium resources.
+  3. **Redirection** : The MacStadium Portal redirects users to your IdP's login page.
+  4. **Authentication** : The user provides their credentials to your IdP.
+  5. **SAML Assertion** : Your IdP successfully authenticates the user and generates a SAML assertion containing user information. This is sent to the MscStadium SSO service.
+  6. **Verification and Authorization** : The MacStadium SSO service validates the SAML assertion and grants user access based on configured permissions.
+
+
+
+## Supported Providers
+
+The MacStadium SAML SSO integration works seamlessly with major identity providers including:
+
+  * Okta
+  * Azure AD
+  * Google Workspace Federation
+
+
+
+## Next Steps
+
+Refer to our setup guide for step-by-step instructions on configuring the SAML integration with your chosen IdP.

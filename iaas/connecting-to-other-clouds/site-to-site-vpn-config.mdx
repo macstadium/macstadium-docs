@@ -1,0 +1,43 @@
+---
+title: "Site-to-Site VPN Config"
+zendesk_id: 28297916166683
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28297916166683-Site-to-Site-VPN-Config"
+section: "Connecting to Other Clouds"
+category: "IaaS"
+created_at: "2024-08-15T14:14:11Z"
+updated_at: "2024-10-08T13:22:23Z"
+promoted: false
+labels: ["cloud", "configuration", "site-to-site", "vpn", "config"]
+suggested_new_path: "/iaas/connecting-to-other-clouds/site-to-site-vpn-config"
+---
+
+## Prerequisites:
+
+**_Verify that you have configured the non-MacStadium side of the VPN connection._**
+
+For more information, see:
+
+  * [Setting Up the AWS Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28280561588507)
+  * [Setting Up the Azure Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28300178337051)
+  * [Setting Up the GCP Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28301508345755)
+
+
+
+**_Verify that you have prepared the configuration._**
+
+For more information, see [Prepare the VPN Configuration for Input into Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28300434772891).
+
+**_Verify that you are connected via VPN to your MacStadium private cloud._**
+
+For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+
+## Process:
+
+  1. Run Cisco ASDM-IDM and log in
+  2. For more information about how to log in to your firewall, see [Logging in to Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+  3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface**
+  4. Select Multiple Line
+  5. Type configure terminal, press Enter and paste the contents of the prepared VPN configuration
+  6. For more information about this command, see [Cisco Documentation: configure terminal](https://www.cisco.com/c/m/en_us/techdoc/dc/reference/cli/n5k/commands/configure-terminal.html)
+  7. Click Send
+  8. Verify connection (_optional_)

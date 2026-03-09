@@ -1,0 +1,86 @@
+---
+title: "Verify Azure"
+zendesk_id: 28298534785435
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28298534785435-Verify-Azure"
+section: "Azure"
+category: "IaaS"
+created_at: "2024-08-15T14:29:43Z"
+updated_at: "2024-09-18T21:48:41Z"
+promoted: false
+labels: ["cloud", "azure", "verify"]
+suggested_new_path: "/iaas/azure/verify-azure"
+---
+
+After you have completed both the Microsoft Azure and the MacStadium sides of the configuration, you might want to verify that the tunnel is working as expected.
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging into Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface  
+**![97da5cd-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28298522872475)
+  4. Select Single Line, enter the following command, and click Send.**  
+**
+
+
+    
+    
+    show crypto isakmp sa
+
+If the site-to-site VPN connection is configured properly, you should see information about an active IKEv1.
+
+For more information about this verification command, see [Cisco Documentation: show crypto isakmp sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#isakmp_sa).
+
+## Verify that there is an IPsec security association between peers
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging into Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select Tools > Command Line Interface  
+![9bf2163-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28298522873627)
+  4. Select Single Line, enter the following command, and click Send.
+
+
+    
+    
+    show crypto ipsec sa
+
+If the site-to-site VPN connection is configured properly, you should see a detailed log.
+
+For more information about this verification command, see [Cisco Documentation: show crypto ipsec sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#ipsec_sa).
+
+## Verify that the tunnel is connected
+
+  1. Log in to your Azure portal.
+  2. On the All resources page, find the connection that represents your VPN connection (for example: macstadium-vpn) and click it.
+  3. Select Overview and check the Status of the connection. When your tunnel is properly connected, the status is: Connected.  
+![4e4623a-connection-status.png](https://support.macstadium.com/hc/article_attachments/28298534771099)
+
+
+
+## Test traffic and visibility through the tunnel
+
+  1. Verify that you have created a virtual machine in MacStadium.
+  2. Verify that you have created a virtual machine in Azure.
+  3. In the terminal on your MacStadium VM, run the following command. 
+     * Replace <user> with the username for your Azure VM.
+     * Replace <azure-vm-ip> with the private IP of the Azure VM. 
+           
+           ssh <user>@<azure-vm-ip>
+
+  4. When prompted, provide your password or key for the specified username on the specified Azure VM. 
+     * If the connection is successful, the prefix of the terminal becomes <user>@<azure-vm-ip>. This indicates that you have connected from MacStadium to Azure over the tunnel.
+  5. Run the following command. 
+     * Replace <user> with the username for your MacStadium VM.
+     * Replace <macstadium-vm-ip> with the private IP of the MacStadium VM. 
+           
+           ssh <user>@<macstadium-vm-ip>
+
+  6. When prompted, provide your password or key for the specified username on the specified MacStadium VM. If the connection is successful, the prefix of the terminal becomes <user>@<macstadium-vm-ip>. This indicates that you have connected from Azure to MacStadium over the tunnel.
+
+
+
+## Troubleshooting
+
+See our [Azure Troubleshooting](https://support.macstadium.com/hc/en-us/articles/28312694112539) doc for some common issues with Azure-MacStadium Site-to-Site VPN Connections.

@@ -1,0 +1,385 @@
+---
+title: "Orka on AWS: Getting Started"
+zendesk_id: 39570388988059
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started"
+section: "Orka on AWS and On-Prem"
+category: "Orka"
+created_at: "2025-08-01T13:45:45Z"
+updated_at: "2026-01-29T19:27:55Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started"
+---
+
+Orka is an orchestration and virtualization layer for Mac build infrastructures based on Kubernetes and OCI technology. Orka lets you orchestrate macOS in a cloud environment using Kubernetes on genuine Apple hardware.
+
+With Orka (also referred to as Orka Cluster) on AWS, you can now effortlessly integrate macOS development and macOS CI/CD into your AWS workflows and environments.
+
+## How does Orka on AWS work?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#how-does-orka-on-aws-work)
+
+The diagram below illustrates the architecture of an Orka Cluster on AWS, detailing how it integrates with Amazon EC2 Mac instances, Amazon EKS (Elastic Kubernetes Service), and Amazon ECR (Elastic Container Registry) within a customer’s AWS account.
+
+![OrkaClusterAWS.png](https://support.macstadium.com/hc/article_attachments/44003706780059)  
+The EC2 Mac hosts are set up with Orka AMIs, which provide a stable runtime for virtual machines. Each VM is deployed on the host using an OCI image, which can be fetched from Amazon ECR or an external OCI Registry. The use of OCI images enables rapid deployment (within a few minutes) of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac EC2 without Orka VMs. An EKS cluster will integrate with CI tools, CLI, or API, and orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
+
+Key elements in the architecture include:
+
+  * Customer's AWS Account, which houses all the AWS Cloud components for the Customer. The Orka Cluster is software that is installed into various AWS Cloud components, like EKS, EC2 Mac, and ECR.
+  * Customer's VPC containing Amazon Mac EC2 instances, which run the Orka AMI as the base environment for Orka VMs. Orka VMs dynamically launch workloads as OCI Images from ECR or an external OCI Registry.
+  * An EKS, which runs an Amazon EKS cluster managing Orka EKS components for orchestration and automation.
+  * Amazon ECR serves as a container registry within AWS. Or an external OCI Registry, such as GitHub Container Registry, Docker Registry.
+  * Orka Users interacting with the system via CLI, API, or CI tools.
+
+
+
+## Considerations for Deployment in AWS[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#considerations-for-deployment-in-aws)
+
+  * EKS Deployment
+    * Orka must be deployed in a dedicated EKS cluster running v1.33. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive. We will use a set of Ansible scripts (a common deployment method we follow, independent of the deployment location). For AWS, we will provide an image with the required playbooks & roles. It will be flexible and easy to parameterize, customize, and troubleshoot in case something goes wrong.
+  * Storage
+    * We recommend using ECR or alternative OCI repositories for image storage.
+  * Mac EC2
+    * We will provide an AMI based on an official AWS macOS base image that includes our tooling (Virtual Kubelet, Orka Engine) and a bootstrap script that accepts the EKS parameters to connect as an Orka worker node.
+    * We have a new AMI available that supports the external NVMe disk available with M4 instances. Per the [official Amazon docs](https://aws.amazon.com/ec2/instance-types/mac/): "Amazon EC2 M4 Mac instances come with a new 2TB instance store volume per EC2 Mac Dedicated Host, providing low latency storage for improved caching and build/test performance."
+
+The new AMI is compatible with Orka 3.5 and all EC2 Apple Silicon Mac instance types (M1, M2, M4)
+
+By default:
+
+      * The NVMe disk is used for Orka storage of VM and image data on M4 instances only
+
+      * Autologin is enabled for the `ec2-user`, and is required when running a Sequoia guest OS or newer
+
+      * **Note:** The `ENABLE_NVME_DISK` and `ENABLE_AUTOLOGIN` variables are **not** required. These are set to `true` by default, and either variable may be disabled if needed:  
+
+            
+            #!/bin/bash
+            export ENABLE_NVME_DISK=false # disable NVMe disk, use EBS storage instead
+            export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
+            /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
+
+  * Networking
+    * Apple Silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](https://support.macstadium.com/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0), enabling the ability to get an IP on a subnet in your VPC.
+  * User Management and Authorization
+    * Users need to register at portal.mactadium.com, as all user management is handled through the portal service. A future release will allow customers to use their own OIDC provider or Authentication mechanism.
+  * Logging, Monitoring, and Alerting
+    * We provide documentation below on how to centralize logging into CloudWatch, consume metrics, and configure alerts via OpenTelemetry or CloudWatch.
+  * Backups
+    * We will provide an S3-compatible backup target and best practices on what to backup.
+  * API Server SSL
+    * We will provide instructions for putting an AWS load balancer in front of the Orka API and configuring SSL Certificates.
+
+
+
+### Networking and VPC Considerations[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#networking-and-vpc-considerations)
+
+We recommend that you deploy the Orka services to a distinct VPC and implement your networking via VPC peering. This will allow the necessary networking to interact with VMs and the control plane. Within the VPC, the following are ports that should be exposed for different services.
+
+  * EKS running v.1.33
+    * Orka Operator: TCP 8080 (metrics), TCP 8081 (health check), TCP 443 (webhook), Linux worker nodes should be accessible from within the cluster on any port. Does not require Internet access.
+    * Orka OIDC Provider: TCP 443. Requires connectivity to the authentication provider.
+  * EC2 Mac Nodes
+    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be opene to all networks that need access to the VMs: TCP 5900-5912 (Screenshare), TCP 5999-6011 (VNC), and TCP 8822-8834 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
+
+
+
+## Install Overview[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#install-overview)
+
+  1. **Talk to your MacStadium Account Team about your Orka on AWS install.** MacStadium will create an internal service ID for you, and **will provide you with the details you need to connect to our Public ECR repo**.
+  2. Follow the installation steps below for the EKS Cluster and the CodeBuild role.
+     1. **Take note of the EKS Node IAM role and the CodeBuild role ARN, and share the 2 ARNs with your MacStadium Account Team**
+  3. MacStadium provides customers with an OIDC Client ID to use during CodeBuild execution and with AMI details so they can install Orka software onto EC2 Mac.
+  4. Follow the steps below to update your build spec with the OIDC Client ID, set up IAM roles so that CodeBuild can manage the EKS cluster, and execute CodeBuild to install Orka Services into the EKS cluster.
+  5. Follow the steps below to set up the OIDC Provider
+  6. Follow the steps below to expose the Orka API service via Load Balancer
+  7. Follow the steps below to configure EC2 Macs to be able to interface with the EKS cluster and install Orka software via AMI.
+
+
+
+## EKS Install Steps[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#eks-install-steps)
+
+  1. Orka must be deployed in a dedicated EKS cluster for running v1.33.
+     1. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive.
+     2. To set up the cluster, follow the AWS guidelines for [EKS Auto Mode](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-automode.html) or the [EKS QuickStart](https://docs.aws.amazon.com/eks/latest/userguide/quickstart.html).
+  2. **Recommendations** :
+     1. Choose the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
+     2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
+     3. Deploy at least two Linux worker nodes for resiliency and high availability.
+  3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** This ARN is required by MacStadium to access the Orka service images.
+  4. **Optional:**
+     1. Set Cluster endpoint access to “Private” to restrict access to your cluster API from the Internet.
+        1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
+     2. Use EKS API for Cluster authentication mode.
+        1. This is the [newest authentication mode for EKS](https://aws.amazon.com/blogs/containers/a-deep-dive-into-simplified-amazon-eks-access-management-controls/), replacing the old aws-auth config map.
+  5. Orka Cluster installs itself into EKS using Ansible scripts. This may change in the future, but for the time being, you will need to supply MacStadium Support team with an ARN for the role that has permission to pull an image containing the required Ansible playbooks and roles to install Orka Cluster into EKS.
+     1. **Once you provide the ARN, MacStadium support will provide access to the image that contains the ECR Repository URI and an OIDC Client ID**
+     2. Additional considerations
+        1. The Ansible runner must use the credentials of the role provided to MacStadium to pull the Ansible image.
+        2. The Ansible runner must have connectivity to the cluster API.
+        3. The Ansible runner must have Cluster Admin privileges to set up the cluster.
+        4. MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns.
+
+
+
+### Setup a CodeBuild project to run Orka Installation into the EKS Cluster[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster)
+
+MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. You will need to supply MacStadium with the ARN for the role that has permission to pull the image. To set up a CodeBuild project as an Ansible runner:
+
+  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role, as you will need to share it with MacStadium and modify it later.**
+  2. Select the following options:
+     1. Project type - Default project
+     2. Source - no source
+     3. Environment
+        1. Provisioning model - on-demand
+        2. Environment image - custom type
+        3. Compute - EC2
+        4. Environment type - Linux Container
+        5. Image registry - Amazon ECR
+        6. ECR account - other ECR account
+           1. Under Amazon ECR repository URI, enter the image provided by MacStadium.
+  3. Allow AWS to create the CodeBuild role for you.
+     1. Note down the name of the role, as you will need to modify it later.
+  4. (Optional) Set VPC, Subnets and security group to be used by CodeBuild. This is only needed if the EKS access is set to private. To do that:
+     1. Click Additional Configuration
+     2. Select the VPC where your cluster is deployed
+     3. Select the subnets which EKS uses
+     4. Select a security group that has access to the EKS API
+  5. In the BuildSpec, add the following commands:
+         
+         - aws eks update-kubeconfig --name {cluster_name} --region {region}
+         - ansible-playbook /ansible/site.yml -e "k8s_api_address={k8s_api_address}" -e "kube_oidc_client_id={kube_oidc_client_id}"
+
+Where:  
+{cluster_name} - the name of your EKS cluster  
+{region} - the region where the cluster is deployed  
+{k8s_api_address} - the K8s API address of your cluster  
+{kube_oidc_client_id} - the OIDC client ID provided by MacStadium
+
+  6. Save the configuration.
+  7. Next, Configure CodeBuild to access the Ansible image provided by MacStadium and to manage the EKS cluster:
+     1. Access the Ansible image provided by MacStadium.
+        1. **Provide the ARN of the CodeBuild role configured in the previous step to MacStadium to allow access.**
+     2. Manage the EKS cluster. To enable CodeBuild to manage the EKS cluster, complete the following steps:
+        1. The IAM Role needs a policy to manage EKS. To do this:  
+Navigate to the IAM role.  
+Attach a policy (managed or inline) with:
+           * Action: `eks:*`
+           * Resource: The ARN of the EKS cluster to be configured.
+        2. The IAM role must have Cluster Admin permissions. To do this:  
+Navigate to the Cluster and go to the `Access` tab.  
+Click `Create access entry`.  
+Select the ARN of the CodeBuild role with type `Standard`.  
+Click Next.  
+Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope.  
+Click `Add Policy`.  
+Click `Next → Create`.
+  8. Once all permissions are configured, you can run CodeBuild, which will install the Orka services within the cluster.
+
+
+
+Please capture your `EKS cluster name`and `EKS cluster VPC region`for use in bootstrap script needed for Configuring EC2 Macs.
+
+### OIDC Provider Setup[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#oidc-provider-setup)
+
+To use the Orka API/CLI, you need to set up the OIDC provider.
+
+The issuer URL and client ID will be provided by MacStadium.
+
+To set up the provider:
+
+  * Go to the Cluster Access tab.
+  * Click `Associate Identity Provider`.
+  * Add the `Issuer URL` provided by MacStadium.
+  * Add the `Client ID` provided by MacStadium.
+  * Add `cognito:groups` for the `Groups claim`.
+  * Add `oidc:` for the `Groups prefix`.
+
+
+
+### Exposing the Orka API Service[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#exposing-the-orka-api-service)
+
+To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins). Please review the [Orka API User Guide](https://support.macstadium.com/hc/en-us/articles/28349313921563) for more details.
+
+We recommend using the [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/) to expose the service.
+
+## EC2 Mac Install Steps
+
+Before deploying a Mac EC2 instance, ensure that an IAM role exists meeting the below requirements. An EKS access policy must be added to grant the role permissions in Kubernetes. Additionally, a security group that allows access to the EKS control plane from the Mac instance is required.
+
+### IAM Policies
+
+The instance must have an IAM role with the __AmazonEKSWorkerNodePolicy__ attached. This is required for the node to authenticate to the EKS cluster.  
+  
+We also recommend the __AmazonSSMManagedInstanceCore__ policy so the instance can be accessed by SSM for troubleshooting.
+
+### EKS Access Policies
+
+The node IAM role must have EKS Cluster Admin permissions. This is necessary as the Mac node manages nodes and pods inside the cluster. To do this: 
+
+  * Navigate to the Cluster and go to the `Access` tab. 
+  * Click `Create access entry`. 
+  * Select the ARN of the Mac node IAM role with type `Standard`. 
+  * Click Next. 
+  * Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope. 
+  * Click `Add Policy`. 
+  * Click `Next → Create`. 
+
+
+
+### Security Groups
+
+You must attach a security group to allow traffic between the managed Kubernetes control plane and the Mac node. For more information: [Amazon EKS security group requirements and considerations](https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html?icmpid=docs_eks_help_panel_hp_cluster_configure_security_groups)
+
+## Provisioning Steps[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#ec2-mac-install-steps)
+
+  1. We will provide an AMI based on an official AWS macOS base image that includes our tooling (Virtual Kubelet, Orka Engine)
+  2. The AMI will additionally include a bootstrap script that should be run via user data. See the section below for more detailed information
+  3. The IAM role must be linked to an instance profile and attached to the instance
+  4. The security group allowing access to the EKS control plane must be attached to the instance
+  5. We recommend at least 500GB of storage for the host. The size depends on:  
+1\. The size of the images you are using  
+2\. The number of images you plan to have cached on the nodes
+
+
+
+## Obtaining an Orka License Key
+
+Orka Engine requires a valid license key to operate. To request a license key:
+
+1\. Contact your MacStadium account representative 
+
+2\. Provide your organization name, deployment details, and use case 
+
+3\. Your account representative will submit your information to our licensing team for provisioning
+
+4\. Receive license key via email (Est. 24 hour turnaround time)
+
+5\. Activate: ``orka-engine license set --key YOUR_KEY``
+
+You can also download Orka Engine directly at: <https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
+
+### Bootstrap Script[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#bootstrap-script)
+
+The AMI includes a bootstrap script that can be run via [user data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) and accepts the following parameters to connect as an Orka worker node:
+
+  * EKS cluster name, EKS cluster VPC region, Orka License Key (provided by MacStadium)
+  * The customer should pass the following as user data when launching an instance:  
+
+        
+        #!/bin/bash
+        /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
+
+
+
+
+  
+This will attach the node to the EKS cluster as a self-managed node.
+
+### 
+
+## Using ECR for Image Storage and Management[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#using-ecr-for-image-storage-and-management)
+
+You will need to have the following for use with ECR:
+
+  * ECR Authentication: Credentials are required to push and pull to/from private ECR repositories. For public ECR this is required only for push
+  * IAM Policies: The authentication token is scoped with the appropriate permissions to push and/or pull images based on IAM policies
+
+
+
+### ECR Authentication[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#ecr-authentication)
+
+You can get credentials for use with a private ECR registry with the aws CLI as follows:
+    
+    
+    aws ecr get-login-password --region <region>
+
+For a public ECR registry:
+    
+    
+    aws ecr-public get-login-password --region us-east-1
+
+You can then configure the credentials for the Orka cluster using the token:
+    
+    
+    aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --password-stdin https://<aws-account-number>.dkr.ecr.<region>.amazonaws.com
+
+> **Note**
+> 
+> The token is scoped for image push / pull operations based on the IAM policies configured for the calling entity - i.e. whichever user or role calls the `aws ecr get-login-password` command
+
+> **Note**
+> 
+> The token is valid for 12 hours and will need to be refreshed regularly. See: <https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token>
+> 
+> A future release will improve upon this with a credential helper.
+
+### IAM Policies for ECR[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#iam-policies-for-ecr)
+
+The entity that fetches the authentication token needs to have appropriate permissions to push and/or pull images.
+
+#### Private Registry[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#private-registry)
+
+For a private registry, the following policies contain the minimum set of permissions:
+
+  * Pull: [AmazonEC2ContainerRegistryReadOnly](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-2#/policies/details/arn%3Aaws%3Aiam%3A%3Aaws%3Apolicy%2FAmazonEC2ContainerRegistryReadOnly)
+  * Push: [AmazonEC2ContainerRegistryPowerUser](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-2#/policies/details/arn%3Aaws%3Aiam%3A%3Aaws%3Apolicy%2FAmazonEC2ContainerRegistryPowerUser)
+
+
+
+#### Public Registry[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#public-registry)
+
+For a public registry, the following policies contain the minimum set of permissions:
+
+  * Pull: [AmazonElasticContainerRegistryPublicReadOnly](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-2#/policies/details/arn%3Aaws%3Aiam%3A%3Aaws%3Apolicy%2FAmazonElasticContainerRegistryPublicReadOnly)
+  * Push: [AmazonElasticContainerRegistryPublicPowerUser](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-2#/policies/details/arn%3Aaws%3Aiam%3A%3Aaws%3Apolicy%2FAmazonElasticContainerRegistryPublicPowerUser)
+
+
+
+## Mac Node Deprovisioning Steps[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#mac-node-deprovisioning-steps)
+
+To deprovision a Mac Node you need to:
+
+  1. Delete the Mac instance
+  2. (Optional) Release the Mac dedicated host if you no longer need it
+  3. Delete the Kubernetes node by running kubectl delete node <node_name> where <node_name> is the name of the node you want to deprovision
+
+
+
+## Logging, Monitoring, and Alerting[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#logging-monitoring-and-alerting)
+
+### OpenTelemetry Standards[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#opentelemetry-standards)
+
+Logging and monitoring conform to OpenTelemetry best practices, meaning that metrics can be scraped from the appropriate resources via Prometheus and visualized with Grafana using Prometheus as a data source.
+
+Logs can be exposed on EC2 Mac workers via CloudWatch or by installing a `promtail` service, allowing them to be aggregated through Loki.
+
+If you prefer to use CloudWatch, you can reference [AWS documentation for consuming OpenTelemetry endpoints](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OpenTelemetry-Sections.html) and the [agent installation guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html) to integrate with your existing logging system.
+
+#### Key Log Sources[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#key-log-sources)
+
+What | Resource | Accessing | Purpose  
+---|---|---|---  
+Virtual Kubelet Logs | Mac EC2 Node | Via promtail  
+/usr/local/virtual-kubelet/vk.log | Interactions between EKS and worker node for managing virtualization.  
+Orka VM Logs | Mac EC2 Node | Via promtail  
+/Users/administrator/.local/state/virtual-kubelet/vm-logs/* | Logs pertaining to the lifecycle of a specific VM  
+Pod Logs | EKS | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
+  
+#### Key Metrics[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#key-metrics)
+
+A list of metrics covering the following is available: Orka API Server, Orka Operator Metrics.
+
+Any metrics exposed by default within EC2 Mac instances can be referenced via CloudWatch. CPU utilization and network traffic are examples of metrics that are made available natively through CloudWatch.
+
+## FAQ[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#faq)
+
+### Does Orka Cluster support Intel nodes on AWS?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#does-orka-cluster-support-intel-nodes-on-aws)
+
+Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x version of Orka Cluster generally supports Intel, the support requires a wipe of the machine and an install of our custom-built Linux-based OS. This operation is not supported on AWS EC2 Mac.
+
+### How is macOS 15 Sequoia supported on AWS?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#how-is-macos-15-sequoia-supported-on-aws)
+
+macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the Apple Virtualization documentation <https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines>. Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
+
+  1. After setting up your EC2 Mac, you will need to setup a login keychain on the host OS before running the Sequoia OS Orka VM image.
+  2. MacStadium will supply a Sequoia OCI image that is upgraded from a Sonoma image rather than created from a Sequoia IPSW on Sequoia host. This will run without the Apple ID functionality in guest.

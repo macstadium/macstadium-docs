@@ -1,0 +1,28 @@
+---
+title: "Why are coreaudiod and launchd using a high amount of resources?"
+zendesk_id: 28211986171931
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28211986171931-Why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources"
+section: "IaaS FAQs"
+category: "IaaS"
+created_at: "2024-08-12T19:15:20Z"
+updated_at: "2024-12-09T14:19:54Z"
+promoted: false
+labels: ["faq", "coreaudiod", "resources"]
+suggested_new_path: "/iaas/iaas-faqs/why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources"
+---
+
+Disclaimer: We are an infrastructure provider and can only offer a minimal amount of help for software issues. We can not guarantee this fix works for all users or offer support for it. Please contact the software developer (Apple, in this case) for further help. We can also provide a list of vendors that we work with to support you.
+
+We found a confirmed solution with the help of a customer:
+
+"I figured out what the problem was in case you all are seeing this in other places. The bluetooth daemon had crashed. I'm not sure why that made coreaudiod and launchd go crazy, but the fix is this:
+    
+    
+    $ sudo launchctl unload -w /system/library/launchdaemons/com.apple.blued.plist 
+
+If the daemon crashes you may see a message like this: /System/Library/LaunchDaemons/com.apple.blued.plist: Could not find specified service. Next, run this:
+    
+    
+    $ sudo launchctl load -w /system/library/launchdaemons/com.apple.blued.plist 
+
+Once blued is running properly, coreaudiod and launchd both "settle down."

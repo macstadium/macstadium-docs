@@ -1,0 +1,292 @@
+---
+title: "Web UI Quick Start"
+zendesk_id: 28393197020059
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28393197020059-Web-UI-Quick-Start"
+section: "Quick Start Guides"
+category: "Orka"
+created_at: "2024-08-19T13:07:20Z"
+updated_at: "2025-07-23T13:15:17Z"
+promoted: false
+labels: ["orka", "api", "web", "ui"]
+suggested_new_path: "/orka/quick-start-guides/web-ui-quick-start"
+---
+
+Getting started with the Orka UI is quick, simple, and straightforward. Learn how to quickly get set up for the first time, basic operations, and how to get help.
+
+If you want to skip the detailed explanations, just run through these steps on your own:
+
+  1. Obtain an authentication token.
+  2. Launch the Orka UI in your browser at `<ORKA_API_URL>`.
+  3. Go to **Nodes**.
+  4. Go to **Images**.
+  5. Go to **VM Configs** and click **Create config** (`sonoma-90gb-orka3-arm` for image, 3 for CPU and vCPU, leave VNC enabled).
+  6. Click **Deploy Config** and wait for the confirmation.
+  7. Go to **VMs** and check the connection information for the instance.
+  8. Use Apple Screen Sharing to connect to the VM instance. Example: `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
+  9. Once you login be sure to change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
+  10. Return to the UI. On the **VMs** page, select your VM instance and click **More** > **Save as new image** at the top.
+  11. Return to the UI. Go to the **Images** page and make sure that your new image appears in the list.
+  12. On the **VMs** page, select your VM instance and click **More** > **Delete** at the top.
+  13. Make sure that the list of VMs is empty.
+  14. Go to **VM configs** and verify that your template is preserved.
+
+
+
+The Orka UI is a user-friendly way to get started with Orka. It provides basic capabilities and a clean UI.
+
+The Orka UI will be most beneficial to:
+
+  * Beginner users.
+  * Users with predominantly manual workflows.
+
+
+
+## 1\. Before you begin
+
+  1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+  2. Get your VPN connection information from your IP Plan. You can [download](https://support.macstadium.com/hc/en-us/articles/28230867289883) it from the [MacStadium portal](https://portal.macstadium.com/).
+  3. Connect to your Orka cluster via VPN.
+     1. [Download and install a VPN client](https://support.macstadium.com/hc/en-us/articles/28329406438683). Note that you might need to make additional configuration changes if you're using a custom Orka domain.
+     2. Use the server address and credentials from the VPN section at the top of your IP Plan.
+
+
+
+## 2\. Authenticate with the cluster
+
+The Orka Web UI currently does not let you log in with your MacStadium Customer Portal credentials. Instead, you need to obtain an authentication token from the Orka3 CLI.
+
+Orka lets you log in with your MacStadium Customer Portal credentials. Your access privileges are based on the role configured by your account admin in the Customer Portal. By default, you will have access to the `orka-default` namespace. You can access additional namespaces if you have been added to additional role bindings.
+
+> #### **Glossary: Namespace**
+> 
+> A way to isolate and dedicate resources to users and teams within the cluster.
+> 
+> The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+    
+    
+    orka3 login
+
+Orka will launch a new browser tab (or window) and let you log in via the SSO-enabled form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
+
+You now need to get your Orka authentication token from your `~/.kube/config`:
+    
+    
+    orka3 user get-token
+
+## 3\. Launch the Orka UI
+
+  * In your browser, navigate to your Orka API URL.
+
+
+
+> #### **What's your Orka API URL?**
+> 
+> You can get your Orka API URL from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883):
+> 
+>   * For clusters deployed before Orka 2.1, it's the `.100` address for your `Private-1` network (usually, `10.221.188.100`), prefixed with `http`. For example: `http://10.221.188.100`.
+>   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
+>   * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](https://support.macstadium.com/hc/en-us/articles/28329724250011) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](https://support.macstadium.com/hc/en-us/articles/28330039248923).
+> 
+
+> 
+> Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
+
+![f3f5e8d-Screenshot_2023-10-10_at_23.37.22.png](https://support.macstadium.com/hc/article_attachments/28393224419867)
+
+## 4\. Create and deploy your first VM instance
+
+> #### **Known limitations**
+> 
+> The Orka Web UI works only in the `orka-default` namespace.
+> 
+> The Orka Web UI does not let you deploy VM instances without a VM configuration.
+> 
+> The Orka Web UI works only with images stored locally in the cluster or stored in the remote repository. You cannot deploy VMs using images from OCI-compatible registries.
+
+  1. In the sidebar, click **Nodes**. This page provides information about the current state of your nodes, including the available resources.
+
+
+
+> #### **Glossary: Node**
+> 
+> A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads.
+> 
+> A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
+
+![634a6b0-Screenshot_2023-10-10_at_23.42.27.png](https://support.macstadium.com/hc/article_attachments/28393197002523)
+
+  2. In the sidebar, click **Images**.
+
+
+
+You will likely see a `sonoma-90gb-orka3-arm` item list. This is a fully installed and configured macOS Sonoma image with a 90GB disk size. It also has an admin user configured and SSH and Apple Screen Sharing access enabled.
+
+> #### **Glossary: Image**
+> 
+> A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs.
+> 
+> (Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+
+  3. In the sidebar, click **VM Configs**.
+
+
+
+If this is your first time using Orka, you will get a blank screen.
+
+  4. On the **VM Configs** page, click **Create config** and fill in the form:
+
+
+  * **Name:** Set any user-friendly name that will help you recognize the VM.
+  * **Base image:** Set to `sonoma-90gb-orka3-arm`. (Note that the settings in the dialog change based on the selected image type.)
+  * **CPU** : Set to 3. This is the number of CPUs for the VM (Virtual Machine).
+  * **vCPU** : Set to 3. Unless the CPU is 3, it must be half of or the exact number of CPUs. This denotes if hyperthreading is enabled. For example, if the vCPU equals CPU, hyperthreading is enabled.
+  * **Memory (G)** : Leave blank.This is the default setting.  
+When left blank, Orka automatically assigns the memory for your VMs.  
+When you provide a value for Memory, this overrides Orka and allocates the specified value to the VM (Virtual Machine).
+
+
+
+> #### **VM name limitations**
+> 
+> The name you specify under `VM Name` must meet the following requirements:
+> 
+>   * Doesn't exceed 38 characters.
+>   * Contains only lowercase Latin alphanumeric characters (0-9, a-z) and dashes (-).
+>   * Begins and ends with an alphanumeric character.
+> 
+
+
+![0b2dd08-Screenshot_2023-10-10_at_23.55.17.png](https://support.macstadium.com/hc/article_attachments/28393224435355)
+
+This creates a VM (Virtual Machine) config.
+
+> #### **Glossary: VM config**
+> 
+> A template for an Orka virtual machine. You can deploy multiple VM instances (VMs) from a single VM config.
+
+  5. On the **VM Configs** page, select your newly created template and click **Deploy config**. Make sure that your template is selected and click **Deploy**.
+
+
+
+Wait for the loading UI at the bottom of the dialog to complete. A success message should pop up at the top of the screen.
+
+This deploys a VM (Virtual Machine) instance from your template.
+
+> #### **Glossary: VM instance (VM)**
+> 
+> A deployed instance of a VM config. VMs take up resources from your nodes and require a certain amount of CPU and RAM to run.
+
+  6. Go to the **VMs** page. Now that you have deployed your first VM instance, you will see it in the list.
+
+
+
+![310d27c-Screenshot_2023-10-10_at_23_59_26.jpg](https://support.macstadium.com/hc/article_attachments/28393197006875)
+
+Note: this screen shows essential and detailed connection information about your VM (Virtual Machine).
+
+> #### **Want to see more details?**
+> 
+> If you're looking for more information about your VM, click its name in the list.
+
+  7. Go to the **Nodes** page again. Did the number of available resources change?
+
+
+
+## 5\. Experience your VM instance
+
+  1. Return to the **VMs** page and click the **Connection** button for your VM.
+
+
+
+![ef0c92e-Screenshot_2023-10-11_at_0_02_21.jpg](https://support.macstadium.com/hc/article_attachments/28393224438683)
+
+  2. Launch Apple Screen Sharing on your local machine (In **Finder** , press `Cmd+K`). In the **Connect to Server** dialog, paste the information from the pop-up. (`vnc://10.221.189.13:5903` in the example above).
+
+
+
+> #### **Not working on macOS?**
+> 
+> This step works only on macOS. If you're working on a Linux or Windows machine instead, launch your preferred VNC client and connect to `<VM-IP>:<VNC-port>` (`10.10.10.4:6002` in the example above).
+
+One more thing to remember is that Screen Sharing must already be enabled within your macOS VM (Virtual Machine). This is usually not the case (especially on clean OS installs or after an ISO install (Intel Workloads Only)), and you must enable the setting yourself. This applied to SSH connectivity service as well.
+
+The good news is that `sonoma-90gb-orka3-arm` is already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
+
+> ####  **Are you not using the**`**sonoma-90gb-orka3-arm**`**image?**
+> 
+> If you're using another image as your starting point or if you are installing your OS from ISO (Intel Only), you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to [connect to the VM via VNC](https://orkadocs.macstadium.com/docs/vnc-to-a-vm). You can then [enable SSH and Screen Sharing](https://orkadocs.macstadium.com/docs/orka-vms-ssh-vnc-screen-sharing#managing-ssh-or-screen-sharing) connectivity in the OS.
+
+  3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password again - when Apple connects to the VM.
+  4. On the VM, launch **System Preferences** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
+  5. (Optional) Launch the Terminal application and run the following command.
+
+
+    
+    
+    brew install orka-vm-tools  
+      
+    OR  
+      
+    brew upgrade orka-vm-tools
+
+This action ensures that your VM (Virtual Machine) is running the latest version of the [Orka VM Tools](https://orkadocs.macstadium.com/docs/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs (Virtual Machines) more efficiently and enables vital features, such as [shared VM storage](https://orkadocs.macstadium.com/docs/shared-vm-storage).
+
+If your cluster is not running the latest Orka version, download and install an [Orka VM Tools](https://orkadocs.macstadium.com/docs/downloads#orka-vm-tools-for-arm-vms) that matches the version of your cluster.
+
+  6. Always apply the latest OS updates and restart the VM.
+
+
+
+## 6\. Create a new base image
+
+Changing the configuration or the file system of a running VM (Virtual Machine) does not affect its base image. As soon as you delete the VM (Virtual Machine), your changes will be lost; in other words, they are ephemeral, and you will need to recreate them manually on other VMs (Virtual Machines).
+
+You can save the changes as a new image to create changes that stick and appear on future deployments.
+
+> Glossary: Save changes
+> 
+> `Save` creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image.
+> 
+> This operation restarts the VM.
+
+  1. Return to the Web UI. On the **VMs** page, select your VM. Select **More** > **Save as new image**.
+
+
+
+![2919446-save-2.jpg](https://support.macstadium.com/hc/article_attachments/28393197010843)
+
+  2. Provide a name for the new image and click **Save**.
+
+
+
+![028e8d7-save-dialog.png](https://support.macstadium.com/hc/article_attachments/28393197013787)
+
+Wait for the operation to complete. It might take a while. There is no progress indicator, but the operation runs in the background. When the operation completes, the dialog closes, and a success notification appears.
+
+  3. After the operation completes, go to the **Images** page. Did your new image appear there?
+
+
+
+> #### **TIP**
+> 
+> To use your newly created image, you need to create a new VM config.
+
+## 7\. Delete VMs
+
+ _This section is optional._
+
+When your VM configs and instances have served their purpose, you can remove them.
+
+> #### **Glossary: Delete VM**
+> 
+> This operation removes the specified instance(s). Delete always preserves the original VM config and you can deploy new VM instances from it.
+
+  * On the **VMs** page, select your VM. Select **More** > **Delete**. When prompted, confirm that you want to delete the VM.
+
+
+
+![af25e3d-delete.jpg](https://support.macstadium.com/hc/article_attachments/28393197015195)
+
+When the page refreshes, you should not see any more VM instances. Your VM config is still available on the **VM Configs** page, and you can deploy new instances from it.
+
+Note that the changes you made to your deleted VM instance will not be present on newly deployed instances.

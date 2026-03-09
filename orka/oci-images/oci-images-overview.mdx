@@ -1,0 +1,47 @@
+---
+title: "OCI Images: Overview"
+zendesk_id: 28334504387995
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28334504387995-OCI-Images-Overview"
+section: "OCI Images"
+category: "Orka"
+created_at: "2024-08-16T15:23:43Z"
+updated_at: "2026-01-15T15:51:26Z"
+promoted: false
+labels: ["api", "image", "images", "oci"]
+suggested_new_path: "/orka/oci-images/oci-images-overview"
+---
+
+You can deploy a VM using a compatible image straight from a private or public registry, and you can store your images in your own registry.
+
+Starting with Orka 3.0.0, you can work with OCI-compatible images. You can deploy a VM using a compatible image straight from a private or public registry, and you can store your images in your own registry.
+
+## Benefits
+
+OCI-compatible Orka images provide the following benefits:
+
+  * The official vanilla macOS images, maintained by MacStadium, are now publicly available at <https://github.com/macstadium/orka-images>.
+  * Users can maintain their own images separately from the Orka cluster, saving storage space in the process.
+  * Users can now maintain versions of their OCI-compatible images.
+  * Deployments using OCI-compatible Orka images are generally faster because of improved caching and storage utilization.
+
+
+
+## Workflow
+
+Working with OCI-compatible Orka images usually consists of these steps:
+
+  1. Set up the credentials for the image registry in the namespace where you will be deploying VMs. 
+     * If you are using one of the official images, maintained by MacStadium, you can skip this step.
+  2. Deploy a VM by specifying the path to the image. Use the VM in your workloads.
+  3. Preserve any changes made to the VM by saving a new image locally or pushing a version of the image to an OCI-compatible registry. 
+     * If you are using one of the official images, maintained by MacStadium, you can preserve your changes by saving a new image locally or pushing to your own private registry.
+
+
+
+## Known limitations
+
+  * You cannot work with OCI images in the Orka Web UI.
+  * You cannot store multiple credentials for the same registry in the same namespace.
+  * You cannot store your registry credentials on the cluster level - you need to store them individually per namespace.
+  * You cannot push changes to the official images, maintained by MacStadium.
+  * Only cluster administrators can manage the registry credentials.

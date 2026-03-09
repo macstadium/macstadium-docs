@@ -1,0 +1,36 @@
+---
+title: "Enable SAML SSO with Google Workspace Federation"
+zendesk_id: 28262763988379
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28262763988379-Enable-SAML-SSO-with-Google-Workspace-Federation"
+section: "Account Management and SAML"
+category: "MacStadium"
+created_at: "2024-08-14T13:49:57Z"
+updated_at: "2024-09-18T21:49:33Z"
+promoted: false
+labels: ["federation", "sso", "google", "saml", "workspace"]
+suggested_new_path: "/macstadium/account-management-and-saml/enable-saml-sso-with-google-workspace-federation"
+---
+
+SAML SSO is a paid offering. Please contact your account team through the portal for more information.
+
+  1. Go to [Google Admin Console](https://admin.google.com/)
+  2. Navigate to “Web and mobile apps” (Apps → Web and mobile apps in the left menu or use [this link](https://admin.google.com/ac/apps/unified))  
+![d7af030-image.png](https://support.macstadium.com/hc/article_attachments/28262749454747)
+
+  3. Create a new “Custom SAML App” (click Add app)  
+![5673e45-image.png](https://support.macstadium.com/hc/article_attachments/28262749456027)
+
+  4. Enter “App name” (e.g. MacStadium Portal)
+  5. Download the metadata by clicking Download Metadata - Keep this file for sharing with our support team later.  
+![3f929de-image.png](https://support.macstadium.com/hc/article_attachments/28262763978523)
+  6. Configure 
+     * ACS URL - <https://idp.macstadium.com/saml2/idpresponse>
+     * Entity ID - urn:amazon:cognito:sp:us-east-1_pusi8jHs1
+     * Configure email mapping with the "Show Advanced Settings" menu
+     * Select EMAIL for the Name ID Format field
+     * Select Primary Email for the Name ID field  
+![a4a569e-image.png](https://support.macstadium.com/hc/article_attachments/28262763979675)
+  7. Map Primary email to email  
+![2394d9c-image.png](https://support.macstadium.com/hc/article_attachments/28262749462171)
+  8. Click Finish to complete the setup
+  9. Provide our support team with the metadata file from step 5

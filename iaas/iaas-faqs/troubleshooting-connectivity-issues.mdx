@@ -1,0 +1,92 @@
+---
+title: "Troubleshooting Connectivity Issues"
+zendesk_id: 43215194564251
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/43215194564251-Troubleshooting-Connectivity-Issues"
+section: "IaaS FAQs"
+category: "IaaS"
+created_at: "2025-11-11T23:23:18Z"
+updated_at: "2025-11-12T13:26:48Z"
+promoted: false
+labels: []
+suggested_new_path: "/iaas/iaas-faqs/troubleshooting-connectivity-issues"
+---
+
+If you're unable to connect to your device, follow these self-remediation steps in order to diagnose and resolve the issue.
+
+## Step 1: Verify Network Path with Traceroute
+
+Run a traceroute to your device to check accessibility and identify where the connection path breaks:
+
+**For macOS and Linux users:**
+    
+    
+    traceroute <your-device-ip>
+
+**For Windows users:**
+    
+    
+    tracert <your-device-ip>
+
+Analyze the traceroute results to determine the issue:
+
+### Issue: Route fails to reach MacStadium data center
+
+**Likely cause:** Local network, firewall, or VPN configuration blocking access.
+
+**Resolution:**
+
+  1. Verify your local internet connection is working properly
+  2. Check your firewall settings to ensure traffic to MacStadium data centers is allowed
+  3. If you're using a VPN:
+     * Confirm the VPN connection is active
+     * Verify your VPN configuration permits access to MacStadium IP ranges
+  4. Try connecting from a different network to rule out local network restrictions
+
+
+
+### Issue: Route reaches MacStadium data center but stops before the device
+
+**Likely cause:** Your device may be powered off.
+
+**Resolution:**
+
+  1. Power on the device through the portal
+  2. Wait 2-3 minutes for the machine to fully boot
+  3. Test connectivity with another traceroute /tracert or ping:
+
+
+    
+    
+       ping <your-device-ip>
+
+  4. Once the device responds to ping, attempt your VNC connection again
+
+
+
+### Issue: Route reaches your device, but VNC connection fails
+
+**Likely cause:** VNC service issue or incorrect port configuration.
+
+**Resolution:**
+
+  1. Verify you're using the correct VNC port for your device
+  2. Restart the device through the portal
+  3. Wait 2-3 minutes for the machine to fully boot
+  4. Test connectivity with another traceroute /tracert or ping:
+
+
+
+### 
+
+## Step 2: Still Having Issues?
+
+If you've completed all the steps above and still cannot connect to your device, please open a support ticket with the following information:
+
+  * The issue you're experiencing
+  * Results from your traceroute
+  * Steps you've already attempted
+  * Any error messages you're receiving
+
+
+
+Our support team will investigate further and help resolve your connectivity issue.

@@ -1,0 +1,252 @@
+---
+title: "Feature Parity: Apple Hardware"
+zendesk_id: 28336418107931
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28336418107931-Feature-Parity-Apple-Hardware"
+section: "Compatibility"
+category: "Orka"
+created_at: "2024-08-16T16:12:36Z"
+updated_at: "2024-09-18T21:47:43Z"
+promoted: false
+labels: ["hardware", "orka", "api", "compatibility", "parity", "apple"]
+suggested_new_path: "/orka/compatibility/feature-parity-apple-hardware"
+---
+
+Compatibility between Orka features and Intel- and Apple silicon-based nodes, VMs, and images.
+
+## macOS versions
+
+macOS version | Intel | Apple silicon  
+---|---|---  
+macOS 10.14 (Mojave) | ✅ | ❌  
+macOS 10.15 (Catalina) | ✅ | ❌  
+macOS 11 (Big Sur) | ✅ | ❌  
+macOS 12 (Monterey) | ✅ | ✅  
+macOS 13 (Ventura) | ✅ | ✅  
+macOS 14 (Sonoma) | ✅ | ✅  
+  
+## General features
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Use API IP to access Orka | ✅ | ✅  
+Use built-in Orka domain to access Orka | ✅ | ✅  
+Use external custom domain to access Orka | ✅ | ✅  
+View output in TABLE format | ✅ | ✅  
+View output in WIDE format | ✅ | ✅  
+View output in JSON format | ✅ | ✅  
+  
+## Tool configuration
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Configure API IP | ✅ | ✅  
+Configure built-in Orka domain | ✅ | ✅  
+Configure external custom domain | ✅ | ✅  
+Upload TLS certificate to use with an external custom domain | ✅ | ✅  
+  
+## Cluster configuration and features
+
+Feature | Intel | Apple silicon  
+---|---|---  
+VM scheduling | ✅ | ✅  
+GPU passthrough | ✅* | ✅**  
+VM Internet isolation | ✅ | ✅  
+VM network isolation | ✅ | ✅  
+Namespaces | ✅ | ✅  
+Namespaces with custom pods allowed (formerly, sandboxed mode) | ✅ | ✅  
+Nested virtualization (Beta) | ✅ | ❌  
+  
+The listed configurations are disabled by default and are available upon request.
+
+** GPU passthrough is always enabled by default on Apple silicon-based nodes.
+
+## Checks
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Check the current tool version | ✅ | ✅  
+  
+## Users
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Log in | ✅ | ✅  
+Log out | ✅ | ✅  
+Get token | ✅ | ✅  
+Set token | ✅ | ✅  
+Manage role bindings for the user | ✅ | ✅  
+  
+## Service accounts
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Create service account | ✅ | ✅  
+Get service account token | ✅ | ✅  
+List service accounts | ✅ | ✅  
+Delete service account | ✅ | ✅  
+Manage role bindings for the service account | ✅ | ✅  
+  
+## Namespaces
+
+Feature | Intel | Apple silicon  
+---|---|---  
+List namespaces | ✅ | ✅  
+Create namespace | ✅ | ✅  
+Delete namespace | ✅ | ✅  
+Manage role bindings for the namespace | ✅ | ✅  
+  
+## Nodes
+
+Feature | Intel | Apple silicon  
+---|---|---  
+List nodes | ✅ | ✅  
+Assign node to a namespace (formerly, grouping) | ✅ | ✅  
+Assign node to a namespace with enabled custom pods (formerly, sandboxing) | ✅ | ✅  
+Apply tag (node affinity) | ✅ | ✅  
+Remove tag (node affinity) | ✅ | ✅  
+  
+## VMs: Listing and info
+
+Feature | Intel | Apple silicon  
+---|---|---  
+List all users' VMs | ✅ | ✅  
+List specific VMs | ✅ | ✅  
+List all users' VM configurations | ✅ | ✅  
+List specific VM configurations | ✅ | ✅  
+List the VM's ports reserved for VNC, SSH, and Apple Screen Sharing | ✅ | ✅  
+List the VM's ports reserved for port forwarding | ✅ | ✅  
+  
+## VMs: Create VM configurations
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Create basic VM configuration (name,image) | ✅ | ✅  
+Create VM configuration with custom memory | ✅ | ✅  
+Create VM configuration with attached ISO | ✅ | ❌  
+Create VM configuration with enabled/disabled VNC | ✅ | ✅  
+Create VM configuration with enabled/disabled I/O boost* | ✅ | ❌*  
+Create VM configuration with enabled/disabled Network boost setting* | ✅ | ❌*  
+Create VM configuration with enabled/disabled GPU passthrough* | ✅ | ❌*  
+Create VM configuration with custom serial number | ✅ | ❌  
+Create VM configuration with preferred tag (node affinity) | ✅ | ✅  
+Create VM configuration with required tag (node affinity) | ✅ | ✅  
+Create VM configuration with custom scheduler | ✅ | ✅  
+  
+* GPU passthrough, I/O boost, and Network boost are always enabled for Apple silicon-based nodes and VMs. You cannot manually disable or override these settings on the VM config or VM level.
+
+## VMs: Deploy VMs
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Deploy basic VM (image) | ✅ | ✅  
+Deploy VM with custom memory | ✅ | ✅  
+Deploy VM with attached ISO | ✅ | ❌  
+Deploy VM with enabled/disabled VNC | ✅ | ✅  
+Deploy VM with enabled/disabled I/O boost* | ✅ | ❌*  
+Deploy VM with enabled/disabled Network boost* | ✅ | ❌*  
+Deploy VM with enabled/disabled GPU passthrough* | ✅ | ❌*  
+Deploy VM with custom serial number | ✅ | ❌  
+Deploy VM with preferred tag (node affinity) | ✅ | ✅  
+Deploy VM with required tag (node affinity) | ✅ | ✅  
+Deploy VM with custom scheduler | ✅ | ✅  
+Deploy without VM configuration | ✅ | ✅  
+Deploy VM from VM configuration | ✅ | ✅  
+Deploy VM from VM configuration and override the VM configuration | ✅ | ✅  
+  
+* GPU passthrough, I/O boost, and Network boost are always enabled for Apple silicon-based nodes and VMs. You cannot manually disable or override these settings on the VM config or VM level.
+
+## VMs: Start/stop/suspend/resume
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Stop VM by name (power off) | ✅ | ❌  
+Start VM by name (power on) | ✅ | ❌  
+Suspend VM by name (sleep) | ✅ | ❌  
+Resume VM by name (wake) | ✅ | ❌  
+  
+## VMs: Delete
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Delete VM by name | ✅ | ✅  
+  
+## VMs: Storage
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Shared VM storage | ✅ | ✅  
+I/O boost* | ✅ | ✅ *  
+  
+* I/O boost is always enabled on Apple silicon-based nodes and VMs. You cannot manually disable or override it on the VM config or VM level.
+
+### macOS and shared VM storage
+
+macOS version | Intel | Apple silicon  
+---|---|---  
+macOS 10.14 (Mojave) | ❌ | ❌  
+macOS 10.15 (Catalina) | ✅ | ❌  
+macOS 11 (Big Sur) | ✅ | ❌  
+macOS 12 (Monterey) | ✅ | ❌*  
+macOS 13 (Ventura) | ✅ | ✅  
+macOS 14 (Sonoma) | ✅ | ✅  
+  
+* Starting with Orka 2.4.0, shared VM storage is deprecated for Apple silicon-based VMs running macOS Monterey. In Orka 3.0.0, shared VM storage will be removed for all Apple Silicon-based Monterey VMs.
+
+## VMs: Networking
+
+Feature | Intel | Apple silicon  
+---|---|---  
+VNC | ✅ | ✅  
+SSH | ✅ | ✅  
+Apple Screen Sharing | ✅ | ✅  
+Port forwarding | ✅ | ✅  
+Network boost* | ✅ | ✅*  
+  
+* Network boost is always enabled on Apple silicon-based nodes and VMs. You cannot manually disable or override it on the VM config or VM level.
+
+## VMs: Performance
+
+Feature | Intel | Apple silicon  
+---|---|---  
+GPU passthrough | ✅ | ❌  
+I/O boost* | ✅ | ✅*  
+Network boost* | ✅ | ✅*  
+  
+* I/O boost and Network boost are always enabled for Apple silicon-based nodes and VMs. You cannot manually disable or override these settings on the VM config or VM level.
+
+## Images
+
+Feature | Intel | Apple silicon  
+---|---|---  
+Deploy from public OCI-compatible images | ✅ | ✅  
+Deploy from private OCI-compatible images (with registry credentials configured locally) | ✅ | ✅  
+Push an image from a running VM to an OCI-compatible registry (with registry credentials configured locally) | ✅ | ✅  
+List images locally stored in the cluster | ✅ | ✅  
+List remote images | ✅ | ✅  
+Pull a remote image | ✅ | ✅  
+Pull a remote image and rename it | ✅ | ✅  
+Download an image on your local machine | ✅ | ❌  
+Upload an image from your local machine | ✅ | ❌  
+Generate a new empty image | ✅ | ❌  
+Set an image description | ✅ | ✅  
+Copy and rename an image | ✅ | ✅  
+Save a new image from the specified VM (Save as) | ✅ | ✅  
+Overwrite the existing image with its current state from the specified VM (Save) | ✅ | ✅  
+Resize the disk and automatically resize the partition of the specified VM | ✅ | ✅  
+Resize the disk and automatically resize the partition of a specified VM and automatically save a new image from it | ✅ | ✅  
+Only resize the disk of the specified VM | ✅ | ✅  
+Delete an image | ✅ | ✅  
+  
+## ISOs
+
+Feature | Intel | Apple silicon  
+---|---|---  
+List ISOs | ✅ | ❌  
+List remote ISOs | ✅ | ❌  
+Pull a remote ISO | ✅ | ❌  
+Pull a remote ISO and rename it | ✅ | ❌  
+Rename an ISO | ✅ | ❌  
+Copy and rename an ISO | ✅ | ❌  
+Delete an ISO | ✅ | ❌  
+Download an ISO | ✅ | ❌  
+Upload an ISO | ✅ | ❌

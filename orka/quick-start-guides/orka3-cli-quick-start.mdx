@@ -1,0 +1,324 @@
+---
+title: "Orka3 CLI Quick Start"
+zendesk_id: 28347375974555
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28347375974555-Orka3-CLI-Quick-Start"
+section: "Quick Start Guides"
+category: "Orka"
+created_at: "2024-08-16T20:12:26Z"
+updated_at: "2025-10-23T21:15:22Z"
+promoted: false
+labels: ["orka", "api", "cli", "quick", "start", "command line"]
+suggested_new_path: "/orka/quick-start-guides/orka3-cli-quick-start"
+---
+
+Working with the Orka3 CLI is straightforward and friendly. Learn how to quickly get set up for the first time, basic operations, and how to get help.
+
+If you want to skip the detailed explanations, just run through these steps on your own:
+
+  1. `orka3 config set --api-url <ORKA_API_URL>`
+  2. `orka3 completion {bash|fish|powershell|zsh}`
+  3. `orka3 login`
+  4. `orka3 node list`
+  5. `orka3 vm list` (you should see 0 results)
+  6. `orka3 remote-image list` (this will return available base images in MacStadium's internal remote repository)
+  7. `orka3 remote-image pull <IMAGE_NAME>`(this will copy the image to your cluster's repository)
+  8. `orka3 image list` (this will return the list of locally stored images)
+  9. `orka3 vm deploy --image <IMAGE_NAME>`
+     1. Alternatively, you can deploy from OCI repositories: `orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest`
+  10. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
+  11. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
+  12. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
+  13. `orka3 vm commit <VM_NAME>` or `orka3 vm save <VM_NAME>`
+  14. `orka3 vm deploy --image <IMAGE_NAME> -y` (use the name of the newly saved image or the original image, if you committed the changes to it).
+  15. Run Apple Screen Sharing and connect to the newly deployed VM. Use the connection information printed by `orka3 vm deploy`. Verify that your changes are there.
+  16. `orka3 vm delete -v <NAME>`
+  17. `orka3 vm list`
+
+
+
+The Orka3 CLI is the most immersive way to get started with Orka. It provides easy-to-use commands, command autocompletion, and comprehensive built-in help.
+
+The Orka3 CLI will be helpful to:
+
+  * Beginner and advanced users.
+  * Users with manual workflows.
+  * Users with workflows that require automation.
+
+
+
+## 1\. Before you begin
+
+  1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+  2. Get your VPN connection information from your IP Plan. You can [download](https://support.macstadium.com/hc/en-us/articles/28230867289883) it from the [MacStadium portal](https://portal.macstadium.com/).
+  3. Connect to your Orka cluster via VPN.
+     * [Download and install a VPN client](https://support.macstadium.com/hc/en-us/articles/28329406438683). Note that if you're using a custom Orka domain, you might need to make some additional configuration changes.
+     * Use the server address and credentials from the VPN section at the top of your IP Plan.
+
+
+
+## 2\. Download and configure the Orka3 CLI
+
+  1. Download and install the latest [Orka3 CLI](https://support.macstadium.com/hc/en-us/articles/28347376278299) that matches your environment version.
+     * On macOS, run the `pkg` executable.
+     * On Linux, unpack the archive and move the executable to `/usr/local/bin`.
+     * On Windows, add the directory of the executable to your `PATH`.
+
+
+
+**TIP** : Using Homebrew?
+
+Try `brew install orka3`.
+
+  2. Launch your preferred command-line tool (e.g., the Terminal on macOS) and run the following command:
+
+
+    
+    
+    orka3 config set --api-url <ORKA_API_URL>
+
+This operation is a one-time effort. With it, you set the Orka service endpoint for your cluster.
+
+#### **What's your Orka API URL?**
+
+You can get your Orka API URL from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883):
+
+  * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](https://support.macstadium.com/hc/en-us/articles/28330039248923) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](https://support.macstadium.com/hc/en-us/articles/28330039248923).
+
+
+
+Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
+
+**Known limitation**
+
+The Orka3 CLI works only with trusted custom domains and valid TLS certificates issued by trusted certificate authorities.
+
+  3. Enable command autocompletion for the Orka3 CLI
+
+
+    
+    
+    orka3 completion {bash|fish|powershell|zsh}
+
+The Orka3 CLI prints detailed instructions for the selected shell type.
+
+## 3\. Authenticate with your cluster
+
+Orka lets you log in with your MacStadium Customer Portal credentials. Your access privileges are based on the role configured by your account admin in the Customer Portal. By default, you will have access to the orka-default namespace. You can access additional namespaces if you have been added to additional role bindings.
+    
+    
+    orka3 login
+
+Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional`orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
+
+## 4\. Some CLI basics
+
+The Orka3 CLI is a powerful tool in the hands of both inexperienced and advanced users.
+
+The default Orka3 CLI output for list commands is table-formatted. You can switch to an expanded table format with the `--output wide` flag or to JSON with the `--output json` flag.
+
+To get help, run:
+    
+    
+    orka3 help
+    orka3 <command> --help
+    orka3 <parent_command> <command> --help
+
+## 5\. Create and deploy your first VM instance
+
+  1. Open a new command-line prompt and run:
+
+
+    
+    
+    orka3 nodes list
+
+This command shows basic information about the nodes in the `orka-default` namespace. Re-run this command as you deploy VM instances later on to keep track of the available resources on your nodes.
+
+**Glossary: Node**
+
+A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads.
+
+A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
+
+**Glossary: Namespace**
+
+A way to isolate and dedicate resources to users and teams within the cluster.
+
+The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+
+  2. Run:
+
+
+    
+    
+    orka3 vm list
+
+This command lists all VM instances in the `orka-default` namespace. If nothing prints, no one has created any VM instances yet.
+
+#### **Do you want to see more information about the available VMs?**
+
+Run `orka3 vm list --output wide`.
+
+  3. List the available base images that you can use to deploy a VM:
+
+
+    
+    
+    orka3 remote-image list
+
+This command shows all of the standard base images in MacStadium's remote repository. You will likely see a `sonoma-90gb-orka3-arm` item. It is a fully installed and configured Apple Silicon-based macOS Sonoma image with a 90GB disk size. It also has an admin user configured, SSH and Apple Screen Sharing access enabled, and Orka VM Tools installed.
+
+**Glossary: Image**
+
+A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs.
+
+(Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+
+  4. Deploying a VM is as simple as just specifying a base image. Run:
+
+
+    
+    
+    orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest
+
+Orka creates a simple VM with the specified image and 3CPU and assigns a randomly generated name.
+
+#### **Did you know?**
+
+Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
+
+So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest Sonoma image from GitHub packages.
+    
+    
+    orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
+
+  7. Check your nodes and your VMs.
+
+
+  * Re-run `orka3 node list`. Did the number of available resources change?
+  * List your VMs:
+
+
+    
+    
+    orka3 vm list
+
+You should now see your VM in the list.
+
+For more detailed output, you can run `orka vm list --output wide`. In addition to the name, IP, and connection ports of the VM, it also shows its architecture, base image, and CPU and memory configuration. Note that even though `Screenshare` and `SSH` are always listed and configured for every VM; you won't be able to use them unless the respective connection type is enabled in macOS. This behavior is a security limitation of the OS.
+
+**In a pool of many VMs, are you looking for that special one?**
+
+When you have a lot of VMs, the output of `orka3 vm list` might become too crowded to use efficiently. Run `orka3 vm list <VM_NAME>` instead and get the system information for a single VM.
+
+## 6\. Experience your VM instance
+
+  1. Look at the last output of `orka3 vm list` again. Get that IP and `Screenshare` port.
+  2. Launch Apple Screen Sharing on your local machine (`Cmd+K` in Finder). Type `vnc://<VM-IP>:<Screenshare-port>`.
+
+
+
+One more thing to remember is that Screen Sharing must already be enabled on the macOS. This is usually not the case (especially on clean OS installs or after an ISO install), and you will need to enable the setting yourself.
+
+The good news is that `ghcr.io/macstadium/orka-images/sonoma:latest` is already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
+
+  3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password again - when Apple connects to the VM.
+  4. On the VM, launch **System Preferences** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
+  5. (Optional) Launch the Terminal and run the following command.
+
+
+    
+    
+    brew install orka-vm-tools OR brew upgrade orka-vm-tools
+
+This action ensures that your VM is running the latest version of the [Orka VM Tools](https://orkadocs.macstadium.com/docs/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables key features, such as [shared VM storage](https://support.macstadium.com/hc/en-us/articles/28340384486683).
+
+If your cluster and CLI are not running the latest Orka version, download and install an [Orka VM Tools](https://support.macstadium.com/hc/en-us/articles/28340435787163) that matches the versions of your cluster and Orka3 CLI.
+
+  6. Apply the latest OS updates and restart the VM.
+
+
+
+## 7\. Preserve the image changes
+
+Changing a running VM's configuration or file system does not affect its base image. As soon as you delete the VM, your changes will be lost, and you will need to recreate them manually on other VMs.
+
+To create changes that stick and appear on future deployments, you can commit your changes to the base image, save the changes as a new image, or push your changes to an OCI-compatible registry.
+
+> #### **Glossary: Commit changes**
+> 
+> `Commit` modifies the original base image of the respective VM instance. With this operation, you apply the current state of a VM instance over the base image of its VM config. This way, newly deployed instances will launch in the same state as your current VM.
+> 
+> This operation restarts the VM.
+> 
+> Run `orka3 vm commit --help` for more information.
+
+> #### **Glossary: Save changes**
+> 
+> `Save` creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image.
+> 
+> This operation restarts the VM.
+> 
+> Run `orka vm save --help` for more information.
+
+> #### **Glossary: Push changes**
+> 
+> `Push` your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image. For more information, run `orka3 regcred --help`.
+> 
+> Run `orka vm push --help` for more information.
+
+  1. Commit the changes, save a new image, or push to a private OCI-compatible registry.
+
+
+
+This operation will retain the new admin password and the latest OS updates. You might need to share the new admin password with future users who follow this guide.
+
+Return to the command line on your local machine and run:
+    
+    
+    orka3 vm commit <VM_NAME>
+    
+    OR
+    
+    orka3 vm save <VM_NAME> <NEW_IMAGE_NAME>
+    
+    OR
+    
+    orka3 regcred <SERVER> --username <USER> --password <PASSWORD> [--allow-insecure]
+    orka3 vm push <VM_NAME> <IMAGE[:TAG]>
+
+You can get the `<VM_NAME>` from the `orka3 vm list` output you ran earlier.
+
+Registry credentials are required to push an image. For more information, run `orka3 regcred --help`.
+
+  2. See how the changes are preserved for yourself. Deploy a new VM instance:
+
+
+    
+    
+    orka3 vm deploy --image <IMAGE_NAME>
+
+  3. Launch Apple Screen Sharing and connect to the newly deployed VM instance. Use the updated admin credentials to log in.
+
+
+
+## 8\. Delete VMs
+
+_This section is optional._
+
+When your VM instances have served their purpose, you can `delete` them.
+
+  1. Remove all VM instances you created until now:
+
+
+    
+    
+    orka3 vm delete <VM_NAME>
+
+  2. List your VMs again.
+
+
+    
+    
+    orka3 vm list

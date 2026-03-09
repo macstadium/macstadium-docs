@@ -1,0 +1,169 @@
+---
+title: "Risk Assessment and Mitigation Plan for Orka on AWS"
+zendesk_id: 45531213762459
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/45531213762459-Risk-Assessment-and-Mitigation-Plan-for-Orka-on-AWS"
+section: "Orka on AWS and On-Prem"
+category: "Orka"
+created_at: "2026-01-16T14:57:08Z"
+updated_at: "2026-01-16T14:57:47Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws"
+---
+
+The following is a structured risk assessment and mitigation guide for Orka on AWS.   
+  
+## Risk Assessment Summary Using AWS Well-Architected Framework
+
+Below is a short mapping of risk areas to the AWS Well-Architected Framework: 
+
+**Pillar** | **Associated Risks** | **Mitigation Focus**  
+---|---|---  
+Security | IAM/config errors, network exposure, cluster access | Least privilege, secure VPC rules, monitoring  
+Reliability | Single control plane points, operational limits | HA EKS nodes, automated recoveries  
+Operational Excellence | Restricted operational model | Documented runbooks, controlled governance  
+Cost Optimization | Over-provisioned resources | Autoscaling, right-sizing of clusters  
+Performance Efficiency | Network, storage, ECR latency | Region alignment, use of NVMe where applicable  
+Sustainability | Inefficient resource use | Autoscale down unused resources  
+  
+## Detailed Description of Risk Areas and Mitigation
+
+### Security & Identity Management
+
+**Risk Description**
+
+  * Orka on AWS integrates with EKS, EC2 Mac instances, CodeBuild, IAM roles, OIDC providers, and ECR. Improper IAM permissions or misconfigured identity providers can lead to privilege escalation or unauthorized access.
+
+  * Sensitive actions (e.g., attaching `eks:*` policies, Cluster Admin rights) are required for setup. 
+
+
+
+
+**Potential Impact**
+
+  * Unauthorized access to cluster control plane, EC2 Mac hosts, or ECR images.
+
+  * Compromise of build artifacts, credentials, or production infrastructure.
+
+
+
+
+**Mitigation Considerations**
+
+  * Apply least privilege IAM role principles; avoid broad `eks:*` permissions where not necessary and use scoped policies.)
+
+  * Implement IAM Access Analyzer and regular permission reviews.
+
+  * Enable multi-factor authentication (MFA) and use strong OIDC client configurations.
+
+  * Monitor identity provider and token usage via AWS CloudTrail and GuardDuty.
+
+
+
+
+### Networking
+
+**Risk Description**
+
+  * Orka requires exposing certain ports (e.g., for VNC, SSH, metrics) within the VPC. Misconfiguration of security groups/VPC rules could inadvertently expose traffic.
+
+  * NAT, network isolation, or VPC peering may be complex, introducing misconfigurations. 
+
+
+
+
+**Potential Impact**
+
+  * Unauthorized access to Orka or macOS VMs.
+
+  * Increased attack surface.
+
+
+
+
+**Mitigation Considerations**
+
+  * Use strict security group rules with least network exposure; restrict ingress only to necessary CIDRs.
+
+  * Deploy private subnets with NAT gateways for necessary egress rather than public IPs.
+
+  * Use AWS Network Firewall or AWS Security Hub to detect insecure configurations.
+
+
+
+
+### EKS Operational Restrictions
+
+**Risk Description**
+
+  * Orka limits namespace creation and pod deployment, and user management is restricted. This increases governance for customers who must manage operations within those constraints. 
+
+
+
+
+**Potential Impact**
+
+  * Misunderstanding of restrictions could slow deployments or create gaps in observability.
+
+
+
+
+**Mitigation Considerations**
+
+  * Clearly document the operational limits and integrate them into internal DevOps runbooks.
+
+  * Provide automated validations (i.e. via pipeline checks) for compliance with Orka constraints.
+
+
+
+
+### Backups, Logging & Monitoring
+
+**Risk Description**
+
+  * Centralized logging mechanisms (CloudWatch, OpenTelemetry) and backups are suggested but not enforced by default.
+
+
+
+
+**Potential Impact**
+
+  * Missed detection of security or performance incidents.
+
+  * Loss of critical state or configuration data during outages.
+
+
+
+
+**Mitigation Considerations**
+
+  * Enforce centralized logging and metric aggregation pipelines with retention policies.
+
+  * Configure alerts and dashboards for key signals (node failures, burst traffic, unexpected auth events).
+
+  * Automate backups to S3, with lifecycle rules and access restrictions.
+
+
+
+
+### Registry Credential Management for Images
+
+**Risk Description**
+
+  * Credentials for ECR access are time-bound and require frequent refresh. Incorrect handling can lead to build failures or credential exposure. 
+
+
+
+
+**Potential Impact**
+
+  * CI/CD disruptions, build failures, or stale credentials leading to outages.
+
+
+
+
+**Mitigation Considerations**
+
+  * Use automated credential rotation integrated into workflows.
+
+  * Store credentials securely (i.e. AWS Secrets Manager) and enforce short TTLs with refresh policies.

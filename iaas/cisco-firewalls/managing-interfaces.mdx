@@ -1,0 +1,133 @@
+---
+title: "Managing Interfaces"
+zendesk_id: 28277745764123
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28277745764123-Managing-Interfaces"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T20:06:16Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "configuration", "manage", "config"]
+suggested_new_path: "/iaas/cisco-firewalls/managing-interfaces"
+---
+
+Manage interfaces via the Cisco Adaptive Security Device Manager (ASDM), which = is done via **Configuration > Device Setup > Interfaces**.
+
+The Cisco ASDM delivers world-class security management and monitoring through an intuitive, easy to use management interface. As ASDM is a client, it can run on workstations, desktops, and laptops.
+
+The Misc tab on the IP Plan contains specific instructions and links for downloading the Cisco ASDM client.
+
+## Plan Misc Tab
+
+Once behind the firewall via VPN, access the environment either via ASDM or by Secure Shell (SSH).
+
+## ASDM data sheet
+
+The ASDM data sheet can be [found here](https://www.cisco.com/c/en/us/products/security/asa-5500-series-next-generation-firewalls/data_sheet_c78-345385.html).
+
+## DMZs
+
+A DMZ is a server reachable by outside IP addresses, but which can also communicate with inside IP addresses, too. It provides a method of communication between inside and outside IP addresses. Customers ultimately define their own DMZs. This can be also be configured via ASDM.
+
+  * [Cisco ASA DMZ Configuration Example](https://www.speaknetworks.com/cisco-asa-dmz-configuration-example/)
+  * [Configure a Public Server with Cisco ASDM](https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-next-generation-firewalls/113425-asdm-pub-server-00.html)
+  * [How to Set up a Cisco ASA DMZ](https://www.youtube.com/watch?v=eeTZZN5U858) (video)
+
+
+
+## Logging
+
+Firewalls can log how they handle various types of traffic. For forensic purposes, information like source and destination IP addresses, port numbers, and protocols can be invaluable. However, the downside of logging is that the size of log files can quickly become unwieldy. Because of this, MacStadium has logging turned off by default. However, it is easy to change and configure this setting to capture traffic details.
+
+To turn _logging _on, you will first need to identity a repository for the log information. MacStadium recommends designating a separate repository for those log files, because it can grow quickly. This can be set in ASDM via **Monitoring > Logging**. Users can also submit a firewall change request via the MacStadium portal to choose a new repository.
+
+Users running CI as a service, should port those logs to a separate server. Otherwise, speed, storage, and performance may become impacted. MacStadium also recommends that leaving logging disabled, especially for internal-only customers.
+
+For more information, see [Cisco Logging Best Practices](https://tools.cisco.com/security/center/resources/firewall_best_practices#43).‍
+
+### ‍### Command Line Interface
+
+For expert users, the Command Line Interface (CLI) can provide an elegant and convenient option for configuring your firewall.
+
+To access the CLI, first connect via your VPN. Then SSH to the IP address of the inside interface found in your connection information available via the MacStadium portal.
+
+## Command Line Interface (CLI)
+
+[Cisco ASA 5500 Series Command Reference, 8.2](https://www.cisco.com/c/en/us/td/docs/security/asa/asa84/configuration/guide/asa_84_cli_config.html)
+
+## Connecting to another public cloud
+
+### Site to Site VPN
+
+Site to Site VPNs are designed to connect a firewall to a firewall, a router to a router, or a router to a firewall. With a Site to Site VPN properly configured, MacStadium customers can connect their environments to an AWS implementation or another public cloud.
+
+MacStadium supported Site to Site VPN is a standard IPsec site-to-site implementation. Most customers can set that up in ASDM very similarly to how they create other VPN connections, via the VPN Wizard.
+
+Wizards > Site-to-Site VPN Connection Setup Wizard
+
+The VPN Wizard by default creates the most generic and compatible tunnel you can make. MacStadium supports two versions, traditional Internet Key Exchange (IKE) methods IKEv1 vs IKEv2. More information on configuring each can be found below:
+
+  * [Configuring Internet Key Exchange Version 2 (IKEv2)](https://www.cisco.com/en/US/docs/ios-xml/ios/sec_conn_ike2vpn/configuration/15-2mt/sec-cfg-ikev2-flex.html)
+  * [Configure IKEv1 IPsec Site-to-Site Tunnels with the ASDM or CLI on the ASA](https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-next-generation-firewalls/119141-configure-asa-00.html)
+  * [Configure a Site-to-Site IPSec IKEv1 Tunnel Between an ASA and a Cisco IOS Router](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/119425-configure-ipsec-00.html)
+  * [Cisco ASA Site-to-Site IKEv1 IPSec VPN](https://networklessons.com/cisco/asa-firewall/cisco-asa-site-site-ikev1-ipsec-vpn)
+
+
+
+## IPSec VPN
+
+If your optimum environment requires an IPSec VPN connection, MacStadium supports this method of connection. Be aware that IPSec VPN is no longer supported by Windows post Windows 8. However, Macs still support this method of connection out of the box.
+
+For specific instructions on configuring an IPSec VPN from macOS, see [How to Setup an IPSec VPN Connection from macOS](https://support.apple.com/en-gb/guide/mac-help/mchlp2963/mac).
+
+## Virtual Tunneling Interface (VTI)
+
+MacStadium also supports IPSec VTI. Tunnel interfaces have many uses, including participating in a larger VPN configuration. MacStadium supports a Border Gateway Protocol (BGP) based tunnel. This is the best method for connecting to an AWS implementation.
+
+Be advised VTI is not supported on older model ASA appliances (5585, 5540, etc).
+
+## IPSec Virtual Tunnel Interface
+
+If you want to have lots of VMS that live on a few IP addresses, you may want to utilize port forwarding instead of the internal public addresses. Port forwarding is a method of making your MacStadium private cloud accessible to specific IP addresses on the internet, even though you are behind a firewall.
+
+Port forwarding to VMs must be statically defined on the firewall.
+
+[Configure ASA Version 9.x Port Forwarding with NAT](https://www.cisco.com/c/en/us/support/docs/ip/network-address-translation-nat/118996-config-asa-00.html)
+
+## Rules
+
+You can create custom rules for your firewall as if it was in your own environment. Rules can be configured in ASDM via **Configuration > Firewall > Access Rules**.
+
+## Best practices
+
+  * Keep in mind that rules are processed in order.
+  * Only create rules on the outside interface, and leave others saying “any.”
+  * Unless you are an expert, we recommend that you don’t filter any outbound traffic. If you do choose to filter outbound traffic, be very specific with ALL traffic heading outbound so you don’t inadvertently block legitimate traffic. Start by using a rule that permits everything and then narrow down.
+  * You will need both a Network Address Translation (NAT) rule and an access rule working in conjunction, as either alone won’t work. A typical use case would be creating an SSH rule tied to a Jenkins master (if you don’t use a VPN).
+  * If you don’t have experience with ASAs, just do a 1:1, where one internal IP address behind the interface is mapped to one external IP address.
+
+
+
+## Dynamic Host Configuration Protocol (DHCP)
+
+If DHCP is integral to your solution, you can use a VM on your network to control it. Keeping DHCP on a separate VM keeps your environment safe in case you need to restart your DHCP server.
+
+## Configuring the Cisco IOS DHCP Server
+
+### DHCP relay
+
+DHCP Relay permits DHCP clients and servers to be placed on numerous networks. The DHCP relay agent will respond to a broadcasted “discover” request and reply to the relay server. It sends the offer back to the DHCP device and sends it back to the original requester.
+
+### Configuring the Cisco IOS DHCP Relay Agent
+
+Documentation can be found [here](https://www.cisco.com/en/US/docs/ios/12_4t/ip_addr/configuration/guide/htdhcpre.html).
+
+## Best Practices for Continuous Integration
+
+CI/CD projects are by their nature unique, and hence will also benefit from a custom firewall configuration that corresponds to your individual needs.
+
+MacStadium recommends putting your build farm elements in private space. This allows environments to grow and shrink on demand. Another reason to place these elements in private space is that a lot of CI/CD traffic is necessarily east/west. If they all live in the same VLAN, then communications between VMs can be direct and not have to go through the firewall.
+
+## Support
+
+If you require additional help with your firewall, please contact MacStadium support.

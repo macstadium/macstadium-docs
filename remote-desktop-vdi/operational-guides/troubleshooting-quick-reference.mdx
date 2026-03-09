@@ -1,0 +1,1230 @@
+---
+title: "Troubleshooting Quick Reference"
+zendesk_id: 44261906056859
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44261906056859-Troubleshooting-Quick-Reference"
+section: "Operational Guides"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-10T21:00:10Z"
+updated_at: "2026-02-24T22:06:48Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+---
+
+## Orka for VDI Environment
+
+### How to Use This Guide
+
+This is a quick reference for troubleshooting common issues. Each section is organized by symptom (what users report or what you observe), followed by its likely causes and diagnostic steps.
+
+During an incident:
+
+  1. Find the symptom that matches your situation
+
+  2. Follow the diagnostic commands in order
+
+  3. Apply the recommended solution
+
+  4. Document what worked for your post-incident review
+
+
+
+
+Tool usage guidelines:
+
+  * **Primary method:** Always use Ansible playbooks for VM operations (deploy, delete, start, stop, image management)
+
+  * Advanced diagnostics: You can SSH to hosts and use `orka-engine` CLI commands for lower-level troubleshooting
+
+  * Examples: `orka-engine vm list`, `orka-engine vm run --image <image> --net-interface en0`
+
+  * Note: All production operations should go through Ansible playbooks to maintain consistency
+
+
+
+
+If your issue isn't listed here: Escalate using the procedures in Guide B: Day-2 Operations Guide.
+
+## VM Provisioning Issues
+
+### Symptom: VM Deployment Fails Completely
+
+What you see: `deploy.yml` playbook fails with error messages
+
+Quick diagnostic:
+
+`ansible-playbook -i dev/inventory deploy.yml \ -e "vm_group=test" \ -e "desired_vms=1" \ -e "vm_image=<image-name>" \ -vvv ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=<image-name>" \ -v ansible hosts -i dev/inventory -m shell -a "df -h /var/orka" ansible hosts -i dev/inventory -m shell -a "orka-engine --version"`
+
+Likely causes and solutions:
+
+**Cause** |  **How to Verify** |  **Solution**  
+---|---|---  
+Image doesn’t exist | Pulling image fails with error 404/not found | Check image name/tag; verify in container registry  
+Registry authentication failed | Image pull fails with authentication error | Verify `registry_username` and `registry_password`  
+Host out of disk space | `df` shows >90% of available space is used on `/var/orka` | Clean up old images; add storage  
+Host out of CPU/memory | Error mentions resource limits | Reduce VMs per host or add hosts  
+Image incompatible with host | Error mentions architecture mismatch | Use ARM images for Apple Silicon hosts  
+Network timeout pulling image | Pull times out | Check network connectivity to registry  
+Orka Engine is unresponsive | Commands hang or timeout | Restart Orka Engine; contact MacStadium  
+  
+Most common fix: Image name/tag typo or a registry authentication failure.
+
+### Symptom: VMs Deploy But Won't Start
+
+What you see: Deployment succeeds but VMs show "Stopped" or error status
+
+Quick diagnostic:
+
+`ansible-playbook -i dev/inventory list.yml | grep <vm-name> ansible-playbook -i dev/inventory vm.yml \ -e "vm_name=<vm-name>" \ -e "desired_state=running" \ -v ssh admin@<host-ip> sudo log show --predicate 'process == "orka-engine"' --last 30m | grep -i error ssh admin@<host-ip> orka-engine vm list <vm-name> --format json`
+
+#### Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Corrupted VM image | Logs show image errors | Re-pull image using `pull_image.yml`; redeploy VM  
+Insufficient host resources | Logs show resource allocation failure | Free resources on host; delete unused VMs or deploy to different host  
+VM configuration invalid | JSON shows invalid CPU/memory values | Verify all deployment parameters are correct; check image compatibility  
+Storage backend issue | Logs show I/O errors | Check host storage health with `df -h`; contact MacStadium  
+Boot disk missing | Logs show disk not found | Delete VM and redeploy from scratch using fresh image pull  
+  
+**Most common fix:** Corrupted image during pull. Re-pull the image to the host and redeploy.
+
+### Symptom: Wrong Number of VMs Deployed
+
+What you see:**** Requested 10 VMs but only 7 deployed, or deployment stopped partway through
+
+Quick diagnostic:
+
+`ansible-playbook -i dev/inventory list.yml -e "vm_group=<group>" | grep <group> | wc -l ansible hosts -i dev/inventory -m shell -a "top -l 1 | head -20"`
+
+**Likely causes and solutions:**
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Hit `max_vms_per_host` limit | VMs distributed but stopped early | Increase limit or add more hosts  
+One or more hosts failed | Some hosts show errors | Fix failed hosts; redeploy remaining VMs  
+Ran out of IP addresses | Bridged mode: DHCP exhausted | Expand DHCP pool or use different subnet  
+Partial playbook failure | Playbook shows some failed tasks | Review errors in verbose output (`-vvv`); fix issues; rerun playbook  
+  
+**Most common fix:** You may have hit the max_vms_per_host limit. Add more hosts to distribute VM load.
+
+### Symptom: Can't Delete VMs
+
+**What you see:** `delete.yml` or `vm.yml` with `desired_state=absent` fails
+
+**Quick diagnostic:**
+
+`ansible-playbook -i dev/inventory vm.yml \ -e "vm_name=<vm-name>" \ -e "desired_state=absent" \ -vvv ansible-playbook -i dev/inventory list.yml | grep <vm-name> ssh admin@<host-ip> orka-engine vm stop <vm-name> --force orka-engine vm delete <vm-name> ssh admin@<host-ip> ps aux | grep <vm-name>`
+
+**Likely causes and solutions:**
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+VM already deleted | `list.yml` doesn't show VM | Ignore error; VM is already deleted  
+VM stuck in a hung state | Force stop succeeds; delete succeeds | SSH to host; use `orka-engine vm stop <vm> --force` then delete  
+Orka Engine issue | All delete operations failing | SSH to host; check Orka Engine service status; contact MacStadium  
+VM disk locked | Logs show disk busy error | Stop all VMs using the disk; retry  
+Permission issue | Logs show permission denied | Verify `ansible_user` has sudo access; check `ansible_become=yes` in inventory  
+  
+**Most common fix:** VM is stuck in a hung state. Force stop and delete the VM via SSH to the host.
+
+## Citrix VDA Registration Failures
+
+### Symptom: New VMs Won't Register with Citrix
+
+What you see: VMs show as "Unregistered" in Citrix Cloud Console → Monitor → Machines
+
+Quick diagnostic:
+
+`ansible-playbook -i dev/inventory list.yml | grep <vm-name> ssh admin@<host-ip> open vnc://<vm-ip>:5900 // Navigate to: System Preferences → Citrix VDA // Should show: "Registered" with Cloud Connector details // Test network connectivity from the VM // From the VM Terminal: ping <cloud-connector-ip> curl https://api.cloud.com // Check VDA service logs // On the VM: Console.app → Search for "Citrix"`
+
+**Likely causes and solutions:**
+
+**Most common fix:** Firewall blocking outbound HTTPS from VMs to Citrix Cloud Connector. Verify ports `443`, `1494`, and `2598` are open.
+
+### Symptom: VMs Were Registered, Now Show as Unregistered
+
+**What you see:** VMs that were working now show "Unregistered" status
+
+**Quick diagnostic:**
+
+  1. Verify the VM is running: `ansible-playbook -i dev/inventory list.yml | grep <vm-name>`
+
+  2. VNC into the VM and check VDA status: `ssh admin@<host-ip> open vnc://<vm-ip>:5900`
+
+  3. Navigate to: System Preferences → Citrix VDA. Should show: "Registered" with Cloud Connector details.
+
+  4. Test network connectivity from the VM: `ping <cloud-connector-ip> curl https://api.cloud.com`
+
+  5. Check VDA service logs. On the VM: Console.app → Search for "Citrix"
+
+
+
+
+**Likely causes and solutions:**
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+VDA not installed in image | System Preferences has no Citrix VDA pane | Rebuild golden image with VDA installed  
+VDA not configured | VDA pane shows "Not configured" | Configure VDA with Cloud Connector details  
+VDA service crashed on VMs | VDA status shows "Stopped" on multiple VMs | Restart affected VMs using `vm.yml` with `desired_state=stopped` then `running`  
+Host reboot without VM auto-start | All VMs on one host unregistered simultaneously | Start VMs using Ansible; configure auto-start in Orka if available  
+Network can't reach Cloud Connector | Ping/curl fails | Check firewall rules; verify outbound HTTPS  
+Wrong Cloud Connector configured | VDA shows wrong Cloud Connector IP | Reconfigure VDA in golden image  
+VDA service not running | VDA status shows "Stopped" | Restart VDA service or reboot VM  
+Firewall blocking required ports | Ports 443, 1494, 2598 are blocked | Open required ports in firewall  
+Citrix licensing issue | VDA shows licensing error | Check Citrix Cloud licenses; contact support  
+  
+**Most common fix:** Cloud Connector lost network connectivity or service crashed. Restart the Cloud Connector.
+
+### Symptom: VDA Shows "Registration in Progress" Indefinitely
+
+What you see: VDA status remains stuck on "Registering..." and never completes
+
+Quick diagnostic:
+
+  1. Check if Cloud Connector is up by navigating to Citrix Cloud Console → Monitor → Cloud Connectors, and look for: Status "Up" or "Down".
+
+  2. Check if multiple VMs are affected: Monitor → Machines → Filter by Delivery Group. Check if all VMs show as unregistered, or just some.
+
+  3. Test connectivity from VM to Cloud Connector by running `ssh admin@<host-ip>`, VNC to the VM, then run: `ping <cloud-connector-ip>`
+
+  4. Check the VDA service on the VM: System Preferences → Citrix VDA.
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Cloud Connector down | Console shows "Down" status | Restart Cloud Connector VM/service  
+DNS resolution failing | `nslookup <cloud-connector-fqdn>` fails from VM | Fix DNS configuration in golden image or via DHCP; use IP address temporarily  
+Incorrect broker address | VDA configured with wrong Cloud Connector address | Fix broker address in VDA configuration in golden image; redeploy VMs  
+Network path failure | VMs can't ping Cloud Connector | Check network/firewall; contact network team  
+VDA service crashed | VDA status shows "Stopped" on VMs | Restart affected VMs  
+Citrix Cloud service issue | Cloud Connector up but VMs unregistered | Check Citrix status page: Contact support  
+Host reboot without VM auto-start | All VMs on one host unregistered | Start VMs manually; configure auto-start  
+Certificate expiration | VDA logs show cert errors | Renew certificates; update VDA configuration  
+  
+Most common fix: Verify that the VM can resolve the Cloud Connector hostname or configure it with a correct/updated IP address.
+
+### Symptom: VMs Register But Users Can't Connect
+
+What you see:**** Citrix Console shows VMs are "Registered" but users get connection errors
+
+Quick diagnostic:
+
+  1. Verify the user is in the correct Delivery Group by navigating to Citrix Cloud Console → Manage → Delivery Groups → Search for the user
+
+  2. Check that the VM is actually in an "Available" state by navigating to Monitor → Machines → and checking the ‘Status’ column. This should show "Available" not "In Use" or "Maintenance".
+
+  3. Test the connection yourself with a test account by launching a desktop from Citrix Workspace.
+
+  4. Check for Citrix policy issues. Policies → Review policies applied to the impacted Delivery Group.
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+User not in Delivery Group | Search shows no assignment | Add user to the appropriate Delivery Group  
+VM in maintenance mode | Status shows "Maintenance Mode" | Take the VM out of maintenance mode  
+Delivery Group misconfigured | No desktops published | Check Delivery Group configuration  
+Session limit reached | Policies show max sessions = 1, already in use | Increase session limit or deploy more VMs  
+HDX protocol failure | Users get protocol error | Check HDX policies; test with different user  
+VM networking issue | VM registered but can't be reached | Verify VM network connectivity  
+  
+Most common fix: User was not added to the Delivery Group. Add the user via Citrix Cloud Console.
+
+## Network and Connectivity Problems
+
+### Symptom: VMs Can't Reach Internet
+
+What you see: Users report "No internet connection" / Can't browse web or download updates
+
+Quick diagnostic:
+
+  1. Test basic connectivity from the VM by VNCing into the VM:  
+`ping 8.8.8.8`  
+`ping google.com`  
+`curl https://google.com`
+
+  2. Check the VM network configuration  
+`ifconfig route -n get default`
+
+  3. Check DNS configuration  
+`cat /etc/resolv.conf`
+
+  4. Test connecting from the host to rule out any host issues  
+`ssh admin@<host-ip> `  
+`ping 8.8.8.8`
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+DNS not configured | `resolv.conf` is empty or incorrect | Add DNS servers to golden image or DHCP  
+No default gateway | `route -n get default` shows no route | Configure gateway in image or via DHCP  
+Proxy required | Network requires proxy for internet access | Configure proxy settings in golden image; set HTTP_PROXY variables  
+DHCP not providing DNS/gateway | Bridged mode: VM has IP but no DNS/gateway | Fix DHCP server configuration to provide DNS and gateway options  
+Firewall is blocking VM traffic | Ping fails but host succeeds | Add firewall rule for VM subnet  
+NAT not working | Host reaches internet but VM doesn't | Check Orka NAT configuration on host  
+Upstream network outage | Host also can't reach internet | Contact network team/ISP  
+VM subnet not routed | Traceroute shows no path | Add routing for VM subnet  
+  
+Most common fix: DNS is not configured in the golden image. Add DNS servers (e.g., 8.8.8.8, 8.8.4.4) to network config in the image template.
+
+### Symptom: VMs Can't Reach Internal Corporate Services
+
+What you see: "Can't access file shares" / "Internal apps unreachable" / "Need VPN"
+
+Quick diagnostic:
+
+  1. Test connecting from the VM to internal services  
+  
+`ping <internal-server-ip> telnet `  
+`<internal-server-ip> <port>`
+
+  2. Check routing: `traceroute <internal-server-ip>`
+
+  3. Test from host (confirm the host has access)  
+  
+`ssh admin@<host-ip> `  
+`ping <internal-server-ip>`
+
+  4. Check if the VM subnet is allowed through company firewalls. Contact your network IT team with the following information:  
+  
+Source: VM or subnet  
+Destination: Internal service IP  
+Ports needed
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Firewall is blocking the VM subnet | Host can reach but VM cannot | Add firewall rule to allow VM subnet  
+VMs are on an isolated VLAN | Traceroute shows no route | Move VMs to correct VLAN or add routing  
+Missing static route | No path to internal network | Add static route on VMs or router  
+Server-side firewall | Server blocks VM IPs | Update server firewall to allow VM subnet  
+ACL blocking traffic | Traffic dropped at switch/router | Update ACLs to permit VM traffic  
+Split-tunnel VPN required | Services only accessible via VPN | Configure VPN on VMs or route through VPN gateway  
+  
+Most common fix: Your firewall rules don't include the VM subnet. Work with your network team to add the appropriate `‘allow’` rules.
+
+### Symptom: Bridged Mode VMs Getting Wrong IPs (192.168.64.x)
+
+What you see: VMs should get corporate IPs but are getting 192.168.64.x private range instead
+
+Important prerequisite: Bridged networking requires a DHCP server on your network that can assign IP addresses to VMs. If you don't have DHCP configured, VMs will fall back to NAT mode with 192.168.64.x addresses.
+
+Quick diagnostic:
+
+  1. Check cluster configuration on the Orka for VDI management node: `cat /path/to/cluster.yml | grep vm_network_mode`. This should show: `vm_network_mode: bridge`.
+
+  2. Check host interface configuration: `cat /path/to/nodes.yml | grep osx_node_vm_network_interface` or check the `hosts` file: `cat /path/to/hosts | grep osx_node_vm_network_interface`
+
+  3. Verify that the interface exists on the host: `ssh admin@<host-ip> ifconfig | grep <interface-name>`
+
+  4. Check DHCP traffic on the interface: `ssh admin@<host-ip> sudo tcpdump -i <interface-name> port 67 and port 68`
+
+  5. Deploy a test VM and watch for DHCP requests/replies
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+`osx_node_vm_network_interface` is not set | Config files missing interface setting | Add to `nodes.yml` or `hosts` file  
+Wrong interface name specified | Interface doesn't exist on `ifconfig` | SSH to host; verify the correct interface name  
+Deployment missing bridge mode flag | Check deploy command history | Redeploy with `--extra-vars "vm_network_mode=bridge"`  
+Configuration not applied to hosts | Config updated but not rerun | Rerun the host configuration Ansible playbook  
+DHCP server is unreachable | `tcpdump` shows no DHCP replies | Verify DHCP server; check interface connection  
+Some VMs are still using NAT | Mixed NAT and bridge VMs | Delete all VMs; redeploy after config change  
+  
+Solution steps:
+
+  1. Delete all VMs (this is required before switching networking modes)  
+  
+`ansible-playbook -i dev/inventory delete.yml \ `  
+`-e "vm_group=<all-groups>" \ `  
+`-e "delete_count=<all>"`
+
+  2. Verify configuration files  
+  
+`cat cluster.yml` should have: `vm_network_mode: bridge`  
+`cat nodes.yml` __should have:__`osx_node_vm_network_interface: <interface>`
+
+  3. Reapply the host configuration: `ansible-playbook -i dev/inventory configure-hosts.yml`
+
+  4. Deploy a test VM:  
+  
+`ansible-playbook -i dev/inventory deploy.yml \ `  
+`-e "vm_group=test" \ `  
+`-e "desired_vms=1"`
+
+  5. Verify that the VM received a corporate IP address: `ansible-playbook -i dev/inventory list.yml | grep test`
+
+
+
+
+Most common fix: `osx_node_vm_network_interface` is not set or was set incorrectly. Verify the interface name, then reapply the configuration.
+
+### Symptom: Intermittent Network Connectivity
+
+What you see: Network works sometimes, drops randomly, packet loss
+
+Quick diagnostic:
+
+  1. Run a continuous ping test from the VM by VNCing into the VM and running: `ping -c 100 8.8.8.8`. Look for the packet loss percentage.
+
+  2. Check for interface errors on the host, and look for errors/drops in output:  
+  
+`ssh admin@<host-ip> `  
+`netstat -i`
+
+  3. Check host network utilization:  
+  
+`ssh admin@<host-ip> `  
+`nload (or: iftop)`
+
+  4. Check if the connectivity issue is specific to one host, or impacts all hosts. Test VMs on different hosts to confirm.
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Network congestion | `nload` shows saturated bandwidth | QoS configuration; add bandwidth  
+Faulty network hardware | Errors show on specific interface | Replace cable/switch; contact MacStadium  
+Host overloaded | High CPU/memory on host | Reduce VMs on host or upgrade host  
+Spanning tree reconvergence | Brief outages periodically | Tune STP or use rapid STP  
+IP address conflicts | Multiple devices with same IP | Check DHCP pool size; fix duplicates  
+Wireless interference (if wireless) | Packet loss at specific times | Use wired connection; change channel  
+  
+Most common fix: Network congestion or host overloaded. Reduce VMs per host or work with network team on quality of service improvements.
+
+## Image Cache and Distribution Issues
+
+### Symptom: Image Pull Extremely Slow
+
+What you see: `pull_image.yml` takes 30+ minutes for reasonably sized images
+
+Quick diagnostic:
+
+  1. Test registry connection and speed:  
+  
+`ssh admin@<host-ip> `  
+`time curl -o /dev/null https://<registry>/test-file`
+
+  2. Check image size by viewing this in your container registry UI
+
+  3. Monitor network utilization during the image pull process  
+  
+`ssh admin@<host-ip> `  
+`nload`  
+
+
+  4. Check if the repository is rate limiting. Look for throttling messages in the image pull output to confirm/deny this.   
+  
+`ansible-playbook -i dev/inventory pull_image.yml \ `  
+`-e "remote_image_name=<image>" \ `  
+`-vvv | grep -i "limit\|throttle"`
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Image is extremely large | Image size >50GB | Optimize image; remove unnecessary files  
+Registry is located in a different datacenter | High latency/slow speeds to registry | Deploy registry in the same datacenter or use mirror  
+Network congestion | Bandwidth saturated during pull | Schedule pulls during off-hours  
+Registry is rate limiting | Pull logs show throttling | Contact registry admin; increase limits  
+Slow registry storage | Registry on slow disks | Upgrade registry storage backend  
+Shared bandwidth limits | Multiple hosts pulling simultaneously | Stagger pulls across hosts  
+  
+Most common fix: Registry is located in a geographically distant datacenter. Deploy the registry closer to Orka hosts or use registry replication.
+
+### Symptom: Image Pull Fails with Authentication Error
+
+What you see: "unauthorized" / "authentication required" / "403 Forbidden"
+
+Quick diagnostic:
+
+  1. Test registry authentication manually: `curl -u <username>:<password> https://<registry>/v2/_catalog`
+
+  2. Verify credentials in the Ansible playbook command, and check that the `registry_username` and `registry_password` are correct
+
+  3. Test pull with credentials:  
+  
+`ansible-playbook -i dev/inventory pull_image.yml \ `  
+`-e "remote_image_name=<image>" \ `  
+`-e "registry_username=<user>" \ `  
+`-e "registry_password=<pass>" \ `  
+`-vvv`  
+
+
+  4. If available, check the registry access logs. Look for any authentication failures.
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Wrong credentials | Manual `curl` fails with the same credentials | Verify username/password; reset if needed  
+Credentials expired | Were working before, now failing | Update credentials; refresh tokens  
+User lacks pull permissions | Auth succeeds but pull denied | Grant pull permissions in registry  
+Registry requires token auth | Password auth doesn't work | Use token-based auth; update playbook params  
+Network blocking auth endpoint | Can't reach registry auth server | Check firewall rules for auth endpoint  
+Insecure registry without flag | TLS/cert verification fails | Add `-e "insecure_pull=true"` if appropriate  
+  
+Most common fix: Credentials are outdated or incorrect. Verify and update your `registry_username` and `registry_password` values.
+
+### Symptom: Image Pull Succeeds, But Deploy Fails
+
+What you see: `pull_image.yml` succeeds but `deploy.yml` can't find image
+
+Quick diagnostic:
+
+  1. Verify the image was pulled successfully:   
+  
+`ansible-playbook -i dev/inventory list.yml`
+
+  2. Try pulling the image again with verbose output:  
+  
+`ansible-playbook -i dev/inventory pull_image.yml \ `  
+`-e "remote_image_name=<image-name>" \ `  
+`-vvv`
+
+  3. Check the image name and tags match exactly
+
+  4. Try pulling the image to a specific host  
+  
+`ansible-playbook -i dev/inventory deploy.yml \ `  
+`-e "vm_group=test" \ `  
+`-e "desired_vms=1" \ `  
+`-e "vm_image=<exact-image-name>" \ `  
+`--limit <specific-host>`
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Image name mismatch | Image pulled with a different name/tag | Use exact same image name in `deploy` command  
+Image tag omitted or incorrect | Image pulled with `:latest` but deploy uses `:v1.0` | Always specify explicit tags; avoid `:latest` in production  
+Image pulled to wrong host | Deploy targeting host without image | Pull image to all hosts using `pull_image.yml` without `--limit`  
+Image tag changed | Image exists, but with different tag(s) | Use correct image tag (including `:latest` if needed)  
+Deployment targeting wrong image | Deploy command references different image path | Verify `vm_image` parameter matches pulled image exactly  
+Image corrupted during pull | Image exists, but is damaged | Delete image; re-pull from container registry  
+Case sensitivity issue | Image names differ only in case | Use exact, case-sensitive image name  
+  
+Most common fix: Image name/tag mismatch between pull and deploy. Ensure an exact match, including image tags.
+
+### Symptom: Can't Push New Image to Registry
+
+What you see: `create_image.yml` fails during push phase
+
+Quick diagnostic:
+
+  1. Run the `create_image.yml` Ansible playbook with verbose output:  
+  
+`ansible-playbook -i dev/inventory create_image.yml \ `  
+`-e "vm_image=<source>" \ `  
+`-e "remote_image_name=<destination>" \ `  
+`-e "registry_username=<user>" \ `  
+`-e "registry_password=<pass>" \ `  
+`-vvv`
+
+  2. Check registry authentication  
+`curl -u <user>:<pass> https://<registry>/v2/_catalog`
+
+  3. Check registry storage space
+
+  4. Verify sufficient host disk space: `ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"`
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Registry authentication failed | Curl returns 401 error | Verify push credentials; check permissions  
+Registry out of storage | Push fails with storage error | Expand registry storage; clean old images  
+Registry quota exceeded | Error mentions quota | Increase quota or clean up images  
+Insufficient host disk space | Can't create/prepare image locally for push | ree space on host; delete unused VMs using `delete.yml` or `vm.yml`  
+Source VM not stopped | Image creation requires stopped VM | Stop source VM before running `create_image.yml` playbook  
+Insecure registry without flag | TLS/cert error | Add `-e "insecure_push=true"` if appropriate  
+Network timeout during push | Push times out | Check network; try again during off-hours  
+Image name violates registry policy | Push rejected by policy | Follow registry naming conventions  
+Insufficient host disk space | Can't create image to push | Free space on host; delete unused VMs using `delete.yml` or `vm.yml`  
+  
+Most common fix: Registry authentication or insufficient storage space. Verify credentials and check registry capacity.
+
+### Symptom: Inconsistent Images Across Hosts
+
+What you see: The same image name on different hosts, but with different behavior/versions
+
+Quick diagnostic:
+
+  1. List VMs on all hosts to check deployment times  
+  
+`ansible-playbook -i dev/inventory list.yml`
+
+  2. Check when VMs were last deployed using `list.yml` to show the VM status
+
+  3. Test pulling an image to verify registry performance  
+  
+`ansible-playbook -i dev/inventory pull_image.yml \ `  
+`-e "remote_image_name=<image-name>" \ `  
+`--limit <single-host>`
+
+  4. Check the registry for image versions  
+  
+Likely causes and solutions:
+
+
+
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Images pulled at different times | Timestamps differ; registry updated between pulls | Re-pull image to all hosts  
+Cached old version | Digest doesn't match registry | Force re-pull with `docker pull --no-cache`  
+Different image tags used | Tags differ across hosts | Standardize on specific tag (not `:latest`)  
+Registry changed without notification | Registry version changed | Coordinate with registry team on updates  
+Partial pull failure | Some hosts have corrupted image | Delete and re-pull on affected hosts  
+  
+#### Solution steps:  
+  
+
+
+  1. Pull a fresh image to all hosts  
+`ansible-playbook -i dev/inventory pull_image.yml \ `  
+`-e "remote_image_name=<image>"`
+
+  2. Verify all hosts completed pull successfully, check playbook output for any errors
+
+  3. Redeploy VMs from the freshly pulled image  
+`ansible-playbook -i dev/inventory deploy.yml \ `  
+`-e "vm_group=<group>" \ `  
+`-e "desired_vms=<count>" \ `  
+`-e "vm_image=<image>"`
+
+
+
+
+Most common fix: Images were pulled at different times, with registry updates between. Re-pull images to all hosts for consistency.
+
+## Performance and Latency Problems
+
+Symptom: Desktop Feels Sluggish for Users
+
+What you see**:** Users report slow response, lag, choppy mouse movement, etc.
+
+Quick diagnostic:
+
+  1. Check host resource utilization  
+`ansible hosts -i dev/inventory -m shell -a "top -l 1 | head -20"`
+
+  2. Count VMs per host  
+`ansible-playbook -i dev/inventory list.yml | grep <host-name> | wc -l`
+
+  3. Check specific VM resources by VNCing into the VM:   
+`open vnc://<vm-ip>:5900 `  
+Open Activity Monitor → Check CPU, Memory, Disk, Network
+
+  4. Test the user's network latency (if remote). Ask the user to ping the VM IP, or use the Citrix HDX Tester tool
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Host overloaded | CPU consistently >85% shown in `top` output | Redistribute VMs to other hosts using delete/redeploy; add more hosts  
+Too many VMs per host | VM count exceeds 2 per host | Move VMs to other hosts; respect `max_vms_per_host` limits  
+VM resource exhaustion | Activity Monitor shows VM maxed CPU/memory | Restart VM using `vm.yml` playbook; consider increasing VM resources in golden image  
+Network latency (remote users) | Ping >100ms or visible packet loss | Tune HDX policies for high latency; user needs better network connection  
+Disk I/O bottleneck | Activity Monitor shows red disk pressure indicator | Check host storage performance with MacStadium; reduce VM count on host  
+Background processes | Spotlight indexing (`mds`) or updates consuming CPU | Wait for processes to complete; configure indexing schedules in golden image  
+Insufficient VM CPU/memory | VM configured with too few resources | Create new golden image with more CPU/memory allocation; redeploy VMs  
+Host storage saturation | Multiple VMs competing for disk I/O | Move VMs to hosts with faster storage; contact MacStadium about storage upgrades  
+  
+Most common fix: Host is overloaded. Redistribute VMs across hosts or add capacity.
+
+### Symptom: Poor Video Quality or Choppy Playback
+
+What you see: Pixelated screen, blurry text, stuttering video
+
+Quick diagnostic:
+
+  1. Check the user's network bandwidth
+
+  2. Ask the user to run: [](https://speedtest.net/)[Speedtest by Ookla - The Global Broadband Speed Test](https://speedtest.net/)
+
+     1. < 5 Mbps indicates the user is experiencing low bandwidth issues
+
+  3. Check the user’s HDX Visual Quality policy by navigating to: Citrix Cloud Console → Policies.
+
+     1. Find the user's policy in → HDX Settings → Visual Quality
+
+  4. Test bandwidth/performance with Citrix HDX Monitor (if available), as this shows real-time HDX metrics
+
+  5. Check the user’s connection type (Are they connecting remotely/via VPN? On wifi? Wired?)
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Low bandwidth connection | User speed test shows <5 Mbps download | Adjust HDX Visual Quality policy to "Low" or "Medium" for user's Delivery Group  
+Visual Quality policy too low | Policy shows "Medium" or "Low" setting | Increase to "High" or "Build to Lossless" for users with good connections  
+High latency connection | Ping shows >150ms round-trip time | Enable HDX Adaptive Transport (Framehawk) in Citrix policies  
+VPN throttling bandwidth | User on VPN with constrained bandwidth | Contact network team about VPN QoS settings; increase VPN bandwidth allocation  
+WiFi interference/weak signal | User on WiFi with poor signal strength | Switch user to wired Ethernet connection; improve WiFi signal; use 5GHz band  
+Application not HDX-optimized | Specific app shows poor graphics | Check for HDX optimization packs for that application; use app remoting instead  
+Host CPU overloaded | Multiple users experiencing poor quality | Reduce VMs per host; add more hosts to distribute load  
+User's client device underpowered | Old/slow computer struggling with HDX | Update Citrix Workspace app; consider thin client hardware upgrade  
+  
+Most common fix: HDX Visual Quality policy too conservative. Increase quality for users with good connections.
+
+### Symptom: Slow Login Times (>2 Minutes)
+
+What you see: Long wait from launching desktop to usable desktop
+
+Quick diagnostic:
+
+  1. Measure login time components
+
+     1. Time for desktop to appear in Workspace: Citrix delivery time
+
+     2. Time from click to login prompt: VM boot time (if stopped)
+
+     3. Time from login to desktop: User profile load time
+
+  2. Check if VM had to boot `ansible-playbook -i dev/inventory list.yml | grep <vm-name>`
+
+     1. If VM was stopped, boot time is included
+
+  3. Check user profile size (if using roaming profiles)
+
+     1. VNC to VM after user login: `du -sh /Users/<username>`
+
+
+
+
+4\. Monitor VM resources during login: Watch Activity Monitor during the login process
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+VM boot time included | VM was stopped and had to start | Keep VMs running 24/7; deploy adequate pool size to avoid stopping VMs  
+Large roaming profile | User's home directory >10GB in size | Implement folder redirection; enable profile cleanup policies; limit profile size  
+Login scripts timing out | Console shows script errors or delays during login | Fix or remove problematic login scripts; optimize script performance  
+Slow network share access | Profile stored on congested network storage | Optimize network storage performance; use faster storage for profiles  
+Spotlight indexing on first login | First login after VM creation triggers indexing | Allow indexing to complete once; optimize indexing settings in golden image  
+Too many login items | Many applications launching at login | Remove unnecessary startup items; configure minimal login items in golden image  
+GPO processing delay | Long wait at "Applying policies" screen | Optimize Group Policy Objects; reduce number of policies; use loopback processing  
+Profile corruption | Login hangs or fails repeatedly | Delete local profile; force fresh profile download from server  
+  
+Most common fix: Large roaming profiles. Implement folder redirection and profile cleanup policies.
+
+### Symptom: Application Launches Are Slow
+
+What you see: Apps take 30+ seconds to launch after clicking
+
+Quick diagnostic:
+
+  1. Test from within the VM directly
+
+     1. VNC to the VM
+
+     2. Launch the app; and time the launch
+
+  2. Check if the app is on network share vs. local storage
+
+     1. Applications on network drives are slower
+
+  3. Check VM disk I/O
+
+     1. Activity Monitor → Disk tab during application launch
+
+  4. Check available memory
+
+     1. Activity Monitor → Memory tab
+
+     2. Look for increased memory pressure
+
+
+
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Apps installed on network share | App path shows network/UNC location | Install applications locally in golden image; update image; redeploy VMs  
+Insufficient memory | Memory pressure high; heavy swap usage shown | Create golden image with more RAM allocation; redeploy VMs for power users  
+Slow disk I/O | Disk wait times high in Activity Monitor | Check host storage performance with MacStadium; redistribute VMs  
+App requires more resources | Large app (Xcode, video editing) on small VM | Create high-spec golden image variant; deploy separate VM group for power users  
+Antivirus scanning on launch | AV process active during app startup | Exclude app folders from real-time scanning; configure AV exceptions  
+App not optimized for virtualization | Native app expects physical hardware resources | Use published applications instead of full desktop; optimize app settings  
+First launch initialization | App creating caches/configs on first use | Subsequent launches will be faster; pre-configure apps in golden image  
+Network dependency | App verifying license or downloading data on launch | Ensure good network connectivity; pre-cache data if possible  
+  
+Most common fix: Applications installed on network shares. Pre-install in golden image for local execution.
+
+### Symptom: High CPU Usage Even When Idle
+
+What you see: VM consuming 50%+ CPU with no user activity
+
+Quick diagnostic:
+
+  1. Identify the process consuming CPU by VNCing into the VM, then navigate to Activity Monitor → Sort by %CPU
+
+  2. Check for runaway processes
+
+     1. Look for: Spotlight indexing (mds), kernel_task, unexpected processes
+
+  3. Check for malware (unlikely but possible)
+
+     1. Run security scan if suspicious
+
+  4. Monitor over time: Is the CPU spike temporary or sustained?
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Spotlight indexing | `mds` or `mdworker` processes using high CPU | Wait 30-60 minutes for completion; configure indexing exclusions in golden image  
+Background macOS updates | `softwareupdated` or related processes active | Allow updates to complete; schedule updates during maintenance windows  
+Runaway application process | Specific app/process stuck consuming CPU continuously | Kill process via Activity Monitor; investigate app issue; report bug  
+Malware or cryptominer | Unknown suspicious process using CPU | Run malware scan; rebuild VM from clean golden image if infected  
+System maintenance tasks | Normal macOS background maintenance (periodic) | Wait for completion (typically 30-60 min); occurs daily at specific times  
+GPU acceleration disabled | Software rendering using CPU instead of GPU | Enable GPU passthrough if available (M4 hosts); verify GPU settings in VM  
+Memory pressure causing swapping | High swap activity consuming CPU | Increase VM memory allocation in golden image; reduce memory-intensive apps  
+Browser with many tabs/extensions | Browser process consuming CPU | Close unnecessary tabs; disable resource-heavy extensions; restart browser  
+  
+Most common fix: Spotlight indexing or macOS maintenance tasks. Usually resolves itself within an hour.
+
+## Authentication and Access Control
+
+### Symptom: User Can't Log Into Desktop (Credentials Rejected)
+
+What you see: The user enters their credentials, but gets an "Invalid username or password" error
+
+Quick diagnostic:
+
+  1. Verify the user exists in your identity provider by checking Active Directory or Azure AD
+
+  2. Test user login capabilities with a known-good account
+
+     1. Use an admin account or test account to attempt logging in
+
+  3. Check if the issue is specific to one VM or is impacting all VMs
+
+     1. Try launching a different desktop in the pool
+
+  4. Check VDA domain binding (if using AD)
+
+     1. VNC into the VM: System Preferences → Citrix VDA → Check domain binding status
+
+
+
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+User account disabled in AD/IdP | Check Active Directory or identity provider status | Re-enable user account; verify account is active  
+Password expired | User confirms password expired or needs change | Have user reset password through normal corporate password reset process  
+VM not bound to domain | VDA shows "Not bound" or incorrect domain | Rebuild golden image with proper domain binding; verify domain credentials  
+Time sync issue | VM time differs by >5 minutes from domain controller | Configure NTP in golden image; manually sync time; verify host time correct  
+Domain controller unreachable | VM can't ping or connect to DC | Check network connectivity; verify DNS resolution for domain; check firewall  
+Cached credentials expired | Works for some users but not others | Clear Keychain cached credentials; force fresh authentication  
+Wrong identity provider | VDA bound to wrong domain or tenant | Reconfigure VDA with correct domain/tenant in golden image; redeploy VMs  
+  
+**Most common fix:** The user’s password is expired. Have the user reset their password through your normal corporate process.
+
+### Symptom: User Can Log In But Has the Wrong Permissions
+
+What you see: User is authenticated, but they can't access files/apps they should have access to
+
+Quick diagnostic:
+
+  1. Check the user's group memberships
+
+     1. VNC into the VM:
+
+     2. In the Terminal, enter: `groups <username>` or `dscl . -read /Users/<username> GroupMembership`
+
+  2. Verify user permissions on restricted resources
+
+     1. Check file/folder permissions
+
+  3. Test with a known-good user from the same group
+
+     1. Do other users have the correct group access?
+
+  4. Check GPO application (if using AD)
+
+     1. In the Terminal, enter: `sudo gpupdate --user`
+
+
+
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+User not in required AD groups | `groups` command doesn't show expected group | Add user to appropriate Active Directory security groups  
+GPO not applied correctly | `gpupdate` shows no policies or errors | Force GPO refresh with `sudo gpupdate --force --user`; verify DC connectivity  
+Local file permissions incorrect | File ACLs don't include user or group | Fix file/folder permissions; verify inheritance settings  
+Profile not loaded correctly | User profile appears incomplete or corrupted | Delete local profile cache; force fresh profile download on next login  
+Network share mapping failed | Expected drives not appearing | Verify network connectivity; manually map shares to test; check GPO mappings  
+Cached credentials out of sync | Using old cached authentication | Clear macOS Keychain; force re-authentication with current credentials  
+Group Policy precedence issue | Conflicting GPOs applied in wrong order | Review GPO precedence; adjust GPO link order; use block inheritance carefully  
+Domain trust relationship issue | Cross-domain permissions not working | Verify domain trusts are functional; contact domain administrators  
+  
+Most common fix: The user is not in the required AD group(s). Add them to the appropriate group(s), and then force a GPO refresh.
+
+### Symptom: Single Sign-On (SSO) Not Working
+
+What you see: Users are prompted for their SSO credentials despite being logged into iCloud/corporate network
+
+Quick diagnostic:
+
+  1. Check Citrix Workspace SSO configuration
+
+     1. Ask the user to log into Citrix Workspace → Preferences → and verify their SSO settings
+
+  2. Verify Citrix Gateway/SSO configuration is correct
+
+     1. If using Citrix Gateway: Check pass-through authentication settings
+
+  3. Test SSO login capability with manual credentials
+
+     1. Does SSO login work if the user enters their credentials manually?
+
+  4. Check the user's SSO/company omain login
+
+     1. Are they logged in with the correct SSO/company domain account?
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+SSO not enabled in Citrix Workspace | Workspace preferences show SSO disabled | Enable SSO in Citrix Workspace settings under ‘Account preferences’  
+Gateway pass-through not configured | Citrix Gateway shows no SSO/pass-through config | Configure pass-through authentication on Citrix Gateway; enable domain pass-through  
+User on non-domain computer | Computer not joined to corporate domain | Join computer to domain or use manual credential entry  
+Certificate authentication issue | SSO uses cert auth; certificate is invalid/expired | Renew user certificate; reinstall certificate; verify cert trust chain  
+Wrong authentication method | SAML/OAuth/SSO login configured incorrectly | Verify auth method matches identity provider; check Citrix Cloud auth settings  
+Browser security settings | Browser blocking credential passing | Adjust browser security settings; add Citrix URLs to trusted sites  
+VPN interfering with SSO | VPN tunnel disrupting authentication flow | Configure split-tunnel VPN; ensure SSO endpoints reachable  
+  
+Most common fix: SSO is not enabled in Citrix Workspace. Enable SSO in the user's Workspace preferences.
+
+### Symptom: Can't Access Citrix Cloud Admin Console
+
+What you see**:** Admins can't log into Citrix Cloud Console to manage environment(s)
+
+Quick diagnostic:
+
+  1. Try using a different browser
+
+     1. Some browsers cache authentication differently
+
+
+
+
+2\. Clear browser cookies and cache, then try logging in again
+
+3\. Verify your admin account is not locked, check with Citrix support or another admin
+
+4\. Check Citrix Cloud status: [https://status.cloud.com](https://status.cloud.com/ "https://status.cloud.com")
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Browser cache/cookies issue | Login works in incognito/private mode | Clear browser cookies and cache; restart browser; try again  
+MFA/2FA device failure | Error occurs during two-factor authentication step | Re-register MFA device in account settings; use backup codes if available  
+Account locked after failed attempts | Multiple failed login attempts triggered lock | Contact Citrix support to unlock; wait for auto-unlock period (usually 30 min)  
+Citrix Cloud service outage | Status page shows service issues | Check [status.cloud.com](http://status.cloud.com/ "http://status.cloud.com"); wait for Citrix to resolve; monitor status updates  
+Network blocking Citrix Cloud | Can't reach [cloud.com](http://cloud.com/ "http://cloud.com") domains | Check firewall/proxy; verify outbound HTTPS allowed; try different network  
+Browser version incompatible | Using old/unsupported browser version | Update to current Chrome, Firefox, Edge, or Safari version  
+Admin permissions revoked | Account no longer has admin role | Contact Citrix Cloud organization admin; verify role assignments  
+Session timeout | Logged out due to inactivity | Log back in; adjust session timeout settings if available  
+  
+Most common fix: Browser cache issue. Clear your cookies and cache, or try using incognito/private mode.
+
+## Ansible Playbook Errors
+
+### Symptom: Playbook Fails with "Host unreachable"
+
+What you see: Playbook errors: "Failed to connect to the host via ssh" / "Host is unreachable"
+
+Quick diagnostic:
+
+  1. Test basic connectivity `ping <host-ip>`
+
+  2. Test SSH manually `ssh admin@<host-ip>`
+
+  3. Check inventory file `cat dev/inventory`
+
+     1. Verify host IP addresses are correct
+
+
+
+
+4\. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Host powered off or unreachable | Ping test fails completely | Power on host via MacStadium portal; contact MacStadium support  
+Wrong IP address in inventory | IP doesn't match actual host address | Update `dev/inventory` file with correct host IP addresses  
+SSH service not running on host | Ping works but SSH connection refused/timeout | Restart SSH service on host; contact MacStadium support  
+Firewall blocking SSH from control node | SSH works from some locations but not control node | Check firewall rules; allow SSH (port 22) from Ansible control node IP  
+SSH key not in authorized_keys | SSH prompts for password instead of using key | Add Ansible control node's public SSH key to host's `~/.ssh/authorized_keys`  
+Wrong username configured | Using incorrect `ansible_user` value | Verify `ansible_user=admin` (or correct user) in inventory `[all:vars]`  
+Network routing issue | Can't reach host network from control node | Verify routing; check if VPN required; test from different network location  
+Host SSH configuration changed | SSH settings preventing key-based auth | Verify host SSH config allows public key authentication  
+  
+Most common fix: SSH key is not in `authorized_keys` on host. Add the Ansible control node's public key to the host.
+
+### Symptom: Playbook Fails with "Permission denied"
+
+What you see: Playbook errors with permission/sudo errors during execution
+
+Quick diagnostic:
+
+  1. Test basic connectivity `ping <host-ip>`
+
+  2. Test SSH manually `ssh admin@<host-ip>`
+
+  3. Check inventory file `cat dev/inventory`
+
+     1. Verify host IP addresses are correct
+
+
+
+
+4\. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Host powered off or unreachable | Ping test fails completely | Power on host via MacStadium portal; contact MacStadium support  
+Wrong IP address in inventory | IP doesn't match actual host address | Update `dev/inventory` file with correct host IP addresses  
+SSH service not running on host | Ping works but SSH connection refused/timeout | Restart SSH service on host; contact MacStadium support  
+Firewall blocking SSH from control node | SSH works from some locations but not control node | Check firewall rules; allow SSH (port 22) from Ansible control node IP  
+SSH key not in authorized_keys | SSH prompts for password instead of using key | Add Ansible control node's public SSH key to host's `~/.ssh/authorized_keys`  
+Wrong username configured | Using incorrect `ansible_user` value | Verify `ansible_user=admin` (or correct user) in inventory `[all:vars]`  
+Network routing issue | Can't reach host network from control node | Verify routing; check if VPN required; test from different network location  
+Host SSH configuration changed | SSH settings preventing key-based auth | Verify host SSH config allows public key authentication  
+  
+Most common fix: SSH key is not in `authorized_keys` on host. Add the Ansible control node's public key to the host.
+
+### Symptom: Playbook Fails with "Permission denied"
+
+What you see: Playbook errors with permission/sudo errors during execution
+
+Quick diagnostic:
+
+  1. Test sudo access manually   
+`ssh admin@<host-ip> `  
+`sudo ls /var/orka`
+
+  2. Check Ansible inventory   
+`sudo settings cat dev/inventory | grep ansible_become`
+
+  3. Run the playbook with verbose output `ansible-playbook -i dev/inventory <playbook> -vvv`
+
+  4. 4\. Check if a specific task is failing, and/or look at which task in the playbook fails
+
+
+
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+`ansible_become` is not set | Inventory missing `ansible_become=yes` | Add `ansible_become=yes` to `[all:vars]` section in inventory  
+User lacks sudo permissions | Manual `sudo` command prompts for password | Add Ansible user to sudoers; configure passwordless sudo for admin user  
+Sudo password is required | Playbook needs `become_password` but not provided | Add `-K` flag when running playbook to prompt for sudo password  
+File permissions are too restrictive | Specific files/dirs not readable/writable | Fix file permissions on host; verify ownership is correct  
+SELinux/security policy blocking | macOS security policies preventing operation | Adjust security settings; may need to disable SIP temporarily for some operations  
+Wrong sudo path or configuration | Sudo command not found or misconfigured | Verify sudo is installed and in PATH; check `/etc/sudoers` configuration  
+Ansible connection user mismatch | Connecting as one user, trying to become another | Verify `ansible_user` matches expected user account on hosts  
+  
+Most common fix: `ansible_become=yes` not set in inventory. Add to `[all:vars]` section.
+
+### Symptom: Playbook Times Out
+
+What you see: Your Ansible playbook runs, but it times out on specific tasks without completing
+
+Quick diagnostic:
+
+  1. Run with verbose output to see where the playbook hangs: `ansible-playbook -i dev/inventory <playbook> -vvv`
+
+  2. Test the specific command manually by SSHing to the host and running the command that's timing out
+
+  3. Check if the task requires a long time to complete
+
+     1. Note that image pulls and VM deployments can take more time than initially anticipated
+
+
+
+
+4\. Monitor host resources during tasks by running:   
+`ssh admin@<host-ip> `  
+`top`
+
+Likely causes and solutions:
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Task legitimately takes a long time | Image pull or VM deployment in progress | Be patient; increase the task timeout in your playbook if needed; and monitor progress with `-vv`  
+Host is overloaded and responding slowly | High CPU/memory usage on host during task | Reduce load on host; stop some VMs; retry during low-usage period  
+Network timeout during download | Downloading a large image from a slow source | Improve network path to registry; use closer registry; retry during off-hours  
+Task(s) hanging indefinitely | No progress visible for an extended period of time | Cancel with Ctrl+C; SSH to host to debug; check for stuck processes  
+Insufficient async timeout | Default timeout is too short for the operation | Increase `async` timeout parameter in playbook task definition  
+Host became unresponsive | Host not responding to any commands | SSH to host to check status; may need host reboot; contact MacStadium  
+Deadlock or resource contention | Task waiting for resource held by another process | Identify and kill blocking processes; restart Orka Engine service  
+Network connection is unstable | Intermittent connectivity during long operations | Improve network stability; use a more reliable connection; and/or retry the operation  
+  
+Most common fix: Legitimate long-running task (such as an image pull). Increase the `async` timeout or be patient.
+
+### Symptom: Playbook Variables Not Being Applied
+
+What you see: Playbook runs but doesn't use the variables you specified with `-e`
+
+Quick diagnostic:
+
+  1. Check command syntax
+
+     1. Verify `-e` flags are formatted correctly
+
+
+
+
+2\. Run with verbose output:   
+`ansible-playbook -i dev/inventory <playbook> \ `  
+`-e "var1=value1" \ `  
+`-e "var2=value2" \ `  
+`-vv`
+
+3\. Check playbook for variable names, and ensure they match exactly (variable names are case-sensitive)   
+4\. Check for hard-coded values in the playbook, these might override other variables
+
+Likely causes and solutions:
+
+**Cause** |  **How to identify** |  **Solution**  
+---|---|---  
+Variable name typo or case mismatch | Names don't match exactly (case-sensitive) | Use the exact variable name from your playbook’s documentation; check case  
+Variable already set with precedence | Playbook has default; your var has lower precedence | Extra vars (`-e`) should override; verify syntax is correct  
+Wrong variable data type | Passing string where an integer expected or vice versa | Check playbook documentation for expected data type; convert if needed  
+Variable not used in playbook | Playbook doesn't reference that variable | Verify playbook supports variable; check playbook source code or docs  
+Syntax error in `-e` flag | Command line parsing failed silently | Use proper quotes: `-e "vm_group=test"` not `-e vm_group=test`  
+Multiple `-e` flags parsed incorrectly | Only first `-e` being applied | Ensure each `-e` flag is separate and properly formatted  
+Variable scope issue | Variable defined in wrong `group_vars` location | Check variable is in correct inventory group or `all` group  
+Special characters not escaped | Variable value contains spaces or special chars | Quote values properly: `-e "vm_name=test vm"` needs quotes  
+  
+Most common fix: Variable name typo. Check playbook documentation for exact variable names (these are case-sensitive).
+
+### Symptom: Playbook Fails Partway Through
+
+What you see: The playbook starts successfully, but fails on a specific task
+
+Quick diagnostic:
+
+  1. Run the playbook with verbose output to see the exact error: a`nsible-playbook -i dev/inventory <playbook> -vvv`
+
+  2. Check the specific task that failed, reviewing the error logs carefully
+
+  3. Test the failing task’s command manually by SSHing into the host and running the command
+
+  4. Check if the task is stuck in a partially successful state and needs cleanup, or needs to be re-run
+
+
+
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Resource exhaustion mid-task | Host ran out of disk space or memory during operation | Free resources on the host; delete unused VMs; retry playbook from the beginning  
+Network interruption | Connection to host lost during task execution | Verify network stability; check for network issues; rerun playbook  
+Task dependency not met | Previous task didn't fully complete before next started | Review task dependencies; add explicit wait/pause between tasks if needed  
+Invalid parameter value | Task received bad input causing failure | Verify all parameter values are valid; check for typos in variables  
+Race condition | Task timing-sensitive; failed due to timing issue | Add explicit `pause` or `wait_for` tasks between dependent operations  
+External service unavailable | Registry, DNS, or API temporarily unavailable | Check external service status; retry when service available; implement retries  
+Disk write failure | File system full or read-only during write | Check disk space with `df -h`; verify filesystem not read-only  
+Concurrent playbook execution | Another playbook is modifying the same resources | Ensure only one playbook runs at a time; implement locking if needed  
+  
+Most common fix: Network or resource interruption. Verify connectivity and available resources, then re-run the playbook.
+
+### Symptom: Playbook Says "Changed" But Nothing Actually Changed
+
+What you see: Playbook reports changes, but its state appears identical
+
+Quick diagnostic:
+
+  1. Check what the playbook claims to change, look at the task output while the playbook is running
+
+  2. Verify the actual state on the Orka for VDI host `ssh admin@<host-ip>` and check if the claimed changes actually exist
+
+  3. Run the playbook in check mode: `ansible-playbook -i dev/inventory <playbook> --check`
+
+  4. Check for idempotency issues, and run the playbook twice. The task status should display "ok," the second time, and not "changed".
+
+
+
+
+  
+
+
+**Cause** |  **How to verify** |  **Solution**  
+---|---|---  
+Playbook not idempotent | Playbook status always reports "changed" | Fix playbook to properly check state  
+Task reporting incorrectly | Code bug in the playbook | Review/fix task logic  
+Cached state outdated | Playbook is using old state info | Force refresh of facts  
+External state changed | Something else modified playbook state | Determine what else is changing state  
+Task has side effects | Change occurs but not where expected | Review full task behavior  
+  
+Most common fix: The playbook is not properly checking the existing state before making changes (idempotency issue).
+
+## Escalation Quick Reference
+
+When to escalate:
+
+**Issue Pattern** |  **Escalate To** |  **Contact** |  **SLA**  
+---|---|---|---  
+Single user problem | Handle yourself | N/A | Immediate  
+5-10 users affected | Infrastructure team lead | Internal | 30+ minutes  
+10+ users affected | Infrastructure manager | Internal | Immediate  
+Host hardware failure | MacStadium support | support@macstadium.com | 1 business day  
+Orka Engine issues | MacStadium support | support@macstadium.com | 1 business day  
+Network infrastructure | Network team | Internal | Varies  
+Citrix Cloud outage | Citrix support | support@citrix.com | Varies by support tier  
+VDA failures (widespread) | Citrix support | support@citrix.com | Varies by support tier  
+Storage/registry down | Storage team | Internal | Varies

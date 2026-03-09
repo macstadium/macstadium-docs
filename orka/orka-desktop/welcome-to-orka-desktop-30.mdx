@@ -1,0 +1,295 @@
+---
+title: "Welcome to Orka Desktop 3.0"
+zendesk_id: 28396626048667
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28396626048667-Welcome-to-Orka-Desktop-3-0"
+section: "Orka Desktop"
+category: "Orka"
+created_at: "2024-08-19T14:38:22Z"
+updated_at: "2025-09-26T16:14:24Z"
+promoted: false
+labels: ["desktop", "orka"]
+suggested_new_path: "/orka/orka-desktop/welcome-to-orka-desktop-30"
+---
+
+# Orka Desktop by MacStadium
+
+**Orka Desktop** is a free, no obligation, virtualization tool, which is designed to be deployed on individual macOS workstations. These workstations might be a local Macbook, a hosted Mac mini or Studio by MacStadium, AWS, or even an individual On-Prem solution. Once deployed, **Orka Desktop** allows users to create a seamless workflow for running the same image on any device. An image can be built and tested locally, then uploaded to the cloud. This is much easier than needing bespoke technologies, and individual processes to test, share, and configure virtualized images.
+
+**Orka Desktop** integrates with other cloud based, licensed MacStadium products, like **Orka**. For example, an image built and tested with **Orka Desktop** can be uploaded to a Container Repository that is shared with an Orka cloud instance, using this integrated tool. The ability to publish local images to the Orka cloud means users can develop locally and deploy globally - offering flexibility, scalability, and an on-ramp to use MacStadium products more effectively.
+
+> 🗒️ **NOTE**
+> 
+> Users can publish any image to a container registry, for example, GitHub Packages or DockerHub and then pull it into the **Orka Cluster**.
+
+> 📘 **Downloading Orka Desktop**
+> 
+> Orka Desktop is available from the following locations:
+> 
+> *MacStadium website: <https://www.macstadium.com/>
+> 
+> *MacStadium GitHib repo: <https://github.com/macstadium/orka-desktop/releases>
+> 
+> *Brew package manager: Coming Soon
+
+> 📘 **Orka Desktop Requirements**
+> 
+> Apple M1 with 8GB RAM, and 50GB disk space
+> 
+> macOS X 14.0+ (Sonoma)
+> 
+> macOS X 13.0+ (Ventura)
+
+> 📘 **Registry Requirements**
+> 
+>   1. Pull - Clients are able to pull from the registry
+>   2. Push - Clients are able to push to the registry
+>   3. Content Discovery - Clients are able to list or otherwise query the content stored in the registry
+>   4. Content Management - Clients are able to control the full life-cycle of the content stored in the registry
+> 
+
+
+All registries conforming to this specification must support all APIs in the Pull category.
+
+Registries should also support the Push, Content Discovery, and Content Management categories. A registry claiming conformance with one of these specification categories must implement all APIs in the claimed category.
+
+## OCI Image Overview
+
+The Open Container Initiative (OCI) is an open governance structure for the express purpose of creating open industry standards around container formats and runtimes.
+
+Users can deploy a VM using a compatible image from a private or public registry, as well as store those images in a user registry.
+
+# Installation and Set Up in 3 Easy Steps
+
+**Orka Desktop** has a clear and intuitive GUI, which makes it easy transition to using Orka in the cloud. It provides information about your system, available images, and VMs.
+
+1\. Download Orka Desktop. Move to your Applications folder. Run Orka Desktop.
+
+2\. Create a New Virtual Machine (VM). There are two options for creating a new VM:
+
+  * **Clean Install** , where the image is created from an existing IPSW file.
+  * **Pull Image** , where the image is pulled from an Image Repository (based on an existing OCI image that is available via a Container Registry).
+
+
+
+3\. Use the VM.
+
+> 🗒️ **NOTES**
+> 
+>   * IPSW (Apple Software/Firmware) is a file format used in macOS firmware for devices equipped with Apple silicon.
+>   * There is also the option to pull the latest IPSW directly from Apple’s servers, which is detailed in the Other IPSW Options section.
+> 
+
+
+## Downloading Orka Desktop
+
+  * MacStadium website: https://www.macstadium.com/
+  * MacStadium GitHib repo: https://github.com/macstadium/orka-desktop/releases
+  * Brew package manager: brew install orka-desktop
+
+![06c54b4-image.png](https://support.macstadium.com/hc/article_attachments/28396594761627)  
+
+
+_Orka Desktop_
+
+![e0fa01e-image.png](https://support.macstadium.com/hc/article_attachments/28396625934875)  
+
+
+_Confirmation Box_
+
+## Creating a New Virtual Machine (Clean Install via IPSW Files)
+
+  1. Download Orka Desktop.
+  2. Open the Orka Desktop tool and the _System Information_ screen displays.
+  3. Click + **Create New VM  
+**![6470f4a-image.png](https://support.macstadium.com/hc/article_attachments/28396625940379)
+  4. When the new Virtual Machine dialog box opens, select **Clean Install**(based on an IPSW); then use the **Name** field to name the VM.  
+![a37f0ea-image.png](https://support.macstadium.com/hc/article_attachments/28396594767899)  
+
+
+🗒️ **NOTES**
+
+     * In this example, the new VM is called New Name Here, and at the same time, that name appears on the left-hand side of the screen, under the list of available Virtual Machines.
+     * The VM is now in a pending installation state.
+  5. If a user wants to select an existing IPSW file, then select **Other** from the dropdown menu.  
+![af3c9aa-image \(1\).png](https://support.macstadium.com/hc/article_attachments/28396594771611)  
+
+
+_Other (to select from an existing IPSW file)_  
+🗒️ **NOTE  
+** Selecting the **Other** dropdown opens a folder, which the user can pick the existing IPSW file to install.
+
+  6. If a user does not have a local IPSW file to use for the new VM, then select Download Latest, to get the latest files from Apple.  
+![fa81c57-image.png](https://support.macstadium.com/hc/article_attachments/28396625948571)  
+__Download Latest (to get the latest files from Apple)  
+**NOTE** : Selecting the Download Latest dropdown opens a confirmation box.__
+  7. Use the stepped sliders to manually adjust the number of CPUs, and the amount of Memory and Storage that you want to allocate to the VM.  
+![7f515ec-image.png](https://support.macstadium.com/hc/article_attachments/28396594776475)  
+
+
+_Confirmation Box_
+
+  8. Use the Display Resolution drop own to set the resolution of the screen when running Console into the image.
+  9. Use the Image Data Location to select the location of the saved files.![203a10d-image.png](https://support.macstadium.com/hc/article_attachments/28396594778779)  
+_Image Data Location_
+  10. Click Install and the progress bar displays the install progress.
+
+
+
+> 🗒️ **NOTE**
+> 
+> When the install completes, there is a new VM available on the Orka Desktop, which can be used to Start, Pause, Resume, Stop, or Console into.
+
+## Creating a New Virtual Machine (Pull from OCI Image)
+
+  1. Download Orka Desktop.
+  2. Open the Orka Desktop tool and the _System Information_ screen displays.
+  3. Click + **Create New VM**![6470f4a-image \(1\).png](https://support.macstadium.com/hc/article_attachments/28396594781339)
+  4. When the new Virtual Machine dialog box opens, select **Pull from an Image** ; then use the **Name** field to name the VM.  
+![6ccd395-image.png](https://support.macstadium.com/hc/article_attachments/28396594783131)_Pull from an Image  
+_**NOTES**
+     * In this example, the new VM is called New VM Pulled From Image, and at the same time, that name appears on the left-hand side of the screen, under the list of available Virtual Machines.
+     * The VM is now in a pending installation state.
+  5. Complete all fields with the required information.
+  6. Use the stepped sliders to manually adjust the number of CPUs, and the amount of Memory and Storage that you want to allocate to the VM.
+  7. Use the Display Resolution drop own to set the resolution of the screen when running Console into the image.  
+![7483782-image \(1\).png](https://support.macstadium.com/hc/article_attachments/28396594784923)
+  8. Click **Pull**.
+
+
+
+![c58836d-image.png](https://support.macstadium.com/hc/article_attachments/28396594788763)
+
+Configuration Warnings
+
+When adding CPU Count and Memory Size, the Orka Desktop application displays a warning message if the recommended sized are exceeded.
+
+![c58de83-image.png](https://support.macstadium.com/hc/article_attachments/28396625976603)  
+
+
+_CPU Count Warning_
+
+![4d37221-image.png](https://support.macstadium.com/hc/article_attachments/28396625982107)  
+
+
+_Memory Size Warning_
+
+## Starting the VM
+
+  1. Click on an existing VM on the left-hand side. In this example, the VM is Orka3.
+  2. Click Start.  
+![9c955db-image.png](https://support.macstadium.com/hc/article_attachments/28396625987099)
+  3. A separate window opens and the VM starts.
+
+![2d43728-image.png](https://support.macstadium.com/hc/article_attachments/28396625995675)  
+
+
+_VM Starting_
+
+**NOTE** : Starting a VM for the first time may take several minutes.
+
+> 🗒️ **NOTES**
+> 
+>   * This VM might be configured to run a different version of macOS from your host, so users can test the same software in two different environments. Note that you can only use OSs in VMs that are more recent than the OS running on the host.
+>   * Users may install Xcode, then use it as a build machine for iOS apps.
+>   * IT Admins can test Mobile Device Management (MDM) profiles using VMs, which can be easily done without maintaining several Mac mini machines. MDM profile testing can be performed on a VM that was created by Orka Desktop.
+>   * Apple has limited the ability to sign into iCloud with an Apple ID within a VM.
+> 
+
+
+## Stop a VM
+
+If a VM is running, then click the Start button to Stop it.
+
+![349e11d-image.png](https://support.macstadium.com/hc/article_attachments/28396625998107)
+
+## Console into a VM
+
+Think of this functionality as a graphical console, which opens the VM display in a UI screen. In other words, it opens a new screen for interactions with guest OS.
+
+![d78fba7-image.png](https://support.macstadium.com/hc/article_attachments/28396626002459)
+
+## Resume VM
+
+Resumes a VM that was paused.
+
+![dcf7540-image.png](https://support.macstadium.com/hc/article_attachments/28396594812955)
+
+## Push to OCI Registry
+
+Users can push the image to an OCI registry. Push allows users to push an image, so another user can download and use that image. This is helpful for sharing an image across a team; for example, an IT Admin can create and configure an image and push it to a shared location, then team members can access that image and begin using it. Developers may also push an image to a shared registry for testing purposes.
+
+  1. Select an existing VM.
+  2. Click **Push to OCI Registry**.![3f4a5dc-image.png](https://support.macstadium.com/hc/article_attachments/28396594814875)
+  3. Complete the required fields and click **Push**.![625b67f-image.png](https://support.macstadium.com/hc/article_attachments/28396594818203)
+  4. A progress bar appears while the image is being pushed.
+
+![7878120-image.png](https://support.macstadium.com/hc/article_attachments/28396626017435)  
+
+
+_Progress Bar_
+
+![3b8e5b4-image.png](https://support.macstadium.com/hc/article_attachments/28396626019739)  
+
+
+_Push Success Message_
+
+## Managing the VM
+
+Right click on an existing VM to display a dropdown menu.
+
+![2d4fe07-image.png](https://support.macstadium.com/hc/article_attachments/28396626023323)  
+
+
+_Right Click on VM_
+
+  * **Duplicate** = Duplicate can be used for upgrade testing. Use Duplicate to create a copy of the existing VM, then test the upgrade to a new VM.
+  * **Push to OCI Registry** = Users can push to an OCI registry.
+  * **Delete** = Delete is used to delete the VM from Orka Desktop.
+
+
+
+## Log Files
+
+The following information is found in the log file: directory, image directory, and default VM settings.
+
+The log file has four sections, with the following information:
+
+  * Node Info (Contains system details, for example, chip, cores, memory, OS version, and so on).
+  * Image Info (Lists images, creates new image, deploys new VM based on an image).
+  * VM Details (For each running VM, there are actions like, Open Screenshare, Open SSH, Stop, Save, Save As, View Log actions).
+  * Logs (Running logs, and any other useful information for debugging.)
+
+![e648a9e-image.png](https://support.macstadium.com/hc/article_attachments/28396626024987)
+
+## About
+
+Click About to confirm the version number of the product.
+
+![1eeb766-image.png](https://support.macstadium.com/hc/article_attachments/28396626026907)
+
+## Settings
+
+Use to set log file location, VM directory, and other information.
+
+![f0d07cb-image.png](https://support.macstadium.com/hc/article_attachments/28396594835099)
+
+> 👍 **Tips**
+> 
+>   * Orka Desktop automatically starts a Console (screen share) session with the VM when Start is selected.
+>   * Managing and debugging issues with the VMs is made simple with a comprehensive list of actions available, including the ability to view and traverse log files and other artifacts.
+> 
+
+
+## Other IPSW Options
+
+Download the appropriate files from [http://developer.apple.com.](http://developer.apple.com """")
+
+![727939e-image.png](https://support.macstadium.com/hc/article_attachments/28396594837787)
+
+## Personal Access Token (PAT) with GitHub
+
+Personal Access Token (PAT) is used to Push or Pull from a Container Repo hosted by GitHub (ghcr.io). First, users must create a PAT and use those credentials. (NOTE: Other Container Repos may only use a username and password for credentials. Please consult the instructions on the Container Repository being used.) To use ghcr.io with Orka Desktop, please consult the GetHub documentation: <https://docs.github.com/en>
+
+## Community and Support
+
+Please use our GitHub project for your support needs. We have set up a [Discussions](https://github.com/macstadium/orka-desktop/discussions """") section for questions, feedback, or sharing your use case, and an [Issues](https://github.com/macstadium/orka-desktop/issues """") section for filing bugs or feature requests.

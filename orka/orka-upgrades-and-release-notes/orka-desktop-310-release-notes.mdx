@@ -1,0 +1,79 @@
+---
+title: "Orka Desktop 3.1.0 Release Notes"
+zendesk_id: 41858099174555
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/41858099174555-Orka-Desktop-3-1-0-Release-Notes"
+section: "Orka Upgrades and Release Notes"
+category: "Orka"
+created_at: "2025-10-07T16:08:20Z"
+updated_at: "2025-10-15T15:25:31Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes"
+---
+
+We are excited to announce the latest [Orka Desktop 3.1.0](https://github.com/macstadium/orka-desktop/releases/tag/3.1.0) release, which includes the following new features and improvements: Support for MacOS 26 guest images, updated OCI image format compatibility, local storage mounting accessible from within the Orka Desktop UI, and shared clipboard functionality.
+
+## New Features
+
+### MacOS 26 Tahoe guest image support:
+
+#### Key capabilities:
+
+Orka Desktop 3.1.0 brings with it support for running MacOS 26 Tahoe guest VM images. This allows Orka Desktop users to start using Tahoe guest images for their VMs.
+
+#### Getting started:
+
+Users can get started with Tahoe by downloading the latest Tahoe image from [OrkaHub](https://orkahub.com/), or our [Tahoe package](https://github.com/orgs/macstadium/packages/container/package/orka-images%2Ftahoe) in the MacStadium orka-images repository on GitHub. Tahoe guest VMs can be run using the Orka CLI, or by using Orka Desktop.
+
+#### Technical requirements:
+
+  * A Sequoia 15.5+ host is required in order to run a MacOS Tahoe 26 guest image.
+
+  * Orka does not currently officially support running Tahoe on a host machine. We will support MacOS 26 hosts in the upcoming Orka 3.6.0 release.
+
+
+
+
+### Improvements
+
+  * Clipboard sharing is now supported
+
+    * Clipboard sharing and host folder sharing features both require Orka VM tools v3.5.0 to be installed in the VM
+
+      * Available via [brew](https://formulae.brew.sh/cask/orka-vm-tools) or direct download at: [https://orka-tools.s3.us-east-1.amazonaws.com/orka-vm-tools/official/3.5.0/orka-vm-tools.pkg](https://orka-tools.s3.us-east-1.amazonaws.com/orka-vm-tools/official/3.5.0/orka-vm-tools.pkg)
+
+  * Local storage mounting is available via the Orka Desktop UI  
+  
+![VMStorageUI.png](https://support.macstadium.com/hc/article_attachments/41858115100315)
+
+  * An updated OCI image format is now supported
+
+
+
+
+### Known issues
+
+When running MacOS 15.6.1 and attempting to install a VM from the “latest” IPSW using Orka Desktop, the VZ API downloads the macOS 26 Tahoe IPSW. However, the installation fails with a popup message urging users to update the software.
+
+![failedVMinstallDesktop.png](https://support.macstadium.com/hc/article_attachments/41858099169435)
+
+#### Workarounds:
+
+  * MacOS 15.6.1 users can resolve this issue using any of the following workarounds:
+
+    * Install XCode 26 - This enables Tahoe VM installation with Orka Desktop
+
+    * Download a specific IPSW - Manually select an IPSW instead of using “latest”
+
+    * Upgrade your host machine - Update your host machine to MacOS Tahoe
+
+
+
+
+### Bug fixes
+
+  * VMs now duplicate correctly
+
+  * Orka Desktop no longer sporadically crashes when pushing/pulling an image from an OCI repository
+
+  * Dynamic resolution and DPI settings are now retained after pulling an image

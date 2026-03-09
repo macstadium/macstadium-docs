@@ -1,0 +1,176 @@
+---
+title: "Ansible Playbook Implementation"
+zendesk_id: 44332755734299
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44332755734299-Ansible-Playbook-Implementation"
+section: "Orka for VDI Deployment"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-12T16:11:40Z"
+updated_at: "2026-02-25T06:05:00Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation"
+---
+
+### 
+
+Ansible playbooks automate VM lifecycle operations for Citrix VDA deployment. These are automation scripts written in YAML that define a series of tasks to be executed on remote systems. They describe the desired state of your infrastructure and document the steps needed to achieve it.
+
+**How playbooks work:**
+
+A playbook contains one or more "plays," each targeting specific hosts and executing a sequence of tasks:
+
+  1. **Inventory** defines which hosts to target (e.g., the `hosts` group containing your physical Mac machines)
+
+  2. **Tasks** specify actions to perform (deploy VM, install software, configure settings)
+
+  3. **Variables** customize behavior for different environments or use cases
+
+  4. **Handlers** respond to changes (restart services after configuration updates)
+
+
+
+
+An example of an inventory file:
+    
+    
+    [hosts]
+    10.0.0.31
+    10.0.0.32
+    10.0.0.33
+
+Playbooks eliminate manual work by automating repetitive tasks, ensuring consistency, rapid recovery, providing audit trails, and simplifying updates. Each task in a playbook runs sequentially, and if any task fails, Ansible reports the error and stops execution, preventing partial deployments.
+
+### Core Ansible Playbook Examples
+
+#### VM Deploy
+    
+    
+    # Plan deployment (dry-run)
+    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" --tags plan
+    
+    # Execute deployment
+    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" 
+
+#### Delete a single VM 
+    
+    
+    ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
+
+#### Delete multiple VMs matching a specific naming convention
+    
+    
+    # Plan deletion (dry-run)
+    ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5" --tags plan
+    
+    # Execute deletion
+    ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5"
+
+Note: This deletes a defined number of VMs from the group with that name. To delete a VM on a specific host, use:
+    
+    
+    ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent" --limit 10.0.100.10
+
+Create backup file(s) before deleting a VM  
+  
+Note: This implementation does not have a dedicated backup Ansible playbook. To preserve VM configurations:
+
+1\. Use `create_image.yml` to create versioned images
+
+2\. Store images in your OCI registry
+
+3\. To restore: Deploy new VMs from the backed-up image version
+
+**VM deletion playbook workflow:**
+
+  1. Deletes VM from Orka Engine
+
+  2. Frees up resources on host
+
+
+
+
+#### Create a VM Image
+    
+    
+    ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
+
+Before running:
+
+1\. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
+
+2\. Scripts will be executed in alphabetical order
+
+3\. Example scripts:
+    
+    
+    - 01_install_dotnet.sh 
+    - 02_install_citrix_vda.sh 
+    - 03_configure_system.sh
+
+#### Cache a VM Image
+    
+    
+    ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" 
+
+Note: `pull_image.yml` automatically caches the image on all hosts in the inventory.
+
+#### Recreate a VM Image
+
+This implementation doesn’t have a dedicated playbook. To refresh VMs with a new image:
+    
+    
+    ansible-playbook -i inventory vm.yml "vm_name=citrix-vda-abc123" -e "desired_state=absent"
+
+**VM recreation playbook workflow:**
+
+  1. Delete existing VM
+
+  2. Create a new VM from specified image
+
+
+
+
+### Playbook customization for your environment
+
+The Ansible playbook examples referenced throughout this document will require additional customization to match your infrastructure and organizational requirements.  
+  
+**Environment-specific variables:**
+
+Create a `group_vars/all.yml` file with the following settings as an example:
+    
+    
+    ansible_user: admin
+    vm_image: registry.example.com/citrix-vda/sonoma-finance:latest
+    max_vms_per_host: 2
+
+### Test Basic VM Lifecycle Operations
+
+Before deploying to production, validate all playbook operations in a test environment.
+
+#### Test sequence:
+
+  1. Test connectivity
+
+  2. Test image operations
+
+  3. Test VM deployment
+
+  4. Test VDA registration
+
+  5. Test VM lifecycle
+
+  6. Test image creation
+
+  7. Test VM recreation
+
+  8. Test VM deletion
+
+  9. Test end-to-end user sessions
+
+  10. Use verbose output for troubleshooting:
+
+
+
+    
+    
+    ansible-playbook -i inventory create_orka_vm.yml -vvv -e "vm_name=test-vm-debug" -e "image_source=sonoma-test"

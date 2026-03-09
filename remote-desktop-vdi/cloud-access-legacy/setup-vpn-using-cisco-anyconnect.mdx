@@ -1,0 +1,27 @@
+---
+title: "Setup VPN using Cisco AnyConnect"
+zendesk_id: 28230920203291
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28230920203291-Setup-VPN-using-Cisco-AnyConnect"
+section: "Cloud Access (Legacy)"
+category: "Remote Desktop (VDI)"
+created_at: "2024-08-13T13:54:55Z"
+updated_at: "2025-12-10T19:32:40Z"
+promoted: false
+labels: ["vpn", "cisco", "AnyConnect"]
+suggested_new_path: "/remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect"
+---
+
+Upon signup, you will receive an IP Plan that contains all the information you will need to configure access to your cloud environment. The simplest and recommended method of gaining access is via a Virtual Private Network (VPN). This provides an easy to implement, secure connection.
+
+We highly recommend the [Cisco AnyConnect SecureMobility](https://www.cisco.com/c/en/us/support/security/anyconnect-secure-mobility-client/series.html) as a means of gaining access to your Mac Private Cloud.
+
+## Setup Process:
+
+  1. Log in using the username and password given to you in your IP Plan.
+  2. Cisco AnyConnect SecureMobility will then check to see if your personal computer has Java installed. If it is installed, Java will be used. If not, you will be given a direct download link. Simply click the link to begin the download and subsequent installation process.
+  3. Follow the installation prompts to complete the install.
+  4. Once installation has completed: 
+     * Select Settings
+     * Uncheck “Block connections to untrusted servers,” as the Cisco ASA appliance by default will be using a self signed certificate.
+  5. From the main screen, enter the IP Address provided in your IP Plan, and click connect.
+  6. Finally, to connect to your Mac Private Cloud, simply enter your username and password once more.

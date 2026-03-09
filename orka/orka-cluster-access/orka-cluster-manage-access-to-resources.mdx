@@ -1,0 +1,249 @@
+---
+title: "Orka Cluster: Manage Access to Resources"
+zendesk_id: 28333357279387
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28333357279387-Orka-Cluster-Manage-Access-to-Resources"
+section: "Orka Cluster Access"
+category: "Orka"
+created_at: "2024-08-16T14:56:25Z"
+updated_at: "2024-09-18T21:47:46Z"
+promoted: false
+labels: ["access", "resources", "orka", "api", "manage", "cluster", "resource"]
+suggested_new_path: "/orka/orka-cluster-access/orka-cluster-manage-access-to-resources"
+---
+
+(Admin-only) How to manage the access to your cluster resources with namespaces and role bindings.
+
+Orka 3.0 introduces the concept of namespaces - a way to isolate and dedicate resources to users and teams within the cluster. This concept replaces the earlier versions of node dedication (also known as "grouping").
+
+Orka 3.0 relies on RBAC for user access management. Both roles and role bindings are created and maintained automatically by Orka. Cluster administrators can manually add subjects to the role binding for a namespace, which grants the respective users and service accounts access to the namespace. All cluster administrators have access to all namespaces.
+
+The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+
+By managing namespaces and the subjects of role bindings, administrators can isolate and dedicate resources to specific users or emulate the concept of teams in the cluster. For example, an administrator might create a namespace dedicated to a team and then add the users belonging to this team to the namespace role binding. Or an administrator might create a namespace dedicated exclusively to CI/CD and limit its access only to service accounts.
+
+## Before you begin
+
+  1. Connect to your cluster via VPN. See [here](https://support.macstadium.com/hc/en-us/articles/28329406438683).
+  2. [Log in](https://support.macstadium.com/hc/en-us/articles/28333784957211) as an administrator.
+
+
+
+## Create a namespace
+
+You can create regular namespaces where you can deploy and run Orka VMs, or you can create a sandboxed namespace where you can deploy and run only Kubernetes custom pods.
+
+  1. Connect to your cluster via VPN.
+
+  2. Log in as an administrator.
+
+  3. Run the following command:
+
+
+
+
+#### **Orka CLI**
+    
+    
+    orka3 namespace create <NAMESPACE_NAME>  
+      
+    OR, if you want to create a sandboxed namespace,  
+      
+    orka3 namespace create <NAMESPACE_NAME> --enable-custom-pods
+
+#### **Orka API**
+    
+    
+    curl -X 'POST' \  
+    'http://<ORKA_API_IP>/api/v1/namespaces' \  
+    -H 'accept: application/json' \  
+    -H 'Authorization: Bearer <TOKEN>' \  
+    -H 'Content-Type: application/json' \  
+    -d '{  
+    "enableCustomPods": false,  
+    "name": "<NAMESPACE_NAME>"  
+    }'  
+      
+    OR, if you want to create a sandboxed namespace,  
+      
+    curl -X 'POST' \  
+    'http://<ORKA_API_IP>/api/v1/namespaces' \  
+    -H 'accept: application/json' \  
+    -H 'Authorization: Bearer <TOKEN>' \  
+    -H 'Content-Type: application/json' \  
+    -d '{  
+    "enableCustomPods": true,  
+    "name": "<NAMESPACE_NAME>"  
+    }'
+
+Your namespace name must meet the following requirements:
+
+  * Begins with the orka- prefix.
+  * Does not exceed 63 characters (including the prefix).
+  * Consists of lowercase alphanumeric characters or dashes (-).
+  * The string ends with an alphanumeric character.
+  * The name is unique to the cluster.
+
+
+
+## Grant access to the namespace
+
+You can dedicate a pool of resources to one or more users or service accounts by assigning them to a specific namespace.
+
+  1. To add one or more users, run the following command:
+
+#### **Orka CLI**
+         
+         orka3 rb add-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]  
+           
+         OR  
+           
+         orka3 rb add-subject --user user_1@company.com,user_2@company.com [--namespace <TARGET_NAMESPACE>]
+
+#### **Orka API**
+         
+         curl -X 'POST' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: Bearer <TOKEN>' \  
+         -H 'Content-Type: application/json' \  
+         -d '{  
+         "users": [  
+         "user@company.com"  
+         ]  
+         }'
+
+  2. To add one or more service accounts, run the following command:
+
+#### **Orka CLI**
+         
+         orka3 rb add-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]  
+           
+         OR  
+           
+         orka3 rb add-subject --serviceaccount <SA_NAMESPACE_2>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
+
+#### **Orka API**
+         
+         curl -X 'POST' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: Bearer <TOKEN>' \  
+         -H 'Content-Type: application/json' \  
+         -d '{  
+         "serviceaccounts": [  
+         {  
+         "name": "<SERVICE_ACCOUNT_NAME>",  
+         "namespace": "<SERVICE_ACCOUNT_NAMESPACE>"  
+         }  
+         ]  
+         }'
+
+
+
+
+## Dedicate resources to the namespace
+
+The resources within a namespace are completely isolated and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role binding.
+
+Formerly, this feature was known as node dedication and was achieved with node and user grouping.
+
+Run the following command:
+
+#### **Orka CLI**
+    
+    
+    orka3 node namespace <NODE_NAME> [--namespace <CURRENT_NAMESPACE>] <TARGET_NAMESPACE>
+
+#### **Orka API**
+    
+    
+    curl -X 'POST' \  
+    'http://<ORKA_API_IP>/api/v1/namespaces/<CURRENT_NAMESPACE>/nodes/<NODE_NAME>/namespace' \  
+    -H 'accept: application/json' \  
+    -H 'Authorization: <TOKEN>' \  
+    -H 'Content-Type: application/json' \  
+    -d '{  
+    "namespace": "<TARGET_NAMESPACE>"  
+    }'  
+      
+    }'
+
+There must be no running VMs on the node.
+
+## Revoke access to a specific namespace
+
+If needed, you can revoke the access of a user or a service account to a namespace. You need to remove the respective subjects from the respective role binding.
+
+  1. To add one or more users, run the following command:
+
+#### **Orka CLI**
+         
+         orka3 rb remove-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]  
+           
+         OR  
+           
+         orka3 rb remove-subject --user user_1@company.com,user_2@company.com [--namespace <TARGET_NAMESPACE>]
+
+#### **Orka API**
+         
+         curl -X 'DELETE' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: Bearer <TOKEN>' \  
+         -H 'Content-Type: application/json' \  
+         -d '{  
+         "users": [  
+         "user@company.com"  
+         ]  
+         }'
+
+  2. To add one or more service accounts, run the following command:  
+**Orka CLI**
+         
+         orka3 rb add-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]  
+           
+         OR  
+           
+         orka3 rb add-subject --serviceaccount <SA_NAMESPACE_2>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
+
+#### **Orka API**
+         
+         curl -X 'DELETE' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: Bearer <TOKEN>' \  
+         -H 'Content-Type: application/json' \  
+         -d '{  
+         "serviceaccounts": [  
+         {  
+         "name": "<SERVICE_ACCOUNT_NAME>",  
+         "namespace": "<SERVICE_ACCOUNT_NAMESPACE>"  
+         }  
+         ]  
+         }'
+
+
+
+
+## Remove resources from a namespace
+
+If needed, you can move unused resources (nodes) across namespaces.
+
+  1. Verify that there are no VMs deployed on the node.
+  2. Run the following command:  
+
+
+**Orka CLI**
+         
+         orka3 node namespace <NODE_NAME> [--namespace <CURRENT_NAMESPACE>] <TARGET_NAMESPACE>
+
+#### **Orka API**
+         
+         curl -X 'POST' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<CURRENT_NAMESPACE>/nodes/<NODE_NAME>/namespace' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: <TOKEN>' \  
+         -H 'Content-Type: application/json' \  
+         -d '{  
+         "namespace": "<TARGET_NAMESPACE>"  
+         }'

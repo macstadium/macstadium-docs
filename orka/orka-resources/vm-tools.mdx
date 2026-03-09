@@ -1,0 +1,38 @@
+---
+title: "VM Tools"
+zendesk_id: 28340435787163
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28340435787163-VM-Tools"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2024-08-16T17:48:14Z"
+updated_at: "2025-08-01T14:02:57Z"
+promoted: false
+labels: ["tools", "configuration", "orka", "api", "vm"]
+suggested_new_path: "/orka/orka-resources/vm-tools"
+---
+
+Orka VM Tools is a collection of services that make it possible for Orka to manage more effectively the guests operating systems. Orka VM Tools start when the guest operating system starts and allows the communication between the underlying VM process on the host and the guest operating system.
+
+Orka VM Tools are only compatible with ARM-based guest operating systems with MacOS 12 or later versions.
+
+Orka VM Tools are pre-installed on each ARM-based base image that Orka provides.
+
+The following Orka features require Orka VM Tools in order for them to work as expected:
+
+  * [Shared attached disk](https://support.macstadium.com/hc/en-us/articles/28340384486683)
+
+
+
+**IMPORTANT**
+
+Make sure to pull the updated sonoma-90gb-orka3-arm image from the remote in order to use Orka VM Tools on your virtual machines and benefit from the new Orka features. Installing Orka VM tools to your VMs as a standalone installation is available with Orka 2.2.0+.
+
+[Learn more about pulling an image](https://orkadocs.macstadium.com/docs/cli-reference#orka3_image)
+
+To access the latest features and updates, always run the Orka VM Tools version that matches your cluster and the other Orka tools and integrations you're using. For example: your cluster, Orka tools and integrations, and Orka VM Tools all run 3.x versions.
+
+Orka VM Tools run in the background. They are started automatically as a daemon when the operating system starts. You can control Orka VM Tools process using the following commands:
+
+Run sudo launchctl list com.orka.vm.tools to see if Orka VM Tools are running in your VM.
+
+![b037a3d-Screenshot_2022-08-29_at_15.53.04.png](https://support.macstadium.com/hc/article_attachments/28340435776027)

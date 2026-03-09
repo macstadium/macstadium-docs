@@ -1,0 +1,429 @@
+---
+title: "Troubleshooting Common Issues"
+zendesk_id: 44333132574107
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44333132574107-Troubleshooting-Common-Issues"
+section: "Orka for VDI Deployment"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-12T16:19:48Z"
+updated_at: "2026-02-24T22:06:15Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues"
+---
+
+**Issue:** VDA fails to register with Citrix Cloud
+
+**Symptoms:**
+
+  * VM deploys successfully, but doesn’t appear in Machine Catalog
+
+  * Desktop is not visible in Citrix Workspace
+
+  * VDA logs show registration errors
+
+
+
+
+**Troubleshooting steps:**
+
+  * Check VDA service status
+        
+        ansible mac_vms -i inventory \
+          -m shell \
+          -a "sudo launchctl list | grep citrix"
+
+  * Verify network connectivity
+        
+        ansible mac_vms -i inventory \
+          -m shell \
+          -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
+
+  * Review VDA logs
+        
+        ansible mac_vms -i inventory \
+          -m shell \
+          -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
+
+  * Restart VDA service
+        
+        ansible mac_vms -i inventory \
+          -m shell \
+          -a "sudo launchctl kickstart -k system/com.citrix.vda"
+
+
+
+
+**Common causes:**
+
+  * Expired enrollment token
+
+  * Firewall blocking TCP 443 to `*.xendesktop.net`
+
+  * Incorrect ID in VDA configuration
+
+  * DNS resolution failure
+
+  * VDA service crashed during startup
+
+
+
+
+#####  **Issue:** Session fails to launch or times out
+
+**Symptoms:**
+
+  * Desktop appears in Citrix Workspace, but fails to launch/won’t launch
+
+  * Connection progress bar stalls at a certain percentage
+
+  * “Unable to connect” error message is displayed
+
+
+
+
+**Troubleshooting steps:**
+
+  * Verify VM is powered on
+        
+        ansible-playbook -i inventory list_orka_vms.yml
+
+  * Check Citrix Cloud console
+
+    * Machine state should be “Registered” and “Available”
+
+    * Machine state should not be “Unregistered”, “Maintenance”, or “In Use”
+
+  * Test Rendezvous connectivity (if using)
+        
+        ansible mac_vms -i inventory \
+          -m shell \
+          -a "curl -v https://*.*.nssvc.net 2>&1 | grep Connected"
+
+  * Verify HDX ports are open
+
+    * Client → VM: TCP 1494, TCP 2598, UDP 1494, UDP 2598
+
+    * Test with 
+          
+          nc -zv <vm-ip> 1494
+
+  * Check client side for issues
+
+    * Update Citrix Workspace app to the latest version
+
+    * Clear Citrix Workspace app cache
+
+    * Try different client devices to help identify the problem
+
+    * If available, test from a different network to rule out network restrictions
+
+
+
+
+**Common causes:**
+
+  * VM powered ‘Off’, or crashed
+
+  * Rendezvous connection broken (check Gateway Service availability)
+
+  * Firewall is blocking HDX ports
+
+  * Network routing issues
+
+  * Citrix Workspace application is out-of-date
+
+
+
+
+#####  **Issue:** Poor session performance or lag
+
+**Symptoms:**
+
+  * High input lag when typing, moving the mouse, or gesturing using the trackpad
+
+  * Low frame rate, choppy display
+
+  * Applications slow to respond
+
+  * Video playback stutters
+
+
+
+
+**Troubleshooting steps**
+
+  * Check host resource utilization
+        
+        ansible hosts -i inventory \
+          -m shell \
+          -a "top -l 1 | grep 'CPU usage'"
+
+  * Check VM resource allocation
+
+    * Ensure VM has adequate CPU/RAM allocated
+
+    * Compare allocation to baseline requirements to ensure minimums are met
+
+  * Check network latency with 
+        
+        ping <vm-ip>
+
+    * Test bandwidth availability
+
+    * Check for packet loss
+
+  * Review HDX policies
+
+    * Check Citrix policies for codec settings
+
+    * Verify compression settings are appropriate for the connection
+
+    * Ensure adaptive transport is enabled
+
+  * Application specific issues
+
+    * Some applications may not perform well over HDX
+
+    * Check Citrix compatibility for specific software
+
+    * Consider GPU acceleration needs, if any
+
+
+
+
+**Common causes:**
+
+  * Insufficient VM resources
+
+  * Host oversubscribed (too many VMs)
+
+  * High network latency or packet loss
+
+  * Suboptimal HDX policies for connection type
+
+  * Graphics-intensive applications without GPU support
+
+
+
+
+#####  **Issue:** Clipboard or file transfer not working
+
+**Symptoms:**
+
+  * Cannot copy/paste between the client and the VM
+
+  * File drag-and-drop fails
+
+  * Error messages when attempting clipboard operations
+
+
+
+
+**Troubleshooting steps:**
+
+  * Check HDX policies in Citrix Cloud
+
+    * Navigate to Policies → HDX Settings
+
+    * Verify that “Client clipboard redirection” is enabled
+
+    * Verify that “Client drive redirection” is enabled
+
+  * Restart the session
+
+    * Log out and back in (sometimes, policies don’t apply until a new session has been started)
+
+  * Update Citrix Workspace application
+
+    * Ensure the latest version is installed, as older versions may have bugs when using the Clipboard
+
+  * Test with different types of content
+
+    * Try plain text first
+
+    * Then try formatted text, images, or files
+
+    * Isolate what’s working vs. what’s not working
+
+
+
+
+**Common causes:**
+
+  * HDX policy is blocking the clipboard/file transfer
+
+  * Security policy is restricting file transfers
+
+  * Citrix Workspace application has a bug (updating may resolve this)
+
+  * Content size exceeds limits
+
+
+
+
+#####  **Issue:** VM fails to deploy or gets stuck during deployment
+
+**Symptoms:**
+
+  * Ansible playbook times out during VM creation
+
+  * VM is created, but never boots up
+
+  * VM boots, but services don’t start
+
+
+
+
+**Troubleshooting steps:**
+
+  * Check Orka Engine status
+        
+        ansible hosts -i inventory \
+          -m shell \
+          -a "orka-engine --version"
+
+  * Verify the image exists and is valid
+
+
+
+    
+    
+    ansible hosts -i inventory \
+      -m shell \
+      -a "orka-engine image list"
+
+  * Check available disk space
+
+
+
+    
+    
+    ansible hosts -i inventory \
+      -m shell \
+      -a "df -h /var/orka"
+
+  * Review Orka logs
+
+
+
+    
+    
+    ansible hosts -i inventory \
+      -m shell \
+      -a "sudo tail -100 /var/log/orka-engine.log"
+
+  * Attempt to manually deploy
+
+    * SSH to Orka host
+
+    * Manually run
+          
+          orka-engine vm create
+
+    * Observe error messages
+
+  * Force VM shutdown if VM is still stuck
+
+
+
+    
+    
+    ansible-playbook -i inventory stop_orka_vm.yml \
+      -e "vm_name=stuck-vm" \
+      -e "force=true"
+
+**Common causes:**
+
+  * Insufficient disk space for VM creation
+
+  * Corrupted image
+
+  * Host resource exhaustion
+
+  * Network bridge misconfiguration
+
+  * Apple 2-VM licensing limit reached on host
+
+
+
+
+#####  **Issue:** Image operations fail
+
+**Symptoms:**
+
+  * Image pull from container registry fails or times out
+
+  * Image backup/commit fails
+
+  * Publishing an image to container registry fails
+
+
+
+
+**Troubleshooting steps:**
+
+  * Test registry connectivity
+        
+        ansible hosts -i inventory \
+          -m shell \
+          -a "curl -v https://registry.example.com"
+
+  * Verify registry credentials
+
+    * Check Ansible Vault contains correct credentials
+
+    * Test authentication manually
+
+  * Check available disk space
+        
+        ansible hosts -i inventory \
+          -m shell \
+          -a "df -h /var/orka"
+
+  * Review image size
+
+    * Images larger than 20GB may timeout on slow networks
+
+    * Consider optimizing images as needed
+
+  * Test with a smaller image
+        
+        ansible-playbook -i inventory pull_orka_image.yml \
+          -e "remote_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
+          -e "local_name=test-pull"
+
+
+
+
+**Common causes:**
+
+  * Network timeout (large image + slow connection)
+
+  * Registry authentication failure
+
+  * Insufficient disk space
+
+  * Registry rate limiting
+
+  * Corrupted image layers
+
+
+
+
+### Troubleshooting best practices
+
+  1. Start with simple tests, then move on to more complex diagnostics
+
+  2. Check one layer at a time (network → host → VM → VDA → Citrix)
+
+  3. Use verbose output when running playbooks for debugging
+         
+         ansible-playbook -i inventory <playbook.yml> -vvv
+
+  4. Test on a single host before assuming an issue is widespread
+         
+         ansible-playbook -i inventory <playbook.yml> --limit mac-node-1
+
+  5. Document resolutions to issues for future reference, and add them to your internal company troubleshooting documentation
+
+  6. Monitor logs proactively, and set up alerts as needed

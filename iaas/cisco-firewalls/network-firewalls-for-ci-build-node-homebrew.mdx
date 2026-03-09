@@ -1,0 +1,213 @@
+---
+title: "Network Firewalls for CI Build Node: Homebrew"
+zendesk_id: 28203289491099
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28203289491099-Network-Firewalls-for-CI-Build-Node-Homebrew"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-12T15:46:15Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "firewalls", "ci/cd", "delivery", "integration", "cloud", "infrastructure", "ci", "cd", "cloud infrastructure"]
+suggested_new_path: "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew"
+---
+
+This guide details how to install the build tools needed to set up a CI Build Node using Homebrew.
+
+Minimum requirements:
+
+  * [Homebrew](https://brew.sh/)
+  * [fastlane](https://fastlane.tools/)
+  * [CocoaPods](https://cocoapods.org/)
+  * [Xcode](https://developer.apple.com/xcode/)
+  * [Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html) is also a requirement to set up a Jenkins agent
+
+
+
+**NOTE:** it is a good practice to have a bot user whose only responsibility is to build your OSX/iOS projects. This means such a user with the correct permissions should be created, so the user can build OSX/iOS projects.
+
+Do this via VNC or via the Web Console, or to enable Remote Login in the macOS settings, set SSH in.
+
+## Install Homebrew
+
+[Homebrew](https://brew.sh/) is a package manager for macOS and used for managing installation of the various tools needed for iOS and macOS CI efforts. This step takes about 15 minutes, and requires the password at least once.
+
+## Install Ruby
+
+Lots of tooling requires a modern Ruby installed (fastlane for instance), so we also update our system Ruby:
+    
+    
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  
+    brew install rbenv ruby-build  
+      
+    # Add rbenv to bash so that it loads every time you open a terminal   
+    echo 'if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi' >> ~/.bash_profile   
+    source ~/.bash_profile  
+      
+    # Install Ruby   
+    rbenv install 2.4.2   
+    rbenv global 2.4.2   
+    ruby -v
+
+## Install fastlane
+
+[fastlane](https://fastlane.tools/) provides an easy way to automate beta deployments and releases for iOS and Android apps.
+
+To install it, run:
+    
+    
+    sudo gem install fastlane -NV
+
+## Install CocoaPods
+
+[CocoaPods](https://cocoapods.org/) is a dependency manager for Swift and Objective-C Cocoa projects. It is installed via ruby gem:
+    
+    
+    sudo gem install cocoapods
+
+## Install Node.js
+
+To install the latest version of Node.js run:
+    
+    
+    brew install node
+
+To install the latest LTS run:
+    
+    
+    brew install [node@10](mailto:node@10)  
+    brew link node@10 --force
+
+This installs Node.js 10 LTS and links it to `/usr/local/bin` so it is available in `PATH`.
+
+**NOTE** : Consider using [nvm](https://github.com/creationix/nvm) to manage different Node.js versions. To install nvm run:
+    
+    
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+## Install Java 8
+
+To setup a Jenkins agent, Java 8 must be installed on the machine.
+
+To do that, run:
+    
+    
+    brew tap homebrew/cask-versions  
+    brew cask install java8
+
+## Install Xcode
+
+Do this is via a VNC/screen-sharing session. If working from a Mac, open the Finder and press "cntrl k". This opens the machine's built-in VNC GUI. Collect your public IP and screen-sharing port, and pass them in the GUI.
+
+  1. Enter the user credentials.
+  2. Open a web browser via the screen-sharing connection.
+  3. Navigate to <https://developer.apple.com>
+  4. Log in
+  5. Navigate to <https://developer.apple.com/downloads/more>
+  6. Download and install the preferred version of Xcode by clicking the download link and double-clicking on the resulting download.
+
+
+
+## Creating Dedicated Build User
+
+MacStadium recommends having a dedicated user that is responsible for building OSX/iOS applications.
+
+First, create a group for this user. The group needs to have an unique ID. List the current group IDs in а numerical oder by running:
+    
+    
+    dscl . -list /Groups PrimaryGroupID | awk '{print $2}' | sort -n
+
+Choose a number that is not in the list. Then run by replacing {GroupName} and {GroupID} with the desired values:
+    
+    
+    sudo dscl . -create /Groups/{GroupName}  
+    sudo dscl . -create /Groups/{GroupName} PrimaryGroupID {GroupID}
+
+Pick a unique ID for the user. It is done in a similar fashion to the way we chose the group ID:
+    
+    
+    dscl . -list /Users UniqueID | awk '{print $2}' | sort -n
+
+Finally, run by replacing the placeholders:
+    
+    
+    sudo dscl . -create /Users/{UserName}  
+    sudo dscl . -create /Users/{UserName} UserShell /bin/bash  
+    sudo dscl . -create /Users/{UserName} UniqueID {UserID}  
+    sudo dscl . -create /Users/{UserName} PrimaryGroupID {GroupID}  
+    sudo dscl . -create /Users/{UserName} NFSHomeDirectory /Users/{UserName}
+
+Ensure a home folder is created for the user:
+    
+    
+    sudo mkdir /Users/{UserName}  
+    sudo chown {User}:{GroupName} /Users/{UserName}
+
+## Creating Default Keychain for the Build User
+
+Since the build user will not log into the OSX machine, a default keychain will never be created.  
+This could cause build and/or code sign issues (especially when using fastlane).
+
+To create a default keychain for the build user, switch to the build user in the terminal:
+    
+    
+    sudo su {Username}
+
+Execute commands as the build user:
+    
+    
+    security create-keychain -p {KeychainPassword} login.keychain  
+    security default-keychain -s login.keychain
+
+This creates new keychain called `login.keychain`and makes it default for the build user.  
+The security command line tool has a bug and does not add the new keychain to the list of available keychains. To fix this, call:
+    
+    
+    security list-keychains -d user -s {Keychain}
+
+Proceed with the rest of the setup. To switch back to the previous user type:
+    
+    
+    exit
+
+## Logging Remotely with the Build User
+
+Remote logging is required. To log remotely with the newly created build user and ensure the user can log remotely:
+    
+    
+    sudo systemsetup -setremotelogin on  
+    sudo dseditgroup -o edit -a {UserName} -t user com.apple.access_ssh
+
+Create an SSH key pair that to use for remote logging.
+
+If a SSH key pair does not exist, then create one by executing:
+    
+    
+    ssh-keygen -m PEM -t rsa -C "build machine key" -f "buildMachine_rsa"
+
+**Note:** For an increased security, it is recommended to associate a passphrase to the private key.
+
+The command creates two files:
+
+  * buildMachine_rsa - This is the private key. Keep it safe and do not share it with anyone.
+  * buildMachine_rsa.pub - This is the public key.
+
+
+
+To copy the private key to a secure machine that uses `scp`. This command executed copy over SSH; run:
+    
+    
+    scp /path-to-buildMachine_rsa/ [username@host:/path-to-location-on-secure-machine](mailto:username@host:/path-to-location-on-secure-machine)
+
+To create a `authorized_keys` file. It lists all keys that can be used to log remotely with a given user:
+    
+    
+    sudo su {UserName}  
+    mkdir ~/.ssh  
+    cat buildMachine_rsa.pub >> ~/.ssh/authorized_keys  
+    chmod 644 ~/.ssh/authorized_keys  
+    exit
+
+Use the private key to log to the machine remotely using the newly created user:
+    
+    
+    ssh {UserName}@{host} -i {path-to-private-key}

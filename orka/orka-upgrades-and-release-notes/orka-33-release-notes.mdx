@@ -1,0 +1,110 @@
+---
+title: "Orka 3.3 Release Notes"
+zendesk_id: 39592731793691
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39592731793691-Orka-3-3-Release-Notes"
+section: "Orka Upgrades and Release Notes"
+category: "Orka"
+created_at: "2025-08-01T21:01:57Z"
+updated_at: "2025-08-06T20:35:10Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-33-release-notes"
+---
+
+**IMPORTANT**
+
+Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions.
+
+# Orka 3.3.3
+
+## Improvements and Fixes
+
+Orka 3.3.3 addresses an issue that may cause ARM nodes to become non-operational under certain workloads. This problem is caused by a bug wherein:
+
+  * Orka does not delete VMs in certain cases, leading to VMs running out of space
+  * This leaves impacted VMs in a stopped state
+  * VMs are then unreachable
+
+
+
+This causes Orka to crash, which could lead to VMs not being cleaned up.
+
+### Who is affected:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#who-is-affected)
+
+All customers running workloads that rapidly deploy multiple VMs may be affected. This includes any environment with medium-high utilization of ARM-based nodes.
+
+### Impact:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#impact)
+
+When this issue occurs:
+
+  * Nodes may run out of space
+  * VMs may not be assigned a valid MAC address and will be inaccessible
+
+
+
+### Customer downtime:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#customer-downtime)
+
+This is a zero-downtime operation and has no effect on already running VMs.
+
+### Next steps:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#next-steps)
+
+We recommend that all customers using Orka 3.3.0 and above apply this hotfix immediately, especially those that are operating medium or large-load ARM-based infrastructure, or high-volume VM deployments.
+
+If you have any questions or require assistance, please [contact our support team](https://docs.macstadium.com/docs/support)
+
+# Orka 3.3.2
+
+## Improvements and Fixes
+
+Orka 3.3.2 is a patch release that provides a system-level control to determine if VMs have consistent or dynamic UDID generation.
+
+  * Consistent UDID generation is good for use cases that require the same machine identifier for each deployment. This is often the case for code signing or other workflows that expect a specific machine ID.
+
+  * Dynamic UDID generation is good for use cases that require unique IDs, such as VDI or Remote Desktop Use Cases, where each desktop is assigned to an individual user and may be more long-lived. MDM integration may also depend on having unique (or dynamically generated) UDIDs. 
+
+
+
+
+The default system behavior is consistent UDIDs. [Contact our support team](https://docs.macstadium.com/docs/support) to make use of Dynamic UDID.
+
+OCI integration now supports Harbor as a repository.
+
+# Orka 3.3.1
+
+## Improvements and Fixes
+
+Orka 3.3.1 is a patch release that addresses compatibility issues with JAMF MDM.
+
+# Orka 3.3.0
+
+## New Features[](https://orkadocs.macstadium.com/docs/orka-33-release-notes#new-features)
+
+  * [Orka Burst](https://orkadocs.macstadium.com/docs/burst) is now available to customers, providing dedicated, on-demand access to elastic cluster capacity as needed. If you are interested in adding burst nodes to your account, please get in touch with MacStadium through your Account Portal.
+  * Component versions are now shown with the `orka3 version`and `orka3 node list -o wide` commands.
+  * Orka worker nodes are upgraded to macOS 15.5.
+
+
+
+## Fixes and Improvements[](https://orkadocs.macstadium.com/docs/orka-33-release-notes#fixes-and-improvements)
+
+  * Orka has been updated from Kubernetes v1.30 to v1.33. [Upgrade Information.](https://orkadocs.macstadium.com/v3.3.0/docs/orka-upgrades)
+    * Internal upgrades to Kubernetes networking components for greater stability on the control plane.
+  * Orka now handles the permission alert for non-privileged applications in Sequoia 15.4.
+    * Starting with macOS Sequoia, macOS triggers a graphical permissions alert whenever a non-privileged application attempts to communicate with anything on the local network (e.g., pulling an image from an OCI registry hosted on a separate machine on the local network). As a result of this change, the Orka Engine is now deployed as a LaunchDaemon.
+  * Custom certificates uploaded by clients will persist on API restart and upgrades.
+  * VMs now generate unique identifiers under Apple's guidelines—more details on the impact of this change in the Known Issues section.
+  * All fixes released in the Orka 3.2 series are included. [3.2.2](https://orkadocs.macstadium.com/v3.3.0/docs/orka-322-release-notes) [3.2.1](https://orkadocs.macstadium.com/v3.3.0/docs/orka-321-release-notes)
+
+
+
+**Known Issues[](https://orkadocs.macstadium.com/docs/orka-33-release-notes#known-issues)**
+
+> If you implement code signing workflows in Orka this message pertains to you. Please consider your workflows before deciding to upgrade to 3.3.0
+
+The 3.3.0 release implements behaviors to align with Apple’s guidelines for Virtualization regarding identifiers, as discussed in [VZMacMachineIdentifier | Apple Developer Documentation](https://developer.apple.com/documentation/virtualization/vzmacmachineidentifier), such that VMs are always created with a unique machine identifier.
+
+In previous versions of Orka, when creating a new macOS VM using `orka3 vm deploy --image $OCI_IMAGE` or cloning an existing VM, the new VM inherited the machine identifier from the source image or VM. This change conflicted with Apple’s guidelines and was updated in the Orka 3.3.0 release to align with Apple's official guidelines.
+
+Due to this change and other code signing workflows in macOS 15 (see: [Apple Developer Forum](https://developer.apple.com/forums/thread/787500?answerId=843094022#843094022)) that depend on a persistent (or repeatable) machine identifier may fail, as provisioning profiles can no longer be reused across newly created or cloned VMs. Teams using these workflows should regenerate profiles for each VM or consider alternate provisioning strategies that account for dynamic identifiers.
+
+Subsequent releases of Orka will offer an alternative approach to ensure that code signing workflows can execute in VMs.

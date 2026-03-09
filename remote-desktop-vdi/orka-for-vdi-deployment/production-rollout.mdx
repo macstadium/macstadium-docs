@@ -1,0 +1,588 @@
+---
+title: "Production Rollout"
+zendesk_id: 44334107315611
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44334107315611-Production-Rollout"
+section: "Orka for VDI Deployment"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-12T16:42:17Z"
+updated_at: "2026-02-25T06:19:57Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/production-rollout"
+---
+
+### 
+
+A production rollout transitions your Orka for VDI environment from testing to live operation. This step in the deployment lifecycle typically covers configuring user access, operational monitoring, backup strategies, and scaling concerns.
+
+Before transitioning to production, you will want to ensure that you have completed environment testing, golden images have been tested and are ready for deployment, troubleshooting procedures have been documented, your operations and support teams have been trained on daily support tasks, and relevant escalation procedures have been defined.
+
+### User assignment and access policies
+
+Configures how users access desktops and what permissions they have within the Orka for VDI environment.
+
+#### User assignment strategies
+
+##### Dedicated (static) assignment:
+
+  * Each user is assigned to a specific VM permanently
+
+  * Users always connect to the same desktop
+
+  * The desktop retains user customizations, installed applications, and files
+
+  * Use case: Power users, developers, or executives who need a persistent workspace
+
+
+
+
+##### Pooled (random) assignment:
+
+  * Users get any available VM from pool
+
+  * VM resets to golden image after user logs out (non-persistent)
+
+  * No user data is stored on the VM (uses network storage)
+
+  * Use case: Shared workstations, call centers, task-based work
+
+
+
+
+##### Configuring user assignment in Citrix Cloud
+
+  * Navigate to **Citrix Cloud Console → Web Studio → Delivery Groups**
+
+  * Select your Delivery Group
+
+  * Configure assignment type:
+
+    * Static: "Assign to specific user" to map users to specific VMs
+
+    * Pooled: "Assign randomly" means users get the next available VM
+
+  * Add users or groups:
+
+    * Assign Active Directory security groups
+
+    * Assign Azure AD groups
+
+    * Add individual users for testing
+
+
+
+
+##### Example assignment strategy
+
+  * Delivery group: Finance-Standard-VDI
+
+  * Assignment: Pooled (random VM)
+
+  * Users: Finance department AD Group (200 users)
+
+  * VM pool: 50 VMs
+
+  * Session timeout: 8 hours idle  
+
+
+  * Delivery group: Engineering-Persistent-VDI
+
+  * Assignment: Static (dedicated VM)
+
+  * Users: Engineering team AD Group (35 users)
+
+  * VM pool: 30 VMs
+
+  * Session timeout: 24 hours idle
+
+
+
+
+### Access policies
+
+#### Network access control:
+
+  * Defines where users can connect from (internal network, remote, mobile)
+
+  * Configure Citrix Gateway for external access
+
+  * Implement conditional access based on device compliance
+
+
+
+
+#### Session policies:
+
+Configure session policies in Citrix Cloud → Policies → Session Settings
+
+  * Session timeout: Auto-disconnect after idle period (default 24 hours)
+
+  * Reconnection: Allow users to reconnect to disconnected sessions
+
+  * Multiple sessions: Allow or block concurrent sessions per user
+
+  * Power management (pooled VMs only): Shut down VMs after extended idle period
+
+
+
+
+#### Feature restrictions:
+
+Configure HDX policies to enable/disable features as needed.
+
+  * Clipboard: Enable/disable copy-paste between client and VM
+
+  * File transfer: Allow/block the ability to drag and drop files
+
+  * USB redirection: Allow specific devices or block all USB devices
+
+  * Printing: Enable client printer mapping
+
+  * Local drive access: Mount client drives in VM
+
+
+
+
+#### Example policy matrix:
+
+  * Finance team
+
+    * Clipboard: Enabled (unidirectional, client to VM only)
+
+    * File transfer: Disabled
+
+    * Printing: Enabled
+
+    * USB: Disabled
+
+  * Engineering team
+
+    * Clipboard: Bidirectional
+
+    * File transfer: Enabled
+
+    * Printing: Enabled
+
+    * USB: Enabled (specific devices only)
+
+
+
+
+#### User communication:
+
+Before production rollout, communicate to users:
+
+  * How to access Citrix Workspace (URL or app download)
+
+  * Login credentials and authentication requirements
+
+  * Desktop naming and identification
+
+  * Session behavior (persistent vs. non-persistent)
+
+  * IT support contact information
+
+  * Best practices (save work to network drives, not local desktop)
+
+
+
+
+Consider a phased rollout approach if time allows, beginning with a pilot team and progressing through teams/departments until full production adoption has been reached. This allows for additional time to monitor any issues before expanding Orka for VDI access to further teams.
+
+### Monitoring and Observability
+
+Proactive monitoring identifies issues before they impact end users, and provides valuable data for capacity planning and disaster recovery.
+
+You may wish to monitor both the infrastructure layer (Orka hosts, network, storage, VMs) and the Citrix layer (VDA registration, machine catalog, sessions, user experience).
+
+Host-level monitoring example:  
+
+    
+    
+    # Check disk space for Orka storage
+    ansible hosts -i inventory -m shell -a "df -h /opt/orka"
+    
+    # Check CPU usage
+    ansible hosts -i inventory -m shell -a "top -l 1 | grep 'CPU usage'"
+    
+    # Check memory statistics
+    ansible hosts -i inventory -m shell -a "vm_stat"
+
+You may also wish to consider creating an Ansible playbook to run periodic health checks on your infrastructure layer:
+    
+    
+    ---
+    - name: Infrastructure Health Check
+      hosts: hosts
+      tasks:
+        - name: Check Orka Engine running
+          shell: pgrep orka-engine
+          register: orka_status
+          failed_when: orka_status.rc != 0
+    
+        - name: Check VM count per host
+          shell: /usr/local/bin/orka-engine vm list | wc -l
+          register: vm_count
+    
+        - name: Check disk space
+          shell: df -h | grep -v tmpfs
+          register: disk_status
+
+VDA-level health checks (service status, log inspection) should be reviewed via Citrix Cloud Monitor or directly from within individual VMs. For host-level checks, use the Infrastructure Health Check playbook on a schedule.
+
+Citrix VDA service health and log monitoring should be observed via Citrix Cloud Monitor (Citrix Cloud Console → Monitor tab). For deeper log inspection, connect directly to the VM and run: 
+    
+    
+    sudo launchctl list | grep citrix
+    grep -i 'crash\|error\|fatal' /Library/Application\ Support/Citrix/VDA/Logs/vda.log | tail -20
+
+You can also use Citrix Cloud Monitor (built-in) to track:
+
+  * Session launch success rate
+
+  * Average session launch time
+
+  * Failed connection attempts
+
+  * Active vs. available desktop count
+
+  * User login patterns and peak usage times
+
+
+
+
+Access this by navigating to: Citrix Cloud Console → Monitor tab
+
+You will also want to clearly define an alerting strategy with your team. As an example:
+
+  * Critical alerts (requiring immediate response)
+
+    * VDA registration drops below a certain percentage of expected count
+
+    * All VMs in a Delivery Group are “Unavailable”
+
+    * Orka host disk space is >90% full
+
+    * Orka Engine service has crashed
+
+  * Warning alerts (respond within 1-3 hours)
+
+    * Session launch failures over a certain percentage within 15 minutes
+
+    * Host CPU sustained at >80% for 10+ minutes
+
+    * Disk space is >75% full
+
+    * VM deployments are failing
+
+  * Informational alerts (review daily/as needed)
+
+    * Session launch time exceeds baseline by 50%
+
+    * Network latency increases
+
+    * Users log out without proper shutdown
+
+
+
+
+You will want to discuss with your team how you wish to structure your alerting tools and dashboards. This includes email or Slack/Teams notifications, PagerDuty or similar services for critical outage alerts, custom scripts, AI agents, or Ansible playbooks that send notifications to system administrators on failures.
+
+Dashboard configuration is helpful for teams to visualize the current availablity and uptime of the service. This may consist of certain attributes such as the total number of deployed VMs vs. available machines, current active sessions, session launch success rates, host resource utilization, recent alerts or incidents, and capacity utilization. Tools such as Grafana, Datadog, or Citrix Director can be used to create visualizations and dashboards.
+
+You may also consider centralizing logs for additional troubleshooting in some cases:
+
+  * Orka Engine logs: `/opt/orka/logs/com/macstadium.orka-engine.server.managed.log`
+
+  * VDA logs: `/Library/Application Support/Citrix/VDA/Logs/`
+
+  * System logs: `/var/log/system.log`
+
+
+
+
+Additionally, you can choose to ship your logs to a central logging system (e.g. Splunk, CloudWatch) for further research and analysis if deemed appropriate by your organization’s existing data policies and procedures.
+
+### Backup and recovery procedures
+
+Implementing backup strategies protects against data loss, VM corruption, and infrastructure failures.
+
+What to include in backups:
+
+VM images (golden images):
+
+  * Base macOS images with Orka for VDI pre-installed
+
+  * Department-specific images with specific software or applications installed
+
+  * All versions maintained for rollback capabilities
+
+
+
+
+VM configuration data:
+
+  * VM resource allocations (CPU, RAM, network, etc.)
+
+  * Network bridge settings
+
+  * Inventory files and Ansible settings
+
+
+
+
+User data (persistent desktops only)
+
+  * User home directories
+
+  * Application data and settings
+
+  * Documents and files
+
+
+
+
+Citrix configuration:
+
+  * Machine catalog definitions
+
+  * Delivery Group settings
+
+  * Policies and user assignments
+
+  * Enrollment tokens
+
+
+
+
+### Image backup examples  
+  
+Deploy new VMs from the backup image version using cron scheduling:
+
+VM image backup consists of ensuring your golden images are pushed to a secondary or off-site OCI registry. You can schedule this by running pull_image.yml against a backup registry destination on a cron schedule. For example, to re-tag and push an existing image to a backup registry:
+    
+    
+    # Pull latest golden image to local hosts (as a cache/backup step)
+    ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:latest" 
+
+For persistent VM user data, backup procedures depend on your organization's existing storage infrastructure and are outside the scope of the Orka orchestration tooling.
+
+In the event of Orka host failure, take the following steps for system recovery:
+
+  1. Provision replacement Mac hardware
+
+  2. Add the new host to your Ansible inventory and run the `install_engine.yml` playbook
+
+  3. Verify the host has a static IP or DHCP reservation and is reachable via Ansible: `ansible hosts -i inventory -m ping`
+
+  4. Pull golden images from container registry
+
+  5. Deploy VMs on the new host
+
+  6. Citrix VDAs should register automatically with an existing enrollment token
+
+
+
+
+Recovery time: Est. between 2-4 hours in the case of MacStadium managed hardware with a spare host available; 5-10 minutes to deploy a image to an Orka host. Provisioning new MacStadium hardware not already available can take 2-3 days.
+
+In the event of complete infrastructure loss, a disaster recovery playbook should walk through the following steps:
+
+  * Provision new Mac hardware
+
+  * Run `install_engine.yml` against all new hosts to install Orka Engine (see Install Orka Engine section of the Deployment Guide)
+
+  * Restore Ansible configurations from Git/Bitbucket/etc.
+
+  * Pull all images from OCI registry
+
+  * Run Ansible deployment playbooks to recreate VMs
+
+  * Verify VDA registration and user access
+
+  * Restore user data from backup storage
+
+
+
+
+Recovery time: Est. 4-8 hours depending on company scale
+
+When scheduling quarterly disaster planning, consider the following tests:
+
+  * Simulate VM failures and practice recovery
+
+  * Test backup restoration procedures
+
+  * Validate recovery time objectives meet requirements
+
+  * Document any gaps or process improvements needed
+
+
+
+
+#### Backup process checklist:
+
+  * Implement VM configuration backup
+
+  * Configure user data backup for persistent desktops
+
+  * Export Citrix configurations regularly
+
+  * Store backups off-site (separate registry or storage)
+
+  * Define and enforce a data retention policy
+
+  * Document recovery procedures for common scenarios
+
+  * Create a disaster recovery playbook
+
+  * Test recovery procedures quarterly
+
+  * Validate recovery time objectives are met
+
+
+
+
+#### Scale considerations
+
+As your company grows and your needs evolve, you will want to plan for onboarding additional users to your Orka for VDI instance. When undertaking capacity planning, it is important to ensure that you document your infrastructure’s current state.
+
+##### Example ‘State of current infrastructure’:
+
+Infrastructure:
+
+  * 3x Mac Mini M4 (24GB RAM, 512GB storage)
+
+  * Max VMs per host: 2 (Apple licensing restriction)
+
+  * Total VM capacity: 6 VMs
+
+
+
+
+Current utilization:
+
+  * Deployed VMs: 4
+
+  * Active sessions (peak): 3
+
+  * Average resource usage per VM: 4 CPU cores, 8GB RAM
+
+  * Storage used: 45% (200GB / 512GB)
+
+
+
+
+User base:
+
+  * Total licensed users: 50
+
+  * Concurrent usage peak: 60% (30 users)
+
+  * Current VM user ratio: 1:12.5
+
+
+
+
+Growth projection requires accurately estimating future needs.
+
+##### Three month growth projection:
+
+  * User growth: +30 users (80 total)
+
+  * Concurrent usage: 60% (48 users)
+
+  * VMs needed: 10 (current: 4)
+
+  * Additional hardware: 2x Mac Mini M4
+
+
+
+
+##### Six month growth projection:
+
+  * User growth: +50 users (100 total)
+
+  * Concurrent usage: 60% (60 users)
+
+  * VMs needed: 15
+
+  * Additional hardware: 5x Mac Mini M4
+
+
+
+
+##### Twelve month growth projection:
+
+  * User growth: +100 users (150 total)
+
+  * Concurrent usage: 65% (98 users)
+
+  * VMs needed: 25
+
+  * Additional hardware: 10x Mac Mini M4 (or 5x Mac Studio for higher density workloads)
+
+
+
+
+**Scaling triggers:**
+
+Define thresholds that trigger capacity expansion:
+
+  * VM utilization >80% during business hours: Add 2+ hosts
+
+  * Session launch wait time >30 seconds: Insufficient available VMs
+
+  * Host CPU running at >75% sustained load: VMs need more resources or more hosts are needed
+
+  * Storage >70% full: Add additional storage or clean up old images
+
+
+
+
+**Horizontal scaling (adding hosts):**
+
+As your user base grows, you may wish to add more Orka hosts:
+
+  1. Procure additional Mac hardware meeting minimum Orka for VDI requirements
+
+  2. Install macOS and configure your network (static IP or DHCP reservation)
+
+  3. Add the new hosts to your Ansible inventory file and run the installation playbook
+  4. Verify the new hosts are reachable and Orka Engine is running
+  5. Add these new hosts to your existing Ansible inventory:  
+
+         
+         [hosts]
+         10.0.100.10
+         10.0.100.11
+         10.0.100.12
+         10.0.100.13  # New host
+         10.0.100.14  # New host
+
+  6. Cache golden images on new hosts:  
+
+         
+         ansible-playbook -i inventory pull_image.yml --limit 10.0.100.13,10.0.100.14 -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"
+
+  7. Deploy VMs on new hosts:  
+
+
+
+
+    
+    
+    ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=40" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+
+**Vertical scaling (increase VM resources):**
+
+If users need more powerful desktops, upgrade to higher-spec Macs:
+
+  * Mac mini M4 → Mac mini M4 Pro (more CPU cores, RAM)
+
+  * Mac mini M4 Pro → Mac Studio M2 Ultra (significantly more power)
+
+
+
+
+A production rollout marks the transition from project to operational service. With proper user access controls, monitoring, backup procedures, and scaling plans in place, your Orka for VDI environment is ready to deliver reliable macOS virtual desktops to users at scale.

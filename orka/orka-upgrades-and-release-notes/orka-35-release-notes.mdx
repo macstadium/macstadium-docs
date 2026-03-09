@@ -1,0 +1,322 @@
+---
+title: "Orka 3.5 Release Notes"
+zendesk_id: 41327066930459
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/41327066930459-Orka-3-5-Release-Notes"
+section: "Orka Upgrades and Release Notes"
+category: "Orka"
+created_at: "2025-09-22T17:54:53Z"
+updated_at: "2026-02-12T21:37:19Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-35-release-notes"
+---
+
+**IMPORTANT**
+
+Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions.
+
+## Orka 3.5.2
+
+## Release summary
+
+Orka 3.5.2 delivers enhanced storage management capabilities, streamlined CLI workflows, and significant reliability improvements across the platform. This release introduces native shared attached disk configuration, eliminating manual storage provisioning steps for VM deployments. The Orka CLI now uses intelligent namespace resolution by leveraging your available `orka` kubeconfig context. Additionally, Orka 3.5.2 includes critical stability enhancements for OCI image operations, macOS Tahoe and Sequoia compatibility fixes, and improved operator behavior in multi-namespace environments.
+
+## New Features
+
+### VM Shared Attached Disk Configuration:
+
+The Orka AMI now supports automatic setup of VM shared attached disks during instance initialization
+
+#### Key capabilities:
+
+  * Flexible deployment control: Enable or disable shared disk usage globally using the `vm_shared_disk_enabled: true` variable
+
+  * Instance-level disk sizing: Specify shared disk size for each Mac instance via user data script (AWS) or via Ansible (on-prem)
+
+  * Consistent VM storage: When enabled, all VMs deployed from the instance will automatically use the shared attached disk, ensuring standardized storage configuration across your infrastructure
+
+
+
+
+#### Getting started:
+
+#### First-time disk installation (per-host):
+
+When a shared attached disk is used for the first time on a host, you need to format and mount it from inside the first VM deployed on that host. This is a one-time step per host. All subsequent VMs deployed on the same host will have the disk auto-mounted at `/Volumes/shared` on boot.
+
+  1. Inside the guest VM, identify the shared disk:
+
+
+    
+    
+    diskutil list internal physical
+
+Look for the disk identifier in the output. The disk will initially be unformatted and will not contain a filesystem.
+
+  2. Format and mount the disk:
+
+
+    
+    
+       diskutil eraseDisk -noEFI JHFS+ shared /dev/<disk-identifier>
+
+Replace `<disk-identifier>` with the identifier from the previous step (e.g., `disk1`). The disk will be automatically mounted at `/Volumes/shared`.  
+
+
+> **Important:** These steps only need to be performed once per host, for the first VM deployed on that host. Every VM subsequently deployed on the same host will have the shared attached disk auto-mounted on boot at `/Volumes/shared`.
+
+#### 
+
+####    
+For AWS deployments (two-step process):
+
+To enable shared attached disk support for your Orka instance:
+
+  1. Set up a [CodeBuild project](https://support.macstadium.com/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster- "https://support.macstadium.com/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster-") (if one is not already configured) and set: `vm_shared_disk_enabled: true`
+
+  2. Configure each EC2 Mac Instance. Set the `VM_SHARED_DISK_SIZE` environment variable to the desired size as part of the user data script during instance launch:
+
+
+
+    
+    
+    #!/bin/bash
+    export VM_SHARED_DISK_SIZE=500
+    /usr/local/bin/bootstrap-orka <eks-cluster-name> <aws-region> <orka-engine-license-key>
+
+**Note:** Both steps are required. The `VM_SHARED_DISK_SIZE` environment variable must be set for _each instance_ , but the `vm_shared_disk_enabled` variable is set _once_ globally.
+
+  3. The bootstrap script will automatically configure the instance to use the VM shared disk feature, and applies to all VM deployments from the instance
+
+  4. All subsequent VM deployments from this instance will utilize the shared attached disk
+
+
+
+
+To disable the feature, first set `vm_shared_disk_enabled: false` in Ansible and re-run your CodeBuild project, then terminate and re-create your EC2 Mac instances.
+
+#### Technical requirements:
+
+  * Your cluster has been upgraded to Orka v3.5.2 (Note that clusters must be at least on Orka 3.4 / k8s v1.33 to be upgraded to 3.5.2)
+
+  * Global configuration: The `vm_shared_disk_enabled: true` variable must be set in Ansible (this is disabled by default)
+
+  * AWS only: The `VM_SHARED_DISK_SIZE` environment variable must be set in the user data script for each EC2 Mac instance to enable the feature
+
+  * For Apple silicon nodes: Shared attached disk support is **disabled** by default: `vm_shared_disk_enabled: false`.
+
+    * Optional: Set `osx_node_orka_vm_shared_disk_size` to specify disk size (Note: This is for on-prem/MSDC users only, and does not apply to AWS)
+  * Critical limitation for Apple silicon: When shared attached disk is enabled, only **one** VM may run per Apple silicon node
+
+  * Users running AWS: Note that the `VM_SHARED_DISK_SIZE` environment variable must be set in the user data script to enable the feature
+
+
+
+### Default Namespace Detection in Orka CLI
+
+The Orka CLI now reads the default namespace directly from your `orka` kubeconfig context, implementing hierarchical namespace resolution with environment-level overrides also available.
+
+#### Key capabilities:
+
+  * Automatic namespace detection: The Orka CLI now automatically derives the default namespace from your `orka` kubeconfig context, eliminating the need to repeatedly specify namespaces in commands
+
+  * You can manually set the `ORKA_DEFAULT_NAMESPACE` in order to override the kubeconfig-derived namespace for specific workflows or environments
+
+
+
+
+#### Getting started:
+
+#### Set a custom default namespace
+    
+    
+    export ORKA_DEFAULT_NAMESPACE=my-team-namespace
+    orka3 vm list
+    
+    
+    kubectl config set-context orka --namespace=orka-default
+
+#### Technical requirements:
+
+  * Orka CLI version 3.5.2 or later
+
+  * Valid `orka` kubeconfig file with configured context
+
+  * Optional: Set the `ORKA_DEFAULT_NAMESPACE` environment variable if a custom namespace override is needed
+
+  * Existing namespace-specific flags (e.g., `--namespace`) will continue to work and take precedence over default namespace settings
+
+
+
+
+## Improvements
+
+  * Reliability improvements for OCI image operations
+
+  * VM troubleshooting and logging improvements
+
+  * Orka Engine VM start timeout is now configurable via Ansible
+
+  * Image push/pull streaming operations now fail with a timeout if the Orka Engine server is unavailable
+
+  * Cache cleanup has been serialized to avoid concurrent cleanup failures, ensuring cache lock file permissions remain consistent
+
+  * Reduced noise and fixed behavior in non-default namespaces
+
+    * Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
+
+    * The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
+
+
+
+
+## Bug fixes
+
+  * macOS Tahoe 26.0 compatibility fixes for image deletion, copying, and tagging
+
+  * Pulling public images from GitHub Container Registry succeeds even when registry credentials are configured (automatic retry without credentials)
+
+  * Orka VM tools v3.5.2 now applies the configured display resolution correctly for Sequoia guests with custom resolution settings
+    * **Note:** You must update Orka VM tools on your existing images to receive this fix. New images created with Orka 3.5.2 will include the updated VM tools automatically.
+
+
+
+
+## Orka 3.5.1
+
+## Release summary
+
+The Orka v3.5.1 hotfix addresses five issues affecting ARM nodes, Orka operator, and the Orka CLI. All fixes can be deployed with zero downtime.
+
+## Fixed issues
+
+### NAT Networking on M4 Pro
+
+Issue: Sporadic connectivity failures where VMs using NAT networking on M4 Pro nodes cannot reach the internet or LAN.
+
+Fix: Added automatic detection and self-healing for NAT networking issues. If self-healing fails, the VM deployment will fail and the VM will be deleted. Note that most common integrations (e.g., Jenkins) will then simply re-deploy the VM.
+
+### Node Resource Display in Custom Namespaces
+
+Issue: `orka3 node list -o wide` incorrectly showed resource usage for nodes in non-default namespaces. This issue was cosmetic only, and had no impact on scheduling VMs.
+
+Fix: Corrected resource reporting logic to accurately display usage across all namespaces.
+
+### Image Caching in Custom Namespaces
+
+Issue: `orka3 ic add` silently failed when caching images to nodes in custom namespaces.
+
+Fix: Image caching now works correctly across all namespaces. You will need to re-cache any previously failed images after applying this hotfix.
+
+### Service Account Permissions Loss
+
+Issue: Service accounts lost RBAC permissions during Ansible maintenance operations, breaking automated workflows.
+
+Fix: Modified maintenance playbooks to preserve service account role bindings. Note: If you are running a previous version of Orka and are experiencing this issue, you can verify service account permissions and manually restore if needed using `orka3 rb add-subject`.
+
+### SSO Login JWT Decoding
+
+Issue: `orka3 login` with SSO failed for certain identity providers with the error "invalid ID token: illegal base64 data".
+
+Fix: Enhanced JWT token decoding to support a wider range of identity provider token formats. Update to the latest Orka CLI version and test SSO login.
+
+## Deployment
+
+The Orka v3.5.1 hotfix patch is a zero-downtime deployment. Note that Orka clusters must be at least on Orka v3.4+ / k8s v1.33 to be upgraded to v3.5.1.
+
+## Support
+
+If you have questions or require assistance, please [contact our support team.](https://support.macstadium.com/hc/en-us/requests/new "https://support.macstadium.com/hc/en-us/requests/new")  
+Orka 3.5.0
+
+We are excited to announce the latest Orka release, which brings with it significant networking enhancements, expanded guest OS support, and improved storage capabilities. Orka 3.5.0 also includes various bug fixes, improvements to performance optimization, and stability enhancements. 
+
+### New Features
+
+### Bridged networking support:
+
+> Note: Customers must configure their own DHCP server on the network infrastructure. Static IP configuration through Orka is not currently supported.
+
+The release of Orka 3.5.0 brings with it new support for bridged networking for customers running [Orka On-Prem](https://support.macstadium.com/hc/en-us/articles/39570839057819-Orka-On-Prem-Getting-Started), enabling seamless connectivity from a virtual environment to a physical network environment.
+
+#### Key capabilities:
+
+Bridged networking allows Orka VMs to connect directly to a physical network as a native device, receiving their own IP address from the network’s DHCP server. This enables direct communication with other network devices and services without the use of NAT, and is configurable automatically using Orka alongside your existing DHCP server.
+
+#### Getting started:
+
+For more information on getting started using bridge networking with Orka, please visit: [Bridge networking with Orka](https://support.macstadium.com/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0).
+
+### MacOS 26 Tahoe guest support:
+
+#### Key capabilities:
+
+Orka 3.5.0 now allows users to create guest VM images using MacOS 26 (Tahoe).
+
+#### Getting started:
+
+Users can get started with Tahoe by downloading the latest image from [OrkaHub](https://orkahub.com/), or our Tahoe package in the [orka-images repository](https://github.com/orgs/macstadium/packages/container/package/orka-images%2Ftahoe). Tahoe guest VMs can be run using the Orka CLI, or by using Orka Desktop.
+
+#### Technical requirements:
+
+  * A Sequoia 15.5 host is required in order to run a MacOS Tahoe 26 guest image
+
+  * Orka does not currently officially support running Tahoe on a host machine. We aim to officially support MacOS 26 hosts in the upcoming Orka 3.6.0 release.
+
+
+
+
+### OCI storage:
+
+Orka 3.5.0 introduces Harbor OCI storage as an alternative to NFS storage in Orka. OCI is now our default managed storage solution for new Orka customers (existing customers will keep their current storage). Your OCI instance comes preconfigured with everything needed to push and pull macOS VM images using the Orka CLI. When you purchase hosted storage through MacStadium, OCI is included as a managed service with automatic resource scaling based on your available Orka nodes. While external repositories will still remain supported for use with Orka, our managed Harbor instance provides better performance and reliability.
+
+#### Key capabilities:
+
+  * Secure, OCI-compliant image storage and management
+
+  * Role-based access control and user management
+
+  * Activity auditing and compliance tracking
+
+  * Push and pull images directly from the Orka CLI to your Harbor registry
+
+  * Prometheus support for Harbor
+
+
+
+
+#### Technical requirements:
+
+For technical requirements, please visit: [https://](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[support.](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[macstadium.](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[com/hc/en-us/](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[a](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[r](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[t](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[ic](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[l](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[e](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[s](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[/41318654531099-U](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[si](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[ng-H](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[a](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[rbor-OCI-Storag](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[e](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[-](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[wi](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[th-the-Or](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[k](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)[a-CLI](https://support.macstadium.com/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI)
+
+### Improvements
+
+  * VM shared storage is now **disabled** by default for new Orka deployments. If you are a new Orka customer and require shared storage for your VMs, please open a support ticket to opt-in and enable this feature in your cluster. Existing Orka deployments are not impacted by this change, and will retain the previous setting (enabled).
+
+  * Performance and stability improvements have been made to the Orka Nodes.
+
+  * New [Packer template examples](https://github.com/macstadium/packer-plugin-macstadium-orka/tree/main/examples) are now available, adding popular developer tools such as Homebrew, Cocoapods, Swift, xcodes, Git, and Fastlane on top of our latest existing MacOS Tahoe and MacOS Sequoia 15.5 base images.
+
+  * NFS connection is now self-healing
+
+  * VM deletion time has been improved
+
+  * Runtime reporting has been improved
+
+
+
+
+### Bug fixes
+
+  * Orphan VM logic has been updated to include removing stopped VMs automatically
+
+  * Public IP feature awareness has been added to the Orka API server
+
+  * VMs will no longer pull images if an image is already running
+
+
+
+
+### Known Issues
+
+  * VM data loss during upgrade: Upgrading from Orka 3.4 to Orka 3.5 will result in VM loss. Ensure you save/backup all virtual machines before proceeding with the upgrade, then redeploy them afterward.

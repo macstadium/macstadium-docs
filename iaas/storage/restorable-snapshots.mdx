@@ -1,0 +1,260 @@
+---
+title: "Restorable Snapshots"
+zendesk_id: 43967899182619
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/43967899182619-Restorable-Snapshots"
+section: "Storage"
+category: "IaaS"
+created_at: "2025-12-03T01:56:59Z"
+updated_at: "2025-12-03T01:57:35Z"
+promoted: false
+labels: []
+suggested_new_path: "/iaas/storage/restorable-snapshots"
+---
+
+## Snapshots
+
+A snapshot is a restorable point-in-time __picture__ of a VM or Private Cloud storage. Snapshots can be used to revert either individual virtual machines, or an entire Private Cloud instance back to the snapshotted state. Snapshots can be run either as part of a schedule or on-demand.
+
+Snapshots are particularly useful in the event of a misconfigured environment, as restoring from a cloud snapshot can revert the entire environment to its previous state.
+
+There are two types of snapshots:
+
+  * **Cloud Snapshot**
+
+    * A snapshot of an entire Private Cloud instance.
+
+  * **VM Snapshot**
+
+    * A snapshot of an individual Virtual Machine.
+
+
+
+
+### Snapshot Profiles
+
+Snapshots are created by using __snapshot profiles__. Once a snapshot profile is set up, it can be set to automatically snapshot machines on a regular basis according to stored schedules. The retention period, frequency, and machines snapshotted are all configurable. A snapshot profile can be assigned to an entire Private Cloud, an individual VM, or a NAS volume.
+
+Private Cloud includes multiple default snapshot profiles that can be used out of the box or modified as needed. Users can also create new snapshot profiles from scratch.
+
+**Default Snapshot Profiles**
+
+Default profiles are readily available and can be modified if needed. The following are default snapshot profiles:
+
+  * **SOX****(Sarbanes-Oxley)**
+
+    * Yearly snapshots retained for 7 years
+
+    * Monthly snapshots retained for 1 year
+
+    * Weekly snapshots retained for 31 days
+
+    * Daily snapshots retained for 7 days
+
+  * **HIPAA (Health Insurance Portability & Accountability Act)**
+
+    * Yearly snapshots retained indefinitely (no expiration)
+
+    * Monthly snapshots retained for 1 year
+
+    * Weekly snapshots retained for 31 days
+
+    * Daily snapshots retained for 7 days
+
+  * **NAS****Volume Syncs**
+
+    * Daily (at 6pm) snapshots retained for 3 days
+
+  * ***Cloud Snapshots (Suggested default profile for entire-system snapshots)**
+
+    * Hourly for 3 hours
+
+    * Daily (at midnight) snapshots retained for 3 days
+
+    * Daily (at noon) snapshots retained for 1 day
+
+
+
+
+Any of the default profiles can be modified to meet individual needs or requirements.
+
+### Using a Default Snapshot Profile
+
+  1. Click **System**.
+
+
+
+
+![Screenshot 2024-10-02 at 10.05.45 AM.png](https://support.macstadium.com/hc/article_attachments/43967884633883)
+
+  2. Click**Snapshot Profiles** and a list of default snapshot profiles appears.
+
+
+
+
+![Screenshot 2024-11-13 at 2.20.55 PM.png](https://support.macstadium.com/hc/article_attachments/43967884634395)
+
+  3. In this example, we'll show the SOX profile, which was created for compliance focused orgs, but MacStadium recommends Cloud Snapshots for normal use cases. 
+
+
+![Screenshot 2024-11-13 at 2.26.41 PM.png](https://support.macstadium.com/hc/article_attachments/43967884635675)
+
+  4. Double-click SOX row, and the **SOX****Snapshot Profile** opens.
+
+
+
+
+![Screenshot 2024-11-13 at 2.29.23 PM.png](https://support.macstadium.com/hc/article_attachments/43967899164827)
+
+The default SOX snapshot profile has 4 periods:
+
+  * A snapshot is taken Daily. It is retained for 7 Days.
+  * A snapshot is taken Weekly. It is retained for 4 Weeks.
+  * A snapshot is taken Monthly. It is retained for 1 year.
+  * A snapshot is taken Yearly. It is retained for 7 years.
+
+
+
+**NOTE** : There is a **\+ Add Period** , which can be used to add more snapshots. For example, a user might want an hourly snapshot or a 6-hour snapshot. The retention time can also be set.
+
+  6. In this example, click the **\+ Add Period** to modify the existing default snapshot profile. The **Snapshot Profile Period** screen opens.
+
+
+![Screenshot 2024-11-13 at 3.02.28 PM.png](https://support.macstadium.com/hc/article_attachments/43967899165467)
+
+In this example, an hourly snapshot profile is created and the retention period is 3 days. This means every hour a snapshot is taken, and then it is kept for 3 days, causing 72 snapshots to be stored.
+
+  7. Click **Submit** to create the new snapshot profile.
+
+
+
+
+![Screenshot 2024-11-13 at 3.23.41 PM.png](https://support.macstadium.com/hc/article_attachments/43967884636315)
+
+This snapshot profile now has the following snapshots:
+
+  * Hourly 
+
+  * Daily
+
+  * Weekly
+
+  * Monthly
+
+  * Yearly
+
+
+
+
+Depending on individual needs and circumstances, this snapshot might be capturing too much or too little data. But it is important to remember that snapshots can be modified as needed, and starting with a default snapshot profile might be helpful.
+
+For new users who do not have any snapshot profiles assigned, MacStadium recommends enabling the default Cloud Snapshots profile for Cloud snapshots. This profile stores 3 days of snapshots at varying frequencies, enabling recovery to a recent state in the event of a misconfiguration.
+
+### Cloud Snapshots
+
+The Cloud Snapshot profile determines the schedule used for creating snapshots of the __entire__ system. MaStadium recommends setting a Cloud Snapshot profile to for most Private Cloud instances. 
+
+Scheduled Cloud Snapshots are disabled by default. To enable cloud snapshots, a profile must be selected by navigating to **System → Cloud Snapshots** , and select the snapshot profile to use. 
+
+If a Cloud Level Snapshot is configured, individual VM snapshots may not needed. Cloud Snapshots include every VM and volume in a Private Cloud instance, and are taken in addition to VM snapshots.
+
+#### Enabling Cloud Snapshots
+
+  1. From the main dashboard, click **System** on the left menu.
+
+
+
+
+![Screenshot 2024-09-09 at 4.30.09 PM.png](https://support.macstadium.com/hc/article_attachments/43967884636571)
+
+  2. Click **Cloud Snapshots** from the left menu and you'll see the list of Snapshots.
+
+
+
+
+![Screenshot 2024-09-09 at 4.34.50 PM.png](https://support.macstadium.com/hc/article_attachments/43967899167387)![Screenshot 2024-09-24 at 3.10.28 PM.png](https://support.macstadium.com/hc/article_attachments/43967884636955)
+
+  3. Click **Select Snapshot Profile** from the left menu
+
+
+
+
+![Screenshot 2024-12-16 at 2.24.22 PM.png](https://support.macstadium.com/hc/article_attachments/43967884637467)
+
+  4. Select desired  __**snapshot profile**__ from the dropdown list
+
+     * The default Cloud Snapshots profile is recommended as a starting point for Cloud Snapshots.
+
+  5. Click **Submit** at the bottom of the page.
+
+
+
+
+![Screenshot 2024-09-09 at 4.39.22 PM.png](https://support.macstadium.com/hc/article_attachments/43967899172123)
+
+Once a Cloud Snapshot has been created, it can be viewed by clicking **Snapshot → Cloud Snapshots.**
+
+![Screenshot 2024-10-03 at 1.49.22 PM.png](https://support.macstadium.com/hc/article_attachments/43967884638107)
+
+### Manually Creating a Cloud Snapshot
+
+  1. From the main dashboard, click **System** from the left menu.
+
+  2. Select **Cloud Snapshots**.
+
+  3. Select **New** from the left menu.  
+![Screenshot 2024-11-15 at 11.44.37 AM.png](https://support.macstadium.com/hc/article_attachments/43967899173019)
+
+  4. The Cloud Snapshot screen opens
+
+
+
+  * Enter a  __**Name**__ (required) for the snapshot.
+
+  * Enter a  __**Description**__ (optional).
+
+  * In the  __**Expires**__ field, Select/Enter a date and time for expiration.
+
+
+
+
+In the Expiration Type field, __Never Expire__ can be selected, however, this can cause the snapshot to consume substantial amounts of storage. It is not recommended to use the Never Expire option unless absolutely necessary.
+
+![Screenshot 2024-11-15 at 11.49.11 AM.png](https://support.macstadium.com/hc/article_attachments/43967899176219)
+
+  5. The  __**Private**__ checkbox is selected by default. This option pertains to multitenancy, and can be ignored in the majority of cases.
+
+  6. Click **Submit**.
+
+
+
+
+### Managing Profiles for Scheduled Snapshots
+
+These profiles pertain to any snapshot that uses them.
+
+  1. From the main dashboard, click **System** from the left menu
+
+
+![Screenshot 2024-12-16 at 2.48.36 PM.png](https://support.macstadium.com/hc/article_attachments/43967884639643)
+
+  2. Click **Snapshot Profiles** from the left menu
+
+
+![Screenshot 2024-12-16 at 2.59.48 PM.png](https://support.macstadium.com/hc/article_attachments/43967884640155)
+
+  3. Click the desired snapshot profile
+
+
+![Screenshot 2024-12-16 at 3.14.46 PM.png](https://support.macstadium.com/hc/article_attachments/43967899177627)
+
+  4. Click **View**
+
+
+![Screenshot 2024-12-16 at 3.16.47 PM.png](https://support.macstadium.com/hc/article_attachments/43967884641179)
+
+The dashboard for the selected profile opens
+
+  * To ass periods to the profile click the **+Add Period** link. (A snapshot profile can contain multiple periods.)
+
+  * To modify an existing period: click the (pencil icon) to the far right. 
+  * To remove existing periods: click the (trash can icon) to the far right.

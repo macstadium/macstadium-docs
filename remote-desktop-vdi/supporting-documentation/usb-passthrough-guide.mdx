@@ -1,0 +1,178 @@
+---
+title: "USB Passthrough Guide"
+zendesk_id: 40892940519835
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/40892940519835-USB-Passthrough-Guide"
+section: "Supporting Documentation"
+category: "Remote Desktop (VDI)"
+created_at: "2025-09-09T19:53:45Z"
+updated_at: "2025-12-10T19:28:37Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/supporting-documentation/usb-passthrough-guide"
+---
+
+## 
+
+Citrix Virtual Delivery Agent (VDA) for macOS supports [USB redirection](https://docs.citrix.com/en-us/mac-vda/configure/general-content-redirection/usb-redirection), allowing locally connected USB devices to be accessed within a remote macOS desktop session hosted on MacStadium infrastructure. This enables developers and power users to interact with USB devices (such as external drives, HID devices, and iPhones/iPads) as if they were physically attached to the remote Mac.
+
+### Supported Devices and Scenarios
+
+#### Mass Storage Devices (USB drives, external disks)
+
+  * Supported beginning with Citrix macOS VDA release 2409.
+
+  * Requires enabling the USB redirection policy in Citrix DaaS or Citrix Virtual Apps and Desktops.
+
+  * Works reliably from Windows Citrix Workspace App clients.
+
+
+
+
+#### HID Devices
+
+  * Examples: Wacom tablets, game controllers.
+
+  * Redirection supported via Generic USB virtual channel.
+
+
+
+
+#### iDevices (iPhone/iPad)
+
+  * Supported beginning with [Citrix macOS VDA release 2507](https://docs.citrix.com/en-us/mac-vda/whats-new).
+
+  * Enables app developers to connect physical devices for debugging in Xcode.
+
+
+
+
+### Known Limitations
+
+Citrix Workspace App for macOS (CWA Mac)
+
+  * On macOS 15.4 and later, USB mass storage redirection may fail when using the Generic USB virtual channel.
+
+  * Devices may appear in the Workspace App interface but not mount in Finder.
+
+  * Known issue under active investigation by Citrix (see Citrix Workspace App for Mac release notes: [](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac/whats-new.html#known-issues-1)[About this release | Citrix Workspace™ app for Mac](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac/whats-new.html#known-issues-1) ).
+
+
+
+
+Performance Constraints
+
+  * USB passthrough is highly sensitive to network latency. Round-trip latency >150–200ms may prevent devices from mounting properly.
+
+  * For best results, low-latency connections (<100ms) are recommended.
+
+
+
+
+Client Platform Differences
+
+  * Windows Workspace clients are more stable for USB redirection today.
+
+  * macOS Workspace clients may be impacted by ongoing [known issues](https://docs.citrix.com/en-us/mac-vda/known-issues).
+
+
+
+
+### Recommendations
+
+  * Confirm USB Redirection policy is enabled for the correct Delivery Group in Citrix DaaS/Virtual Apps and Desktops.
+
+  * If using macOS clients, monitor Citrix release notes for resolution of known issues.
+
+  * For latency-sensitive testing, use a Windows client or connect from a low-latency environment.
+
+  * For debugging, collect logs using:
+
+` sudo xdlcollect  ctxsession -v # Check session latency`
+
+
+
+
+### Testing Guide
+
+#### 1\. Prerequisites
+
+Target system:
+
+  * Either Orka VM or MacStadium bare metal Mac, running macOS 14.x or later with Citrix VDA 2409+ installed.
+
+  * Citrix DaaS or Citrix Virtual Apps & Desktops with USB Redirection policy enabled.
+
+  * Citrix Workspace App installed on test client(s):
+
+    * Windows 11 client (recommended baseline).
+
+    * macOS 15.4+ client (to validate current known issue).
+
+
+
+
+Physical USB devices:
+
+  * Mass storage device (USB drive).
+
+    * Optional: HID device (Wacom tablet, game controller).
+
+    * Optional: iPhone/iPad (for developer redirection testing).
+
+
+
+
+#### 2\. Test Procedure
+
+  1. Enable Policy
+
+     1. Confirm USB Redirection is enabled for the correct Delivery Group.
+
+     2. Allow ~5 minutes for policy propagation.
+
+  2. Connect from Client
+
+     1. Plug USB device into local client.
+
+     2. Launch Citrix Workspace App → open the macOS VDA desktop session.
+
+     3. Check Devices menu in Workspace toolbar for USB device.
+
+  3. Switch Redirection Mode
+
+     1. If device not mounted, try switching from Optimized to Generic.
+
+     2. On macOS 15.4+, Generic may revert to Optimized (known issue).
+
+  4. Validate in VDA
+
+     1. Inside VDA, check Finder for mount.
+
+     2. Run to confirm detection:
+
+`diskutil list`
+
+  5. Network Latency Check
+
+     1. Run:
+
+`ctxsession -v`
+
+     2. If latency >150–200ms, device may not mount.
+
+  6. Collect Logs (if issues)
+
+     1. Run:
+
+`sudo xdlcollect`
+
+     2. Save and attach logs for escalation.
+
+
+
+
+#### 3\. Expected Results
+
+Windows Client: USB mass storage should appear and mount in Finder.  
+macOS Client: Device may show but not mount due to known issue.  
+HID Devices & iDevices: Should redirect and function if supported by release.

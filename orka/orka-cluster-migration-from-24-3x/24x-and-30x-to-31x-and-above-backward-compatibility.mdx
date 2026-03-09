@@ -1,0 +1,35 @@
+---
+title: "2.4.x and 3.0.x to 3.1.x and above: Backward Compatibility"
+zendesk_id: 28349322137627
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28349322137627-2-4-x-and-3-0-x-to-3-1-x-and-above-Backward-Compatibility"
+section: "Orka Cluster Migration from 2.4->3.x"
+category: "Orka"
+created_at: "2024-08-16T21:04:57Z"
+updated_at: "2025-10-22T20:37:26Z"
+promoted: false
+labels: ["orka", "api", "compatibility", "2.4", "backward"]
+suggested_new_path: "/orka/orka-cluster-migration-from-24-3x/24x-and-30x-to-31x-and-above-backward-compatibility"
+---
+
+What continues to work out-of-the-box right after the migration from Orka 2.4.x and Orka 3.0.x to Orka 3.1.x and above.
+
+The old Orka API is removed in Orka 3.1. You need to make sure that you are using:
+
+  1. You are using the new [orka3 CLI](https://support.macstadium.com/hc/en-us/articles/28347375974555)
+  2. You are using the new [Orka API](https://support.macstadium.com/hc/en-us/articles/28349313921563)
+  3. You have updated your [Orka Integrations](https://support.macstadium.com/hc/en-us/articles/28347376278299) to their latest version (**recommended**) or an older version that uses the new Orka API or CLI
+  4. You have [given access to everyone](https://support.macstadium.com/hc/en-us/articles/28328584628379) on your team that needs to access the Orka cluster inside the MacStadium Portal
+
+
+
+If you are upgrading from Orka 2.4.x you should review the CLI and API mapping to understand how to migrate your integrations with Orka.
+
+  * CLI Mapping: <https://support.macstadium.com/hc/en-us/articles/28346199889179-2-4-x-to-3-0-0-CLI-Mapping>
+  * API Mapping: <https://support.macstadium.com/hc/en-us/articles/28346085154971-2-4-x-to-3-0-0-API-Mapping>
+  * Orka3 API documentation: <https://macstadium.github.io/orka-api-docs/>
+
+
+
+**Note**
+
+The public IP support in Orka 3.0.x is limited to the Jenkins and TeamCity plugins. If you require public IPs for the Orka API and nodes for other integrations or the CLI, you need to use Orka 3.1.x or above.

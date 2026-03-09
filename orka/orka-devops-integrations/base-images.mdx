@@ -1,0 +1,37 @@
+---
+title: "Base Images"
+zendesk_id: 28332123227803
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28332123227803-Base-Images"
+section: "Orka DevOps Integrations"
+category: "Orka"
+created_at: "2024-08-16T14:23:36Z"
+updated_at: "2025-07-29T17:27:30Z"
+promoted: false
+labels: ["orka", "api", "base", "image", "images"]
+suggested_new_path: "/orka/orka-devops-integrations/base-images"
+---
+
+How to list, pull, generate, upload, and update base images with the Orka CLI.  
+  
+This page discusses base image workflows in the Orka CLI. For more information about workflows with the Orka API, see [Orka API Reference: Images](https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest#c311a394-6be6-4e8c-8b9b-b7185df6563e).
+
+On this page, you will learn how to:
+
+  * List the available base images.
+  * Add base images to the local Orka storage by generating, uploading or pulling files.
+  * Download a base image from Orka storage to your local machine.
+  * Use VMs to expand and enrich your collection of base images.
+
+
+
+#### **Quick command summary**
+    
+    
+    orka image [list / list-remote / upload / download / pull / generate]  
+    orka image [commit / save]
+
+#### **Apple ARM-based Nodes Support**
+
+Orka 2.0 introduces Apple ARM-based nodes support which adds a new type of images. To deploy a VM on an Apple ARM-based node, you need to use any of the Apple Silicon images which have extension .orkasi and are marked as Apple Silicon in the image list. Supported operations for Apple Silicon images are: list, list-remote, pull, commit, save.
+
+Read more about Apple ARM-based Support to see which commands and options are supported for VMs deployed on Apple ARM-based nodes.

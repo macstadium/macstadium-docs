@@ -1,0 +1,159 @@
+---
+title: "Shared VM Storage"
+zendesk_id: 28340384486683
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28340384486683-Shared-VM-Storage"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2024-08-16T17:46:17Z"
+updated_at: "2025-08-01T14:02:57Z"
+promoted: false
+labels: ["orka", "api", "storage", "shared"]
+suggested_new_path: "/orka/orka-resources/shared-vm-storage"
+---
+
+#### **Apple Silicon-based Monterey VMs**
+
+Starting with [Orka 2.4.0](https://orkadocs.macstadium.com/docs/orka-v240), shared VM storage is deprecated for Apple Silicon-based VMs running macOS Monterey. Intel-based Monterey VMs are not affected.
+
+In [Orka 3.0](https://orkadocs.macstadium.com/docs/orka-v300), shared VM storage is enabled for Applie Silicon macOS Ventura and newer.
+
+## Overview
+
+Starting with Orka 1.6.0, all deployed Intel-based VMs will have access to a shared storage volume in the cluster. Starting with Orka 2.1.0, all deployed ARM-based VMs will have access to the same shared storage.
+
+This storage can be used to cache build artifacts in-between stages of your CI/CD pipeline, for example, or host Xcode installers and other build dependencies.
+
+Orka offers two different ways to utilize shared VM storage:
+
+  1. By default, the VM shared storage directory will be placed on the primary NFS storage export for your cluster. This means that VM shared storage will share storage space with VM images and ISOs, so please keep this in mind!
+  2. Optionally, you may request to provision a secondary storage export that will be dedicated to shared storage. This is ideal if you plan to share a lot of data between your CI/CD pipeline builds.
+
+
+
+## Shared Storage in ARM-based VMs
+
+In ARM-based VMs the shared storage will be automatically mounted and available to use. Same storage is shared between ARM-based and Intel-based VMs.
+
+**IMPORTANT**
+
+To use the shared VM storage with VMs deployed on ARM nodes, make sure to pull the new sonoma-90gb-orka3-arm image from the remote. It contains Orka VM Tools which are required for the shared VM storage to be automounted in the VM.
+
+[Learn more about pulling an image](https://orkadocs.macstadium.com/docs/image#pull-an-image-from-the-remote-repo)
+
+**IMPORTANT**
+
+Orka VM Tools 2.2.0 introduce a breaking change to the Shared VM Storage feature when used with Orka versions 2.1.0 and 2.1.1. As a workaround, make sure to use XXXX-2.1.orkasi images (i.e. 90GBMontereySSH-2.1.orkasi) or upgrade your cluster to Orka 2.2.0.
+
+## Shared Storage in Intel-based VMs
+    
+    
+    sudo mount_9p orka
+
+The volume will be mounted at /Volumes/orka. The first time you attempt to access the filesystem via Terminal, you will be asked to grant the Terminal application permissions to access files on a network volume:
+
+![fe2b601-Screen_Shot_2021-07-23_at_5.07.33_PM.png](https://support.macstadium.com/hc/article_attachments/28340384462491)
+
+Click the OK button to allow access. You will then be able to access files on the volume:
+
+![e84d4f8-Screen_Shot_2021-07-23_at_6.11.28_PM.png](https://support.macstadium.com/hc/article_attachments/28340339123227)
+
+## Automount Shared Storage in Intel-based VMs
+
+Instead of mounting the shared storage manually after every OS restart, you can create a /Library/LaunchDaemons/com.mount9p.plist to handle automounting the shared storage.
+
+  1. Connect to your VM via SSH. 
+         
+         ssh <macOS_user>@<VM_IP> -p <SSH_PORT>
+
+  2. Make sure that /Volumes/orka is already mounted on the VM. 
+         
+         ls /Volumes
+
+  3. If not already mounted, mount the shared VM storage. 
+         
+         sudo mount_9p orka
+
+  4. Navigate to /Library/LaunchDaemons and create a com.mount9p.plist file. 
+         
+         cd /Library/LaunchDaemons  
+           
+         ls  
+           
+         sudo vim com.mount9p.plist
+
+  5. Copy the following contents and paste them in Vim. Type :wq to save and exit.  
+com.mount9p.plist 
+         
+         <?xml version="1.0" encoding="UTF-8"?>  
+         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">  
+         <plist version="1.0">  
+         <dict>  
+         <key>Label</key>  
+         <string>com.mount9p.plist</string>  
+         <key>RunAtLoad</key>  
+         <true/>  
+         <key>StandardErrorPath</key>  
+         <string>/var/log/mount_9p_error.log</string>  
+         <key>StandardOutPath</key>  
+         <string>/var/log/mount_9p.log</string>  
+         <key>ProgramArguments</key>  
+         <array>  
+         <string>/bin/bash</string>  
+         <string>-c</string>  
+         <string>mkdir -p /Volumes/orka && mount_9p orka</string>  
+         </array>  
+         </dict>  
+         </plist>
+
+  6. Change the ownership and permissions for com.mount9p.plist. 
+         
+         sudo chown root:wheel /Library/LaunchDaemons/com.mount9p.plist  
+         sudo chmod 600 /Library/LaunchDaemons/com.mount9p.plist
+
+  7. Reboot the VM and save or commit the VM image.
+
+
+
+## Limitations
+
+### Reading and Writing Data
+
+You may encounter permissions issues when reading or writing data to the shared storage volume. In order to get around this, you may need to become the root user to write data to the shared storage volume.
+
+If you need to give a specific user read and write access to files, you can add that user to the group 107. For example, if your CI user is called machine-user create the group ci:
+    
+    
+    sudo dscl . create /Groups/ci  
+    sudo dscl . create /Groups/ci gid 107  
+    sudo dscl . create /Groups/ci passwd '*'  
+    sudo dscl . create /Groups/ci GroupMembership machine-user
+
+Confirm the above changes were made with the command dscl . read /Groups/ci. Reboot the virtual machine and save or commit the VM image to persist these changes.
+
+**IMPORTANT**
+
+Files must be given group write access to be modified by the user you have added to the 107 group. For example, sudo chmod g+w myfile.txt.
+
+### Cluster Storage Limits
+
+If you are using the default primary storage export in your cluster for shared VM storage, keep in mind that this storage is also used to host your Orka VM images and other data. This should be acceptable for sharing a limited set of files between virtual machines but is not recommended for intensive IO. In the case that you require frequent use of multiple reads and writes to the shared storage volume, setting up dedicated secondary storage is highly recommended.
+
+## Known Issues
+
+When connecting to the VM over SSH and attempting to access the shared storage volume, you may encounter the error orka: Operation not permitted:
+
+![1f2144e-Screen_Shot_2021-07-26_at_11.24.03_AM.png](https://support.macstadium.com/hc/article_attachments/28340339125531)
+
+To fix this issue, connect to the VM via VNC and navigate to System Preferences → Security & Privacy and click on the Privacy tab. From the list select Full Disk Access and click the padlock in the lower lefthand corner to make changes:
+
+![520ff79-Screen_Shot_2021-07-26_at_11.29.14_AM.png](https://support.macstadium.com/hc/article_attachments/28340384468251)
+
+You will then be prompted to enter your password. Next, click the checkbox next to sshd-keygen-wrapper:
+
+![2199d4a-Screen_Shot_2021-07-26_at_11.32.14_AM.png](https://support.macstadium.com/hc/article_attachments/28340339129371)
+
+Click the padlock again to prevent further changes. You should now be able to access the shared storage volume over an SSH connection.
+
+**IMPORTANT**
+
+Make sure to save or commit the VM image after completing the above steps to persist changes.

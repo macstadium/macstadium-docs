@@ -1,0 +1,147 @@
+---
+title: "AWS VPN Config for Cisco ASA/ASAv"
+zendesk_id: 28280625682587
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28280625682587-AWS-VPN-Config-for-Cisco-ASA-ASAv"
+section: "AWS"
+category: "IaaS"
+created_at: "2024-08-14T21:17:29Z"
+updated_at: "2026-01-30T18:23:47Z"
+promoted: false
+labels: ["aws", "vpn", "config", "asa/asav"]
+suggested_new_path: "/iaas/aws/aws-vpn-config-for-cisco-asaasav"
+---
+
+## About
+
+After creating a [site-to-site VPN connection in Amazon](https://support.macstadium.com/hc/en-us/articles/28280561588507), customers must configure the Cisco firewall to recognize the connection and let traffic into MacStadium Private Cloud.
+
+## Overview
+
+Amazon provides a semi-prefilled configuration file with very detailed instructions. The configuration file must be downloaded and provide any missing information (indicated by placeholders). Afterwards, the configuration can be applied to the Cisco ASA/ASAv to complete the Site-to-Site VPN setup.
+
+## Getting Started
+
+**Amazon Configuration Download**
+
+Amazon lets you download pre-filled configurations for a variety of vendors. The default firewall vendor for MacStadium private clouds is Cisco Systems, Inc.
+
+  1. Verify that you have created a site-to-site VPN connection in Amazon.
+     * For more information about how to set up your VPN, see [Setting Up the AWS Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28279691634075).
+  2. Log in to your AWS Management Console and access your VPC service.
+  3. In the top right corner of the screen, make sure that you're working in the correct region.
+  4. In the VPC service sidebar, locate the Virtual Private Network menu and select Site-to-Site VPN Connections.  
+![48ec19d-select-virtual-private-gatewa.png](https://support.macstadium.com/hc/article_attachments/28280932929691)
+  5. In the list, select your newly created VPN connection and click Download Configuration.  
+![a86c88f-download-configuration.png](https://support.macstadium.com/hc/article_attachments/28280937375771)
+  6. For Vendor, select Cisco Systems, Inc.
+  7. For Platform, select ASA 5500 Series.
+  8. For Software, select ASA 9.x for a policy-based VPN OR ASA 9.7 + VTI for a route-based VPN.  
+![d081d30-Screenshot_2020-08-19_at_14.47.33.png](https://support.macstadium.com/hc/article_attachments/28280937379867)
+
+
+
+## Fill in the configuration blanks
+
+**IMPORTANT** : Unless you have extensive experience with AWS and ASA/ASAv configurations, follow the instructions in the configuration file to the letter. Otherwise, your site-to-site VPN might not work as expected.
+
+You need to manually replace the placeholders in the configuration file you downloaded from Amazon with the values for your MacStadium configuration.
+
+**Table 1: Configuration parameters**
+
+Placeholder | Description | More information | Example  
+---|---|---|---  
+`<outside_interface>` | The name of the outside interface of your Cisco ASA/ASAv device as provided in **Appendix A** of your IP Plan. By default, the value is `Outside`. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | `Outside`  
+`<outside_access_in>` | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | [Cisco Documentation: Cisco Access Control Lists](https://www.cisco.com/c/en/us/support/docs/security/ios-firewall/23602-confaccesslists.html) | `outside_access_in`  
+`<vpc_subnet>` | The IPv4 address of your Amazon VPC (without the subnet mask bit notation). | You can get this value by logging in to your AWS Management Console, navigating to your VPC dashboard, selecting your VPC, and checking the **Description** at the bottom of the screen. | `192.168.0.0`  
+`<vpc_subnet_mask>` | The subnet mask for your Amazon VPC. | You can get this value by logging in to your AWS Management Console, navigating to your VPC dashboard, selecting your VPC, and checking the **Details** at the bottom of the screen. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the `/16` notation converts to a `255.255.0.0` subnet mask). | `255.255.0.0`  
+`<amzn_vpn_map>` | A unique name for the crypto map. If you already have other crypto maps configured, you need to change the mapping number. | [Cisco Documentation: Configuring Crypto Maps](https://www.cisco.com/c/en/us/td/docs/security/vpn_modules/6342/vpn_cg/6342site3.html#wp1036915) |  `amzn_vpn_map`.  
+`<sla_monitor_address>` | An IP address in your Amazon VPC that can serve as an SLA monitor keeping the site-to-site tunnel alive. | You can set this to the `<vpc_subnet>` address plus one. For example: if your `<vpc_subnet>` is `192.168.0.0`, use `192.168.0.1` for your `<sla_monitor_address>`. | `192.168.0.1`  
+`<local_subnet>` | The IP address for the internal private network of your MacStadium cloud as provided in **Appendix A** of your IP Plan. By default, this is the `Private-1` network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | `192.168.0.0`  
+`<local_subnet_mask>` | The subnet mask for the internal private LAN of your MacStadium cloud as provided in **Appendix A** of the IP Plan. By default, this is the `Private-1` network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | `255.255.0.0`  
+  
+  1. Verify that you have downloaded the configuration file from your AWS Management Console.
+  2. Open the configuration file.
+  3. Replace all placeholders with their respective values. Use Table 1: Configuration parameters for reference.
+  4. Uncomment the line: access-list amzn-filter extended permit ip .... To uncomment, remove ! at the start of the line.
+  5. Uncomment the lines for object and nat configuration at the end of the config file. To uncomment, remove ! at the start of the line.
+  6. Keep the following line. This ensures the SLA monitor works as expected.
+         
+         object network obj-SrcNet
+         subnet 0.0.0.0 0.0.0.0
+
+     * Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If you choose to modify this line, do not configure the <sla_monitor_address> value.
+  7. On the following line, change 0.0.0.0 0.0.0.0 to a combination of the IP address and the subnet mask for your Amazon VPC.
+     * You can get these values by logging in to your AWS Management Console, navigating to your VPC dashboard, selecting your VPC, and checking the Description at the bottom of the screen. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the /16 notation converts to a 255.255.0.0 subnet mask).
+     * For example
+           
+           object network obj-amzn
+           subnet 0.0.0.0 0.0.0.0
+           TO
+           object network obj-amzn
+           subnet 192.168.0.0 255.255.0.0
+
+  8. On the following line, change inside and outside to the names of the internal private network and the outside interface of your MacStadium private cloud, respectively, as provided in Appendix A of your IP Plan. By default, these are Private-1 and Outside, respectively.
+         
+         nat (inside,outside) 1 source static obj-SrcNet obj-SrcNet
+         destination static obj-amzn obj-amzn
+         TO
+         nat (Private-1,Outside) 1 source static obj-SrcNet obj-SrcNet
+         destination static obj-amzn obj-amzn
+
+  9. (Optional) Delete the remaining commented lines to clean up the file. Commented lines are indicated by ! at the beginning of the line.
+  10. Save your changes.
+
+
+
+### Configure TCP State Bypass (Route-based VPN only)
+
+If you selected **ASA 9.7 + VTI** (route-based VPN), you need to enable the TCP State Bypass feature. This allows outbound and inbound traffic to flow through separate VPN tunnels, which is required for HA VPN scenarios where both tunnels are active simultaneously.  
+  
+**Table 2: TCP State Bypass parameters**
+
+Place  
+holder | Description | More information | Example  
+---|---|---|---  
+`<acl-state-bypass>` | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | [Cisco Documentation: Access Control Lists](https://www.cisco.com/c/en/us/support/docs/security/ios-firewall/23602-confaccesslists.html) | `acl-state-bypass`  
+`<cm-state-bypass>` | A unique name for the class map that identifies the traffic for which to disable stateful firewall inspection. | [Cisco Documentation: TCP State Bypass](https://www.cisco.com/c/en/us/td/docs/security/asa/asa-cli-reference/A-H/asa-command-ref-A-H.html) | `cm-state-bypass`  
+`<pm-state-bypass>` | A unique name for the policy map that assigns actions to the specified class map traffic. | [Cisco Documentation: TCP State Bypass](https://www.cisco.com/c/en/us/td/docs/security/asa/asa-cli-reference/A-H/asa-command-ref-A-H.html) | `pm-state-bypass`  
+`<private_interface>` | The name of the internal private interface of your Cisco ASA/ASAv device as provided in Appendix A of your IP Plan. By default, this is `Private-1`. | The IP Plan | `Private-1`  
+  
+  1. Define an access list with the source and destination networks:
+
+
+    
+    
+    access-list <acl-state-bypass> extended permit ip <local_subnet> <local_subnet_mask> <vpc_subnet> <vpc_subnet_mask>
+
+  2. Create a class map to identify the traffic for which you want to disable stateful firewall inspection:
+
+
+    
+    
+    class-map <cm-state-bypass>
+      match access-list <acl-state-bypass>
+
+  3. Create a policy map to assign the TCP State Bypass action to the class map:
+
+
+    
+    
+    policy-map <pm-state-bypass>
+      class <cm-state-bypass>
+        set connection advanced-options tcp-state-bypass
+
+  4. Apply the policy map to your private interface:
+
+
+    
+    
+    service-policy <pm-state-bypass> interface <private_interface>
+
+  5. Save your changes.
+
+
+
+## Next steps
+
+If you are ready to feed the complete configuration into your Cisco ASA/ASAv, see [Setting Up the MacStadium Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28297916166683).

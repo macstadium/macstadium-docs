@@ -1,0 +1,97 @@
+---
+title: "VPN Connection"
+zendesk_id: 28329406438683
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28329406438683-VPN-Connection"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-16T13:17:32Z"
+updated_at: "2024-09-18T21:47:46Z"
+promoted: false
+labels: ["orka", "api", "vpn"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/vpn-connection"
+---
+
+## Before you begin
+
+  * The server address from Step 1: VPN in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  * The username and password from Step 1: VPN in the IP Plan. 
+
+
+
+To protect your environment, MacStadium deploys your Orka cluster with a dedicated [Cisco Adaptive Security Virtual Appliance (ASAv)](https://www.cisco.com/c/en/us/products/collateral/security/adaptive-security-virtual-appliance-asav/datasheet-c78-733399.html) firewall. Cisco ASAv runs the same software as physical Cisco ASAs and delivers full ASA firewall and VPN capabilities to the cloud.
+
+Your Orka cluster sits behind its dedicated Cisco ASAv firewall. You need to be connected to the cluster via VPN to do any of the following tasks:
+
+  * Manage your Orka VMs and K8s pods.
+  * Log in to the firewall and manage connectivity between your cluster and the outside world (for example, enterprise networks, other private and public clouds).
+
+
+
+MacStadium has pre-configured the firewall and has enabled VPN access. All you need to do is run a VPN client and provide the server address and credentials for the connection.
+
+## (Open-source option) OpenConnect
+
+#### **Why OpenConnect?**
+
+If you are a pre-dominantly CLI user, you might want to use [OpenConnect](https://www.infradead.org/openconnect/index.html) \- an open-source VPN client available from the command line.
+
+### Download and install OpenConnect
+
+  * If you have Homebrew on your system, you can run brew install openconnect from your command line.
+  * If you're running on Windows, you can [download](https://www.infradead.org/openconnect/download.html) and [build](https://www.infradead.org/openconnect/building.html) the OpenConnect package yourself or you can use Cisco AnyConnect instead.
+
+
+
+### Use OpenConnect
+
+  1. From your command line, run the following command. Replace <SERVER ADDRESS> with the server address from Step 1: VPN in the IP Plan. 
+         
+         sudo openconnect <SERVER ADDRESS> --protocol=anyconnect  
+         // OR if running on Windows  
+         openconnect <SERVER ADDRESS> --protocol=anyconnect
+
+  2. Follow the prompts.  
+
+     * On the immediate Password prompt, provide your sudo password (the password for your current computer user) and press Enter.
+     * On the Enter 'yes' to accept, 'no' to abort; anything else to view: prompt, type yes and press Enter.
+     * On the Username prompt, provide the username from Step 1: VPN in the IP Plan and press Enter.
+     * On the Password prompt, provide the password from Step 1: VPN in the IP Plan and press Enter.
+
+
+
+When the connection is established, you will see a similar output:
+
+![3e27d50-openconnect-output \(1\).png](https://support.macstadium.com/hc/article_attachments/28332809005211)
+
+**TIP: Want to terminate the VPN connection?**
+
+At any time press Ctrl+C on the command line.
+
+## Cisco AnyConnect Secure Mobility Client
+
+#### **Why Cisco AnyConnect?**
+
+Cisco firewalls are designed to work with the [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/support/security/anyconnect-secure-mobility-client/tsd-products-support-series-home.html) as a VPN client. If you prefer a GUI VPN client or you're running on Windows, you might want to use Cisco AnyConnect.
+
+### Download and install Cisco AnyConnect
+
+  1. In your browser, navigate to the server address from Step 1: VPN of your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). You might need to use https://.
+  2. Ignore the certificate warning and proceed to the address.
+  3. When prompted, enter the credentials from Step 1: VPN in the IP Plan. For Orka Small Teams, see here.  
+![b054a75-anyconnect-install-prompt.png](https://support.macstadium.com/hc/article_attachments/28332770639515)
+  4. When prompted, download, install, and run the Cisco AnyConnect desktop client.
+
+
+
+## Use Cisco AnyConnect
+
+  1. Run Cisco AnyConnect Secure Mobility Client.
+  2. When prompted, enter the server address from Step 1: VPN of your IP Plan and click Connect.  
+![27c1f33-anyconnect-first-screen.png](https://support.macstadium.com/hc/article_attachments/28332809020571)
+  3. If prompted that an untrusted server was blocked, perform the following steps: 
+     * Click Change Setting... and deselect Block connections to untrusted servers.
+     * Close the Preferences - VPN window.
+     * Click Connect again.  
+![dd9d567-vpn-preferences \(1\).png](https://support.macstadium.com/hc/article_attachments/28332809026203)
+  4. If prompted that the server certificate is untrusted, click Connect Anyway.
+  5. When prompted, provide your login credentials and click OK.

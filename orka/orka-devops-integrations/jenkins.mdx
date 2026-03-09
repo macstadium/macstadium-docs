@@ -1,0 +1,94 @@
+---
+title: "Jenkins"
+zendesk_id: 28398867623835
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28398867623835-Jenkins"
+section: "Orka DevOps Integrations"
+category: "Orka"
+created_at: "2024-08-19T15:29:56Z"
+updated_at: "2026-02-20T21:47:18Z"
+promoted: false
+labels: ["orka", "jenkins", "api"]
+suggested_new_path: "/orka/orka-devops-integrations/jenkins"
+---
+
+How to use Jenkins with your Orka environment.
+
+The [**Orka by MacStadium plugin for Jenkins**](https://plugins.jenkins.io/macstadium-orka) lets you provision permanent and ephemeral Jenkins agents in your Orka environment.
+
+The provisioning of permanent agents is useful when you need to have complete manual control over the process and the lifecycle of the agents.
+
+The provisioning of ephemeral agents is useful when you need to automatically create and delete agents based on the needs of your workflows.
+
+> **IMPORTANT**
+> 
+> Orka 3.1.x and above requires version[ v2.0.0+](https://github.com/jenkinsci/macstadium-orka-plugin/releases/tag/macstadium-orka-2.01) of the plugin.
+
+## Install the plugin
+
+The Orka by MacStadium plugin is available in the [Jenkins Plugin Manager](https://plugins.jenkins.io/macstadium-orka). For more information about how to install publicly available Jenkins plugins, see [Jenkins Documentation: Managing Plugins](https://jenkins.io/doc/book/managing/plugins/).
+
+If you need to manually build, package, and run the plugin yourself, visit the [plugin repo](https://github.com/jenkinsci/macstadium-orka-plugin) for the latest information.
+
+## Provision agents with the plugin
+
+> **IMPORTANT**
+> 
+> Make sure that your Jenkins master is connected to your Orka environment through VPN. You can use a [VPN client](https://support.macstadium.com/hc/en-us/articles/28329406438683) to establish temporary connectivity, or you can create a [site-to-site VPN tunnel](https://support.macstadium.com/hc/en-us/articles/28398327991707) to keep the connection alive at all times.
+
+The [Orka by MacStadium plugin wiki](https://wiki.jenkins.io/display/JENKINS/Orka+by+MacStadium) provides the latest information about how to use the plugin.
+
+> **Apple ARM-based Nodes Support**
+> 
+> Make sure to increase Jenkins timeout to accommodate agents that are using Apple Silicon images and are deployed for the first time on an ARM-based node.
+
+## How to Enable Logging for the Orka Plugin for Jenkins
+
+If you're troubleshooting issues with the Orka plugin for Jenkins (current version: [**v2.09**](https://github.com/jenkinsci/macstadium-orka-plugin/releases/tag/macstadium-orka-2.09)), you can enable detailed plugin logging directly from the Jenkins interface using the built-in System Log feature.
+
+## Steps to Enable the Orka Plugin Logger
+
+  1. In Jenkins, go to **Manage Jenkins** -> **System Log**.
+  2. Click **Add new log recorder**.
+  3. Enter a name for the log recorder (e.g., `Orka Plugin`).
+  4. Click **Add** under **Loggers**.
+  5. In the **Logger** field, enter:
+
+
+    
+    
+       io.jenkins.plugins.orka
+
+  6. Set the **Log Level** to **All**.
+  7. Click **Save**.
+
+
+
+Jenkins will now capture detailed logs for the Orka plugin. You can view them by returning to **Manage Jenkins** → **System Log** and selecting the recorder you created.
+
+## Performance Note
+
+Using the **All** log level is the most verbose setting and can slow down Jenkins. If you notice performance degradation, you can limit logging to the core cloud class instead:
+
+  * In the **Logger** field, use:
+
+
+    
+    
+      io.jenkins.plugins.orka.OrkaCloud
+
+  * Keep the log level set to **All**.
+
+
+
+This collects the most relevant logs while reducing overall volume.
+
+## Plugin Requirements
+
+  * **Orka by MacStadium 3.0+** \-- The current plugin requires Orka 3.0 or later. If you are running Orka 2.x, use plugin version 1.35.
+  * A **VPN connection** to your Orka environment is required. Your Jenkins master must have network visibility to the Orka cluster.
+
+
+
+## Need More Help?
+
+If you're still experiencing issues after reviewing the logs, contact [MacStadium Support](https://support.macstadium.com/hc/en-us/requests/new) and include the log output for faster troubleshooting.

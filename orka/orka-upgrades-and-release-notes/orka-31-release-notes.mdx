@@ -1,0 +1,156 @@
+---
+title: "Orka 3.1 Release Notes"
+zendesk_id: 39572204477339
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39572204477339-Orka-3-1-Release-Notes"
+section: "Orka Upgrades and Release Notes"
+category: "Orka"
+created_at: "2025-08-01T14:24:36Z"
+updated_at: "2025-08-06T20:30:49Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-31-release-notes"
+---
+
+New features, improved functionality, and bug fixes in Orka v3.1.x  
+Released: May 9, 2024
+
+[__](https://orkadocs.macstadium.com/edit/orka-v310)____
+
+> **IMPORTANT**
+> 
+> Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions.
+
+# Orka v3.1.0[](https://orkadocs.macstadium.com/docs/orka-v310#orka-v310)
+
+Orka 3.1.0 is a major Orka release that brings support for public IPs for all integrations. It also contains performance improvements for big clusters.
+
+## New features[](https://orkadocs.macstadium.com/docs/orka-v310#new-features)
+
+### Orka 3.1.0 now provides support for public IPs in the CLI and integrations[](https://orkadocs.macstadium.com/docs/orka-v310#orka-310-now-provides-support-for-public-ips-in-the-cli-and-integrations)
+
+In Orka 3.0.x you were able to use public IPs only from the Jenkins and TeamCity plugins. Orka 3.1.0 allows you to use public IPs from the CLI and other integrations. To do that, use the public API IP provided by the Orka team to configure the CLI or the integrations
+    
+    
+    orka3 config set --api-url <API_PUBLIC_IP>
+
+### (Intel-only) Support for old OS versions[](https://orkadocs.macstadium.com/docs/orka-v310#intel-only-support-for-old-os-versions)
+
+Orka 3.1.0 allows the deployment of High Sierra and Mojave. To do that, ensure that legacy IO is enabled and net boost is disabled for the VM
+    
+    
+    orka3 vm deploy -i mojave.img --legacy-io --disable-net-boost
+
+### Image size details[](https://orkadocs.macstadium.com/docs/orka-v310#image-size-details)
+
+Orka 3.1.0 provides information about the image disk size as well as the actual size it takes on the storage. To get this information, run
+    
+    
+    orka3 image list -o wide
+    
+    NAME                    DESCRIPTION                         SIZE   STORAGE SIZE   TYPE    STATE   ERROR
+    sonoma-90gb-orka3-arm   sonoma-90gb-orka3-arm  							90G    16G            arm64   Ready
+
+_size_ \- This is the disk size of any VM deployed with that image
+
+_storage size_ \- This is the size the image takes on the storage
+
+## Removed and deprecated features[](https://orkadocs.macstadium.com/docs/orka-v310#removed-and-deprecated-features)
+
+### Orka 2.x API[](https://orkadocs.macstadium.com/docs/orka-v310#orka-2x-api)
+
+Orka 2.x API and earlier versions are now **removed**. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) and [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping).
+
+If you need help moving away from the Orka 2.x API, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
+
+### Orka 2.x CLI[](https://orkadocs.macstadium.com/docs/orka-v310#orka-2x-cli)
+
+Orka 2.x CLI and earlier versions are now **removed**. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) , [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping) and [2.4.x and 3.0.x to 3.1.x and above: Backward Compatibility](https://orkadocs.macstadium.com/docs/24x-to-300-backward-compatibility-copy).
+
+If you need help moving away from the Orka 2.x CLI, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
+
+## Improvements[](https://orkadocs.macstadium.com/docs/orka-v310#improvements)
+
+Orka 3.1.0. introduces the following improvements:
+
+  * Performance improvements in clusters > 20 nodes. All Orka commands should run faster and should not degrade under heavier load.
+  * Improved image resize behavior. In previous versions, if there is not enough disk space on the host, the system would cancel the image resize operation. The system now cleans old images from the cache to free space for the resized VM.
+
+
+
+## Known issues[](https://orkadocs.macstadium.com/docs/orka-v310#known-issues)
+
+  * Nested virtualization is not available on macOS 14 Sonoma VMs. This is a limitation of the Apple virtualization framework.  
+**Workaround:** None.
+  * You might experience performance issues when running Xcode 15 on your Orka VMs.  
+**Workaround:** Try updating your OS to macOS 14 Sonoma.
+  * You cannot disable System Integrity Protection on the base Sonoma image.  
+**Workaround:** MacStadiun has published a new base Sonoma image with System Integrity Protection (SIP) disabled <https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
+  * You cannot enable Kernel extensions. This is an Apple limitation.  
+**Workaround:** None.
+  * You might be unable to update existing Intel-based VMs to macOS Ventura or later. This limitation relates to the Orka image design and the Apple virtualization framework.  
+**Workaround:** Re-create your VM from one of the MacStadium official images for the respective macOS version you are trying to upgrade. Next, apply any missing updates within this OS version.
+  * VM isolation between Intel and Apple-silicon based VMs doesn't work.  
+**Workaround:** None.
+  * You might experience degraded performance on Intel-based VMs running macOS 14 Sonoma.  
+**Workaround:** Disable animations for the VM. For more information, see [here](https://support.apple.com/en-gb/guide/mac-help/mchlc03f57a1/mac).
+  * You cannot purge VMs from the **VMs** tab in the Web UI. When you try to purge a VM, the Web UI shows the following error message: `No VMs with that name exist in Orka`.  
+**Workaround:** Run **Purge** from the **VM Configs** tab.
+  * The Web UI lets you manage only resources in the `orka-default` namespace.  
+**Workaround:** For other workspaces, use the Orka3 CLI or the Orka3 API instead.
+  * When downloading a large-size ISO or image from the Swagger UI, the UI might become unresponsive, and you might lose your operation's progress.  
+**Workaround:** Use `curl` instead and provide a path on the local file system with the `-o <FILE_PATH>` flag.
+  * When checking the status of a VM, Orka 3.0.0 will list it as running even when stopped or suspended.  
+**Workaround: None.**
+  * After you resize an Apple silicon-based VM running macOS Ventura and attempt to upgrade to a newer macOS version, the upgrade might fail, or you might experience other issues with your VM. This is a limitation of the current resize design and the Apple virtualization framework.  
+**Workaround:** If possible, upgrade the image before resizing.
+  * After you resize an Apple silicon-based VM running macOS Monterey and attempt to upgrade to a newer macOS version, the upgrade might fail, or you might experience other issues with your VM. This is a limitation of the current resize design and the Apple virtualization framework.  
+**Workaround:** If possible, upgrade the image before resizing.
+  * After you resize an Apple silicon-based VM running macOS Ventura, you can no longer connect via VNC to the VM.  
+**Workaround:** If possible, use SSH or Apple Screen Sharing.
+  * After you upgrade an existing Apple silicon-based VM to a non-latest macOS version (for example, 13.2.1 when 13.3 is the latest), the VM becomes unresponsive, and you can no longer use it. The Apple virtualization framework causes this issue. We have reported the issue to Apple.  
+**Workaround:** Always upgrade to the latest macOS version.
+  * macOS Ventura VMs created from ISO return to the Recovery (ISO install) screen after restart if you don't manually select to boot macOS from the boot menu.  
+**Workaround:** Choose the second option from the boot menu (`macOS Installer` during the final steps of the setup or `Macintosh HD` after you have completed the installation) after every restart. If you miss the boot menu and end up at the Recovery screen, restart the VM from the Apple menu in the top left corner.  
+Once you're done with your current OS configuration, [commit the changes or save a new image](https://orkadocs.macstadium.com/docs/existing-images-upload-management#create-or-update-a-base-image-from-a-deployed-vm) from the VM. Use the image to create and deploy macOS Ventura VMs.
+  * Intel-based Ventura VMs created with the Orka Web UI might not work as expected. This occurs because the **Net Boost** option is disabled by default when creating new VM configs in the Web UI. However, Intel-based Ventura VMs require **Net Boost** to be enabled to work properly.  
+**Workaround:** Select the **Net Boost** checkbox when creating Intel-based Ventura VMs.
+  * You cannot access your shared VM storage after you update your Orka VM Tools from 2.3.x or earlier to 2.4.0 or later on an existing Monterey VM. The storage will still be listed under the /Volumes/orka`but you will not be able to access any content on it.<br/>**Workaround:**`Commit`or`save`the base image with the updated Orka VM Tools and re-create your Monterey VMs. Alternatively, use the latest default`.orkasi` image to re-create your VMs.
+  * If you set the default output to JSON, you can no longer use the Orka CLI in interactive mode.  
+**Workaround:** Use direct mode with the `-y` flag instead.
+  * You can simultaneously start multiple **pull remote image** or **copy image** operations in the Orka Web UI. This might cause Orka to become unresponsive until all operations are complete. You cannot use Orka with any Orka tools and integrations during that time.  
+**Workaround:** Wait for all running operations to complete.
+  * Sometimes, Orka might become unresponsive during a **pull remote image** or **copy image** operation and might start returning authentication errors.  
+Wait for the operation to complete.
+  * Apple silicon-based VMs are not able to run applications that require kernel extensions. We have filed the problem with Apple and are communicating with them through our contacts to solve it.
+  * Any VMs deployed on Apple silicon-based nodes before Orka 2.1.0 might not be functional after the upgrade to the latest Orka release.  
+**Workaround:** Delete and redeploy the VMs.
+  * Users running older versions of Orka will start seeing Apple silicon images when running `orka image list-remote`. These images are not supported in older versions of Orka, and attempting to pull them will result in an error.  
+**Workaround:** Ignore the images or upgrade to Orka 2.1.0+.
+  * There is a known issue with authentication to certain OCI registries, such as AWS ECR. This will be remedied in a coming version of Orka.
+  * If you deploy a VM on an Apple Apple silicon-based node and try to log in to your iCloud account, you might receive an error 'The action could not be completed'. This is a limitation of the Apple Virtualization Framework.  
+**Workaround:** Download the needed software via a web browser and install it manually.
+
+
+
+![1462](https://files.readme.io/4534063-7a9f7a8-Screenshot_2022-02-07_at_16_12_18.png)
+
+  * If your git-related operations are hanging, and nothing happens on an Orka VM, your Xcode is probably stuck in the "Verifying Xcode dialog" state. To ensure this is the case, you can connect to your VM via VNC, start the Xcode application and check if you will get a small window saying "Verifying Xcode".  
+**Workaround:** VNC to the VM and wait for the verification process to complete or execute the following command from the Terminal to disable Xcode verification:
+
+
+    
+    
+    xattr -d com.apple.quarantine '/Applications/Xcode.app'
+
+## How to upgrade[](https://orkadocs.macstadium.com/docs/orka-v310#how-to-upgrade)
+
+> **Scheduled maintenance window required**
+> 
+> Orka 3.1.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](https://orkadocs.macstadium.com/docs/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
+> 
+> **This release requires a maintenance window of up to 3 hours depending on the size of the cluster.**
+
+  1. Submit a ticket through the [MacStadium portal](https://portal.macstadium.com/).
+  2. Schedule a time for the maintenance window that works for you through the link provided in the ticket.  
+The suggested time(s) must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
+  3. Follow [this migration guide](https://orkadocs.macstadium.com/docs/post-300-migration-actions) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) to decide how to migrate it.

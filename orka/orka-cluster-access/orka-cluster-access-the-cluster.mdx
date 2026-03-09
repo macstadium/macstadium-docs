@@ -1,0 +1,160 @@
+---
+title: "Orka Cluster: Access the Cluster"
+zendesk_id: 28333784957211
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28333784957211-Orka-Cluster-Access-the-Cluster"
+section: "Orka Cluster Access"
+category: "Orka"
+created_at: "2024-08-16T15:05:05Z"
+updated_at: "2024-09-18T21:47:46Z"
+promoted: false
+labels: ["access", "orka", "api", "cluster"]
+suggested_new_path: "/orka/orka-cluster-access/orka-cluster-access-the-cluster"
+---
+
+To be able to work with your Orka cluster, you need to log in.
+
+## Complete the invitation process
+
+This section is applicable only to users who have been recently invited to join an Orka customer account.
+
+After the account administrator invites you to the account, you need to complete the invitation process.
+
+  1. In your email inbox, look for an email from MacStadium Support titled MacStadium Portal Invitation. 
+     * You might need to check your Spam folder.
+  2. Click the link to the customer portal and sign in with the temporary credentials provided in the invitation.
+  3. When prompted, change your password.
+  4. When prompted, fill in the Complete Registration form and click Complete Registration.
+
+
+
+## Connect to the cluster via VPN
+
+Review our[ VPN documentation](https://support.macstadium.com/hc/en-us/articles/28329406438683) for the steps to connect to your VPN.
+
+## Get your Orka API URL
+
+#### **What's your Orka API URL?**
+
+You can get your Orka API URL from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883):
+
+  * For clusters deployed before Orka 2.1, it's the .100 address for your Private-1 network (usually, 10.221.188.100), prefixed with http. For example: http://10.221.188.100.
+  * For clusters deployed with Orka 2.1 or later, it's the .20 address for your Private-1 network (usually 10.221.188.20). prefixed with http. For example: http://10.221.188.20.
+  * You can also use https://<orka-domain> and https://<custom-domain>(if configured). To get the Orka domain for your Orka cluster, contact MacStadium. To use an external custom domain, see here.
+
+
+
+**Note:** You can use http://<orka-IP>, https://<orka-domain>, and https://<custom-domain> interchangeably in your workflows.
+
+## Log in to the Orka cluster
+
+Orka customers log in to their cluster with their MacStadium Customer Portal credentials. Based on the role bindings configured for the respective user, they can access one or more namespaces.
+
+### Using the Orka3 CLI
+
+If this is the first time you are logging in after installing the Orka CLI, you need to add the <ORKA_ENDPOINT> to your CLI configuration:
+    
+    
+    orka3 config set --api-url <ORKA_ENDPOINT>
+
+If you have already configured the endpoint, run the following command:
+    
+    
+    orka3 login
+
+The Orka3 CLI launches a new browser window. Enter your credentials for the MacStadium Customer Portal and click Sign In. Return to the Orka3 CLI.
+
+### Using the Orka Web UI
+
+If you are using Orka Web UI, complete the following steps:
+
+  1. In the Orka CLI, run the following command:
+         
+         orka3 user get-token  
+           
+         OR, if you have a service account,  
+           
+         orka3 serviceaccount token <SERVICE_ACCOUNT>
+
+  2. In the browser, navigate to your <ORKA_ENDPOINT> and, when prompted, provide the token obtained in Step 1.
+
+
+
+
+#### **TIP**
+
+User tokens have a lifetime of 1h.
+
+Service account tokens have a lifetime of 1 year.
+
+If you rely mostly on the Orka Web UI, you might want to use a service account token instead of a user token.
+
+### Using the Orka3 API
+
+If you are using the Orka API, complete the following steps:
+
+  1. In the Orka3 CLI, run the following command:  
+
+         
+         orka3 user get-token  
+           
+         OR, if you have a service account,  
+           
+         orka3 serviceaccount token <SERVICE_ACCOUNT>
+
+  2. In the browser, navigate to your <ORKA_ENDPOINT>/api/v1/swagger and click Authorize.
+
+  3. In the Value text box, type Bearer <TOKEN> and click Authorize.
+
+  4. Replace <TOKEN> with the token obtained in Step 1.
+
+  5. Click Close
+
+
+
+#### **TIP**
+
+User tokens have a lifetime of one hour.
+
+Service account tokens have a lifetime of one year.
+
+If you rely mostly on the Orka3 API, you might want to use a service account token instead of a user token.
+
+## CI/CD Integrations: Log in to the Orka cluster
+
+Service accounts are intended for use with CI/CD integrations. They don't require username/password credentials to log in and let CI/CD integrations bypass the browser login. The tokens for service accounts also have an extended duration of one year.
+
+  1. Create a service account.
+
+#### **Orka CLI**
+         
+         orka3 sa create <SERVICE_ACCOUNT_NAME> [--namespace <TARGET_NAMESPACE>]  
+           
+         E.g. To create the 'sa-jenkins' service account in the 'orka-test' namespace, run:  
+         orka3 sa create sa-jenkins --namespace orka-test
+
+#### **Orka API**
+         
+         curl -X 'POST' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<NAMESPACE_NAME>/serviceaccounts/<SERVICE_ACCOUNT_NAME>' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: Bearer <TOKEN>' \  
+         -d ''
+
+  2. Generate a token.
+
+#### **Orka CLI**
+         
+         orka3 serviceaccount token <SERVICE_ACCOUNT>
+
+#### **Orka API**
+         
+         curl -X 'POST' \  
+         'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/serviceaccounts/<SERVICE_ACCOUNT_NAME>/token' \  
+         -H 'accept: application/json' \  
+         -H 'Authorization: Bearer <TOKEN>' \  
+         -H 'Content-Type: application/json' \  
+         -d '{  
+           
+         }'
+
+  3. Use the obtained credentials in your CI/CD integrations.

@@ -1,0 +1,35 @@
+---
+title: "3. AWS Orka Side of the VPN Tunnel"
+zendesk_id: 28401305336475
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28401305336475-3-AWS-Orka-Side-of-the-VPN-Tunnel"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-19T16:20:12Z"
+updated_at: "2024-09-18T21:43:48Z"
+promoted: false
+labels: ["orka", "api", "aws", "vpn", "networking", "tunnel"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel"
+---
+
+How to set up the Orka side of your AWS-Orka tunnel to enable two-way access between your AWS and Orka VMs.
+
+> #### **You need:**
+> 
+>   * Active VPN connection to your Orka cluster.
+>   * Your Cisco ASAv connection information from the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The downloaded and prepared [VPN configuration file](https://support.macstadium.com/hc/en-us/articles/28401474359835).
+> 
+
+
+After you [have created your VPN tunnel in Amazon](https://support.macstadium.com/hc/en-us/articles/28401777655707) and you [have prepared the configuration file](https://support.macstadium.com/hc/en-us/articles/28401474359835), you need to apply the configuration to the Cisco ASAv in your Orka cluster.
+
+  1. [Run Cisco ASDM-IDM and log in.](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+  2. In the Cisco ASDM-IDM application toolbar, select **Tools** > **Command Line Interface...**.
+
+
+
+![a56dcdd-cisco-asdm-tools-menu \(1\).png](https://support.macstadium.com/hc/article_attachments/28401292351259)
+
+  3. Select **Multiple Line**.
+  4. Type [configure terminal](https://www.cisco.com/c/m/en_us/techdoc/dc/reference/cli/n5k/commands/configure-terminal.html), press `Enter`, and paste the contents of the [prepared VPN configuration file](https://support.macstadium.com/hc/en-us/articles/28401474359835).
+  5. Click **Send**.

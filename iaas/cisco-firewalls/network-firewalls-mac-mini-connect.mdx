@@ -1,0 +1,58 @@
+---
+title: "Network Firewalls Mac Mini Connect"
+zendesk_id: 28263965931931
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28263965931931-Network-Firewalls-Mac-Mini-Connect"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T14:21:40Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "firewalls", "network", "connect"]
+suggested_new_path: "/iaas/cisco-firewalls/network-firewalls-mac-mini-connect"
+---
+
+**For customers with a firewall**
+
+If you have an account that includes a firewall, visit the "[Connect to your Cloud (VPN)](https://support.macstadium.com/hc/en-us/articles/28230568733979)" page.
+
+Getting connected to a dedicated Mac mini at MacStadium is simple, because the server is pre-configured to be controlled with VNC or SSH.
+
+## Finding your login credentials after signup
+
+Use initial login credentials after checkout. Follow these steps to access them:
+
+  1. Log into the [Portal account](https://portal.macstadium.com/login). These are the same credentials which were created or used during the checkout process.
+  2. Locate a ticket titled "Installation"
+  3. The ticket contain the following information: P address, username, and password (needed to access the machine)
+
+
+
+## Connecting from macOS with Screen Sharing
+
+Connecting to the MacStadium Mac's desktop from a Mac is very simple because a VNC client is included with macOS.
+
+  1. Input your machine's IP address into Safari replacing HTTP with VNC (e.g. vnc://xxx.xxx.xxx.xxx)
+  2. Apple Screen Sharing app will launch and request the machine's username and password
+  3. The login screen appears - enter your password one more time
+
+
+
+## Connecting via VNC from Windows
+
+Connecting to the MacStadium Mac's desktop is simple from Windows but requires a VNC client. MacStadium recommends Real VNC Viewer, which is free to use.
+
+  1. Download [Real VNC viewer](https://www.realvnc.com/en/connect/download/viewer/windows/)
+  2. Install and run
+  3. Use the IP address from the installation ticket
+  4. Use the username and password from the installation ticket
+  5. At the macOS login screen, enter the password one more time
+
+
+
+## Connecting from Windows 10 via SSH
+
+Connecting to your MacStadium Mac terminal via SSH is simple with Windows 10's native SSH command.
+
+  1. Go to the search bar and type "CMD" and open Command Prompt
+  2. Into the prompt, enter: ssh username@your-ip-address - where the username and IP address are the first login credentials you received after sign up
+  3. Enter the password for your machine

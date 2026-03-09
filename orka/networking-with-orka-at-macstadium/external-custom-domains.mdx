@@ -1,0 +1,197 @@
+---
+title: "External Custom Domains"
+zendesk_id: 28330039248923
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28330039248923-External-Custom-Domains"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-16T13:36:56Z"
+updated_at: "2024-09-18T21:47:46Z"
+promoted: false
+labels: ["orka", "api", "domain", "domains", "custom"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/external-custom-domains"
+---
+
+Instead of working with the default Orka endpoints (10.221.188.20 or 10.221.188.100) or your built-in Orka domain (company.orka.app), you can access your cluster from an external custom domain (for example: company.com).
+
+Custom domains provide an additional level of security and compliance. To configure an external custom domain for your cluster, you need a TLS certificate. With a valid TLS certificate in place, you need to access your cluster via HTTPS.
+
+## Overview
+
+To configure an external custom domain for your Orka cluster, you need to complete the following tasks.
+
+  1. Obtain a TLS certificate and a private key for the domain.
+  2. Upload the certificate to the cluster.
+  3. Map the custom domain and the Ingress of your cluster.
+  4. Trust the certificate on your local machine.
+  5. Configure your tools.
+
+
+
+## Limitations
+
+  * You can have only one custom TLS certificate uploaded to your cluster at a time. Subsequent uploads replace the current custom TLS certificate.
+  * Due to Node.js limitations, the Orka CLI can work only with valid TLS certificates issued by [the certificate authorities recognized by Node.js](https://github.com/nodejs/node/blob/main/src/node_root_certs.h).
+
+
+
+## 1\. Obtain a certificate
+
+Before you begin, you must have your own certificate and private key file that meet the following requirements:
+
+  * Both files are in PEM format.
+  * The private key is not passphrase protected.
+  * The certificate might be any of the following: 
+    * A single domain certificate (e.g. company.com).
+    * Multi-domain certificate (e.g. app1.company.com, app2.company.com, and so on).
+    * Wildcard TLS certificate (e.g. *.company.com)
+    * If containing an asterisk, it must be a single asterisk and must be in the leftmost position of the domain name. For example: You cannot use a *.*.company.com certificate to work with Orka.
+    * A certificate chain (bundle) that contains your server, intermediates, and root certificates concatenated (in the proper order) into one file.
+  * The certificate must be a registered domain certificate issued by a certificate authority OR a self-signed certificate for any domain (for local use only).
+
+
+
+## 2\. Upload the certificate
+
+Next, you need to upload the custom TLS certificate and private key to your cluster.
+
+  1. Connect to your cluster via [VPN](https://support.macstadium.com/hc/en-us/articles/28329406438683).
+  2. Make sure you have an [Orka license key](https://support.macstadium.com/hc/en-us/articles/28230867289883) and an Orka token.
+  3. Send the following POST request to /resources/cert/set.
+
+
+    
+    
+    curl -X POST 'http://<orka-api-url>/resources/cert/set' \  
+    --header 'Content-Type: multipart/form-data' \  
+    --header 'Authorization: Bearer <token>' \  
+    --header 'orka-licensekey: <license key>' \  
+    --form 'certPath=@<full-path-to-the-certificate>' \  
+    --form 'keyPath=@<full-path-to-the-private-key>'
+
+Replace <orka-api-ip> with 10.221.188.20 or 10.221.188.100.
+
+Replace <token> with your Orka token.
+
+Replace <license-key> with your actual Orka license key.
+
+Replace <full-path-to-the-certificate> and <full-path-to-the-private-key> with the full paths to the certificate and the private key on your local machine.
+
+## 3\. Map the domain to your cluster Ingress
+
+Next, map your external custom domain and your cluster. You need to map the domain and the IP of the cluster [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+
+#### **What's your Ingress IP?**
+
+If you reach your Orka endpoint at *.*.*.20, the Ingress IP is *.*.*.22.
+
+For example: 10.221.188.22.
+
+If you reach your Orka endpoint at *.*.*.100, the Ingress IP is *.*.*.241.
+
+For example: 10.221.188.241.
+
+### 3.1 Create a global mapping
+
+If you are working with a registered domain and a TLS certificate obtained from a certificate authority, you can configure a global mapping. You need to add A/AAAA record in the DNS settings of the domain. This A/AAAA record must map the external custom domain name to the Orka Ingress IP.
+
+### 3.2 Create a local mapping
+
+If you want to work with an external custom domain locally and you are using a self-signed TLS certificate, you can map the domain to the Ingress IP in your hosts file.
+
+**macOS and Linux**
+
+  1. In the Terminal, run the following command: 
+         
+         sudo nano /etc/hosts
+
+  2. When prompted, provide your password.
+  3. At the bottom of the file, on a new line, add the Ingress IP and the custom Orka domain, separated by a space.  
+
+         
+         <INGRESS-IP> <CUSTOM-DOMAIN>  
+           
+         For example:  
+         10.221.188.22 company.com
+
+  4. Press Ctrl+0 and then press Enter to save your changes.
+  5. Press Ctrl+X to exit nano.
+  6. (Optional, macOS) If you cannot reach your custom Orka domain, try flushing the DNS cache. 
+         
+         dscacheutil -flushcache
+
+
+
+
+**Windows**
+
+  1. Press the Windows key and type Notepad in the search text box.
+  2. Right-click the Notepad icon and select Run as administrator.
+  3. In Notepad, select File > Open.
+  4. In the File name text box, type C:\Windows\System32\drivers\etc\hosts.
+  5. At the bottom of the file, on a new line, add the Ingress IP and the custom Orka domain, separated by a space.  
+
+         
+         <INGRESS-IP> <CUSTOM-DOMAIN>  
+           
+         For example:  
+         10.221.188.22 company.com
+
+  6. Save your changes and close the file.
+
+
+
+## 4\. Trust the certificate locally
+
+This step is required for self-signed certificates. If you are using a TLS certificate for a registered domain, issued by a recognized certificate authority, you can skip this step.
+
+If you are using a self-signed certificate, you need to add your custom TLS certificate and trust it on all systems that will be accessing your Orka cluster. For some browsers, you might need to add the certificate (if self-signed) to the trusted store of the browser as well.
+
+### macOS
+
+  1. Open Keychain Access.
+  2. Drag and drop the certificate to the login keychain.
+  3. Double-click the newly added certificate.
+  4. Expand the Trust section and for the When using this certificate setting, select Always Trust.
+  5. Close the certificate info window and when prompted, provide your password.
+
+
+
+## Linux
+
+Run the following commands:
+    
+    
+    sudo mkdir /usr/local/share/ca-certificates/extra  
+    sudo cp mycertificate.pem /usr/local/share/ca-certificates/extra/mycertificate.crt  
+    sudo update-ca-certificates
+
+### Windows
+
+  1. Rename the certificate and change its extension to .crt.
+  2. Double-click the file and confirm that you want to open it.
+  3. On the General tab, click Install Certificate.
+  4. For Store Location, select Local Machine and click Next.
+  5. When prompted, confirm that you want Windows host process to make changes to your device.
+  6. Select Place all certificates in the following store, click Browse and from the list, select Trusted Root Certification Authorities and click OK.
+  7. Click Next, review the settings, and click Finish.
+
+
+
+## 5\. Configure your tools
+
+### Known limitation
+
+Due to Node.js limitations, the Orka CLI can work only with valid TLS certificates issued by [the certificate authorities recognized by Node.js](https://github.com/nodejs/node/blob/main/src/node_root_certs.h). If you are using a self-signed certificate or your certificate was issued by a certificate authority unrecognized by Node.js, you need to use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.100) with the Orka CLI, or switch to another Orka tool.
+
+Finally, you need to target your external custom domain with your Orka tools. Note that you need to use https with your custom TLS domain.
+
+  * For the Orka API, change your API requests to target [https://<custom-domain>](https://<custom-domain>).
+  * For the Orka CLI, run orka config and set https://<custom-domain> for URL. Note that you can use only valid TLS certificates issued by a limited number of certificate authorities.
+  * For the Orka Web UI, open https://<custom-domain> in your browser.
+  * For CI/CD integrations, switch to https://<custom-domain> in the respective plugin configuration.
+
+
+
+#### **TIP**
+
+You can use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.100) and your custom domain (https://company.com) interchangeably in your workflows.

@@ -1,0 +1,84 @@
+---
+title: "Using Bridge Networking with Orka 3.5.0"
+zendesk_id: 41316947194139
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0"
+section: "Orka on AWS and On-Prem"
+category: "Orka"
+created_at: "2025-09-22T14:49:55Z"
+updated_at: "2026-01-16T14:57:28Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350"
+---
+
+Bridged networking allows Orka VMs running Orka 3.5.0 to connect directly to a physical network as a native device, receiving their own IP address from the network’s DHCP server. This enables direct communication with other network devices and services without the use of NAT, and is configurable automatically using Orka alongside your existing DHCP server.
+
+### Getting started:
+
+To set up bridge networking in your Orka on-prem cluster, you will need to set the following variables in your host’s `cluster.yml` file:
+
+  1. `vm_network_mode: bridge`
+
+     1. This is used to specify the network mode to your Orka services, and is added to your `cluster.yml` file. For instructions on how to set up this file, please refer to the [Orka On-Prem: Getting Started documentation](https://support.macstadium.com/hc/en-us/articles/39570839057819-Orka-On-Prem-Getting-Started).
+
+  2. `osx_node_vm_network_interface: <host-interface>`
+
+     1. `host_interface` is the interface on the host that the DHCP server is accessible on
+
+     2. If the host interface is the same on every host, you can set this in the `nodes.yml` file
+
+     3. If the host interface differs between hosts, this can be set per host in the hosts file
+
+**Example:**  
+  
+`[arm-nodes]`  
+`10.221.188.30 osx_node_vm_network_interface=vlan0`  
+`10.221.188.31 osx_node_vm_network_interface=vlan1`
+
+
+
+
+### VNC Access
+
+When bridge mode is active, you will see a deploy output similar to the following example:
+    
+    
+    NAME IP SSH VNC SCREENSHARE STATUS
+    vm-2gdws 10.221.190.85 22 6000 5900 Running
+
+SSH and screen sharing are accessible on port 22 and port 5900 on the VM IP (10.221.190.85). As VNC runs on the host, rather than the VM, VNS is accessible on port 6000 on the host IP. To obtain the host, enter the following commands:
+
+  1. `orka3 vm list <vm name> -o wide` to get the host name
+
+  2. `orka3 node list <node name> -o wide` to get the host IP
+
+
+
+
+**Known Issue:** The WebUI connection string says For VNC use and uses the VM IP instead of the Host IP.
+
+###    
+Technical requirements and limitations:
+
+  1. Users can configure Orka using **either** NAT or bridged networking mode.
+
+  2. It is not possible to run both networking modes at the same time.
+
+  3. Users cannot have two VMs running using different networking modes simultaneously.
+
+  4. All VMs must be deleted before switching the networking mode. If your Orka cluster is running NAT and needs to be switched to bridge networking, all VMs must be deleted beforehand.
+
+
+
+
+### Common issues:
+
+**Issue:** The Orka VM has a private IP from the 192.168.64.0/24 CIDR
+
+**Solution:**
+
+  1. `vm_network_mode: bridge` was set in the `cluster.yml` file
+
+  2. `osx_node_vm_network_interface: <host_interface>` was **not** set in the `nodes.yml` or the `hosts` file
+
+  3. Rerun the host configuration with `osx_node_vm_network_interface: <host_interface>` set to the correct value

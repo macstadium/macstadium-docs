@@ -1,0 +1,142 @@
+---
+title: "Network Firewalls for CI Build Node: Ansible"
+zendesk_id: 28203419090075
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28203419090075-Network-Firewalls-for-CI-Build-Node-Ansible"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-12T15:50:00Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "ci/cd", "cloud", "infrastructure", "ansible", "ci", "network"]
+suggested_new_path: "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-ansible"
+---
+
+This guide details how to install the build tools needed to set up a CI Build Node using Ansible.
+
+Minimum requirements:
+
+  * [Homebrew](https://brew.sh/)
+  * [fastlane](https://fastlane.tools/)
+  * [CocoaPods](https://cocoapods.org/)
+  * [Xcode](https://developer.apple.com/xcode/)
+  * [Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html) is also a requirement to set up a Jenkins agent
+
+
+
+Finally, it is a good practice to have a bot user whose only responsibility is to build your OSX/iOS projects. This means such a user with the correct permissions should be created, so the user can build OSX/iOS projects.
+
+The recommended way to set up a CI Build Node is to use [Ansible](https://www.ansible.com/).
+
+Ansible is a configuration management tool that is used to automate the setup of a specific system. It can defined the system as code. This makes changes to a specific system easier and most importantly, track who changed what and how. Users unfamiliar with Ansible, should read [quickstart video](https://www.ansible.com/resources/videos/quick-start-video). It gives a good idea of what Ansible is and how it can be used.
+
+MacStadium provides an [Ansible playbook](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html) that takes care of the installation and setup of the tools need for a CI Build Node. The playbook is open-source and can be found [here](https://github.com/macstadium/ansible-playbook-osx-ci-setup).
+
+**Note** : The playbook works for OSX High Sierra and Mojave. It is capable of installing Xcode 8 and above. If you are using an older OSX version or require an older Xcode version, refer to our manual installation guide.
+
+The playbook is intended to be executed on the machine to set up as a CI Build Node. To execute the playbook remotely, to configure another [Ansible inventory](https://docs.ansible.com/ansible/2.4/intro_inventory.html).
+
+The Xcode installation requires a UI session. This means the user that executes Ansible must be logged in. For example, if Ansible with admin is executed, then the user must make sure that this user is logged in. This is achieved via VNC or via the Web Console.
+
+## Ansible Playbook
+
+### Initial setup
+
+The first step is to connect to the target machine. Do this via VNC or via the Web Console, or enable Remote Login in the macOS settings, then SSH in.
+
+To download and run the setup script contained in the [repository](https://github.com/macstadium/ansible-playbook-osx-ci-setup). To do that run the following commands:
+    
+    
+    curl https://raw.githubusercontent.com/macstadium/ansible-playbook-osx-ci-setup/master/scripts/ansible_setup.sh -o ~/ansible_setup.sh   
+    chmod +x ~/ansible_setup.sh  
+    sudo ~/ansible_setup.sh 
+
+This installs:
+
+  * Xcode Command Line Tools
+  * [pip](https://pip.pypa.io/en/stable/)
+  * [Ansible](https://www.ansible.com/)
+
+
+
+Now clone the [repository](https://github.com/macstadium/ansible-playbook-osx-ci-setup) containing the Ansible playbook.
+
+This is done by running:
+    
+    
+    git clone https://github.com/macstadium/ansible-playbook-osx-ci-setup.git
+
+This playbook consists of two roles:
+
+  * [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) \- Installs all common tooling and creates a user capable of running build jobs
+  * [Xcode](https://github.com/macstadium/ansible-role-xcode) \- Installs and configures Xcode
+
+
+
+To install these two roles execute:
+    
+    
+    cd ansible-playbook-osx-ci-setup  
+    ansible-galaxy install -r requirements.yml
+
+## OSX-CI Role Requirements
+
+The [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) requires a path to a public public ssh key on the target machine. The role adds the key to the `authorized_keys` file of the created user to enable remote login via ssh with a private key.
+
+**NOTE** : To use the target machine as a Jenkins agent you will need a key pair generated using the `RSA` algorithm.
+
+If you do not have a ssh key pair you can create one by executing on the target machine:
+    
+    
+    ssh-keygen -m PEM -t rsa -C "build machine key" -f "buildMachine_rsa"
+
+**NOTE** : For increased security, it is recommended to associate a passphrase to the private key.
+
+The command creates two files:
+
+  * buildMachine_rsa - This is the private key. Keep it safe and **do not** share it with anyone.
+  * buildMachine_rsa.pub - This is the public key.
+
+
+
+To copy the private key to a secure machine, use `scp`. This command executes copy over SSH; run:
+    
+    
+    scp /path-to-buildMachine_rsa/ username@host:/path-to-location-on-secure-machine
+
+## Xcode Role Requirements
+
+The [Xcode](https://github.com/macstadium/ansible-role-xcode) needs a Xcode xip file to be present on the target machine. Get the version needed from the [Apple Downloads Page](https://developer.apple.com/download/more/).
+
+## Password Encryption
+
+The playbook requires a privilege escalation password:
+    
+    
+    ansible_become_pass
+
+To specify a password which will be used to create a default keychain for the build user:
+    
+    
+    ci_user_default_keychain_password:
+
+It is highly recommended not to pass the passwords in plain text.
+
+To encrypt use [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html).
+
+Add the variable to [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) and execute the following command:
+    
+    
+    ansible-vault encrypt group_vars/all.yml
+
+A vault password is required and is later used to decrypt the file. Once the operation is executed the file is encrypted.
+
+## Running the Ansible Playbook
+
+To execute the Ansible playbook you can use the following command by replacing the `{placehoders}` with the correct values:
+    
+    
+    ansible-playbook site.yml -i inventory -e ansible_user={AdminUser} -e xcode_xip_location={XcodeLocation} -e xcode_major_version={XcodeMajorVersion} -e ci_user_public_key_location={PublicSshKeyLocation} --ask-vault-pass
+
+You will be prompted for the vault password that you used to encrypt the [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) file in the previous step.
+
+Once the executing is completed, you will have a fully-setup machine that you can use for OSX/iOS builds and for a Jenkins agent.

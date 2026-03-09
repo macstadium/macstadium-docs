@@ -1,0 +1,141 @@
+---
+title: "1. GCP Side of the VPN Tunnel"
+zendesk_id: 28400298949147
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28400298949147-1-GCP-Side-of-the-VPN-Tunnel"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-19T16:00:25Z"
+updated_at: "2024-09-18T21:43:50Z"
+promoted: false
+labels: ["orka", "api", "vpn", "gcp", "tunnel"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel"
+---
+
+How to configure the GCP side of your VPN tunnel between GCP and Orka.
+
+> #### **You need:**
+> 
+>   * The IP address for the `FW1-Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan.](https://support.macstadium.com/hc/en-us/articles/28230867289883)
+>   * . Most likely: `10.221.188.0/24` or `10.10.10.0/24`.
+> 
+
+
+To establish a stable, persistent connection between a Google Cloud Platform (GCP) private cloud and your Orka environment, you need to configure a policy-based IPsec site-to-site VPN between the two clouds.
+
+Currently, you can create only a classic VPN connection with policy-based routing from GCP to Orka. It consists of one tunnel and one interface and does not provide high availability. For more information about this option, see [Google Cloud Documentation: Classic VPN](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn#classic-vpn).
+
+## Step 1: Log in to GCP
+
+  1. Log in to the GCP console with your credentials.
+  2. In the toolbar at the top, make sure that you're working with the correct project.
+
+
+
+![af5b33d-project-select.png](https://support.macstadium.com/hc/article_attachments/28400298916635)
+
+## Step 2: Create the VPN connection
+
+  * From the GCP console sidebar, scroll to the  _Networking_ section and select **Hybrid Connectivity** > **VPN**.
+
+
+
+![095230c-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28400298919451)
+
+Classic VPN connections in GCP consist of a gateway and tunnel. You can create a gateway and a tunnel at once or you can add a new tunnel to an existing gateway.
+
+## Step 3a: Create gateway and tunnel
+
+If you don't have a classic VPN gateway that you want to use, complete the following steps.
+
+  1. If you don't have any VPNs created yet, click **Create VPN connection**.
+  2. If you have one or more VPNs created, click **\+ VPN SETUP WIZARD**.
+  3. Select **Classic VPN** and click **Continue**.  
+The **High-availability (HA) VPN** is currently not supported as an option. For more information about the available options, see [Google Cloud Documentation: Choosing a VPN option](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn).
+  4. In the  _Google Compute Engine VPN gateway_ section, provide **Name** and **Description**.
+  5. For **Network** , select the GCP network that needs to be able to access Orka.
+  6. Select **Region**.  
+For more information about this setting, see [Google Cloud Documentation: Regions and Zones](https://cloud.google.com/compute/docs/regions-zones).
+  7. Select or create a reserved IP address for the connection.  
+You will need this IP address when you configure the Orka side of the tunnel.
+  8. In the **Tunnels** section, provide **Name** and **Description**.
+  9. For **Remote peer IP address** , provide the IP address for the `FW1-Outside` network from your[ IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  10. For **IKE version** , verify that **IKEv2** is selected.
+  11. Provide or generate an **IKE pre-shared key**.
+
+
+
+> #### **IMPORTANT**
+> 
+> Keep a record of the pre-shared key. You will need it later.
+
+  12. For **Routing options** , select **Policy-based**.
+  13. For **Remote network IP ranges** , provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  14. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your Orka private cloud.  
+For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
+  15. (Optional) Provide one or more IP ranges within your GCP local network that needs to access Orka.
+  16. Click **Done**.
+  17. Click **Create**.
+
+
+
+After the creation is complete, the VPN tunnel status is: `First handshake`.
+
+#### **Example: Create gateway and tunnel**
+
+This image shows a sample configuration for the VPN gateway and tunnel.
+
+![fa70642-create-vpn-gateway-and-tunnel.png](https://support.macstadium.com/hc/article_attachments/28400298921499)
+
+## Step 3b: Add a new tunnel to an existing gateway
+
+If you have an existing classic VPN gateway that you want to use for the connection, complete the following steps.
+
+  1. Select **Cloud VPN Tunnels** and click **Create VPN tunnel**.
+
+
+
+![1f4015c-click-create-vpn-tunnel.png](https://support.macstadium.com/hc/article_attachments/28400286060187)
+
+  2. Select the VPN gateway that you want to use and click **Continue**.
+
+
+
+> #### **IMPORTANT**
+> 
+> Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
+
+  3. Provide **Name**.
+  4. (Optional) Provide **Description**.
+  5. For **Remote peer IP address** , provide the IP address for the `FW1-Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  6. For **IKE version** , verify that **IKEv2** is selected.
+  7. Provide or generate an **IKE pre-shared key**.
+
+
+
+> #### **IMPORTANT**
+> 
+> Keep a record of the pre-shared key. You will need it later.
+
+  8. For **Routing options** , select **Policy-based**.
+  9. For **Remote network IP ranges** , provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  10. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your Orka environment.  
+For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
+  11. (Optional) Provide one or more IP ranges within your GCP local network that needs to access Orka.
+  12. Click **Create**.
+
+
+
+After the creation is complete, the VPN tunnel status is: `First handshake`.
+
+#### **Example: Create the VPN gateway and tunnel**
+
+This image shows a sample configuration for the VPN connection.
+
+![e047ff7-example-create-tunnel.png](https://support.macstadium.com/hc/article_attachments/28400298928155)
+
+## Step 4: Ensure that the GCP firewall allows ingress traffic
+
+Based on your requirements, you might need to enable ingress traffic from Orka to GCP in the GCP firewall. For more information, see [Google Cloud Documentation: Configuring firewall rules > Example configurations](https://cloud.google.com/vpn/docs/how-to/configuring-firewall-rules#example_configurations).
+
+##

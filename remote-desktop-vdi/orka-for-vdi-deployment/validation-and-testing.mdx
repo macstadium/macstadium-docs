@@ -1,0 +1,471 @@
+---
+title: "Validation and Testing"
+zendesk_id: 44332879842587
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44332879842587-Validation-and-Testing"
+section: "Orka for VDI Deployment"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-12T16:14:36Z"
+updated_at: "2026-02-25T06:12:06Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing"
+---
+
+### 
+
+Completing validation and testing verifies that your Citrix + Orka VDI environment functions correctly before it is deployed to production. This typically consists of testing end-to-end user connectivity, VM lifecycle operations, establishing a performance baseline, and troubleshooting procedures.
+
+#### Testing prerequisites
+
+Before beginning the testing and validation process, ensure:
+
+  * Any and all relevant environment preparation, Citrix DaaS configuration, Mac host provisioning, Ansible playbook configuration, and image management steps have been completed successfully
+
+  * Golden images have been created and cached on Orka hosts
+
+  * Test VMs have been successfully deployed with Citrix VDA
+
+  * VDA registration is confirmed in Citrix Cloud Console
+
+  * Test user accounts are configured with access to Delivery Groups
+
+  * The Citrix Workspace app has been installed on test client devices
+
+  * Network configuration:
+
+    * VMs deployed with bridged networking OR
+
+    * Proper NAT/firewall configuration for VDA communication
+
+
+
+
+#### End-to-end connectivity test via Citrix Workspace
+
+This test validates the complete user journey from authentication to desktop usage.
+
+  1. Deploy 2-3 test VMs from your golden image, for example:
+         
+         ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-test" -e "desired_vms=3" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+
+  2. Verify VDA registration via the Citrix Cloud Console. Navigate to Manage → Virtual Apps and Desktops → Delivery Groups and confirm the VMs appear with a Registered status.
+
+
+
+
+3\. Test authentication workflow
+
+  * Launch the Citrix Workspace application on the test client
+
+  * Enter workspace URL or email address
+
+  * Authenticate with test user credentials
+
+  * Verify multi-factor authentication (if enabled)
+
+    * Expected result: Successful authentication, workspace dashboard loads
+
+    * Common issues:
+
+      * Authentication fails: Verify user exists in identity provider and is assigned to the correct Delivery Group
+
+      * MFA problems: Check MFA configuration in Citrix Cloud
+
+      * Workspace URL incorrect: Confirm workspace URL matches Citrix Cloud tenant
+
+
+
+
+#### Desktop visibility testing in Citrix Workspace
+
+  1. Navigate to the ‘Desktops’ tab in Citrix Workspace
+
+  2. Verify test desktop appears with the correct display name
+
+  3. Confirm desktop icon and description match configuration  
+**Expected result:** Desktop(s) visible with correct name from Delivery Group  
+**Common issues:**
+
+     1. No desktops appear:
+
+        1. Check user assignment in the Delivery Group
+
+        2. Verify VMs are registered in Citrix Cloud Console
+
+        3. Confirm VMs are in an “Available” state (not “In Use” or “Unregistered”)
+
+     2. Wrong desktop name
+
+        1. Update the desktop display name in Delivery Group settings
+
+
+
+
+#### Session launch testing in Citrix Workspace
+
+  1. Click on desktop to launch
+
+  2. Monitor connection progress
+
+  3. Time how long it takes the desktop to appear  
+**Expected result:** Desktop launches successfully within 15-30 seconds, macOS login screen or desktop appears  
+**Common issues:**
+
+     * Connection timeout
+
+Check network connectivity from client to Citrix Cloud
+
+Verify the Rendezvous connectivity from within a running VDA session by opening Terminal and running:
+           
+           curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected
+
+2\. Confirm firewall allows HDX ports (1494, 2598)
+
+3\. If you see a black screen, the VDA service may not be running, restart the VDA service from within the VM:
+           
+           sudo launchctl kickstart -k system/com.citrix.vda
+
+4\. Slow to launch: Check VM resource allocation and host performance
+
+
+
+
+#### Desktop functionality testing in Citrix Workspace
+
+##### Display and resolution
+
+  1. Verify screen resolution matches client display
+
+  2. Test full-screen mode
+
+  3. Test windowed mode and window resizing
+
+  4. Check multiple monitors are supported, if available
+
+
+
+
+##### Input devices
+
+  1. Test keyboard by typing in Notes/TextEdit
+
+  2. Test mouse movement and clicks register as expected
+
+  3. Test trackpad gestures
+
+
+
+
+##### Application functionality
+
+  1. Launch a browser (Safari, Chrome, Firefox, etc.)
+
+  2. Launch installed applications (Microsoft Office, Slack)
+
+  3. Confirm the ability to open and edit documents
+
+  4. Test switching between applications with `Cmd+Tab`
+
+
+
+
+**Expected result:** All inputs are responsive, applications launch normally with no lag or stuttering
+
+#### Peripheral and feature testing in Citrix Workspace
+
+##### Clipboard functionality
+
+  1. Test Clipboard (Copy/Paste) functionality
+
+     1. Copy text from client device → paste into VM
+
+     2. Copy text from VM → paste into client device
+
+     3. Test the ability to copy/paste formatted text, images, and files
+
+
+
+
+##### File transfers
+
+  1. Drag a file from the client to the VM desktop
+
+  2. Download a file from the VM to the client
+
+  3. Confirm the downloaded file appears in the correct location and is readable
+
+
+
+
+##### Printing
+
+  1. Attempt to print a document
+
+  2. Verify client-side printers appear in the VM
+
+  3. Test ‘print preview’ functionality
+
+  4. Verify printing a document was successful
+
+
+
+
+##### Audio
+
+  1. Verify audio plays in VM (System sounds, YouTube videos played in browser, etc.)
+
+  2. Verify audio plays on client device
+
+  3. Test microphone input (if supported)
+
+  4. Test headphone/bluetooth audio output (if supported)
+
+
+
+
+##### USB redirection (if enabled)
+
+  1. Connect USB devices to client
+
+  2. Verify device appears in VM
+
+  3. Test device functionality
+
+
+
+
+**Expected result:** All features work as expected with minimal latency
+
+**Common issues:**
+
+  * Clipboard isn’t working: Check HDX policy settings in Citrix
+
+  * No file transfer: Verify file transfer policies are enabled
+
+  * Printer issues: Check printer mapping settings in Citrix Workspace
+
+  * No audio: Verify audio policy and codec settings
+
+
+
+
+#### Session management in Citrix Workspace
+
+##### Disconnect and reconnect
+
+  1. Disconnect Citrix Workspace session (close Workspace window without logging out first)
+
+  2. Reopen Citrix Workspace and reconnect to the same desktop
+
+  3. Verify work is preserved (previouslt opened documents are still open)
+
+
+
+
+##### Session timeout
+
+  1. Leave the workspace session idle for the configured timeout period
+
+  2. Verify session disconnects automatically
+
+  3. Reconnect and verify session state
+
+
+
+
+##### Multiple sessions (if allowed)
+
+  1. Launch second desktop while the first is running
+
+  2. Switch between desktops
+
+  3. Verify both remain responsive
+
+
+
+
+##### Logging out
+
+  1. Log out from the desktop
+
+  2. Verify session ends cleanly
+
+  3. Desktop returns to “Available” state in Citrix Cloud
+
+
+
+
+**Expected result:** Sessions connect/disconnect cleanly, state is preserved, no hung sessions
+
+#### Network resilience testing in Citrix Workspace
+
+##### Network interruption
+
+  1. During an active session, briefly disconnect the client network
+
+  2. Reconnect to network after 10-20 seconds
+
+  3. Verify session automatically reconnects
+
+
+
+
+##### Bandwidth limitations
+
+  1. Simulate low bandwidth (if possible)
+
+  2. Verify session adapts (quality is lowered, but still usable)
+
+  3. HDX should automatically optimize for available bandwidth
+
+
+
+
+**Expected result:** Session survives brief interruptions, and adapts to bandwidth changes
+
+#### Multi-user testing in Citrix Workspace
+
+  1. Have multiple users connect simultaneously if testing with pooled (random assignment) desktops
+
+  2. Verify each user gets a different VM
+
+  3. Confirm there are no conflicts or resource contention
+
+  4. Users log out, VMs return to pool
+
+  5. Users reconnect, get different (or same) VM based on company policy
+
+
+
+
+**Expected result:** Multiple users can connect simultaneously without issues
+
+#### Documenting test results
+
+You may wish to record your test results for future reference or auditing/compliance needs. Things of note to include are:
+
+  * The date and time a test was performed
+
+  * Client device type and OS
+
+  * Network conditions (WiFi, VPN, etc.)
+
+  * Session launch time and duration
+
+  * Any issues encountered and their resolution
+
+  * Screenshots/confirmation of successful connection to a workspace or VM
+
+
+
+
+#### VM lifecycle validation
+
+To properly validate the VM lifecycle works as expected through Ansible automation, you will want to consider testing this in its entirety. The complete VM lifecycle is as follows: `Deploy → Start → Stop → Restart → Backup → Recreate → Delete`  
+  
+These operations form the foundation of desktop pool management with Orka for VDI. When testing, the following lifecycle phases should be validated:
+
+  1. Deploy VM from a golden image:
+         
+         ansible-playbook -i inventory deploy.yml -e "vm_group=lifecycle-test" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+
+  
+After the VM has been deployed, you will want to confirm the VM has recieved an IP address from DHCP, it is accessible via SSH, the VDA service has started automatically and has been registered with Citrix Cloud, the desktop appears in Citrix Workspace, and users can successfully launch a session. You may also wish to record the amount of time it takes to complete this workflow from the time launch commands are executed to desktop availability.  
+
+
+  2. VM power operations  
+  
+**Start a VM:**
+         
+         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=running"
+
+  
+You will want to confirm that the VM boots successfully, the VDA service restarts automatically, the VDA re-registers with Citrix Cloud, desktop returns to “Available” state, and that users can successfully launch a new session.  
+  
+**Stop a VM:**
+         
+         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=stopped"
+
+  
+You will want to confirm that the VM stops gracefully (clean shutdown), that the VM state changes to “Stopped” in Orka for VDI, the desktop becomes unavailable in Citrix Workspace, and that no active sessions remain.  
+  
+**Restart a VM (stop then start):**
+         
+         # Stop the VM
+         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=stopped"
+         
+         # Start the VM
+         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=running"
+
+  
+You will want to confirm that the VM restarts cleanly and without corruption, that boot time is reasonable, all services start correctly, and the desktop is available after restarting.  
+  
+**Recover a VM:** Note: This implementation does not have a dedicated recovery playbook.   
+  
+To recover a VM:   
+  
+1\. Deploy a new VM from a versioned golden image stored in your registry   
+2\. VDA will automatically register with Citrix Cloud using the enrollment token   
+  
+Example: 
+         
+         ansible-playbook -i inventory deploy.yml -e "vm_group=recovered-vm" -e "desired_vms=1" -e "vm_image=registry.example.com/backups/sonoma-finance:2025-01-15"
+
+  
+You will want to confirm that the VM has been recovered from backup, retains its configuration from the backup point, the VDA re-registers successfully, and the desktop is functional.  
+  
+**Delete a VM:**
+         
+         ansible-playbook -i inventory vm.yml -e "vm_name=lifecycle-test-abc123" -e "desired_state=absent"
+
+  
+You will want to confirm the VM has been deleted from Orka for VDI, the VM has been unregistered from Citrix Cloud, the desktop is removed from Citrix Workspace, resources have been freed on the Orka host.
+
+
+
+
+#### Performance and latency baselines
+
+Establishing performance baselines helps identify potential points of service degradation, and helps validate that your Orka for VDI environment meets user expectations. Having a baseline established also provides a reference point for troubleshooting, provides capacity planning data for scaling considerations, provides user experience metrics to measure service quality, and allows for regressions to be detected when adverse changes may occur.
+
+Some metrics to consider measuring are:
+
+  1. VM deployment time
+
+     1. How long does it take from playbook execution to the time a VDA is registered?
+
+        1. To establish a baseline, you may wish to record the average, minimum, and maximum time this takes across 10+ deployments and establish an acceptable target (e.g. <5 minutes for cached images)
+
+  2. Session launch time
+
+     1. How long does it take after clicking a desktop in Citrix Workspace to having a usable desktop?
+
+        1. To establish a baseline, you may want to test from multiple client locations such as office, remote, or mobile. An example target baseline metric may be <15 seconds for Rendezvous, and <10 seconds for a direct connection.
+
+  3. HDX session quality
+
+     1. Record the average framerate during normal desktop use
+
+     2. If there is input lag from keyboard/mouse to on-screen updates, how long does it take to resolve? Does the behavior persist upon restart?
+
+     3. How long does it take to launch an application within a desktop session?
+
+     4. Is video playback quality acceptable?
+
+  4. Network latency
+
+     1. What is the round-trip time from client to VM?
+
+        1. You can measure this using `ping` or HDX diagnostics
+
+        2. Test network latency under various conditions and configurations
+
+  5. Resource utilization
+
+     1. What is the host CPU usage when VMs are running?
+
+     2. What is the average memory consumption per VM?
+
+     3. What disk I/O patterns are observed?
+
+     4. What is the average network bandwidth per session?

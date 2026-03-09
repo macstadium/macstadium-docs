@@ -1,0 +1,71 @@
+---
+title: "Verify AWS"
+zendesk_id: 28298236512539
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28298236512539-Verify-AWS"
+section: "AWS"
+category: "IaaS"
+created_at: "2024-08-15T14:23:02Z"
+updated_at: "2024-09-18T21:48:41Z"
+promoted: false
+labels: ["cloud", "aws", "verify"]
+suggested_new_path: "/iaas/aws/verify-aws"
+---
+
+Verify that there is an ISAKMP security association between the peers.
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging into Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface  
+**![97da5cd-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28298213713435)
+  4. Select Single Line, enter the following command, and click Send.**  
+**
+
+
+    
+    
+    show crypto isakmp sa
+
+If the site-to-site VPN connection is configured properly, you should see information about an active IKEv1.
+
+For more information about this verification command, see [Cisco Documentation: show crypto isakmp sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#isakmp_sa).
+
+## Verify that there is an IPsec security association between peers
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging into Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select Tools > Command Line Interface  
+![9bf2163-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28298236498203)
+  4. Select Single Line, enter the following command, and click Send.
+
+
+    
+    
+    show crypto ipsec sa
+
+If the site-to-site VPN connection is configured properly, you should see a detailed log.
+
+For more information about this verification command, see [Cisco Documentation: show crypto ipsec sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#ipsec_sa).
+
+## Verify that one tunnel is up
+
+  1. Log in to your AWS Management Console and access your VPC service.
+  2. In the top right corner of the screen, make sure that you're working in the correct region.
+  3. In the sidebar, locate the Virtual Private Network menu and select Site-to-Site VPN Connections.  
+![4f27daf-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28298236499739)
+  4. Select your VPN from the list and inspect the details at the bottom of the screen.
+  5. Click Tunnel Details and verify that one of the tunnels is up.  
+![d60d726-vpn-tunnel-up.png](https://support.macstadium.com/hc/article_attachments/28298236500763)
+
+
+
+## Test traffic and visibility through the tunnel
+
+Follow the instructions provided in [Amazon VPC Documentation: How to Test the Customer Gateway Configuration](https://docs.aws.amazon.com/vpc/latest/adminguide/Cisco_ASA.html#TestCustomerGateway_ASA).
+
+## Troubleshooting
+
+See our [AWS Troubleshooting](https://support.macstadium.com/hc/en-us/articles/28312073382299) doc for some common issues with AWS-MacStadium Site-to-Site VPN Connections.

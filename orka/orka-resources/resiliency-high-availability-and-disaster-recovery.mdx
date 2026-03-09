@@ -1,0 +1,138 @@
+---
+title: "Resiliency, High Availability, and Disaster Recovery"
+zendesk_id: 39571119584411
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39571119584411-Resiliency-High-Availability-and-Disaster-Recovery"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2025-08-01T14:02:13Z"
+updated_at: "2025-08-06T20:35:29Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-resources/resiliency-high-availability-and-disaster-recovery"
+---
+
+The following will provide guidelines for resiliency, HA, and DR capabilities regarding Orka.
+
+## About[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#about)
+
+Orka provides orchestration and virtualization for virtualized runtime environments on macOS. It is particularly well-suited for continuous integration (CI) build and test processes.
+
+## Overview[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#overview)
+
+This document outlines the built-in Resiliency, High Availability (HA), and Disaster Recovery (DR) capabilities of Orka Cluster components when hosted on MacStadium. The document also outlines additional solutions, which can be implemented with added complexity and cost to achieve more advanced setups.
+
+> 🗒️**NOTE**
+> 
+> It is important to note that HA/DR setups can vary significantly in complexity and cost, based on individual needs.
+
+Orka Cluster provides substantial resiliency as part of its core offering, which is achieved by balancing effectiveness, sound expectations, and shared responsibilities between MacStadium and our customers.
+
+## Key Components[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#key-components)
+
+When considering resiliency, HA, and DR for Orka, we focus on three main software considerations of the system:
+
+  * Control Plane that orchestrates the workloads
+  * Images that can be instantiated as VMs
+  * VM Runtimes that are executing the workloads
+
+
+
+See the following diagram of these components.
+
+![](https://files.readme.io/4225fbdf28c4fd19feb3eb4b8935792c0cda9b167ddcbb83e6d7d87ecb1a27da-Orka_Cluster_3_Arch_Diagrams.png)
+
+Each component has a different approach and set of requirements to support the availability and recoverability of the Orka environment.
+
+### Control Plane[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#control-plane)
+
+The Control Plane is built on k8s, and is responsible for managing and distributing workloads across the system.
+
+**Resiliency/HA Capabilities**
+
+  * When hosted by MacStadium, Orka Cluster employs an  _active-active_ control plane architecture, utilizing three VM hosts located in a single site*. If a node goes down, another node takes over while the failed node restarts.
+    * Active-active control plane is enabled with  _Orka Cluster Advanced_.
+  * This setup provides a level of resiliency and High Availability (HA) if one or two control plane nodes fail, so the system can continue orchestrating workloads without interruption.
+
+
+
+**DR Capabilities**
+
+  * MacStadium implements regular backups of control plane configurations, which are stored on the master nodes on the NFS mount.
+  * In the unlikely event of a complete control plane loss, our Disaster Recovery (DR) plans include the ability to redeploy the control plane based on the most recent backup.
+
+
+
+### Images[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#images)
+
+Images are the saved state of a VM on disk that can be used to run VMs.
+
+**Resiliency/HA Capabilities**
+
+  * When hosted by MacStadium, Orka Cluster stores images in a Pure storage array, known for its high level of resiliency. RAID capabilities provide protection against drive failures.
+  * Customers who prefer more control or have existing storage solutions, Orka Cluster now supports image storage on any OCI-compliant repository. High Availability (HA) solutions can be implemented using the capabilities provided by the repository.
+
+
+
+**DR Capabilities**
+
+  * The Pure storage arrays can take backups at scheduled intervals and store data in adjacent storage for an additional price.
+  * Customers running an OCI-compliant repository, DR solutions can be implemented using the capabilities provided by the repository.
+
+
+
+### Future Enhancements[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#future-enhancements)
+
+  * MacStadium is in the process of enabling a secondary storage solution called  _Private Cloud_ storage solution. This solution provides the following capabilities that customers can leverage for resiliency, HA, and DR.
+    * Snapshot capabilities: Allowing point-in-time copies of images for more customer-controlled backup and recovery.
+    * DR storage on another node at additional cost; implementing cross-node replication for even greater resilience.
+
+
+
+### VM Runtimes[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#vm-runtimes)
+
+VM Runtimes are the ephemeral macOS instances themselves. These VMs typically execute a job and return some artifacts (such as a build) when complete.
+
+**Resiliency/HA Capabilities**
+
+  * In a failure, these VMs are quickly and easily restarted by the calling applications. The VMs run on a single macOS host/node and do not provide any built-in HA capabilities.
+
+
+
+**DR Capabilities**
+
+  * VMs are intended to be ephemeral and do not implement DR capabilities.
+
+
+
+## Redundant Data Centers[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#redundant-data-centers)
+
+To achieve a resilient solution across multiple data centers, MacStadium works with customers to architect a solution to route traffic between multiple geographic sites. These solutions are designed for customers who need near-continuous uptime and wish to mitigate risks associated with localized disruptions. They are not out of the box and require additional design considerations with our team.
+
+### Cluster Deployment Across Data Centers[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#cluster-deployment-across-data-centers)
+
+In a redundant data center configuration, workloads can be balanced between the data centers using a load balancer or traffic router that sits above both clusters. Customers can distribute and route workloads to the most suitable site based on resource availability or performance considerations.
+
+This solution supports use cases like high availability, blue/green deployments, and rolling upgrades. It also enables testing of new deployments without risking production environments and allows for a controlled fallback if any issues are encountered.
+
+In the event of a failure at one data center, the load balancer is reconfigured and redirects all traffic to the operational cluster. The details of this failover mechanism are designed to meet the SLAs of the customer.
+
+## Additional Responsibilities[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#additional-responsibilities)
+
+Effective High Availability / Disaster Recovery is a shared responsibility between MacStadium and our customers.
+
+> 🗒️**NOTE**
+> 
+> Understanding these responsibilities is crucial for maintaining a robust HA/DR posture.
+
+### MacStadiumResponsibilities[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#macstadiumresponsibilities)
+
+  * MacStadium is committed to ensuring that all hardware provided to the customer is operational and performing as expected.
+  * In the event of a failure, MacStadium is prepared to rebuild an Orka Cluster environment specific to that customer. This ensures that customers can resume operations as quickly as possible.
+  * MacStadium continuously monitors and maintain the underlying infrastructure to prevent potential issues before they impact customer operations.
+
+
+
+### Customer Responsibilities[](https://orkadocs.macstadium.com/docs/resiliency-high-availability-and-disaster-recovery#customer-responsibilities)
+
+  * Customers choosing to store images in OCI-compliant repositories, implementing and managing DR plans for these images falls under the customer responsibility.
+  * Customers should maintain up-to-date documentation of their Orka Cluster configurations to facilitate faster confirmation during recovery situations.

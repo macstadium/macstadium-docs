@@ -1,0 +1,324 @@
+---
+title: "Site-to-Site VPN Configuration with GCP"
+zendesk_id: 28301508345755
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28301508345755-Site-to-Site-VPN-Configuration-with-GCP"
+section: "Google Cloud Platform"
+category: "IaaS"
+created_at: "2024-08-15T15:42:25Z"
+updated_at: "2024-09-18T21:48:40Z"
+promoted: false
+labels: ["cloud", "network", "configuration", "site-to-site", "vpn", "networking", "config", "gcp", "google cloud platform"]
+suggested_new_path: "/iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp"
+---
+
+## Overview
+
+The goal of this documentation is to update the Site-to-Site VPN configuration with GCP and add specific configuration details for the ASA feature TCP State-bypass, which is required in HA VPN scenarios.
+
+## Google Cloud Networking Setup
+
+To establish a stable, persistent connection between a Google Cloud Platform (GCP) private cloud and the MacStadium private cloud, configuration must be set between an IPsec Site-To-Site VPN, between the two clouds. Currently, for connectivity between MacStadium and GCP, there are two options:
+
+  * **Classic VPN** with policy-based which consists of a single VPN tunnel, with a single external IP address and a single interface. This option does not provide high availability.
+  * **HA VPN** with dynamic routing (BGP) which provides high availability with multiple VPN tunnels, interfaces, and external IP addresses. This guide is based on the GCP One peer VPN device with one IP address topology available at: Google Cloud Documentation: 1 Peer - 1 Address. HA VPN must use dynamic routing with BGP. Classic VPN remains an option for connecting to MacStadium firewalls that do not run BGP. For more information about general Google Cloud VPN, see Google Cloud Documentation: [Cloud VPN Overview](https://cloud.google.com/network-connectivity/docs/vpn/concepts/overview).
+
+
+
+The feature TCP State Bypass in the ASA / ASAv firewall is required for HA VPN only, and is configured to allow asynchronous routing between the separate VPN tunnels.
+
+To create a site-to-site VPN from your GCP private cloud to your MacStadium private cloud, you need to go through the following high-level steps:
+
+  1. Log into GCP  
+![9b85272-image.png](https://support.macstadium.com/hc/article_attachments/28301508306971)
+  2. Create the VPN connection  
+![ff8d27b-image.png](https://support.macstadium.com/hc/article_attachments/28301513766683)  
+
+     * **NOTE** : Classic and HA VPN connections in GCP require a Cloud VPN Tunnel and a Cloud VPN Gateway. Both elements can be at once or you can add a new Cloud VPN Tunnel to an existing Cloud VPN Gateway.
+
+
+
+
+## Create VPN Gateway and Tunnel
+
+To create a new VPN Gateway, complete the following steps:
+
+  1. If the VPNs are not created yet, the click CREATE VPN CONNECTION.
+  2. If one or more of the VPNs are created, then click +VPN SETUP WIZARD.
+  3. Select Classic VPN or High-availability (HA) VPN.
+  4. Click Continue.
+
+
+
+## Classic VPN Configuration
+
+  1. In the GCP VPN gateway section, provide Name and Description.
+
+  2. For Network, select the GCP network that needs to be able to access MacStadium.
+
+  3. Select Region.
+
+  4. Select or create a reserved IP address for the connection. This IP address is needed when you configure the MacStadium side of the tunnel.
+
+  5. In the Tunnels section, provide Name, and Description.
+
+  6. For Remote peer IP address, provide the IP address of the public network listed in Appendix B of the IP Plan . By default, this is the FW1-Outside network.
+
+  7. For IKE version, verify that IKEv2 is selected.
+
+  8. Provide or generate an IKE pre-shared key.
+
+     * **NOTE** : Keep a record of the pre-shared key. It is needed later.
+
+  9. For Routing options, select Policy-based.
+
+  10. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). By default, this is the Private-1 network. For more information about CIDR notations, see Understanding IP Addresses, Subnets, and CIDR Notation for Networking. You can also use a CIDR calculator such as this CIDR/Netmask Lookup Tool.
+
+  11. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your MacStadium private cloud.
+
+     * **NOTE** : For more information, see Google Cloud Documentation: Networks and subnets.
+
+  12. (Optional) Provide one or more IP ranges within your GCP local network that needs to access MacStadium.
+
+  13. Click Done.
+
+  14. Click Create.  
+![f5b24fa-image.png](https://support.macstadium.com/hc/article_attachments/28301513770523)  
+![0858a5f-image.png](https://support.macstadium.com/hc/article_attachments/28301508314139)
+
+
+
+
+## HA VPN Configuration
+
+Creating an HA VPN on GCP is a three-step process as follows:
+
+**Create Cloud HA VPN Gateway**
+
+  1. In the Cloud HA VPN gateway section, provide a Name.
+  2. For Network, select the GCP network that needs to be able to access MacStadium.
+  3. Select Region.
+  4. Click CREATE & CONTINUE Add VPN tunnels.
+  5. In the VPN Tunnels section, make sure On-prem or Non Google Cloud is selected and click on Peer VPN gateway name > CREATE NEW PEER VPN GATEWAY.
+  6. Provide a Name for the VPN Gateway and confirm that two interfaces is selected at the next section.
+  7. For both Interface 0 IP address and Interface 1 IP address fields, provide the IP address of the public network listed in Appendix B of the IP Plan. y default, this is the FW1-Outside network. Click CREATE.
+  8. In the Routing options section, click on Cloud Router > Create new router.
+  9. Provide a Name and Description.
+  10. In Google ASN, provide any private ASN number (64512 - 65534, 4200000000 - 4294967294).
+  11. Keep the other options with the default values and click CREATE.
+  12. In the VPN tunnels section you need to configure both VPN tunnels.
+  13. Select the first VPN tunnel.
+  14. Provide a Name, Description and confirm IKEv2 is selected.
+  15. Provide or generate an IKE pre-shared key and click DONE. 
+     * **NOTE** : Keep a record of the pre-shared key. It is needed later.
+  16. Select the second VPN tunnel and repeat the steps 10 and 11.
+  17. Click CREATE & CONTINUE. Wait a few seconds while the VPN tunnels are created.
+
+
+
+## Configure BGP Sessions
+
+Scroll right and click on CONFIGURE BGP SESSION at the first VPN tunnel.
+
+  1. Provide a Name and the Peer ASN. This is also the ASN you will use to configure BGP on your MacStadium Firewall. You can choose any private ASN (64512 - 65534, 4200000000 - 4294967294) but it must be different from the ASN assigned to the Cloud Router configured on the previous step.
+  2. Keep the default values for all other options and click SAVE AND CONTINUE.
+  3. Scroll right and click on CONFIGURE BGP SESSION at the second VPN tunnel.
+  4. Repeat steps 2 and 3 to configure the BGP settings of the second VPN tunnel. Notice that the same Peer ASN should be used.
+  5. Click SAVE BGP CONFIGURATION.
+  6. In the Summary and reminder page, click on DOWNLOAD CONFIGURATION.
+  7. For Vendor select Cisco. For Platform, at the time of writing, Firepower is the only options available. On Software, confirm that >= ASA 9.13(1)2 is selected and click on DOWNLOAD.
+  8. Next click OK.
+
+
+
+After the creation is complete, the VPN tunnel status is: No incoming packets.
+
+The following images shows a sample configuration for the HA VPN gateway and tunnel.
+
+![30bd8a1-image.png](https://support.macstadium.com/hc/article_attachments/28301508316443)
+
+![5fc4eaa-image.png](https://support.macstadium.com/hc/article_attachments/28301508318875)
+
+![93df192-image.png](https://support.macstadium.com/hc/article_attachments/28301513779227)
+
+![fb646f7-image.png](https://support.macstadium.com/hc/article_attachments/28301508320155)
+
+![235ac27-image.png](https://support.macstadium.com/hc/article_attachments/28301513782171)
+
+![28687f9-image.png](https://support.macstadium.com/hc/article_attachments/28301513784091)
+
+![d4091f5-image.png](https://support.macstadium.com/hc/article_attachments/28301513785883)
+
+![3367c1b-image.png](https://support.macstadium.com/hc/article_attachments/28301508324891)
+
+![159e03a-image.png](https://support.macstadium.com/hc/article_attachments/28301508326043)
+
+## Ensure that GCP Firewall Allows Ingress Traffic
+
+Based on the requirements, it might be necessary to enable ingress traffic from MacStadium to GCP in the GCP firewall. For more information, see Google Cloud Documentation: [Configure Firewall Rules](https://cloud.google.com/network-connectivity/docs/vpn/how-to/configuring-firewall-rules#example_configurations).
+
+## Preparing the VPN Configuration
+
+To prepare the VPN configuration, see [GCP VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28301505752219).
+
+## GCP VPN Config for Cisco ASA/ASAv
+
+After the Site-to-Site VPN connection is created in Google Cloud Platform (GCP), configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud.
+
+Use the configuration template provided below and fill in the missing information. Data from both GCP and MacStadium is required.
+
+  1. Configuration template.
+  2. Fill in the configuration blanks.
+  3. Get the configuration values.
+  4. Complete the template.
+
+
+
+## Configuration Template Classic VPN
+
+**WARNING** : Do not attempt GCP and ASA/ASAv configuration without proper experience, or unexpected consequences may happen to the VPN.
+
+This is a template configuration that can be used to complete the setup of the GCP-MacStadium Site-To-SiteClassic VPN connection.
+
+` ! #1: Placeholders !  
+! { gcp_network_address } - The address of the GCP local network that needs to have access to MacStadium.  
+! { gcp_network_mask } - The subnet mask of the GCP local network that needs to have access to MacStadium. ! { gcp_vpn_ip } - The public IP address of the cloud VPN gateway in GCP. ! { macstadium_public_ip } - The IP address of the public network of your MacStadium private cloud. By default, this is FW1-Outside. ] ! { macstadium_network_name } - The name of the private network in MacStadium that needs ]to be accessed by GCP. By default, this is Private-1. ! { macstadium_network_address } - The IP address of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. ! { macstadium_network_mask } - The subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. ! { macstadium_outside_interface } - The name of the outside interface of your Cisco ASA/ASAv device. By default, this is Outside. ! { shared_key } - The IPSec pre-shared key used when creating the VPN connection in GCP.  
+! ! #2: NAT exemption ! ! The name "GCP-NET" must be unique for the Cisco ASA/ASAv device. ! object-group network GCP-NET description GCP Virtual Network network-object { gcp_network_address } { gcp_network_mask } ! The name "ONPREM-NET" must be unique for the Cisco ASA/ASAv device. object-group network ONPREM-NET description OnPrem Network network-object { macstadium_network_address } { macstadium_network_mask } ! The names "gcp-in", "gcp-acl", and "gcp-filter" must be unique for the Cisco ASA/ASAv device. access-list gcp-in extended permit ip host { gcp_vpn_ip } host { macstadium_public_ip } access-list gcp-acl extended permit ip any4 object-group GCP-NET access-list gcp-filter extended permit ip object-group GCP-NET object-group ONPREM-NET nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET ! #3: IKE & IPSec configuration  
+! ! The name "gcp" must be unique for the Cisco ASA/ASAv device. crypto ipsec ikev2 ipsec-proposal gcp protocol esp encryption aes-256 protocol esp integrity sha-1 ! The name "gcp-vpn-map" must be unique for the Cisco ASA/ASAv device. crypto map gcp-vpn-map 1 match address gcp-acl crypto map gcp-vpn-map 1 set pfs group14 crypto map gcp-vpn-map 1 set peer { gcp_vpn_ip } crypto map gcp-vpn-map 1 set ikev2 ipsec-proposal gcp crypto map gcp-vpn-map interface { macstadium_outside_interface } crypto ikev2 policy 100 encryption aes-256 integrity sha512 group 14 prf sha lifetime seconds 36000  
+exit crypto ikev2 enable { macstadium_outside_interface } crypto ipsec security-association lifetime seconds 10800 crypto ipsec security-association replay window-size 128 crypto ipsec security-association pmtu-aging infinite crypto isakmp identity address crypto isakmp disconnect-notify no crypto isakmp nat-traversal crypto ipsec df-bit clear-df Outside group-policy gcp internal group-policy gcp attributes vpn-filter value gcp-filter vpn-tunnel-protocol ikev2 tunnel-group { gcp_vpn_ip } type ipsec-l2l tunnel-group { gcp_vpn_ip } general-attributes default-group-policy gcp tunnel-group { gcp_vpn_ip } ipsec-attributes isakmp keepalive threshold 10 retry 3 ikev2 remote-authentication pre-shared-key { shared_key } ikev2 local-authentication pre-shared-key { shared_key } `
+
+## Configuration Template HA VPN
+
+**WARNING** : Do not attempt GCP and ASA/ASAv configuration without proper experience, or unexpected consequences may happen to the VPN.This is a template configuration that you can use to complete the setup of your GCP-MacStadium Site-To-Site HA VPN connection.
+
+` ! #1: Placeholders ! ! { gcp_network_address } - The address of the GCP local network that needs to have access to MacStadium. ! { gcp_network_mask } - The subnet mask of the GCP local network that needs to have access to MacStadium. ! { gcp_network_mask_cidr } - The subnet mask of the GCP local network that needs to have access to MacStadium in CIDR notation. Ex: 255.255.255.0 in CIDR notation is /24. ! { gcp_vpn_ip0 } - The public IP address of the first VPN Gateway interface in GCP. ! { gcp_vpn_ip1 } - The public IP address of the second VPN Gateway interface in GCP. ! { macstadium_public_ip } - The IP address of the public network of your MacStadium private cloud. By default, this is FW1-Outside. ! { macstadium_network_name } - The name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
+! { macstadium_network_address } - The IP address of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. ! { macstadium_network_mask } - The subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. ! { macstadium _network_mask_cidr } - The subnet mask in CIDR notation of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Ex: 255.255.254.0 in CIDR notation is /23 ! { macstadium_outside_interface } - The name of the outside interface of your Cisco ASA/ASAv device. By default, this is Outside. ! { shared_key0 } - The IPSec pre-shared key used when creating the first VPN connection in GCP. ! { shared_key1 } - The IPSec pre-shared key used when creating the second VPN connection in GCP. ! { gcp_bgp_ip_address0 } - The Cloud router BGP IP address of the first BGP session in GCP. ! { gcp_bgp_ip_address1 } - The Cloud router BGP IP address of the second BGP session in GCP. ! { macstadium_bgp_ip_address0 } - The BGP peer IP address of the first BGP session in GCP. ! { macstadium_bgp_ip_address1 } – The BGP peer IP address of the second BGP session in GCP. ! { macstadium_bgp_asn } – The BGP peer router ASN of the BGP sessions configuration in GCP. ! { gcp_bgp_asn } – The BGP router ASN on the Cloud Router configuration in GCP. ! ! #1: IKE & IPSec configuration ! ! The name "gcp" must be unique for the Cisco ASA/ASAv device. ! configure terminal crypto ipsec ikev2 ipsec-proposal gcp protocol esp encryption aes-gcm-256 protocol esp integrity sha-512 !  
+crypto ipsec profile gcp set ikev2 ipsec-proposal gcp set pfs group14 set security-association lifetime kilobytes unlimited set security-association lifetime seconds 10800 ! crypto ipsec security-association pmtu-aging infinite ! crypto ikev2 policy 10 encryption aes-gcm-256 integrity null group 14 prf sha512 sha384 sha256 sha lifetime seconds 36000 crypto ikev2 policy 100 encryption aes-256 integrity sha512 group 14 prf sha lifetime seconds 36000 ! crypto ikev2 enable { macstadium_outside_interface } !  
+group-policy gcp internal group-policy gcp attributes vpn-tunnel-protocol ikev2 ! tunnel-group { gcp_vpn_ip0 } type ipsec-l2l tunnel-group { gcp_vpn_ip0 } general-attributes default-group-policy gcp tunnel-group { gcp_vpn_ip0 } ipsec-attributes isakmp keepalive threshold 10 retry 3 ikev2 remote-authentication pre-shared-key { shared_key0 } ikev2 local-authentication pre-shared-key { shared_key0 } ! tunnel-group { gcp_vpn_ip1 } type ipsec-l2l tunnel-group { gcp_vpn_ip1 } general-attributes default-group-policy gcp tunnel-group { gcp_vpn_ip1 } ipsec-attributes isakmp keepalive threshold 10 retry 3 ikev2 remote-authentication pre-shared-key { shared_key1 } ikev2 local-authentication pre-shared-key { shared_key1 } ! ! #2: Tunnel interfaces configuration ! ! The name Tunnel interface number, "gcp-if-0" and "gcp-if-1" must be unique for the Cisco ASA/ASAv device. interface Tunnel0 nameif gcp-if-0 ip address { macstadium_bgp_ip_address0 } 255.255.255.252 tunnel source interface { macstadium_outside_interface } tunnel destination { gcp_vpn_ip0 } tunnel mode ipsec ipv4 tunnel protection ipsec profile gcp  
+! interface Tunnel1 nameif gcp-if-1 ip address { macstadium_bgp_ip_address1 } 255.255.255.252 tunnel source interface { macstadium_outside_interface } tunnel destination { gcp_vpn_ip1 } tunnel mode ipsec ipv4 tunnel protection ipsec profile gcp ! ! #3: Access control configuration ! ! The name “gcp-vpc-lan”, “gcp-in” and “gcp-out” must be unique for the Cisco ASA/ASAv device. object network gcp-vpc-lan subnet { gcp_network_address } { gcp_network_mask } ! access-list gcp-in extended permit ip any any ! access-group gcp-in in interface gcp-if-0 control-plane access-group gcp-in in interface gcp-if-0 access-group gcp-in in interface gcp-if-1 control-plane access-group gcp-in in interface gcp-if-1  
+! prefix-list gcp-in seq 5 permit { gcp_network_address }/{ gcp _network_mask_cidr } le 32 ! prefix-list gcp-out seq 5 permit { macstadium_network_address }/{ macstadium _network_mask_cidr } le 32 ! router bgp { macstadium_bgp_asn } bgp log-neighbor-changes bgp graceful-restart address-family ipv4 unicast neighbor { gcp_bgp_ip_address0 } remote-as { gcp_bgp_asn } neighbor { gcp_bgp_ip_address0 } ebgp-multihop 2 neighbor { gcp_bgp_ip_address0 } activate neighbor { gcp_bgp_ip_address0 } prefix-list gcp-in in neighbor { gcp_bgp_ip_address0 } prefix-list gcp-out out neighbor { gcp_bgp_ip_address0 } maximum-prefix 100 70 neighbor { gcp_bgp_ip_address1 } remote-as { gcp_bgp_asn } neighbor { gcp_bgp_ip_address1 } ebgp-multihop 2 neighbor { gcp_bgp_ip_address1 } activate neighbor { gcp_bgp_ip_address1 } prefix-list gcp-in in neighbor { gcp_bgp_ip_address1 } prefix-list gcp-out out neighbor { gcp_bgp_ip_address1 } maximum-prefix 100 70 network { macstadium_network_address } mask { macstadium_network_mask } maximum-paths 2 no auto-summary no synchronization exit-address-family end write memory `
+
+## Fill in the Configuration Blanks
+
+Manually replace the placeholders in the configuration template with the values for your GCP and MacStadium configurations.
+
+### Get the Configuration Values
+
+  1. Confirm login to the GCP console.  
+![6e081ee-image.png](https://support.macstadium.com/hc/article_attachments/28302550932123)
+  2. In the GCP search bar, type VPN and select VPN Hybrid Connectivity.  
+![1cabbfb-image.png](https://support.macstadium.com/hc/article_attachments/28302601437467)  
+
+     * { gcp_network_address }, { gcp_network_mask_cidr } and { gcp_network_mask_cidr }
+
+     * This is the IP address of the GCP local network that needs to have access to MacStadium.
+
+  3. Select Cloud VPN Gateways.
+  4. Locate the gateway used by the GCP-MacStadium tunnel and note the value for Region.  
+![0ec2771-image.png](https://support.macstadium.com/hc/article_attachments/28302601443483)
+  5. Click the value listed under VPC network.  
+
+     * The GCP console redirects you to the list of subnets for the selected network.
+
+  6. In the list of subnets, locate the one matching the region selected earlier.
+  7. Obtain the values from the Internal IP ranges field. Example:  
+
+     * ` Region: us-east1 Internal IP range: 10.142.0.0/20 { gcp_network_address }: 10.142.0.0 { gcp_network_mask }: 255.255.240.0 { gcp_network_mask_cidr }: /20 `
+
+     * This is the public IP addresses of the Cloud VPN gateway interfaces in GCP.
+
+  8. In the VPN Hybrid Connectivity service page, select Cloud VPN Gateways.
+  9. Locate the gateway used by the GCP-MacStadium tunnel and use the values listed under IP address.  
+![002bb6e-image.png](https://support.macstadium.com/hc/article_attachments/28302550950555)
+     * `{ macstadium_public_ip }`
+       * This is the IP address of the public network of the MacStadium private cloud. By default, this is FW1-Outside. Information about the public network is located in Appendix B of the IP Plan.  
+`{ macstadium_network_name } Commented [FM20]: New image, highlight CLOUD VPN GATEWAYS, VPC network and Region Commented [FM21]: New image, highlight CLOUD VPN`
+       * GATEWAYS and the IP address field. This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Information about the public network is located in Appendix B of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+     * `{ macstadium_network_address }`
+       * This is the Subnet ID of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1 Subnet ID. Information about the public network is located in Appendix B of the IP Plan
+     * `{ macstadium_network_mask }`
+       * This is the subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1 Subnet. Information about the public network is located in Appendix B of the IP Plan.
+     * `{ macstadium _network_mask_cidr }`
+       * To convert the subnet mask to a CIDR notation, use a CIDR calculator such as this CIDR/Netmask Lookup Tool.
+     * `{ macstadium_outside_interface }`
+       * This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Outside. Information about the public network is located in Appendix B of the IP Plan.
+     * `{ shared_key0 }` and `{ shared_key1 }`
+       * This is the IPSec pre-shared key used when creating the VPN connection in GCP.
+       * **NOTE** : This key must be saved separately. Obtain it from the VPN configuration downloaded from GCP.
+     * `{ gcp_bgp_ip_address0 }` and `{ gcp_bgp_ip_address1 }`
+       * The Cloud router BGP IP address of the BGP sessions in GCP.
+       * In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
+  10. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
+  11. Locate the VPN tunnels used by your GCP-MacStadium VPN and use the values listed under Cloud Router BGP IP address.  
+![f368878-image.png](https://support.macstadium.com/hc/article_attachments/28302550961563)  
+
+     * ` { macstadium_bgp_ip_address0 } and { macstadium_bgp_ip_address1 }`
+
+  12. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
+  13. Locate the VPN tunnels used by your GCP-MacStadium VPN and use the values listed under Peer BGP IP address.  
+![d5d9744-image.png](https://support.macstadium.com/hc/article_attachments/28302601458971)  
+
+     * `{ gcp_bgp_asn }`
+  14. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
+  15. Locate the VPN tunnels used by your GCP-MacStadium VPN, click on the Actions button and select View.  
+![bb3a56b-image.png](https://support.macstadium.com/hc/article_attachments/28302601464219)
+  16. Use the value of the Cloud Router ASN field. Both tunnels should have the same value for this parameter.  
+![523c2c7-image.png](https://support.macstadium.com/hc/article_attachments/28302601474715)  
+
+     * `{ macstadium_bgp_asn }`
+  17. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
+  18. Locate the VPN tunnels used by the GCP-MacStadium VPN, and click on Actions.
+  19. Select View.  
+![19590a0-image.png](https://support.macstadium.com/hc/article_attachments/28302601480475)
+  20. Use the value of the Cloud Router ASN field. Both tunnels should have the same value for this parameter.  
+![946d5e3-image.png](https://support.macstadium.com/hc/article_attachments/28302550993691)
+
+
+
+## Complete the Template
+
+  1. Copy the template into a text editing tool.
+  2. Replace all placeholders with their respective values.
+  3. Delete the remaining commented lines to clean up the template. Commented lines are indicated by ! at the beginning of the line.
+  4. Apply the config to your firewall and save your changes.
+
+
+
+## TCP State Bypass
+
+After the VPN is configured, configure TCP State Bypass on the ASA / ASAv firewall in order to allow the outbound and inbound traffic to flow through separate VPN tunnels.
+
+Placeholder | Description | More Information | Example  
+---|---|---|---  
+      
+    
+    {acl-state-bypass}
+
+| A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation: Access  
+Control Lists | acl-state-bypass  
+      
+    
+    {cm_state-bypass}
+
+| A unique name for the Class-map. | Cisco Documentation: TCP State  
+Bypass | cm-state-bypass  
+      
+    
+    {pm-state-bypass}
+
+| A unique name for the access control list that permits the creation of the tunnel and  
+the traffic over it. | Cisco Documentation: TCP State  
+Bypass | pm-state-bypass  
+  
+  1. Define the Access list with the source and destination networks: 
+     * ` access-list { acl-state-bypass } extended permit ip { macstadium_network_address } { macstadium_network_mask } { gcp_network_address } { gcp_network_mask } `
+  2. Create the Class Map to identify the traffic to disable stateful Firewall inspection: 
+     * `class-map { cm-state-bypass }`
+  3. Enter the match parameter command to specify the traffic of interest within the class map. 
+     * `match access-list { acl-state-bypass }`
+  4. Enter the policy-map name command to assign the actions to be taken in regards to the specified class map traffic: 
+     * `policy-map { pm-state-bypass } class { cm-state-bypass } set connection advanced-options tcp-state-bypass`
+  5. Enter the service-policy command in global configuration mode in order to activate the policy map on the targeted interface: 
+     * `service-policy { pm-state-bypass } interface { macstadium_network_name }`
+  6. Save changes: 
+     * `write memory`
+     * To feed the complete configuration into your Cisco ASA/ASAv, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).

@@ -1,0 +1,46 @@
+---
+title: "2.4.x to 3.0.0: What Persists"
+zendesk_id: 28346719813659
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28346719813659-2-4-x-to-3-0-0-What-Persists"
+section: "Orka Cluster Migration from 2.4->3.x"
+category: "Orka"
+created_at: "2024-08-16T19:58:54Z"
+updated_at: "2024-09-18T21:45:51Z"
+promoted: false
+labels: ["orka", "api", "2.4"]
+suggested_new_path: "/orka/orka-cluster-migration-from-24-3x/24x-to-300-what-persists"
+---
+
+How will your environment look like after migrating from 2.4.x to 3.0.0?  
+  
+Orka 3.0.0 upgrades the Orka Platform along with the virtualization and orchestration layer. See [Orka Upgrades](https://support.macstadium.com/hc/en-us/articles/28337412701467).
+
+The following table outlines which environment features persist and which [you'll need to re-create after the migration](https://support.macstadium.com/hc/en-us/articles/28346593518363) from Orka 2.4.x to 3.0.0.
+
+Environment feature | Does it persist after the migration? | Details | Do I need to do anything?  
+---|---|---|---  
+[Cluster configurations](https://orkadocs.macstadium.com/docs/cluster-configurations) | ✅ | Cluster settings like GPU passthrough, VM Internet and network isolation, and nested virtualization continue to work as expected. | No.  
+Self-signed or custom TLS certificates for access via custom domains and HTTPs | ✅ | All self-signed or custom TLS certificates are retained. | No.  
+Sandboxed nodes | ❌ | All sandboxed nodes are returned to their original state. | Re-create your sandboxing with [custom namespaces](https://orkadocs.macstadium.com/docs/orka-cluster-resource-access#create-a-namespace) with the `--enable-custom-pods` setting.  
+Node dedication (grouping) | ❌ | All user and node grouping is removed. | Re-create node dedication with [custom namespaces](https://support.macstadium.com/hc/en-us/articles/28333357279387).  
+Users | ❗️ | Orka 3.0 introduces a new way to manage users and log in to your cluster.  
+  
+All existing users are retained, and you can still use them to log in with earlier versions of the Orka CLI or the Orka CI/CD integrations. | Configure user access to the cluster. See [here](https://support.macstadium.com/hc/en-us/articles/28328584628379).  
+Deployed VMs | ❌ | All deployed VMs are removed. | Re-create any VMs you might want to use or re-deploy them from the migrated VM configurations.  
+  
+Some settings, such as custom ports and metadata, are available only during deployment and are not retained in the VM configuration.  
+VM configurations | ✅ | All VM configurations are migrated to the new format.  
+  
+VM configurations with attached disk no longer have an attached disk. | Clean up any VM configurations that you no longer need.  
+Node affinity for VMs (tagging) | ❗️ | All existing VM configurations retain their tag settings.  
+  
+All nodes lose their applied tags. | Re-apply the missing node tags.  
+Images (locally stored on the cluster) | ✅ | All images are migrated to the new format and naming convention.  
+  
+The old name is retained in the `Description` field. | Manually update the Orka VM Tools on all Apple silicon-based images and commit the changes.  
+Images (cached on each Apple silicon node) | ❌ | The image cache is removed from each node. | Existing Apple silicon-based images should be saved or committed to take advantage of the new "thin-provisioned" format, and then cached per-node on VM deployment.  
+ISOs (locally stored on the cluster) | ✅ | All ISOs are migrated to the new format and naming convention.  
+  
+The old name is retained in the `Description` field. | No.  
+Remote images | ✅ | All remote images are migrated to the new format and naming convention. | No.  
+Remote ISOs | ✅ | All remote ISOs are migrated to the new format and naming convention. | No.

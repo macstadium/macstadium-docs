@@ -1,0 +1,223 @@
+---
+title: "Orka Overview"
+zendesk_id: 29904434271387
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/29904434271387-Orka-Overview"
+section: "Orka Overview"
+category: "Orka"
+created_at: "2024-10-08T17:25:07Z"
+updated_at: "2025-12-12T01:35:20Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-overview/orka-overview"
+---
+
+## About[](https://orkadocs.macstadium.com/docs/getting-started#about)
+
+Orka is an enterprise platform that provides virtualization and orchestration for various macOS-based workloads. It is designed to scale to hundreds of nodes, supporting performant spin-up and tear-down of virtualized macOS images to support your custom workloads. It is designed to be installed in MacStadium, in AWS, using other managed k8s offerings, or fully On-prem.
+
+Orka is optimized to provide virtualization natively for Apple Silicon and provides some level of support for Intel-based Mac computers and OS versions.
+
+It provides two classes of capabilities:
+
+  * Virtualization (optimized for Apple Silicon and macOS, with Apple Hypervisor interface, while still retaining support for Intel-based Macs)
+  * Orchestration (designed for scalability, speed, and reliability, with native K8S-based scheduling)
+
+
+
+Orka can be deployed to the MacStadium Cloud, AWS, or on-premises.
+
+Users can access their Orka via a CLI, APIs, or direct integration with common CI (continuous integration) systems such as Jenkins, GitHub Actions, GitLab, BuildKite (See [Orka Tools & Integrations](https://support.macstadium.com/hc/en-us/articles/28347376278299) for a complete list of integrations).
+
+Some of the most frequent use cases and workloads for Orka Cluster include:
+
+  * Private CI cluster supporting iOS or macOS builds from Jenkins, GitHub Actions, Buildkite, or your custom continuous integration tooling.
+  * Testing environments for your macOS and iOS apps.
+  * Virtual desktops
+  * AI training and execution environments for various model types
+  * Custom application logic running on macOS
+
+
+
+## Overview[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#overview)
+
+An Orka deployment typically consists of:
+
+  * A fleet of MacStadium Bare Metal Mac hosts running virtualization interfaces to macOS compute resources. The fleet must be network-connected via mesh networks, VPNs, tunnels, or other mechanisms.
+  * An OCI registry to serve as the image repository to store and distribute the images to the fleet, where they are used as VMs.
+  * A control plane that facilitates the orchestration activities, including provisioning and de-provisioning of VMs across hosts running virtualization interfaces to macOS compute resources. The control plane can run in a Kubernetes or Ansible environment. 
+    * For DevOps use cases and ephemeral environments, a Kubernetes (k8s) control plane is recommended. An API Server exposes the k8s control plane to those who manage the workloads on the cluster.
+    * For VDI use cases and long-lived VM environments, an Ansible-based control plane is recommended. A set of Ansible scripts are provided to those who manage the workloads on the cluster.
+
+
+
+An Orka environment can start with as few as two nodes and can scale to hundreds of nodes if needed. The MacStadium team can help confirm the size and scaling.
+
+This document will focus on using k8s as the control plane for Orka. Please see <Orka for VDI> for details on managing an Orka environment with the Ansible-based control plane.
+
+## Key Concepts[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#key-concepts)
+
+  * The [Orka CL](https://orkadocs.macstadium.com/docs/downloads#orka-cli)I (`orka3`) is the primary interface to working with Orka when the control plane is a k8s environment. It is perfect for both manual use and automation.
+  * To build an automated CI/CD system, look into the available [Orka integrations](https://orkadocs.macstadium.com/docs/downloads#cicd-integrations) \- from Jenkins to GitHub Actions. The Orka team continuously adds to the list of supported solutions.
+  * The [Orka Web UI](https://orkadocs.macstadium.com/docs/ui-quick-start) provides a quick and user-friendly way to manage an Orka. Currently, the Web UI offers limited functionality compared to the Orka3 CLI and the Orka3 API.
+
+
+
+> 🗒️NOTE
+> 
+> Orka running in the MacStadium Cloud or AWS may be behind a firewall and may require a VPN to access.
+
+## Terminology[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#terminology)
+
+  * **API Server** : Provides access to the cluster from the CLI, API or CI integrations. The API Server must be accessible to the CLI, API or CI Integrations controlling the Orka instance.
+  * **Bare Metal Macs** : MacStadium has a variety of standard Mac models that run the virtualization software to manage and use the macOS compute resources
+  * **Control Plane** : Facilitates the orchestration activities, which includes provisioning and de-provisioning of VMs across the fleet of hosts that are running virtualization interfaces to macOS compute resources. This runs natively inside of Kubernetes for optimal performance and scale. (This is abstracted away from users, so they never need to interface with k8s unless they want to.)
+  * **Host (or Node)** : A physical computer with a host macOS and an installation of Orka Virtualization software
+  * **Image (or OCI Image)** : Bits on disk that represent VM storage. Images can be deployed as a VM in an Orka and provide the OS, file system, and built-in storage used by the VM.
+    * **OCI** refers to the standard format that the image is packaged with. Images are stored in any OCI-compliant registry. Starting with Orka 3.2, MacStadium has begun storing OCI-compliant images for various versions of the macOS in our public GitHub registry viewable at GitHub - macstadium/orka-images: Public images for Apple silicon-based Orka virtual machines
+  * A **VM** is a virtual machine runtime on top of the macOS host. The VM runs a guest OS image and macOS supports up to 2 running VMs per host.
+
+
+
+## System Requirements[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#system-requirements)
+
+Bare Metal Mac Nodes:
+
+  * Apple Silicon Support: Apple M1+ with 16GB RAM and 512GB disk space. (MacStadium recommends 1TB disk space); macOS X 13.0+ (Ventura)
+  * Apple Intel Support: Mac Intel with 16GB RAM and 1TB disk space; macOS 10.14 (Mojave)+
+
+
+
+Kubernetes:
+
+  * When running in the MacStadium Cloud, MacStadium will install, configure, and manage the k8s versions required.
+  * When running in AWS, EKS will be required. Macstadium will assist you with the installation and configuration of Orka into the EKS environment.
+  * When running On-Prem, Orka will need to be installed into an isolated k8s environment. MacStadium will assist you with the install and configuration of Orka into your k8s environment.
+
+
+
+## Getting Started[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#getting-started)
+
+Orka can be purchased and deployed by meeting with MacStadium Field Engineering teams. The MacStadium team works with users to size, fit, install, and configure the Orka deployment.
+
+Once installed and configured, the following steps and commands quickly introduce the basic features of Orka:
+
+  1. First-time setup:
+
+
+  * If deploying within MacStadium, review the [IP Plan](https://docs.macstadium.com/docs/ip-plan) and configure networking access. If deploying within AWS or On-Prem, review your network access to ensure you have access to the Orka API Server.
+  * Install and configure the `orka3` client with the `api-url`
+  * Manage users via the Portal
+
+
+  2. Run `orka3 login `and `orka3 user get-token` to sign into the cluster control plane
+  3. Learn the 3 main objects to work with: nodes, images, and vms
+  4. Deploy and Connect to a New VM
+  5. Modify, Save, and Stop the VM
+  6. Manage Image Caching behaviors
+
+
+
+> 🗒️NEXT STEPS
+> 
+> Take the customized VM and integrate it with a CI tool.
+
+## 1\. First Time Setup[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#1-first-time-setup)
+
+**Review IP Plan and Setup Networking**
+
+  1. If deploying within MacStadium, Login to the account on [portal.macstadium.com](https://idp.macstadium.com/login?scope=aws.cognito.signin.user.admin+email+openid+phone+profile&response_type=code&client_id=os594upi12pn9ab16hmtk0akp&redirect_uri=https%3A%2F%2Fportal.macstadium.com%2Foauth%2Fredirect&state=eyJsYXN0VmlzaXRlZFVybCI6Ii8ifQ) and get the [IP Plan](https://docs.macstadium.com/docs/ip-plan).  
+If deploying within AWS or On-Prem, make sure to connect to the network such that you have access to the API Server.
+
+
+  * Use the <`ORKA_API_URL`> with the Firewall / VPN information to connect to the Orka outside the Portal.
+  * Use the `.20` address for the `Private-1` network (usually `10.221.188.20`). prefixed with http. For example: [http://10.221.188.20](http://10.221.188.20/).
+
+
+  2. Connect to the [Cluster via a VPN](https://orkadocs.macstadium.com/docs/vpn-connect) or other mesh network to ensure access to your API Server. Ensure the network connection is up-and-running from your calling application (that is, a local laptop with `orka3` client, or CI system that execute builds) when working with Orka.
+
+
+  * MacStadium currently provides VPN based access. Use a VPN client to connect to the cluster using the firewall IP and credentials obtained from the IP Plan.
+  * MacStadium supports customers who wish to bring their own mesh networks or other tools.
+
+
+  3. Keep the VPN connection to the cluster live.  
+
+
+
+
+**Install and Configure orka3 CLI**
+
+  1. Visit the links below to download and install the orka3 CLI binary for the local environment.
+
+
+  * [Orka Cluster 3.2 Release Notes](https://dash.readme.com/project/orka/v3.2.0/docs/orka-32-release-notes-1)
+
+
+  2. Configure the local `orka3` environment with the appropriate ORKA_API_URL so the CLI knows where to connect. This step is a one-time effort.
+
+
+  * In the Orka3 CLI, `run orka3 config set --api-url <ORKA_API_URL>`.
+
+
+
+> 🗒️NOTE
+> 
+> Invite users in the Portal via the [**Users- >Add New Users**](https://orkadocs.macstadium.com/docs/customer-portal-user-management) flow.
+
+## 2\. Run orka3 Login to Sign into the Control Plane[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#2-run-orka3-login-to-sign-into-the-control-plane)
+
+orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh network, login and retrieve a token that can be used for subsequent interactions.
+
+  1. Use the orka3 CLI to login. The below command opens a web browser to support authentication with the MacStadium Customer Portal credentials.
+
+
+
+`orka3 login`
+
+  2. Obtain a token by running the following command to login to the cluster and obtain an authentication token. The token authenticates uniquely with Orka. This operation stores a token locally at `~/.kube/config` file.
+
+
+
+`orka3 user get-token`
+
+  3. _Optional_ \- Use the Orka3 API, provide the `Authorization: Bearer <TOKEN>` header in the API calls or authorize the Swagger UI at `<ORKA_API_URL>/api/v1/swagger`.
+  4. _Optional_ \- For CI/CD integrations, authenticate with a dedicated service account.
+
+
+
+## 3\. Learn the 3 Main Objects[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#3-learn-the-3-main-objects)
+
+**Nodes** , **images** , and **VMs**
+
+  * Use `orka3 nodes list `to see a list of nodes or hosts in the cluster. Use the `-o wide` option to see more information about the nodes
+  * Use `orka3 images list `to see information about the images available to the cluster for running as VMs
+  * Use `orka3 vm list` to see information about the current VMs running in the cluster 
+
+
+
+## 4\. Deploy and Connect to a New VM[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#4-deploy-and-connect-to-a-new-vm)
+
+  * Launch a VM from a base image, including options to load from the OCI registry.
+  * For legacy users, there is a demonstrated loading from an NFS mount.
+  * Access the VM via **SSH** , **VNC** , or **Apple Screen Sharing**.
+
+
+
+> 🗒️NOTE
+> 
+> To deploy a VM, an image is required. Check the MacStadium registry on ghcr.io and pull an image, if the local image list is empty, or use an image from an OCI-compatible registry. Check <https://github.com/macstadium/orka-images> for the latest available OCI-compatible images provided by MacStadium. The images available out-of-the-box provide a pre-configured disk size and a pre-installed OS.
+
+## 5\. Modify, Save, and Stop the VM[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#5-modify-save-and-stop-the-vm)
+
+  * Install dependencies or configure the environment for CI builds.
+  * Once customized, save the VM configuration as a new image for future use.
+
+
+
+## 6\. Manage Image Caches[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#6-manage-image-caches)
+
+Manage images stored on Orka nodes. By adding images to a node before deployment of a VM using that base image, DevOps and engineering staff can manage and control the delay caused by remote or even local cluster storage image pulls, providing consistent deployment times.
+
+## Next Steps - Integrate with CI tooling[](https://orkadocs.macstadium.com/docs/orka-cluster-32-introduction#next-steps---integrate-with-ci-tooling)
+
+See [Orka Cluster 3.2 Integrations](https://orkadocs.macstadium.com/docs/downloads)

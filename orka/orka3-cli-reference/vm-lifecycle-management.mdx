@@ -1,0 +1,320 @@
+---
+title: "VM Lifecycle Management"
+zendesk_id: 42514937795739
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/42514937795739-VM-Lifecycle-Management"
+section: "Orka3 CLI Reference"
+category: "Orka"
+created_at: "2025-10-23T22:05:18Z"
+updated_at: "2025-10-23T22:18:18Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka3-cli-reference/vm-lifecycle-management"
+---
+
+## Saving Images
+
+**orka3 vm save**
+
+Save a new image from a running VM. This saves the file system and the state of the OS, including any running applications. You can preserve the original image and deploy new VMs with the applied changes from the new image.
+
+**Image Name Requirements:**
+
+  * Does not exceed 63 characters including the file extension (if set)
+  * Consists of lowercase alphanumeric characters, dashes (-) or periods (.)
+  * Must be unique to the cluster
+
+
+
+**Note:** Saving a new image is an async operation. To check the status: `orka3 image list NEW_IMAGE_NAME`. This operation does not affect the original image of the VM. This operation restarts the VM.
+
+**Syntax:**
+    
+    
+    orka3 vm save VM_NAME NEW_IMAGE_NAME [--description 'DESCRIPTION'] [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -d, --description string   (Optional) Custom description for the new image
+    -h, --help                 Display help for save
+    -n, --namespace string     (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Save a new image from a running VM
+    orka3 vm save medium-ventura-vm 120gbmodifiedventura
+    
+    # Save a new image from a VM in a specific namespace
+    orka3 vm save medium-ventura-vm 120gbmodifiedventura --namespace orka-test
+    
+    # Save a new image with a custom description
+    orka3 vm save medium-ventura-vm 120gbmodifiedventura --description 'user@company.com saved this image'
+
+**orka3 vm commit**
+
+Update an existing image from a running VM. Take the changes from the specified deployed VM and commit them back to its respective base image. For Intel-based VMs, the image must not be in use by any other VMs.
+
+This operation applies any file system changes and the state of the OS, including any running applications, to the original image.
+
+**Note:** Committing changes to an existing image is an async operation. To check the status: `orka3 image list IMAGE_NAME`. This operation restarts the VM.
+
+**Syntax:**
+    
+    
+    orka3 vm commit VM_NAME [--description 'DESCRIPTION'] [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -d, --description string   (Optional) New description for the original image
+    -h, --help                 Display help for commit
+    -n, --namespace string     (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Commit changes to the original image
+    orka3 vm commit small-ventura-vm
+    
+    # Commit changes from a VM in a specific namespace
+    orka3 vm commit small-ventura-vm --namespace orka-test
+    
+    # Commit changes and set a new description for the image
+    orka3 vm commit small-ventura-vm --description 'user@company.com updated this image'
+
+## Pushing to OCI Registries
+
+**orka3 vm push**
+
+(Apple silicon-only) The state of a running VM is saved on the host and pushed to an OCI-compatible registry.
+
+The provided image must be in the following format: `server.com/repository/image:tag`. The `:tag` portion is optional and defaults to `latest` if not provided.
+
+**Requirements:**
+
+  * Registry credentials must exist in the same namespace as the VM
+  * This is an async operation. To check the status: `orka3 vm get-push-status JOB_NAME`
+
+
+
+**Syntax:**
+    
+    
+    orka3 vm push VM_NAME IMAGE[:TAG] [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for push
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Push an image to GitHub Packages from a running VM
+    orka3 vm push vm-5rjn4 ghcr.io/myorg/orka-images/base:latest
+    
+    # Push from a VM in a specific namespace
+    orka3 vm push vm-fxwj5 ghcr.io/myorg/orka-images/base:latest --namespace orka-test
+
+**orka3 vm get-push-status**
+
+(Apple silicon-only) View the status of an image being pushed to an OCI-compatible registry. The status is viewable for one (1) hour after finishing, after which point the underlying job is cleaned up.
+
+If a job name is not provided, the status of all current image push operations is shown. The job name is initially shown when the image push operation is started.
+
+**Syntax:**
+    
+    
+    orka3 vm get-push-status [JOB_NAME] [--namespace CURRENT_VM_NAMESPACE] [--output wide|json] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for get-push-status
+    -o, --output string      (Optional) Output format: table (default)|wide|json
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # View the status of all images being pushed
+    orka3 vm get-push-status
+    
+    # View the status for a specific image by job name
+    orka3 vm get-push-status vm-push-qxjjf
+
+## Resizing VM Disks
+
+**orka3 vm resize**
+
+Resize the disk of a running VM; but only increase the size of the disk.
+
+**Architecture-Specific Behavior:**
+
+  * **For Apple silicon-based VMs (arm64):** Nothing is needed after the command completes
+  * **For Intel-based VMs (amd64):** Provide SSH access credentials for Orka to complete the resize and repartition automatically. If not provided, it must be completed manually
+
+
+
+For Intel-based VMs, you can save or commit the modified image manually:
+    
+    
+    orka3 vm save VM_NAME NEW_IMAGE_NAME
+    orka3 vm commit VM_NAME
+
+Resize always assumes working in GB. This operation restarts the VM.
+
+**Syntax:**
+    
+    
+    orka3 vm resize VM_NAME NEW_DISK_SIZE [--user SSH_USER] [--password SSH_PASSWORD] [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for resize
+    -p, --password string    (Optional) (Intel-only) SSH password for automatic repartition
+    -u, --user string        (Optional) (Intel-only) SSH user for automatic repartition
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Resize a VM disk to 100GB
+    orka3 vm resize small-ventura-vm 100
+    
+    # Resize a VM disk in a specific namespace
+    orka3 vm resize my-vm 100 --namespace orka-test
+    
+    # (Intel-only) Resize with automatic repartition
+    orka3 vm resize small-intel-vm 100 --user admin --password admin
+
+## Power Operations (Intel Only)
+
+**Note:** Power operations are only available for Intel-based VMs. Stopped or suspended VMs appear as 'Running' when listed with `orka3 vm list`.
+
+**orka3 vm start**
+
+Power ON a stopped VM. The `orka3 vm stop` and `orka3 vm start` sequence acts as a VM reboot.
+
+**Syntax:**
+    
+    
+    orka3 vm start VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for start
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Power ON a stopped VM
+    orka3 vm start small-ventura-vm
+    
+    # Power ON a VM in a specific namespace
+    orka3 vm start small-ventura-vm --namespace orka-test
+
+**orka3 vm stop**
+
+Power OFF a running VM. The `orka3 vm stop` and `orka3 vm start` sequence acts as a VM reboot.
+
+**Syntax:**
+    
+    
+    orka3 vm stop VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for stop
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Power OFF a running VM
+    orka3 vm stop small-ventura-vm
+    
+    # Power OFF a VM in a specific namespace
+    orka3 vm stop small-ventura-vm --namespace orka-test
+
+**orka3 vm suspend**
+
+Suspend a running VM. This operation freezes all running processes on the VM, without turning it off. The `orka3 vm suspend` and `orka3 vm resume` sequence acts as putting the VM on hold then resuming it.
+
+**Syntax:**
+    
+    
+    orka3 vm suspend VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for suspend
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Suspend a running VM
+    orka3 vm suspend small-ventura-vm
+    
+    # Suspend a VM in a specific namespace
+    orka3 vm suspend small-ventura-vm --namespace orka-test
+
+**orka3 vm resume**
+
+Resume a suspended VM. This operation resumes all suspended processes on the VM, without turning it on.
+
+**Syntax:**
+    
+    
+    orka3 vm resume VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for resume
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Resume a suspended VM
+    orka3 vm resume small-ventura-vm
+    
+    # Resume a VM in a specific namespace
+    orka3 vm resume small-ventura-vm --namespace orka-test
+
+## Reverting VMs (Intel Only)
+
+**orka3 vm revert**
+
+(Intel-only) Revert a VM to the latest state of its image. This operation restarts the VM.
+
+**🚧 CAUTION:** This operation cannot be undone. Any unsaved or uncommitted data will be lost and unable to be retrieved.
+
+**Syntax:**
+    
+    
+    orka3 vm revert VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for revert
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Revert a VM to its original image state
+    orka3 vm revert small-ventura-vm
+    
+    # Revert a VM in a specific namespace
+    orka3 vm revert small-ventura-vm --namespace orka-test

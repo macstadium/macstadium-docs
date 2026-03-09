@@ -1,0 +1,122 @@
+---
+title: "Backup and Restore Firewall Config using ASDM"
+zendesk_id: 28277009696795
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28277009696795-Backup-and-Restore-Firewall-Config-using-ASDM"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T19:49:01Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "firewalls", "configuration", "backup", "config", "restore", "asdm"]
+suggested_new_path: "/iaas/cisco-firewalls/backup-and-restore-firewall-config-using-asdm"
+---
+
+## Overview
+
+This process outlines how to backup and restore a configuration by executing line by line changes, while using a graphical user interface.
+
+The backup files are stored on a local system as a ZIP file.
+
+**NOTE** : It is important to store this ZIP file in an easily accessible place in case of an emergency. Plan a backup to be taken anytime changes are made to the firewall configuration.
+
+If the firewall configuration is in an high-availability (HA) Pair, then ensure that the backup and restore to the Active firewall is enabled. This can verified on the Cisco Adaptive Security Device Manager (ASDM) Dashboard, under the **Failover Status** field. Look for **Primary (Active)**. If this is not enabled, then login to the other firewall to perform these steps.
+
+## Prerequisites
+
+  * Access to MacStadium firewall
+  * MacStadium login information
+  * The ability to login to the firewall using the Cisco Adaptive Security Device Manager (ASDM) firewall software
+
+
+
+**NOTE** : If a passphrase was set on the backup, then it needs to be available during the restore process.
+
+## Backup Process
+
+  1. Establish a VPN connection to the MacStadium environment.
+  2. Connect to the firewall using the Cisco Adaptive Security Device Manager (ASDM).
+  3. Click the Tools menu, located at the top of the ASDM application and then select Backup Configuration.  
+![bf56b70-image.png](https://support.macstadium.com/hc/article_attachments/28277009626907)
+  4. Select a location to place the backup files.
+  5. Enter a name for the backup file.  
+![db80e7d-image.png](https://support.macstadium.com/hc/article_attachments/28277009629979)
+  6. The system shows the local file structure. Select an appropriate place and name for your backup.  
+![1e9a1d2-image.png](https://support.macstadium.com/hc/article_attachments/28277042151835)
+  7. Click Select File.
+  8. Accept the defaults of Backup All.
+  9. Click Backup.  
+![761fe82-image \(1\).png](https://support.macstadium.com/hc/article_attachments/28277009636251)  
+
+     * **OPTIONAL** : If the firewall is configured with identity certificates, then select a passphrase to encrypt identity certificates. Document the passphrase that is used as it is needed for future restores.  
+![045969f-image.png](https://support.macstadium.com/hc/article_attachments/28277009642139)
+
+  10. Click OK  
+
+     * **NOTE** : The Progress Message can be copied to a text editor for review and validation.
+
+  11. Click Close after backup is completed. A Backup Statistics window opens and displays additional information about the Backup process.  
+![092cb90-image.png](https://support.macstadium.com/hc/article_attachments/28277009648155)
+  12. Click OK  
+![e98f437-image.png](https://support.macstadium.com/hc/article_attachments/28277042164635)
+
+
+
+## Restore Process
+
+  1. Establish a VPN connection to the MacStadium environment.
+  2. Connect to the firewall using the Cisco Adaptive Security Device Manager (ASDM).
+  3. Click on Tools and select Restore Configuration from the dropdown menu.  
+![bd73198-image.png](https://support.macstadium.com/hc/article_attachments/28277042168347)
+  4. Navigate to the location where the backup file was stored.  
+![ab8c5f7-image.png](https://support.macstadium.com/hc/article_attachments/28277009654043)
+  5. Click Select file.
+  6. Click Next to proceed.  
+![576de37-image.png](https://support.macstadium.com/hc/article_attachments/28277042174747)
+  7. From the Restore Configurations pop-up page, select the options to restore.  
+
+     * **RECOMMENDED SETTINGS:**
+
+       * Running configuration
+
+       * Start-up configuration
+
+       * All Security Images
+
+       * Identity Certificates
+
+       * Leave the remaining default options untouched  
+![0daf363-image.png](https://support.macstadium.com/hc/article_attachments/28277042179227)
+
+  8. Click Restore.
+  9. You should now see the below message. Click Yes.  
+![dc7fa4e-image.png](https://support.macstadium.com/hc/article_attachments/28277009661339)  
+
+     * **NOTE** : If applicable, enter the Certificate Passphrase used to backup the identity Certificate, then click the OK.  
+![bb30c48-image.png](https://support.macstadium.com/hc/article_attachments/28277042184091)
+
+     * **NOTE** : The following message may appear during the Restore Progress. Select Refresh Now or Cancel button. Choosing Cancel will not halt the Restore process.  
+![1d021b9-image.png](https://support.macstadium.com/hc/article_attachments/28277042189339)
+  10. Once the Restore process is complete, click Close. 
+     * **NOTE** :The Progress Message can be copied to a text editor for review and validation.
+
+![4431f75-image.png](https://support.macstadium.com/hc/article_attachments/28277009667995)
+  11. To verify the restore process, close the ASDM application and then relaunch it.
+  12. Review the configuration that is loaded with the device manager.
+  13. Close the application. 
+     * **NOTE** : The following Unapplied Changes message box may appear:
+
+![c58aece-image.png](https://support.macstadium.com/hc/article_attachments/28277042199707)
+
+       * If the Unapplied Changes message box appears, then click Apply Changes.
+
+       * If the Unapplied Changes message box does not appear, then click Save in the ASDM application.
+
+
+
+
+## Additional Notes:
+
+  * If firewall access prevents enables the backup process but does not enable the restore process, then open a MacStadium Support ticket.
+  * In the ticket, request that a restore take place for the firewall device.
+  * Provide the Firewall IP, the backup file, and permissions to perform the restore in the ticket.
+  * Request a specific time for the restore, or it will performed as soon as possible.

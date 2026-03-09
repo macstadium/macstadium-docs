@@ -1,0 +1,191 @@
+---
+title: "Orka 3.4 Release Notes"
+zendesk_id: 39593054198427
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39593054198427-Orka-3-4-Release-Notes"
+section: "Orka Upgrades and Release Notes"
+category: "Orka"
+created_at: "2025-08-01T21:06:20Z"
+updated_at: "2025-09-12T12:36:37Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-34-release-notes"
+---
+
+**IMPORTANT**
+
+Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions.
+
+# Orka 3.4.2
+
+## Hotfix: Image Caching Issues with NFS  
+  
+Summary:[](https://orkadocs.macstadium.com/docs/orka-342-release-notes#summary)
+
+Previously, when an image cached from NFS was updated at the source, Orka could occasionally fail to properly detect and refresh the outdated cached version. Instead, the VM would continue running silently using the stale image without any warning or error from Orka. Additionally, during the caching process, some stale or temporary images were not properly cleaned up, leading to potential storage issues.
+
+### Who is affected:[](https://orkadocs.macstadium.com/docs/orka-342-release-notes#who-is-affected)
+
+All customers using NFS images are impacted. Those with large image sizes and frequent image updates are more likely to encounter this issue first.
+
+### Impact:[](https://orkadocs.macstadium.com/docs/orka-342-release-notes#impact)
+
+  * Customers using NFS storage may unknowingly run VMs with outdated images
+  * No errors or alerts are generated in Orka, making the issue difficult to detect
+  * Hosts may eventually run out of disk space due to accumulation of old or orphaned images
+
+
+
+### Customer downtime:[](https://orkadocs.macstadium.com/docs/orka-342-release-notes#customer-downtime)
+
+This is a zero-downtime operation and has no effect on already running VMs.
+
+### Next steps:[](https://orkadocs.macstadium.com/docs/orka-342-release-notes#next-steps)
+
+We recommend that all customers using Orka 3.3.0 and above using NFS apply this hotfix immediately to ensure proper image updates and prevent storage issues.
+
+If you have any questions or require assistance, please [contact our support team](https://support.macstadium.com/hc/en-us/articles/28260744525723-Support).  
+
+
+# Orka 3.4.1
+
+## Improvements and Bug Fixes
+
+This release addresses an issue that may cause ARM nodes to become non-operational under certain workloads. This problem is caused by a bug wherein:
+
+  * Orka does not delete VMs in certain cases, leading to VMs running out of space
+  * This leaves impacted VMs in a stopped state
+  * VMs are then unreachable
+
+
+
+This causes Orka to crash, which could lead to VMs not being cleaned up.
+
+### Who is affected:[](https://orkadocs.macstadium.com/docs/orka-341-release-notes#who-is-affected)
+
+All customers running workloads that rapidly deploy multiple VMs may be affected. This includes any environment with medium-high utilization of ARM-based nodes.
+
+### Impact:[](https://orkadocs.macstadium.com/docs/orka-341-release-notes#impact)
+
+When this issue occurs:
+
+  * Nodes may run out of space
+  * VMs may not be assigned a valid MAC address and will be inaccessible
+
+
+
+### Customer downtime:[](https://orkadocs.macstadium.com/docs/orka-341-release-notes#customer-downtime)
+
+This is a zero-downtime operation and has no effect on already running VMs.
+
+### Next steps:[](https://orkadocs.macstadium.com/docs/orka-341-release-notes#next-steps)
+
+We recommend that all customers using Orka 3.4.0 and above apply this fix immediately, especially those that are operating medium or large-load ARM-based infrastructure, or high-volume VM deployments.
+
+If you have any questions or require assistance, please [contact our support team](https://docs.macstadium.com/docs/support).  
+
+
+# Orka 3.4.0
+
+## New Features[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#new-features)
+
+In Orka 3.4.0, users can now set custom display settings when deploying or configuring a VM as a part of their UI testing workflow. Users can access this workflow via the Orka CLI. These instructions assume you are currently logged into your Orka cluster, and can access your VMs using Apple Screen Sharing and an applicable image running a version of MacOS.
+
+### Set display settings at VM deployment:[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#set-display-settings-at-vm-deployment)
+
+The `orka3 vm deploy` command has the following new options:
+
+`--display-width` \- Adjust console display window width in pixels  
+`--display-height` \- Adjust console display window height in pixels  
+`--display-dpi` \- Adjust console display density in pixels
+
+In the following example, we have specified a VM deployment running Sequoia 15.4.1 with a height of 2560px, a width of 1600px, and a DPI of 320px.
+
+![New Orka 3.4.0 CLI commands for setting VM display width, height, and DPI](https://files.readme.io/79d6d1a80e934cda1ca93d3454f2ea49e80ad8fa035a19fd04a79cf226f7d3ff-Orka3VMDeployDisplay.png)
+
+New Orka 3.4.0 CLI commands for setting VM display width, height, and DPI
+
+### Examples:[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#examples)
+
+Deploy a VM running MacOS Sequoia 15.4.1 with a display width of 2560x1600px and 320px display DPI (HiDPI):`orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:15.4.1 --display-width 2560 --display-height 1600 --display-dpi 320`
+
+Deploy a VM running the latest version of Mac OS Sequoia (15.5) with a display width of 1920x1080px and a display DPI of 90px:`orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest-display-width 1920 --display-height 1080 --display-dpi 90`
+
+After the VM is successfully created, the display settings specified in the CLI will be reflected in the VM’s display as was specified by the user:
+
+![A deployed Sequoia VM login screen with display resolution configurations set using the Orka 3.4.0 CLI](https://files.readme.io/4833d28cfc9e5f3729ad7ec180d99031154338bcc0ec6dd7e0c2f18d80c72e68-2500pxdisplay.png)
+
+A deployed Sequoia VM login screen with display resolution configurations set using the Orka 3.4.0 CLI
+
+### Set display settings for VM configurations:[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#set-display-settings-for-vm-configurations)
+
+The `orka3 vm create` command has the following new options:
+
+`--display-width` \- Adjust console display window width in pixels  
+`--display-height` \- Adjust console display window height in pixels  
+`--display-dpi` \- Adjust console display density in pixels
+
+The following constraints apply to both deployed and configured VMs:
+
+  * Supports a minimum width of 320 px.
+  * Supports a maximum width of 3840 px.
+  * Supports a minimum height of 480 px.
+  * Supports maximum height of 2160 px.
+  * Supports a minimum DPI of 60 px.
+  * Supports a maximum DPI of 240 px.
+  * Supports an optional maximum DPI of 320 px.
+
+
+
+If a user selects an unsupported resolution, they will see the following error(s):
+
+![Display height error when deploying a VM on Orka 3.4.0](https://files.readme.io/f3bd9de408206ca12bb54e03a96bc1b3c8366deedb2259c247564584f3dfb1fd-VMDisplayError.png)
+
+Display height error when deploying a VM on Orka 3.4.0
+
+### Set display settings via Orka API at VM deployment[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#set-display-settings-via-orka-api-at-vm-deployment)
+
+Users can now set custom display settings when deploying a VM via the Orka API.
+
+The `POST /api/v1/namespaces/{namespace}/vms` route now accepts the following fields:
+
+`displayWidth` \- Adjust console display width in pixels  
+`displayHeight`\- Adjust console display height in pixels  
+`displayDPI`\- Adjust console display density in pixels
+
+### Set display settings via Orka API at VM configuration[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#set-display-settings-via-orka-api-at-vm-configuration)
+
+Users can now set custom display settings when configuring a VM via the Orka API.
+
+The `POST /api/v1/namespaces/{namespace}/vmconfigs` route now accepts the following fields:
+
+`displayWidth` \- Adjust console display width in pixels  
+`displayHeight`\- Adjust console display height in pixels  
+`displayDPI`\- Adjust console display density in pixels
+
+![Example of adjusting display resolution via the Orka API](https://files.readme.io/de67ce365385061f628624269790ba087d85347ef0ae70ff97b41d326c8532e8-APIDisplayResolution.png)
+
+Example of adjusting display resolution via the Orka API
+
+The following constraints apply to both deployed and configured VMs:
+
+  * Supports a minimum width of 320 px.
+  * Supports a maximum width of 3840 px.
+  * Supports a minimum height of 480 px.
+  * Supports maximum height of 2160 px.
+  * Supports a minimum DPI of 60 px.
+  * Supports a maximum DPI of 240 px.
+  * Supports an optional maximum DPI of 320 px.
+
+
+
+### Improvements to existing features[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#improvements-to-existing-features)
+
+Internal improvements resulting in faster deployment times overall.
+
+VMs created from an IPSW now have a default display resolution of 1920x1080x96 px.
+
+### Bug fixes[](https://orkadocs.macstadium.com/docs/orka-34-release-notes#bug-fixes)
+
+This release addresses the [known issue](Orka 3.3 Release Notes ) in Orka 3.3.0 involving virtualization and unique machine identifiers. Unique machine ID/UUID configuration is now behind a feature flag. Customers who need unique machine IDs for their Orka environment should [raise a support ticket](https://docs.macstadium.com/docs/ticketing-and-support-1) with MacStadium to control this behavior for their cluster.
+
+Orka no longer sends cookies when interacting with OCI registries

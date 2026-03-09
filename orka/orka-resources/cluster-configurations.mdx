@@ -1,0 +1,60 @@
+---
+title: "Cluster Configurations"
+zendesk_id: 28337413954843
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28337413954843-Cluster-Configurations"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2024-08-16T16:36:45Z"
+updated_at: "2025-08-01T14:02:57Z"
+promoted: false
+labels: ["configuration", "orka", "api", "cluster", "configurations"]
+suggested_new_path: "/orka/orka-resources/cluster-configurations"
+---
+
+What configurations are available on a cluster level and how to change them
+
+Every Orka cluster is provisioned with some defaults that can be further changed upon request. This page describes the cluster level features and their default values.
+
+## VM Scheduling
+
+Introduced with Orka 2.0, VM scheduling allows you to control the algorithm used when scheduling VMs between the nodes. If no changes are applied, the default scheduling algorithm is used where VMs are scheduled in such a way that keeps balance between free and used resources on each node. It can be changed to the value of most-allocated where VMs are scheduled in a way that tries to exhaust resources on one node before starting scheduling on another.
+
+VM scheduling algorithm can be controlled also on creating a VM configuration and on VM deployment.
+
+[Read more about VM scheduling in the MacStadium blog.](https://www.macstadium.com/blog/vm-scheduling-in-orka-2.0)
+
+## GPU Passthrough
+
+Introduced with Orka 1.5.0 for MacPro hosts and with Orka 1.7.0 for Mac Mini hosts, GPU Passthrough allows you to use the GPU available on a node from within a VM deployed on that node. It is disabled by default and can be enabled in the cluster either at the time of cluster provisioning or during an API update.
+
+#### **Intel Only**
+
+GPU passthrough is available for Mac Intel nodes only. This configuration does not apply to Apple silicon nodes.
+
+[Read more about GPU Passthrough, how to enable it and how to use it.](https://support.macstadium.com/hc/en-us/articles/28337172185755)
+
+## VM Internet Isolation
+
+Introduced with Orka 1.5.3, VM Internet isolation allows to control the access to the Internet from within the VMs. It is disabled by default. When enabled, the access to the Internet is not available from within a VM.
+
+The feature can be enabled during cluster provisioning or Orka upgrade.
+
+[See how to request an Orka upgrade.](https://support.macstadium.com/hc/en-us/articles/28337412701467)
+
+## VM Network Isolation
+
+Introduced with Orka 1.5.1, VM network isolation allows to control the access from one VM to another and the access from a VM to the Orka API. It is disabled by default. When enabled, the access from one VM to another is disabled and the access to the Orka API is not available from within a VM.
+
+The feature can be enabled during cluster provisioning or Orka upgrade.
+
+[See how to request an Orka upgrade.](https://support.macstadium.com/hc/en-us/articles/28337412701467)
+
+## Custom-Pods Namespace: Read-Only Access to the Containers File System
+
+Introduced with Orka 1.5.2, the features allows to control the access to the container's root file system from resources deployed in custom-pods namespaces. It is disabled by default which means there is a read/write access to the container's root file system. When enabled, the container's root file system is read-only for the resources in the namespace.
+
+Check Kubernetes [Security Contexts](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) and the readOnlyRootFilesystem field for more information.
+
+The feature can be enabled during cluster provisioning or Orka upgrade.
+
+[See how to request an Orka upgrade.](https://support.macstadium.com/hc/en-us/articles/28337412701467)

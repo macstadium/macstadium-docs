@@ -1,0 +1,89 @@
+---
+title: "Verify GCP"
+zendesk_id: 28298738716699
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28298738716699-Verify-GCP"
+section: "Google Cloud Platform"
+category: "IaaS"
+created_at: "2024-08-15T14:34:14Z"
+updated_at: "2024-09-18T21:48:41Z"
+promoted: false
+labels: ["verify", "gcp", "google cloud platform", "google cloud"]
+suggested_new_path: "/iaas/google-cloud-platform/verify-gcp"
+---
+
+After you have completed both the Google Cloud Platform (GCP) and the MacStadium sides of the configuration, you might want to verify that the tunnel is working as expected.
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging into Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface  
+**![97da5cd-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28298743710747)
+  4. Select Single Line, enter the following command, and click Send.**  
+**
+
+
+    
+    
+    show crypto isakmp sa
+
+If the site-to-site VPN connection is configured properly, you should see information about an active IKEv1.
+
+For more information about this verification command, see [Cisco Documentation: show crypto isakmp sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#isakmp_sa).
+
+## Verify that there is an IPsec security association between peers
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging into Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select Tools > Command Line Interface  
+![9bf2163-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28298743712283)
+  4. Select Single Line, enter the following command, and click Send.
+
+
+    
+    
+    show crypto ipsec sa
+
+If the site-to-site VPN connection is configured properly, you should see a detailed log.
+
+For more information about this verification command, see [Cisco Documentation: show crypto ipsec sa](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html#ipsec_sa).
+
+## Verify that the tunnel is connected
+
+  1. Log in to your GCP console.
+  2. From the GCP console sidebar, scroll to the Networking section and select **Hybrid Connectivity > VPN**.  
+![d336b02-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28298738704027)
+  3. On the Cloud VPN Tunnels tab, locate the tunnel to MacStadium and check the value for VPN tunnel status. When your tunnel is properly connected, the status is: Established.  
+![c717acd-vpn-tunnel-status.png](https://support.macstadium.com/hc/article_attachments/28298743716635)
+
+
+
+## Test traffic and visibility through the tunnel
+
+  1. Verify that you have created a virtual machine in MacStadium.
+  2. Verify that you have created a virtual machine instance in GCP and that you have enabled user login on it. 
+     * For more information about user login on GCP instances, see [Google Cloud Documentation: Setting up and configuring OS Login](https://cloud.google.com/compute/docs/instances/managing-instance-access).
+  3. In the terminal on your MacStadium VM, run the following command. 
+     * Replace <user> with the username for your GCP instance.
+     * Replace <gcp-vm-ip> with the private IP of the GCP instance. 
+           
+           ssh <user>@<gcp-vm-ip>
+
+  4. When prompted, provide your password or key for the specified username on the specified GCP instance. 
+     * If the connection is successful, the prefix of the terminal becomes <user>@<gcp-vm-ip>. This indicates that you have connected from MacStadium to GCP over the tunnel.
+  5. Run the following command. 
+     * Replace <user> with the username for your MacStadium VM.
+     * Replace <macstadium-vm-ip> with the private IP of the MacStadium VM. 
+           
+           ssh <user>@<macstadium-vm-ip>
+
+  6. When prompted, provide your password or key for the specified username on the specified MacStadium VM. 
+     * If the connection is successful, the prefix of the terminal becomes <user>@<macstadium-vm-ip>. This indicates that you have connected from GCP to MacStadium over the tunnel.
+
+
+
+## Troubleshooting
+
+See our [GCP Troubleshooting](https://support.macstadium.com/hc/en-us/articles/28313080123547) doc for some common issues with GCP-MacStadium Site-to-Site VPN Connections.

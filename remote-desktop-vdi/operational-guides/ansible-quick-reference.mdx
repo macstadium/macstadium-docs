@@ -1,0 +1,352 @@
+---
+title: "Ansible Quick Reference"
+zendesk_id: 44260146530715
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44260146530715-Ansible-Quick-Reference"
+section: "Operational Guides"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-10T20:28:30Z"
+updated_at: "2026-02-24T22:06:27Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/operational-guides/ansible-quick-reference"
+---
+
+## Setup Commands
+
+### Test connectivity
+    
+    
+    ansible hosts -i /inventory -m ping
+
+### Check Orka Engine version
+    
+    
+    ansible hosts -i /inventory -m shell -a "orka-engine --version"
+
+### Verify Python version
+    
+    
+    ansible hosts -i /inventory -m shell -a "python3 --version"
+
+* * *
+
+##    
+One-Liner Examples
+
+### Install/Upgrade Orka Engine
+    
+    
+    ansible-playbook -i /inventory install-engine.yml \
+      -e "orka_license_key=YOUR_KEY" \
+      -e "engine_url=https://download.url/orka-engine"
+
+### Plan Deployment (Dry Run)
+    
+    
+    ansible-playbook -i /inventory deploy.yml \
+      -e "vm_group=webapp" \
+      -e "desired_vms=10" \
+      --tags plan
+
+### Deploy VM Group
+    
+    
+    ansible-playbook -i /inventory deploy.yml \
+      -e "vm_group=webapp" \
+      -e "desired_vms=10"
+
+### Plan Deletion (Dry Run)
+    
+    
+    ansible-playbook -i /inventory delete.yml \
+      -e "vm_group=webapp" \
+      -e "delete_count=5" \
+      --tags plan
+
+### Delete VM Group
+    
+    
+    ansible-playbook -i /inventory delete.yml \
+      -e "vm_group=webapp" \
+      -e "delete_count=5"
+
+### Stop VM
+    
+    
+    ansible-playbook -i /inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=stopped"
+
+### Start VM
+    
+    
+    ansible-playbook -i /inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=running"
+
+### Delete Single VM
+    
+    
+    ansible-playbook -i /inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=absent"
+
+### List All VMs
+    
+    
+    ansible-playbook -i /inventory list.yml
+
+### List VMs from Group
+    
+    
+    ansible-playbook -i /inventory list.yml -e "vm_group=webapp"
+
+### Pull Image to All Hosts
+    
+    
+    ansible-playbook -i /inventory pull_image.yml \
+      -e "remote_image_name=ghcr.io/macstadium/orka-images/sonoma:latest"
+
+### Create and Push Custom Image
+    
+    
+    ansible-playbook -i /inventory create_image.yml \
+      -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
+      -e "remote_image_name=registry.example.com/custom:v1.0"
+
+### Create Image with OS Upgrade
+    
+    
+    ansible-playbook -i /inventory create_image.yml \
+      -e "vm_image=base:latest" \
+      -e "remote_image_name=registry.example.com/custom:v1.0" \
+      -e "upgrade_os=true"
+
+* * *
+
+## Common Variable Combinations
+
+### Small Development Group
+    
+    
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=dev" \
+      -e "desired_vms=5" \
+      -e "max_vms_per_host=2"
+
+### Medium Production Group
+    
+    
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=prod-webapp" \
+      -e "desired_vms=20" \
+      -e "max_vms_per_host=5"
+
+### Large-Scale Deployment
+    
+    
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=build-farm" \
+      -e "desired_vms=100" \
+      -e "max_vms_per_host=10"
+
+### Image Creation with Auth
+    
+    
+    ansible-playbook -i inventory create_image.yml \
+      -e "vm_image=base:latest" \
+      -e "remote_image_name=registry.company.com/app:v2.0" \
+      -e "registry_username=deploy" \
+      -e "registry_password=secret" \
+      -e "insecure_push=false"
+
+### Insecure Registry
+    
+    
+    ansible-playbook -i inventory pull_image.yml \
+      -e "remote_image_name=insecure-registry:5000/image:latest" \
+      -e "insecure_pull=true"
+
+* * *
+
+## Image Naming Patterns
+
+### MacStadium Public Images
+
+  * **Sonoma** : [](http://ghcr.io/macstadium/orka-images/sonoma:latest)[GitHub](http://ghcr.io/macstadium/orka-images/sonoma:latest)
+
+  * **Ventura** : [](http://ghcr.io/macstadium/orka-images/ventura:latest)[GitHub](http://ghcr.io/macstadium/orka-images/ventura:latest)
+
+  * **Monterey** : [ghcr.io/macstadium/orka-images/monterey:latest](http://ghcr.io/macstadium/orka-images/monterey:latest "http://ghcr.io/macstadium/orka-images/monterey:latest")
+
+
+
+
+### Private Registry Format
+
+  * **Full path** : [registry.example.com/organization/repository:tag](http://registry.example.com/organization/repository:tag "http://registry.example.com/organization/repository:tag")
+
+  * **With port** : [registry.example.com:5000/orka/image:v1.0](http://registry.example.com:5000/orka/image:v1.0 "http://registry.example.com:5000/orka/image:v1.0")
+
+
+
+
+### VM Naming Convention
+
+VMs are automatically named with group prefix:
+
+  * Group `webapp` → VMs: `webapp-abc123`, `webapp-def456`, etc.
+
+  * Group `dev` → VMs: `dev-xyz789`, `dev-uvw456`, etc.
+
+
+
+
+* * *
+
+## Ansible Shortcuts
+
+### Run on Single Host
+    
+    
+    ansible-playbook -i /inventory <playbook.yml> --limit mac-node-1
+
+### Dry Run (Check Mode)
+    
+    
+    ansible-playbook -i /inventory <playbook.yml> --check
+
+### Verbose Output
+    
+    
+    # Verbose output
+    ansible-playbook -i /inventory <playbook.yml> -v
+    
+    # More verbose output
+    ansible-playbook -i /inventory <playbook.yml> -vv
+    
+    # Debug level output
+    ansible-playbook -i /inventory <playbook.yml> -vvv
+
+### Run Specific Tags
+    
+    
+    # Run only tasks tagged with 'configure'
+    ansible-playbook -i /inventory create_image.yml --tags configure
+    
+    # Run only tasks tagged with 'push'
+    ansible-playbook -i /inventory create_image.yml --tags push
+
+### Skip Tags
+    
+    
+    ansible-playbook -i /inventory create_image.yml --skip-tags delete
+
+### Step Through Tasks
+    
+    
+    ansible-playbook -i /inventory <playbook.yml> --step
+
+* * *
+
+## Best Practices Checklist
+
+### Planning & Safety
+
+  * Always use `--tags plan` before production deployments
+
+  * Test playbooks on single host first with `--limit`
+
+  * Review deployment plan output before executing
+
+  * Verify capacity before large deployments
+
+
+
+
+### Naming & Organization
+
+  * Use meaningful VM group names (e.g., `webapp-prod`, `build-farm-dev`)
+
+  * Version your images with tags (`:v1.0`, `:v2.0`, not `:latest` in prod)
+
+  * Document group purposes in inventory comments
+
+
+
+
+### Capacity Management
+
+  * Set appropriate `max_vms_per_host` limits
+
+  * Monitor disk space on hosts regularly
+
+  * Keep Orka Engine updated across all hosts
+
+  * Track VM distribution across hosts
+
+
+
+
+### Image Management
+
+  * Place custom configuration scripts in `/scripts` directory
+
+  * Test image builds in dev before production
+
+  * Keep base images cached on all hosts
+
+  * Implement regular image rebuild schedule
+
+
+
+
+### Security & Operations
+
+  * Store credentials securely (Ansible Vault)
+
+  * Maintain inventory file accuracy
+
+  * Use SSH keys (not passwords) for host access
+
+  * Rotate credentials regularly
+
+  * Review deployment logs for errors
+
+
+
+
+### State & Tracking
+
+  * Let Ansible manage VM counts (incremental deployment)
+
+  * Don't manually create VMs in managed groups
+
+  * Use `list.yml` to verify state before changes
+
+  * Keep group vars consistent across environments
+
+
+
+
+* * *
+
+## Support Resources
+
+  * **Documentation** : [](https://orkadocs.macstadium.com/)[MacStadium](https://orkadocs.macstadium.com/)
+
+  * **Support Portal** : [](https://support.macstadium.com/)[MacStadium](https://support.macstadium.com/)
+
+  * **CLI Reference** : 
+        
+        orka-engine --help
+
+  * **VM Commands** : 
+        
+        orka-engine vm --help
+
+  * **Image Commands** : 
+        
+        orka-engine image --help
+
+  * **Project README** : Check your repository's README.md for architecture details

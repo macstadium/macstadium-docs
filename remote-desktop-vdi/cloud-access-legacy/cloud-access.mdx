@@ -1,0 +1,63 @@
+---
+title: "Cloud Access"
+zendesk_id: 28247446745627
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28247446745627-Cloud-Access"
+section: "Cloud Access (Legacy)"
+category: "Remote Desktop (VDI)"
+created_at: "2024-08-13T20:51:49Z"
+updated_at: "2025-12-10T19:31:27Z"
+promoted: false
+labels: ["cloud", "access", "multi-monitor", "low", "jamf", "usb", "copy/paste", "endpoint", "latency", "audio", "passthrough", "performance"]
+suggested_new_path: "/remote-desktop-vdi/cloud-access-legacy/cloud-access"
+---
+
+With extremely low latency, color accuracy, and distortion-free graphics, MacStadium's Cloud Access, [powered by Teradici](https://www.teradici.com/pcoip-technology/what-is-pcoip), allows users to leverage the full power of macOS for graphics-intensive workloads on Macs in the cloud that perform as if they were within arm’s reach.
+
+Cloud Access offers a unique opportunity for your team work on top-of-the-line macOS machines that can be accessed securely from anywhere -- whether that means the home office, a mobile media lab, or anything in between.
+
+### Suggested use cases
+
+  * Video and Entertainment
+  * Game Development
+  * Secure macOS Workstations
+  * Remote Development Environment
+
+
+
+## Cloud Access Features
+
+### Encrypted connection
+
+With Cloud Access, your data will never leave the highly secure MacStadium cloud -- only the encrypted pixels from the remote machine are transferred over the network to a user's local workstation, which means your data is truly secure.
+
+### Extremely low latency
+
+Industry-leading, lossless image compression technology delivers a user experience that feels as though your cloud-hosted Mac is physically at your local workstation.
+
+### Audio support
+
+Cloud Access features full audio support for Macs hosted in the cloud, unlike traditional VPN solutions.
+
+### Multi-Monitor support
+
+Cloud Access hosted by MacStadium supports a maximum of four displays at a maximum resolution of 4K UHD (3840×2160). If you are using a monitor that has more than 3840 pixels in either dimension, you must scale your display to 3840x2160 or lower before launching the PCoIP Client.
+
+### MFA integration
+
+Customers can setup and configure MFA for their end users to safely and securely authenticate over VPN into their MacStadium environment.
+
+### Using Jamf with Cloud Access
+
+Yes, you can manage your Cloud Access machines using Jamf. Currently manual enrollment is the only method to integrate your machines into Jamf. MacStadium is reviewing automation so that admins can more seamlessly enroll machines into Jamf MDM.
+
+### USB Passthrough
+
+Teradici does not currently support USB passthrough.
+
+### Disabling copy/paste
+
+Admins can enable or disable security settings at the keyboard level such as disabling copy/paste for end users so they are restricted from what data can leave the secure Cloud Access machines.
+
+### Working from home with low performance endpoint devices
+
+When using a home PC or laptop configured with a PCoIP Software Client for macOS or Windows, Teradici recommends at least 1.6 GHz dual core Intel Core-i5 processor (2011 era or newer) equivalent configured with 4 GB of RAM or higher to support a knowledge worker use case with dual 1080p displays. Some thin clients or endpoint devices with Ubuntu 18.04 in conjunction with PCoIP Linux Client 2020.04, can be configured to take advantage of PCoIP Ultra GPU Optimizations. For information on configuring the PCoIP Client H.264 hardware decoder on the PCoIP Client, see [here](https://www.teradici.com//web-help/pcoip_client/linux/23.01/configuration/h264_hardware_decode/). Once this as been configured, this will provide an upgraded network bandwidth efficiency and higher frame rates even when the CPU has limited performance specifications.

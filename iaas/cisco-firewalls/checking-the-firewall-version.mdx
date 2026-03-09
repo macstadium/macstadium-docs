@@ -1,0 +1,39 @@
+---
+title: "Checking the Firewall Version"
+zendesk_id: 28278001459739
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28278001459739-Checking-the-Firewall-Version"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T20:12:29Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["firewall", "firewalls", "version"]
+suggested_new_path: "/iaas/cisco-firewalls/checking-the-firewall-version"
+---
+
+Sometimes, it is necessary to know the exact model of the Cisco ASA/ASAv device and its software version. For example, when downloading the VPN configuration file from Amazon, the following information is required: vendor, platform, and software version of the firewall device.
+
+## Check model and version in Cisco ASDM-IDM
+
+  1. Verify login [logged in to your firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  2. In the menu bar of the running Cisco ASDM-IDM, select Help > About Cisco Adaptive Security Appliance (ASA).  
+![39eca90-about-cisco-asa.png](https://support.macstadium.com/hc/article_attachments/28278001446043)
+  3. In the pop-up window, look for the following information:  
+
+     * Cisco Adaptive Security Appliance Software Version: Lists the software version of the firewall. For example: 9.8(2)24.
+     * Device Manager Version: Lists the software version of the Cisco ASDM-IDM interface. For example: 7.8(2).
+     * Model Id: Lists the device model. For example: ASAv5.  
+![df64844-version-and-model.png](https://support.macstadium.com/hc/article_attachments/28277971967387)
+
+
+
+## Check model and version in the CLI
+
+  1. Verify login logged in to your firewall.
+  2. In the Cisco CLI, run the following command:  
+`show version`
+  3. In the command response, look for the following information:  
+
+     * Cisco Adaptive Security Appliance Software Version: Lists the software version of the firewall. For example: 9.8(2)24.
+     * Device Manager Version: Lists the software version of the Cisco ASDM-IDM interface. For example: 7.8(2).
+     * Model Id: Lists the device model. For example: ASAv5.

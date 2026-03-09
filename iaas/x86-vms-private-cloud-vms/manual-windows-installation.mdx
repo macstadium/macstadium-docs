@@ -1,0 +1,199 @@
+---
+title: "Manual Windows Installation"
+zendesk_id: 29998572425371
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/29998572425371-Manual-Windows-Installation"
+section: "x86 VMs (Private Cloud VMs)"
+category: "IaaS"
+created_at: "2024-10-11T15:29:32Z"
+updated_at: "2025-12-01T23:39:30Z"
+promoted: false
+labels: []
+suggested_new_path: "/iaas/x86-vms-private-cloud-vms/manual-windows-installation"
+---
+
+Windows does not include Virtio drivers by default. These drivers need to be installed from a mounted disk during Windows installation.
+
+For Windows Server installation, MacStadium highly recommends the use of the Windows Server recipe.
+
+1\. Windows requires additional drivers in order to access Private Cloud’s virtualized storage and network hardware. To install a Windows VM manually, select **Machines Dashboard → Virtual Machines.**
+
+2\. Click **New VM**.
+
+![Screenshot 2024-10-11 at 11.28.47 AM.png](https://support.macstadium.com/hc/article_attachments/29998596011931)
+
+New VM
+
+3\. The _Select Type_ tab opens. The left-hand side of the screen contains a list of options (Operating Systems, Services, and so on.) The right-hand side of the screen contains a list of recipes. Select **New VM** and click **Next**.
+
+![Screenshot 2024-10-11 at 11.41.55 AM.png](https://support.macstadium.com/hc/article_attachments/29999198633115)
+
+Next
+
+4\. The _Virtual Machine Setting_ tab opens. 
+
+![Screenshot 2024-10-11 at 11.43.27 AM.png](https://support.macstadium.com/hc/article_attachments/29999198636315)Virtual Settings Tab
+
+5\. In the _VM Recipe Instance_ box, complete the following fields:
+
+  * **Name**
+  * **Cores**
+  * **RAM**
+  * **Cluster** (can be left as _Default_)
+  * **OS Family** = Windows
+  * **Attach Virtio Drives** = checked
+
+
+
+![Screenshot 2024-10-11 at 11.44.35 AM.png](https://support.macstadium.com/hc/article_attachments/29999198639003)
+
+VM Recipe Instance
+
+Make sure the **Attach Virtio Drivers** checkbox is selected. This is required to install the Windows operating system.
+
+A Windows Install ISO must be uploaded to Media Images before installation.
+
+6\. In the Drives box, make sure the **Create CD-ROM Drive** is set to **Use Local Media Image**. Select an uploaded Windows install ISO.
+
+![Screenshot 2024-10-11 at 11.45.54 AM.png](https://support.macstadium.com/hc/article_attachments/30000863608219)
+
+_Drives_
+
+7\. In the Network box, set the **NIC Interface** to **Virtio** , and the **Attach Network Interface** to **Internal**.
+
+![Screenshot 2024-10-11 at 12.27.02 PM.png](https://support.macstadium.com/hc/article_attachments/30000863612443)
+
+Network
+
+8\. Click **Submit**.
+
+![Screenshot 2024-10-11 at 12.28.01 PM.png](https://support.macstadium.com/hc/article_attachments/30000863615515)Virtual Machine Settings
+
+9\. In the **New VM (Windows)** page, click **Power**.
+
+![Screenshot 2024-10-11 at 12.29.04 PM.png](https://support.macstadium.com/hc/article_attachments/30000868142363)
+
+10\. In the **Confirmation** box, click Power On.
+
+![Screenshot 2024-10-11 at 12.29.55 PM.png](https://support.macstadium.com/hc/article_attachments/30000868145051)
+
+_Power On_
+
+11\. Open the**Console** by clicking the **Console** button.
+
+![Screenshot 2024-10-11 at 12.33.29 PM.png](https://support.macstadium.com/hc/article_attachments/30001332886939)
+
+_Console Button_
+
+12\. When prompted, press any key to begin installation.
+
+13\. The **Windows** screen opens, click **Next**.
+
+![Screenshot 2024-10-11 at 12.35.52 PM.png](https://support.macstadium.com/hc/article_attachments/30001332893339)
+
+_Windows_
+
+14\. Click**Install Now**.
+
+![Screenshot 2024-10-11 at 12.36.53 PM.png](https://support.macstadium.com/hc/article_attachments/30001332896539)
+
+_Install Now_
+
+15\. Accept the license terms and click **Next.**
+
+![Screenshot 2024-10-11 at 12.37.45 PM.png](https://support.macstadium.com/hc/article_attachments/30001332897691)
+
+_Advanced_
+
+16\. Select **Custom: Install Windows Only (advanced)**.![Screenshot 2024-10-11 at 12.39.09 PM.png](https://support.macstadium.com/hc/article_attachments/30001345524891)
+
+_Custom_
+
+17\. The installation will fail to find any drives. At this point, the virtio storage drivers need to be loaded to continue the install. Click **Load Driver**.
+
+![Screenshot 2024-10-11 at 12.40.40 PM.png](https://support.macstadium.com/hc/article_attachments/30001332900635)
+
+_Load Driver_
+
+18\. Click **OK**.
+
+![Screenshot 2024-10-11 at 12.41.27 PM.png](https://support.macstadium.com/hc/article_attachments/30001345532571)
+
+OK
+
+19\. Select the driver for the corresponding Windows version, according to the folder name. For example, the Windows 10 driver is located in E:\amd64\w10\\.
+
+![Screenshot 2024-10-11 at 12.42.11 PM.png](https://support.macstadium.com/hc/article_attachments/30001332906139)
+
+Windows 10 Driver
+
+20\. Windows begins to install. Allow the installation to finish. Network connectivity does not work during the install, this is expected, as Windows does not come with Virtio network drivers.
+
+![Screenshot 2024-10-11 at 12.43.48 PM.png](https://support.macstadium.com/hc/article_attachments/30001332911515)
+
+Installing Windows
+
+21\. Once installed, additional drivers need to be installed to allow network connectivity. To do this, open Explorer, and navigate to This PC. A CD drive with Virtio drivers should be accessible.
+
+![Screenshot 2024-10-11 at 12.44.51 PM.png](https://support.macstadium.com/hc/article_attachments/30001436932123)
+
+_CD_
+
+22\. **Double click** on **virtio-win-gt-x64**.
+
+![Screenshot 2024-10-11 at 12.45.47 PM.png](https://support.macstadium.com/hc/article_attachments/30001436934811)
+
+_File Name_
+
+23\. When the **Setup Wizard** opens, click **Next**.
+
+![Screenshot 2024-10-11 at 12.46.44 PM.png](https://support.macstadium.com/hc/article_attachments/30001436935579)
+
+_Wizard_
+
+24\. Accept the **terms** and click **Next**.
+
+![Screenshot 2024-10-11 at 12.47.44 PM.png](https://support.macstadium.com/hc/article_attachments/30001449584283)
+
+_Terms_
+
+_25\. Choose all and click**Next**._
+
+_![Screenshot 2024-10-11 at 12.49.07 PM.png](https://support.macstadium.com/hc/article_attachments/30001663469979)_
+
+_Select All_
+
+26\. Click**Install** to begin the installation.
+
+![Screenshot 2024-10-11 at 12.50.14 PM.png](https://support.macstadium.com/hc/article_attachments/30001663472411)
+
+_Install_
+
+27\. The progress bar appears.
+
+![Screenshot 2024-10-11 at 12.51.17 PM.png](https://support.macstadium.com/hc/article_attachments/30001678656411)
+
+_Progress Bar_
+
+28\. Click **Finish** to complete the Setup Wizard.
+
+![Screenshot 2024-10-11 at 12.52.08 PM.png](https://support.macstadium.com/hc/article_attachments/30001678658203)
+
+Finish
+
+29\. Install **Guest tools** by clicking on the file **virtio-win-guest-tools**. Then accept the **license terms** and click **Install**.
+
+![Screenshot 2024-10-11 at 12.52.54 PM.png](https://support.macstadium.com/hc/article_attachments/30001678660635)
+
+_Install_
+
+30\. The progress bar appears.
+
+![Screenshot 2024-10-11 at 12.53.53 PM.png](https://support.macstadium.com/hc/article_attachments/30001678663323)
+
+Progress Bar
+
+31\. Click **Close** to complete the installation. Windows is now ready for use.
+
+![Screenshot 2024-10-11 at 12.54.41 PM.png](https://support.macstadium.com/hc/article_attachments/30001663486235)
+
+_Close_

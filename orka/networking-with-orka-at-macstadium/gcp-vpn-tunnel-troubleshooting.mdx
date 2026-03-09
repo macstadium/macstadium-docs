@@ -1,0 +1,105 @@
+---
+title: "GCP VPN Tunnel Troubleshooting"
+zendesk_id: 28399407505563
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28399407505563-GCP-VPN-Tunnel-Troubleshooting"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-19T15:41:14Z"
+updated_at: "2024-09-18T21:43:50Z"
+promoted: false
+labels: ["orka", "troubleshooting", "api", "vpn", "networking", "gcp", "tunnel"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
+---
+
+What to look for when you're experiencing issues with your GCP-Orka VPN tunnel and how to perform basic troubleshooting.
+
+## Unrecognized interface during the Cisco ASA/ASAv configuration
+
+Sometimes, the command line interface might return `ERROR: unable to find interface “outside”`. The command-line interface might be case-sensitive and you might need to preserve the capitalization of the Orka network configuration as provided in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+
+  1. Clean up the ASA configuration.  
+For more information, see Cleaning up the ASA/ASAv configuration.
+  2. Rename `outside` in your configuration to `Outside`.
+  3. Re-run the complete configuration in Cisco ASDM-IDM.  
+For more information, see [Setting Up the Orka Side of the Site-to-Site VPN](https://support.macstadium.com/hc/en-us/articles/28399706953243).
+
+
+
+## The tunnel is connected but there's no traffic between GCP and Orka
+
+If GCP shows that the tunnel is `Established` but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Preparing the VPN Configuration for Input into Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28399706953243).
+
+  * Verify that your `{ shared_key }` is correct. The `{ shared_key }` in the configuration must match the key set for the VPN connection.
+  * Verify that you've replaced `{ macstadium_network_address }` and `{ macstadium_network_mask }` with the correct values for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  * Verify that you've configured the NAT exemption rule properly. 
+    * The host and subnet mask required for `ONPREM-NET` are the host and mask for `Private-1` network from your [IP Plan](https://orkadocs.macstadium.com/docs/ip-plan).
+    * The host and subnet mask required for `GCP-NET` are the host and mask for your GCP virtual network. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the `/16` notation converts to a `255.255.0.0` subnet mask).
+    * The values in the brackets after `nat` must be the `Private-1`, followed by `Outside`.
+
+
+
+To resolve any of the listed common problems with the Cisco ASA/ASAv configuration, complete the following steps:
+
+  1. Clean up the firewall configuration..
+  2. Make the necessary changes to the [configuration](https://support.macstadium.com/hc/en-us/articles/28400048105243).
+  3. [Re-run](https://support.macstadium.com/hc/en-us/articles/28399706953243) the complete configuration in Cisco ASDM-IDM.
+
+
+
+## There's traffic from GCP to Orka but you cannot access GCP from Orka
+
+Sometimes, you might be able to establish an SSH connection from GCP to Orka but you might not be able to see or access GCP from Orka. This might be due to any of the following issues:
+
+  * The GCP firewall is not configured to allow ingress traffic.  
+For information about how to enable ingress traffic, see [Google Cloud Documentation: Configuring firewall rules > Example configurations](https://cloud.google.com/vpn/docs/how-to/configuring-firewall-rules#example_configurations).
+  * Your GCP instances don't allow OS login.  
+For more information about user login on GCP instances, see [Google Cloud Documentation: Setting up and configuring OS Login](https://cloud.google.com/compute/docs/instances/managing-instance-access).
+
+
+
+## Troubleshooting
+
+### Cleaning up the ASAv configuration
+
+Sometimes, you might need to clean up the Cisco ASAv configuration and start over.
+
+  1. [Verify that you are connected via VPN to your Orka cluster.](https://support.macstadium.com/hc/en-us/articles/28329406438683)
+  2. [Run Cisco ASDM-IDM and log in to the firewall.](https://support.macstadium.com/hc/en-us/articles/28231599395355)
+  3. In the Cisco ASDM-IDM application toolbar, select **Tools** > **Command Line Interface...**.
+
+
+
+![749b9d6-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28399407496219)
+
+  4. Select **Single Line**.
+  5. Run the following commands one by one, clicking **Send** in between. Replace the placeholders with their respective values. Use **Table 1: Placeholders** for reference.
+
+
+    
+    
+    clear configure tunnel-group { gcp_vpn_ip }  
+    clear configure group-policy gcp  
+    clear configure access-list gcp-in  
+    clear configure access-list gcp-acl  
+    clear configure access-list gcp-filter  
+    clear configure crypto map gcp-vpn-map  
+    clear configure crypto ipsec ikev2 ipsec-proposal gcp  
+    no nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET  
+    no object-group network GCP-NET  
+    no object-group network ONPREM-NET
+
+**Table 1: Placeholders**
+
+Placeholder | Value | Description  
+---|---|---  
+`{ gcp_vpn_ip }` | (Sample) `192.168.0.0` | The public IP address of the cloud VPN gateway in GCP.  
+`{ macstadium_network_name }` | `Private-1` | The name of the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).  
+`{ macstadium_outside_interface }` | `Outside` | The name of the `Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).  
+  
+## More troubleshooting by Google
+
+[Google Cloud Documentation: Cloud VPN Troubleshooting](https://cloud.google.com/vpn/docs/support/troubleshooting)
+
+## More troubleshooting by Cisco
+
+[Cisco Documentation: IPsec Troubleshooting](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html).

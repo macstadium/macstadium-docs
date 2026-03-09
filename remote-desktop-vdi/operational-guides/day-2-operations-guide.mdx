@@ -1,0 +1,2472 @@
+---
+title: "Day-2 Operations Guide"
+zendesk_id: 44261455694619
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/44261455694619-Day-2-Operations-Guide"
+section: "Operational Guides"
+category: "Remote Desktop (VDI)"
+created_at: "2025-12-10T20:52:32Z"
+updated_at: "2026-02-24T22:06:37Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/operational-guides/day-2-operations-guide"
+---
+
+This guide covers the ongoing operational tasks for managing a production Orka for VDI environment. It assumes your deployment is complete, users are onboarded, and you're now responsible for day-to-day operations, maintenance, and optimization.  
+  
+What this guide covers:
+
+  * Routine capacity and image management
+
+  * User lifecycle operations
+
+  * Performance optimization and automation
+
+  * Incident response and change management
+
+  * Reporting and compliance
+
+
+
+
+What this guide assumes:
+
+  * You’ve completed the initial deployment process
+
+  * You're familiar with basic Orka operations
+
+  * You have admin access to Citrix Cloud, Orka hosts, and your Ansible control node
+
+  * Your environment is operational with active users
+
+
+
+
+Prerequisites:
+
+  * SSH access to Orka for VDI hosts
+
+  * Citrix Cloud admin credentials
+
+  * A project set up with an Ansible control node running Orka Engine
+
+  * You have access to your container registry
+
+
+
+
+### Routine operations
+
+#### Capacity management
+
+##### Monitoring host utilization:
+
+Check the current VM distribution across your Orka hosts by running the following Ansible script: 
+    
+    
+    ansible-playbook -i inventory list.yml
+
+This playbook shows all your environment’s VMs, and which host each is running on. You’ll want to watch out for uneven host distribution (e.g., one host is overloaded while others remain idle), any hosts approaching their VM limit, and watch for any resource warnings in the log output. To check your existing host resource usage, run the following Ansible script:  
+
+    
+    
+    ansible hosts -i inventory \
+      -m shell \
+      -a "top -l 1 | grep -E 'CPU|PhysMem'"
+
+You will want to monitor CPU usage, and make sure this doesn’t go above 80% sustained. You’ll also want to observe memory pressure (swap usage), and confirm the amount of available disk space on `/var/orka`.
+
+##### Setting up basic monitoring
+
+Use a cron job to capture daily stats on your Ansible control node. For example, the following cron job would add daily capacity to an existing Ansible node daily at 6:00 AM:  
+
+    
+    
+    # Open crontab editor
+    crontab -e
+    
+    # Add this cron entry inside the editor:
+    0 6 * * * ansible-playbook -i /path/to/inventory list.yml > /var/log/orka-capacity-$(date +\%Y\%m\%d).log
+
+You will want to review your Ansible logs weekly to help you spot trends before they become larger issues.
+
+#### Scaling up: Adding new Mac hosts
+
+#####  **When you need to scale up:**
+
+  * Your existing Orka hosts are consistently above 70% CPU utilization
+
+  * Users are reporting slowness during peak hours
+
+  * You are planning to add more desktops than your current host capacity supports
+
+
+
+
+#### Steps to add a new Mac host:
+
+  1. Provision physical Mac hardware with MacStadium
+
+     * Contact MacStadium support to add nodes to your private cloud
+
+     * Request a host in same subnet as your existing infrastructure
+
+     * Install Orka for VDI on your new Mac host machine(s)
+
+  2. Add host to Ansible inventory
+
+
+
+
+Edit `inventory.ini`:
+    
+    
+    [hosts]
+    mac-node-1 ansible_host=10.0.100.10
+    mac-node-2 ansible_host=10.0.100.11
+    mac-node-3 ansible_host=10.0.100.12
+    mac-node-4 ansible_host=10.0.100.13  # New host
+    
+    [all:vars]
+    ansible_user=admin
+    ansible_become=yes
+
+  3. Verify connectivity to the new host:  
+
+         
+         ansible mac-node-4 -i inventory -m ping
+
+  4. Confirm the Orka Engine version matches existing host(s):
+         
+         ansible hosts -i inventory \
+           -m shell \
+           -a "orka-engine --version"
+
+  
+If the new host has a different Orka version, upgrade any existing hosts or downgrade the new host to match. Version mismatches can cause deployment issues.  
+
+
+  5. Pull required images to the new host:
+         
+         ansible-playbook -i inventory pull_image.yml \
+           -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
+           --limit mac-node-4
+
+Repeat this for each image your environment uses. This prevents slow first deployments when users need desktops on the new host.  
+
+
+  6. Test VM deployment on the new host:
+         
+         ansible-playbook -i inventory deploy.yml \
+           -e "vm_group=test-new-host" \
+           -e "desired_vms=1" \
+           -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
+           --limit mac-node-4
+
+  
+Verify the test VM boots, registers with Citrix VDA, and is accessible. Once this is confirmed, you can then delete the test VM by running:  
+
+         
+         ansible-playbook -i inventory delete.yml \
+           -e "vm_group=test-new-host" \
+           -e "delete_count=1"
+
+  7. Deploy production VMs  
+  
+With your new host successfully verified, you can now deploy additional desktops. Use your existing Ansible playbook(s) to automatically distribute VMs across all available hosts.  
+
+         
+         ansible-playbook -i inventory deploy.yml \
+           -e "vm_group=citrix-vda-finance" \
+           -e "desired_vms=15"
+
+  
+This may take anywhere between 2-4 hours for full host integration and testing.
+
+
+
+
+### Scaling Down: Decommissioning Hosts
+
+####  **When you might scale down:**
+
+  * Your user count has reduced (e.g., seasonal workers have been offboarded)
+
+  * You are consolidating to newer hardware
+
+  * Cost optimization during low-usage periods
+
+
+
+
+**Important note:** Decommissioning Orka for VDI hosts requires migrating or deleting VMs first. Orka for VDI does not support live VM migration between hosts.
+
+#####  **Steps to decommission a host:**
+
+  1. Identify VMs on the target host:
+         
+         ansible-playbook -i inventory list.yml | grep mac-node-4
+
+You will want to note all VM names running on the host you're removing.  
+
+
+  2. Choose your migration strategy:  
+  
+**Option A:** Delete and redeploy pooled desktops. These can be deleted and recreated on other hosts without impacting users.  
+
+         
+         # Delete specific VM
+         ansible-playbook -i inventory vm.yml \
+           -e "vm_name=citrix-vda-finance-abc123" \
+           -e "desired_state=absent"
+         
+         # Redeploy VM group to desired count
+         ansible-playbook -i inventory deploy.yml \
+           -e "vm_group=citrix-vda-finance" \
+           -e "desired_vms=10"
+
+**Option B:** Snapshot and recreate VMs for dedicated desktops with user data.  
+  
+If users have local data that must be preserved:
+
+     1. Notify users 48 hours in advance
+
+     2. Have your users back up critical data to their network drives
+
+     3. Take VM snapshots
+
+     4. Delete VMs from the old host and redeploy them on the remaining hosts
+
+     5. Restore your user data from existing backups  
+
+
+Most environments avoid this by enforcing network storage policies where user data is never stored locally on VMs.  
+
+
+  3. Remove the host from your Ansible inventory  
+  
+Edit `inventory.ini` and remove the host:  
+
+         
+         [hosts]
+         mac-node-1 ansible_host=10.0.100.10
+         mac-node-2 ansible_host=10.0.100.11
+         mac-node-3 ansible_host=10.0.100.12
+         mac-node-4 ansible_host=10.0.100.13  # Removed
+
+  4. Verify VM distribution across hosts
+         
+         ansible-playbook -i inventory list.yml
+
+  
+Confirm that your VMs are now running only on the remaining hosts.  
+
+
+  5. Contact MacStadium to decommission hardware
+
+
+
+
+Once an Orka for VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
+  
+Estimated timeline: This may take between 4-8 hours depending on your VM count and migration complexity.
+
+## Image updates and patching
+
+### macOS Security Updates
+
+Frequency: Monthly (as Apple releases updates)
+
+Testing requirement: Always test updates on non-production VMs before rolling out to users.
+
+Recommended workflow:
+
+##### Create a test image
+
+  1. Deploy a test VM from your current golden image:  
+
+         
+         ansible-playbook -i inventory deploy.yml \
+           -e "vm_group=image-test" \
+           -e "desired_vms=1" \
+           -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+  2. Access the test VM and install updates  
+
+         
+         # SSH into the Orka node
+         ssh admin@10.0.100.10
+         
+         # List VMs and filter for the test VM
+         orka-engine vm list | grep image-test
+         
+         # Open VNC connection to the VM
+         open vnc://10.0.101.50
+
+
+
+
+Inside the VM:
+
+  * Navigate to System Settings → General → Software Update
+
+  * Install all available updates
+
+  * Reboot as needed  
+
+
+
+
+  3. Verify Citrix VDA still functions:
+
+
+
+  * Check VDA registration: System Preferences → Citrix VDA
+
+  * Test user login through Citrix Workspace
+
+  * Test HDX features (clipboard, file transfer, USB)
+
+  * Run the following example Ansible playbook to capture the updated VM as a new image version:
+
+
+
+    
+    
+    ansible-playbook -i inventory create_image.yml \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
+      -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.1" \
+      -e "registry_username=deploy" \
+      -e "@vault_passwords.yml"
+
+  4. Delete the test VM  
+
+         
+         ansible-playbook -i inventory delete.yml \
+           -e "vm_group=image-test" \
+           -e "delete_count=1"
+
+
+
+
+##### Pilot update rollout
+
+You may want to deploy the updated image to a small group of users first, as seen in the following example Ansible playbook:  
+
+    
+    
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=citrix-vda-finance-pilot" \
+      -e "desired_vms=5" \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+
+You will want to monitor the updated image deployment for 3-5 business days, collecting user feedback on any new issues or errors, performance changes, and application compatibility issues that may arise.
+
+##### Full production rollout
+
+If the pilot succeeds, you can proceed to update all VMs in production. For pooled desktops, this process is straightforward, as seen in the following Ansible playbook example:
+    
+    
+    # Delete existing VMs from finance group
+    ansible-playbook -i inventory delete.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "delete_count=10"
+    
+    # Redeploy with new image version
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "desired_vms=10" \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+
+  
+You will want to schedule the update to take place during a scheduled maintenance window (evenings or weekends are recommended) to avoid user disruption.
+
+For dedicated desktops, users will lose their local data unless it has been backed up. You will want to notify your users in advance (5 business days recommended) and provide them with data backup instructions.   
+  
+Estimated update timeline: One week (testing) + one day (pilot) + 1-2 hours (full production rollout)
+
+#### Application Updates
+
+Frequency: Varies by application (update applications quarterly or as-needed)
+
+Process: Same as the macOS updates process documented above, but you will want to modify the VM to install application updates before creating a new golden image.
+
+Example: Updating Xcode
+
+  1. Deploy a test VM from the current golden image
+
+  2. Install new Xcode version from Mac App Store or Apple Developer
+
+  3. Test Xcode functionality (build a test project)
+
+  4. Create a new golden image
+
+  5. Pilot the new golden image with your developer team
+
+  6. Roll the new golden image out to production
+
+
+
+
+Note: Keep a CHANGELOG.MD file to show what's included in each image version. You can use image tags to track this:
+    
+    
+    - `registry.example.com/citrix-vda/dev-tools:v1.0` - Xcode 14.3, Sonoma 14.0
+    - `registry.example.com/citrix-vda/dev-tools:v1.1` - Xcode 15.0, Sonoma 14.1
+    - `registry.example.com/citrix-vda/dev-tools:v1.2` - Xcode 15.2, Sonoma 14.3
+
+You will want to store your CHANGELOG.MD file in your project’s git repository alongside your Ansible playbooks.
+
+#### Citrix VDA Updates
+
+Frequency: Quarterly (Citrix releases updates every 3-4 months)
+
+Check for updates: Citrix Cloud Console → Updates & Announcements
+
+Update Process:
+
+  1. Download the new VDA installer from Citrix
+
+  2. Deploy a test VM from your current golden image
+
+  3. Install the new VDA version:
+
+     * Copy the VDA installer to the VM
+
+     * Run the VDA installer (this may require uninstalling the old version first)
+
+     * Reboot the VM
+
+  4. Verify VDA registration and HDX functionality works as expected
+
+  5. Create a new golden image with the updated Citrix VDA version
+
+  6. Pilot the new image and roll out to production as described above
+
+
+
+
+Note: Always test Citrix VDA updates in a non-production environment, as these can occasionally introduce compatibility issues with specific macOS versions or applications.
+
+Rollback plan: Keep the previous golden image version available for 30 days after production rollout. If any issues arise, you can quickly redeploy from the old image as seen in the following Ansible playbook:
+    
+    
+    # Delete existing VMs from finance group
+    ansible-playbook -i inventory-delete.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "delete_count=10"
+    
+    # Redeploy with previous image version (rollback)
+    ansible-playbook -i inventory-deploy.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "desired_vms=10" \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+### User Lifecycle
+
+#### Onboarding New Users
+
+Scenario:**** A new employee needs access to a MacOS desktop.
+
+For pooled desktops:
+
+  1. Add the new user to a Citrix Delivery Group:
+
+
+
+
+Navigate to Citrix Cloud Console → Manage → Delivery Groups → Select group → Edit
+
+Click the "Users" tab → Add users → Search by name or email → Select → Save
+
+  2. Verify capacity
+
+
+
+
+Check if you have unassigned VMs available:  
+
+    
+    
+    ansible-playbook -i inventory list.yml | wc -l
+
+Compare the listed VM count against the number of users in the Delivery Group. If you need more desktops, review the following example Ansible playbook:
+    
+    
+    # Add two more desktops
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "desired_vms=12"
+
+  3. User logs in
+
+
+
+
+The user opens Citrix Workspace, authenticates, and clicks their assigned desktop. Citrix then assigns them an available VM from the pool.
+
+Expected wait time: 5 minutes for admin tasks + 2-3 minutes for user's first login.
+
+For dedicated desktops:
+
+Follow the same process as listed above, but ensure you deploy exactly as many VMs as you have users. Each user gets their own VM with persistent data.
+
+#### Reassigning Desktops
+
+Scenario: A user moves to different department and needs different applications.
+
+For pooled desktops:
+
+  1. Remove the user from their old Delivery Group
+
+  2. Add user to the new Delivery Group
+
+  3. User logs out and logs back in, and gets assigned a VM from the new pool
+
+
+
+
+No VM changes are needed; as the user automatically gets a different desktop.
+
+For dedicated desktops:
+
+If the user needs to keep their data, this requires manual intervention:
+
+  1. Have the user back up their important files to network storage
+
+  2. Delete the user's old VM
+
+  3. Deploy a new VM from the appropriate golden image
+
+  4. Add the user to their new Delivery Group
+
+  5. The user then restores their backed-up files
+
+
+
+
+Alternatively, if user data doesn't need to be preserved, proceed to delete the old VM and deploy a new one.
+
+#### Offboarding and Data Retention
+
+Scenario: An employee leaves the company or no longer needs macOS access.
+
+Process:
+
+  1. Remove user from the Citrix Delivery Group
+
+
+
+
+Citrix Cloud Console → Manage → Delivery Groups → Select group → Edit → Users → Remove user → Save
+
+  2. For dedicated desktops: handle data retention
+
+
+
+
+If the user had a dedicated VM, decide:
+
+**Option A:** Keep VM for 30 days (common policy)
+
+Do nothing immediately. Keep the VM running, but inaccessible. After 30 days:
+    
+    
+    ansible-playbook -i inventory vm.yml \
+      -e "vm_name=citrix-vda-finance-abc123" \
+      -e "desired_state=absent"
+
+**Option B:** Archive user data before VM deletion
+
+  1. SSH to the Orka host running the VM
+
+  2. Use `orka-engine vm backup` or host-level snapshots to capture the VM disk (if your environment supports this)
+
+  3. Store the VM backup for the required retention period (check your company's data retention policies)
+
+  4. Delete the VM
+
+
+
+
+**Option C:** Immediate deletion (pooled desktops)
+
+For pooled desktops where user data isn't preserved, there is no action needed. Users simply can't log in anymore, and their next login will assign them to a different VM (if they regain access later).
+
+Reclaim capacity if needed:
+
+After offboarding multiple users, you may have excess VMs. If usage is consistently below capacity:
+    
+    
+    # List VMs in finance group
+    ansible-playbook -i inventory list.yml \
+      -e "vm_group=citrix-vda-finance"
+    
+    # Delete 3 VMs from finance group
+    ansible-playbook -i inventory delete.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "delete_count=3"
+
+### Backup and Recovery
+
+#### VM Snapshot Strategies
+
+Important limitation: Orka Engine does not have native VM snapshot functionality built into the Ansible playbooks. Snapshots must be handled at the host storage level.
+
+Available backup approaches:
+
+Approach 1: Golden image versioning (this is recommended for most environments)
+
+Rather than backing up individual VMs, maintain version history of your golden images. This works well for pooled desktops where user data isn't stored on VMs.
+
+How it works:
+
+  * Keep the last 3-4 versions of each golden image in your container registry
+
+  * If any issues arise, redeploy VMs from the previous golden image version
+
+  * User data is stored on network file shares, not on VMs
+
+
+
+
+Implementation:
+    
+    
+    ansible-playbook -i inventory create_image.yml \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1" \
+      -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.2"
+
+In your container registry, configure your image retention policies to keep the number of image versions specified:
+
+  * Production images: It is recommended to keep the last four golden image versions (approximately 4-6 months)
+
+  * Development/test images: Keep the last two golden image versions
+
+
+
+
+Approach 2: Host-level storage snapshots (for dedicated desktops)
+
+If your users have dedicated VMs with local data that must be preserved, use host-level tools:
+
+  1. SSH to your Orka for VDI host
+
+  2. Use APFS snapshot capabilities on the host:
+
+
+
+    
+    
+    # Create a Time Machine local snapshot
+    tmutil localsnapshot
+    
+    # Or use custom scripts to snapshot /var/orka/vms/<vm-name>
+
+  3. Restore the desktop by copying the image snapshot back to the VM disk location
+
+
+
+
+Note:**** This approach is not automated in Orka for VDI. You'll need to build custom tooling or manual procedures.
+
+Approach 3: Third-party backup tools
+
+Some environments integrate enterprise backup tools (Veeam, Commvault, etc.) at the host level. Consult your backup vendor's documentation for macOS virtualization support.
+
+### Image Backup Procedures
+
+#### Backup your golden images regularly:
+
+**Method 1:** Container registry replication
+
+Configure your container registry to replicate to a secondary registry for disaster recovery.
+
+Primary: `registry.example.com`   
+Secondary: `backup-registry.example.com` (located in a different datacenter)
+
+Most container registries (Docker, GitHub Container Registry, Harbor, JFrog Artifactory) support replication. Consult your registry's official documentation for more information.
+
+**Method 2:** Export images to file storage
+
+Manually export images for offline backup:
+    
+    
+    ansible-playbook -i inventory pull_image.yml \
+      -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+### Disaster Recovery Runbook
+
+#### Scenario: Complete loss of Orka hosts (datacenter failure)
+
+Prerequisites:
+
+  * Secondary Orka for VDI environment located in a different datacenter (requires MacStadium private cloud in multiple locations)
+
+  * Golden images replicated to a secondary registry accessible from the DR site
+
+  * Ansible inventory configured with DR hosts
+
+
+
+
+#####  **Recovery steps:**
+
+  1. Update your Ansible inventory to point to the specified disaster recovery hosts  
+
+         
+         [hosts]
+         mac-dr-node-1 ansible_host=10.1.100.10
+         mac-dr-node-2 ansible_host=10.1.100.11
+         
+         [all:vars]
+         ansible_user=admin
+         ansible_become=yes
+
+  2. Pull images to disaster recovery hosts  
+
+         
+         ansible-playbook -i inventory-dr pull_image.yml \
+           -e "remote_image_name=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+  3. Deploy VMs in the disaster recovery environment  
+
+         
+         ansible-playbook -i inventory-dr deploy.yml \
+           -e "vm_group=citrix-vda-finance" \
+           -e "desired_vms=10" \
+           -e "vm_image=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+  4. Update Citrix Cloud configuration
+
+
+
+
+VMs will automatically register with Citrix Cloud if:
+
+  * The specified disaster recovery VMs can reach Citrix Cloud (outbound HTTPS)
+
+  * Citrix VDA configuration includes the correct Cloud Connector details
+
+
+
+
+If Cloud Connectors are also lost, you'll need to deploy new ones in the disaster recovery environment first. See [Citrix documentation for Cloud Connector installation](https://docs.citrix.com/en-us/citrix-cloud/citrix-cloud-resource-locations/citrix-cloud-connector/installation.html "https://docs.citrix.com/en-us/citrix-cloud/citrix-cloud-resource-locations/citrix-cloud-connector/installation.html").
+
+  5. Notify users of temporary environment changes
+
+
+
+
+Users may experience:
+
+  * Different VM IP addresses (if you have IP-based network policies)
+
+  * Slightly different VM performance characteristics
+
+  * Needing to reconnect to their desktop through Citrix Workspace
+
+
+
+
+Expected RTO (Recovery Time Objective): 2-4 hours depending on your VM count and image sizes.
+
+Expected RPO (Recovery Point Objective):**** This depends on your golden image replication frequency.   
+  
+With real-time registry replication: Recovery in minutes.   
+With daily image backups: Expect up to 24 hours of configuration changes will be lost.
+
+Cost consideration: Most customers don't maintain a full disaster recovery environment due to hardware costs. Alternatively, you can accept longer RTO periods and work with MacStadium to provision new hosts on-demand during disaster recovery.
+
+### Data Restoration Workflows
+
+#### Scenario: User accidentally deletes important files
+
+#####  **For pooled desktops:**
+
+User data should not be stored on VMs. Redirect users to restore from network file shares, OneDrive, or other corporate backup systems.
+
+If user data was incorrectly stored on a pooled VM and is now lost, there is no recovery path. Use this as a learning opportunity to reinforce data storage policies.
+
+#####  **For dedicated desktops:**
+
+Recovery depends on your backup approach.
+
+If you are using host-level snapshots:
+
+  1. SSH to the Orka for VDI host
+
+  2. Stop the affected VM:
+         
+         ansible-playbook -i inventory vm.yml \
+           -e "vm_name=citrix-vda-finance-abc123" \
+           -e "desired_state=stopped"
+
+  3. Restore VM disk from snapshot (manual process; depends on host storage configuration)  
+  
+Start the affected VM:
+         
+         ansible-playbook -i inventory vm.yml \
+           -e "vm_name=citrix-vda-finance-abc123" \
+           -e "desired_state=running"
+
+  
+If using third-party backup tools, follow your vendor's restore procedures to restore specific files or a full VM.  
+  
+Best practice:**** Train users that local VM storage is not backed up. Enforce policies requiring all important user data to be stored on network drives, cloud storage, or source control systems.
+
+
+
+
+## Advanced Topics
+
+### Performance Optimization
+
+#### Bridged Networking Configuration
+
+When using bridged networking, VMs connect directly to your physical network as native devices, receiving their own IP address from your network's DHCP server. This enables direct communication with other network devices without using NAT.
+
+Requirements:
+
+  * Working DHCP server on your network that can assign IPs to VMs
+
+  * Sufficient IP addresses in your subnet (one per VM)
+
+  * All existing VMs must be deleted before switching modes
+
+  * Orka for VDI running Orka Engine 3.5+
+
+
+
+
+Important limitations:
+
+  * You cannot run NAT and bridged networking simultaneously
+
+  * All VMs in your cluster must use the same networking mode
+
+  * Switching modes requires deleting all VMs first
+
+
+
+
+Configuration:
+
+Bridged networking is configured in your Orka for VDI cluster configuration files before deploying VMs.
+
+Step 1: Configure cluster-wide bridge mode
+
+Edit `cluster.yml` on your Orka for VDI management node:
+    
+    
+    vm_network_mode: bridge
+
+This tells Orka services to use bridged networking for all VMs.
+
+Step 2: Configure host network interface
+
+Specify which physical network interface on your Orka hosts connects to your DHCP-enabled network.
+
+Option A: Same interface on all hosts
+
+Edit `nodes.yml`:
+    
+    
+    osx_node_vm_network_interface: en0 # or vlan0, en1, etc.
+
+Option B: Different interfaces per host
+
+Edit your `hosts` inventory file:
+    
+    
+    [arm-nodes]
+    10.221.188.30 osx_node_vm_network_interface=vlan0
+    10.221.188.31 osx_node_vm_network_interface=vlan1
+    10.221.188.32 osx_node_vm_network_interface=en0
+
+To determine the correct interface:
+
+SSH to each Orka host and check network interfaces:
+    
+    
+    ssh admin@10.221.188.30 "ifconfig | grep -E '^[a-z]|inet '"
+
+Look for the interface with an IP in your corporate network range (the one that can reach your DHCP server).
+
+Step 3: Delete all existing VMs
+
+Important note: You **cannot** switch networking modes with VMs running.
+    
+    
+    # List all VMs
+    ansible-playbook -i inventory list.yml
+    
+    # Delete all VMs (adjust groups and counts as needed)
+    ansible-playbook -i inventory delete.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "delete_count=10"
+    
+    # Repeat for each VM group in your environment
+
+  
+Step 4: Apply configuration changes
+
+Rerun your host configuration playbook to apply the new network settings:
+    
+    
+    ansible-playbook -i inventory configure-hosts.yml
+
+Step 5: Deploy VMs with bridged networking
+
+Deploy your VMs normally. They will now use bridged networking automatically:
+    
+    
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "desired_vms=10" \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+Step 6: Verify that VMs received DHCP addresses
+    
+    
+    ansible-playbook -i inventory list.yml
+
+You should see VMs with IP addresses from your corporate network range, not `192.168.64.x` addresses.
+
+Example output:
+    
+    
+    NAME       IP              SSH  VNC   SCREENSHARE  STATUS
+    vm-2gdws   10.221.190.85   22   6000  5900         Running
+    vm-3hfks   10.221.190.86   22   6001  5900         Running
+
+Accessing VMs in bridge mode:
+
+SSH and Screen Sharing: Access directly on the VM's IP
+    
+    
+    # SSH into the VM
+    ssh admin@10.221.190.85
+    
+    # Screen Sharing on port 5900
+    open vnc://10.221.190.85
+
+VNC: Runs on the host, not the VM. Access on `port 6000` on the host IP.
+
+To find the host IP:
+    
+    
+    # Get detailed VM information
+    orka3 vm list vm-2gdws -o wide
+    
+    # Get detailed node information
+    orka3 node list <node-name> -o wide
+    
+    # Open VNC connection to host's VNC port
+    open vnc://<host-ip>:6000
+
+Known issue: The Orka WebUI shows "For VNC use `vnc://<vm-ip>:6000`" which is incorrect. Always use the host IP for VNC, not the VM IP.
+
+##### Troubleshooting:
+
+Problem: VMs have private IPs from****`192.168.64.0/24`**** range instead of corporate network IPs
+
+This means bridge mode is not properly configured.
+
+Solution:
+
+  1. Verify `vm_network_mode: bridge` is set in `cluster.yml`
+
+  2. Verify `osx_node_vm_network_interface` is set correctly in `nodes.yml` or `hosts` file
+
+  3. Check the interface name is correct (SSH to host and run `ifconfig`)
+
+  4. Rerun the host configuration Ansible playbook to apply changes:
+
+
+
+    
+    
+    ansible-playbook -i inventory configure-hosts.yml
+
+  5. Delete and redeploy affected VMs
+
+
+
+
+Problem: VMs cannot reach network services
+
+Solution:
+
+  1. Verify your DHCP server is reachable from the configured host interface
+
+  2. Check that your firewall rules allow traffic from DHCP-assigned IP ranges
+
+  3. Verify that VMs received valid gateway and DNS settings:
+
+
+
+    
+    
+    ssh admin@<vm-ip> "route -n get default"
+    
+    ssh admin@<vm-ip> "cat /etc/resolv.conf"
+
+Switching back to NAT mode:
+
+If you need to revert to NAT networking:
+
+  1. Delete all VMs
+
+  2. Edit `cluster.yml` and change `vm_network_mode: nat`
+
+  3. Remove or comment out `osx_node_vm_network_interface` settings
+
+  4. Rerun host configuration Ansible playbook
+
+  5. Redeploy VMs
+
+
+
+
+When to contact MacStadium support:
+
+  * Bridge mode not working after following all steps
+
+  * You need assistance determining the correct host interface
+
+  * You have complex network topology requiring custom configuration
+
+  * You are experiencing performance issues specific to bridged networking
+
+
+
+
+#### HDX Tuning for Latency-Sensitive Workloads
+
+Scenario: Users editing video, audio, or using graphics-intensive applications report lag or stuttering.
+
+Citrix HDX optimization:
+
+  1. Enable [framehawk](https://docs.citrix.com/en-us/citrix-virtual-apps-desktops/2402-ltsr/graphics/framehawk.html "https://docs.citrix.com/en-us/citrix-virtual-apps-desktops/2402-ltsr/graphics/framehawk.html") for high-latency connections
+
+
+
+
+Citrix Cloud Console → Policies → Create new policy → HDX Adaptive Transport
+
+Set "Adaptive Transport" to "Preferred"
+
+Apply this policy to the affected Delivery Groups
+
+  2. Adjust graphics quality settings
+
+
+
+
+For users on high-bandwidth connections, increase visual quality:
+
+Policies → Visual Display → Visual Quality: "Build to Lossless"
+
+For users on low-bandwidth connections, prioritize responsiveness:
+
+Policies → Visual Display → Visual Quality: "Medium"
+
+  3. Enable GPU acceleration (if using M4 Macs)
+
+
+
+
+M4 Macs support GPU passthrough for VMs. This requires:
+
+  * Orka 3.5+
+
+  * macOS 15.5+ on the Orka for VDI host
+
+  * Specific VM configuration
+
+
+
+
+**Note:** GPU acceleration is not yet automated in the Orka Engine Ansible playbooks. Contact MacStadium support for GPU-enabled VM deployment guidance.
+
+  4. Test with Citrix HDX Monitor
+
+
+
+
+Download the [Citrix HDX Monitor tool](https://cis.citrix.com/hdx/download/ "https://cis.citrix.com/hdx/download/") from the Citrix website. Run tests between user endpoints and VMs to identify bottlenecks such as:
+
+  * Network latency
+
+  * Bandwidth limitations
+
+  * Frame rate drops
+
+
+
+
+Use these results to fine tune your Citrix HDX policies further.
+
+#### Resource Allocation (CPU, Memory, Storage)
+
+Default VM resources:
+
+Orka VMs inherit resources from the golden image configuration. Most images default to:
+
+  * CPU: 4 cores
+
+  * Memory: 8 GB
+
+  * Storage: 90 GB
+
+
+
+
+Adjusting resources:
+
+Resource allocation is configured when creating the golden image, not at VM deployment time. To change resources:
+
+  1. Deploy a VM from the current image
+
+  2. Shut down the VM
+
+  3. Modify VM configuration using the `orka-engine` CLI:
+
+
+
+    
+    
+    # SSH into the Orka node
+    ssh admin@10.0.100.10
+    
+    # Stop the VM
+    orka-engine vm stop <vm-name>
+    
+    # Resize the VM (6 CPU cores, 16 GB memory)
+    orka-engine vm resize <vm-name> --cpu 6 --memory 16
+    
+    # Start the VM
+    orka-engine vm start <vm-name>
+
+  4. Test the resized VM
+
+  5. Create a new golden image from the resized VM:
+
+
+
+    
+    
+    ansible-playbook -i inventory create_image.yml \
+      -e "vm_image=<resized-vm-name>" \
+      -e "remote_image_name=registry.example.com/citrix-vda/sonoma-highspec:v1.0"
+
+  6. Deploy new VMs from the high-spec image for power users. The recommended specifications are as follows:   
+CPU: 8+ cores  
+Memory: 32GB  
+Storage: 500GB
+
+
+
+
+**Important:** Overprovisioning resources reduces VM density on hosts. Monitor host utilization to ensure you're not running fewer VMs than capacity allows.
+
+### Automation Enhancements
+
+#### Extending Ansible Playbooks
+
+The [Orka Engine Orchestration Ansible playbooks] provide core functionality, but you may want to add custom automation for your environment.
+
+Common extensions:
+
+  1. Automated image updates
+
+
+
+
+Create a playbook that deploys a test VM, installs updates, and creates a new golden image:
+    
+    
+    # update-golden-image.yml
+    ---
+    - name: Automated image update workflow
+      hosts: localhost
+      tasks:
+        - name: Deploy test VM
+          command: >
+            ansible-playbook -i inventory deploy.yml
+            -e "vm_group=image-test"
+            -e "desired_vms=1"
+            -e "vm_image={{ current_image }}"
+    
+        - name: Wait for VM to be ready
+          pause:
+            minutes: 3
+    
+        # Note: OS update installation still requires manual intervention
+        # VNC/Screen Sharing to install updates via GUI
+    
+        - name: Create new golden image
+          command: >
+            ansible-playbook -i inventory create_image.yml
+            -e "vm_image={{ current_image }}"
+            -e "remote_image_name={{ new_image }}"
+            -e "registry_username={{ registry_user }}"
+            -e "registry_password={{ registry_pass }}"
+    
+        - name: Clean up test VM
+          command: >
+            ansible-playbook -i inventory delete.yml
+            -e "vm_group=image-test"
+            -e "delete_count=1"
+
+  2. Scheduled capacity scaling
+
+
+
+
+Schedule a cron job to automatically scale capacity up during business hours and down overnight:
+    
+    
+    # Scale up at 7 AM weekdays
+    0 7 * * 1-5 ansible-playbook -i /path/to/inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=15"
+    
+    # Scale down at 7 PM weekdays
+    0 19 * * 1-5 ansible-playbook -i /path/to/inventory delete.yml -e "vm_group=citrix-vda-finance" -e "delete_count=5"
+
+  3. Health check automation
+
+
+
+
+Create an Ansible playbook that checks VM health and sends alerts as necessary:
+    
+    
+    # health-check.yml
+    ---
+    - name: VM health check
+      hosts: hosts
+      tasks:
+        - name: Check VMs are running
+          shell: orka-engine vm list --format json
+          register: vm_list
+    
+        - name: Parse VM status
+          set_fact:
+            running_vms: "{{ vm_list.stdout | from_json | selectattr('status', 'equalto', 'running') | list }}"
+    
+        - name: Alert if VMs are down
+          debug:
+            msg: "WARNING: {{ vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length }} VMs are not running"
+          when: (vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length) > 0
+
+Schedule this to run every 15 minutes and pipe output to your monitoring system.
+
+#### Integrating with CI/CD Pipelines
+
+Scenario: Automatically build and deploy updated golden images when your application code changes.
+
+Example: GitHub Actions workflow:
+    
+    
+    # .github/workflows/deploy-vdi-image.yml
+    name: Deploy Updated VDI Image
+    
+    on:
+      push:
+        branches: [main]
+        paths:
+          - 'app/**'  # Trigger when application code changes
+    
+    jobs:
+      build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+    
+          - name: Build application
+            run: |
+              # Your app build steps here
+              ./build.sh
+    
+          - name: Deploy test VM
+            run: |
+              ansible-playbook -i inventory deploy.yml \
+                -e "vm_group=image-test" \
+                -e "desired_vms=1" \
+                -e "vm_image=registry.example.com/citrix-vda/dev-base:latest"
+    
+          - name: Copy application to test VM
+            run: |
+              # SCP or rsync app to VM
+              scp -r ./dist admin@<vm-ip>:/Applications/YourApp.app
+    
+          - name: Run automated tests
+            run: |
+              # SSH to VM and run tests
+              ssh admin@<vm-ip> "./run-tests.sh"
+    
+          - name: Create new golden image if tests pass
+            run: |
+              ansible-playbook -i inventory create_image.yml \
+                -e "vm_image=image-test-abc123" \
+                -e "remote_image_name=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}" \
+                -e "registry_username=${{ secrets.REGISTRY_USER }}" \
+                -e "registry_password=${{ secrets.REGISTRY_PASS }}"
+    
+          - name: Deploy to production
+            run: |
+              ansible-playbook -i inventory deploy.yml \
+                -e "vm_group=citrix-vda-dev" \
+                -e "desired_vms=20" \
+                -e "vm_image=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}"
+
+This fully automates the process from code commit to production Orka for VDI deployment.
+
+#### Scheduled Maintenance Tasks
+
+##### Daily:
+
+  * Capacity check (VM count vs. utilization)
+
+  * Health check (VMs registered with Citrix)
+
+
+
+
+##### Weekly:
+
+  * Review capacity trends
+
+  * Check for macOS updates
+
+  * Review user feedback/tickets
+
+
+
+
+##### Monthly:
+
+  * Image updates (security patches)
+
+  * Citrix policy review
+
+  * Backup verification
+
+
+
+
+##### Quarterly:
+
+  * Major application updates
+
+  * Citrix VDA updates
+
+  * Disaster recovery test
+
+  * Host hardware maintenance (coordinate with MacStadium)
+
+
+
+
+Monthly image update reminder example cron job:
+    
+    
+    # Cron job to send reminder on 1st of each month
+    0 9 1 * * /usr/bin/send-email.sh "orka-admins@company.com" "Monthly VDI maintenance reminder" "Check for macOS updates and Citrix VDA updates."
+
+### Multi-Tenant Considerations
+
+Scenario: You're managing Orka environments for multiple teams, departments, or even external clients.
+
+#### Isolation Strategies
+
+Option 1: Delivery Group separation
+
+  * Deploy all VMs from shared infrastructure
+
+  * Separate users into different Citrix Delivery Groups
+
+  * Apply different policies per group
+
+
+
+
+Pros: Simple, maximizes resource efficiency   
+Cons: Teams share the same hardware; and one team's resource spike affects others
+
+Option 2: VM group separation
+
+  * Deploy separate VM groups per tenant: `citrix-vda-finance`, `citrix-vda-engineering`, `citrix-vda-marketing`
+
+  * Each group uses its own golden image
+
+  * All groups still share Orka hosts
+
+
+
+
+Pros: Custom images per tenant, easy to track resources per group   
+Cons: Still sharing hosts
+
+Option 3: Host-level separation
+
+  * Allocate specific Orka hosts to specific tenants
+
+  * Update your Ansible inventory with per-tenant host groups:
+
+
+
+    
+    
+    [finance_hosts]
+    mac-node-1 ansible_host=10.0.100.10
+    mac-node-2 ansible_host=10.0.100.11
+    
+    [engineering_hosts]
+    mac-node-3 ansible_host=10.0.100.12
+    mac-node-4 ansible_host=10.0.100.13
+
+Deploy tenant VMs only to their assigned hosts using `--limit`:
+    
+    
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "desired_vms=10" \
+      --limit finance_hosts
+
+Pros: Complete resource isolation, no noisy neighbor problems   
+Cons: Reduced flexibility, potential for underutilization
+
+Choose a solution that works for you based on your organization’s security and isolation requirements.
+
+#### Chargeback and Cost Allocation
+
+Track resources per tenant:
+    
+    
+    # List VMs by group
+    
+    # Count finance VMs
+    ansible-playbook -i inventory list.yml -e "vm_group=citrix-vda-finance" | wc -l
+    
+    # Count engineering VMs
+    ansible-playbook -i inventory list.yml -e "vm_group=citrix-vda-engineering" | wc -l
+
+Calculate costs:
+
+  1. Determine cost per Orka host (hardware + MacStadium hosting fees)
+
+  2. Divide by VMs per host to get per-VM cost
+
+  3. Multiply by VM count per tenant
+
+
+
+
+Example:
+
+  * Host cost: $1,000/month
+
+  * VMs per host: 10
+
+  * Per-VM cost: $100/month
+
+
+
+
+Finance team: 15 VMs = $1,500/month Engineering team: 25 VMs = $2,500/month
+
+Automate reporting:
+
+Create a monthly report playbook that outputs tenant VM counts and costs:
+    
+    
+    # monthly-chargeback-report.yml
+    ---
+    - name: Generate chargeback report
+      hosts: localhost
+      tasks:
+        - name: Get VM counts per group
+          # ... playbook logic ...
+    
+        - name: Calculate costs
+          # ... cost calculation ...
+    
+        - name: Email report to finance team
+          # ... email report ...
+
+Schedule this to run via a cron job on the 1st of each month.
+
+#### Tenant-Specific Policies
+
+Apply different Citrix policies per tenant:
+
+  1. Create separate Delivery Groups per tenant
+
+  2. Create policies with appropriate settings for each tenant:
+
+     * Finance: Restrictive (no clipboard, no file transfer)
+
+     * Engineering: Open (full access, USB devices)
+
+     * Marketing: Medium (clipboard only, no USB)
+
+  3. Filter policies by Delivery Group name
+
+
+
+
+Each tenant gets appropriate controls without affecting others.
+
+## Incident Response
+
+### Recognizing Common Failure Modes
+
+##### Symptom: User can't connect to desktop
+
+Possible causes:
+
+  1. The VM is not running
+
+  2. The VDA is not registered with Citrix
+
+  3. Network connectivity issues
+
+  4. Citrix Cloud issue
+
+
+
+
+Quick check example:
+    
+    
+    # Verify VM is running
+    ansible-playbook -i inventory list.yml | grep <vm-name>
+    
+    # SSH to host and check VDA status
+    ssh admin@<host-ip>
+    
+    # VNC into VM or use Screen Sharing to check VDA registration
+
+#####  **Symptom: Desktop is slow or unresponsive**
+
+Possible causes:
+
+  1. Host overloaded (too many VMs)
+
+  2. VM resource starvation
+
+  3. Network latency
+
+
+
+
+Quick check example:
+    
+    
+    # Check host CPU/memory
+    ansible hosts -i inventory \
+      -m shell \
+      -a "top -l 1 | head -20"
+    
+    # Check VM count per host
+    ansible-playbook -i inventory list.yml
+
+#####  **Symptom: VMs fail to deploy**
+
+Possible causes:
+
+  1. Orka for VDI host is out of disk space
+
+  2. Image pull failure (registry unreachable or authentication issue)
+
+  3. Orka Engine error
+
+
+
+
+Quick check example:
+    
+    
+    # Check disk space
+    ansible hosts -i inventory \
+      -m shell \
+      -a "df -h /var/orka"
+    
+    # Test image pull manually
+    ansible-playbook -i inventory pull_image.yml \
+      -e "remote_image_name=<image-name>" \
+      -v  # Verbose output shows errors
+
+#####  **Symptom: All VMs down after host reboot**
+
+Cause: VMs don't auto-start after host reboot by default.
+
+Resolution:
+    
+    
+    # Start all VMs on affected host
+    ansible-playbook -i inventory list.yml | \
+      grep <host-name> | \
+      awk '{print $1}' | \
+      xargs -I {} ansible-playbook -i inventory vm.yml \
+        -e "vm_name={}" \
+        -e "desired_state=running"
+
+Consider scripting auto-start behavior or coordinating with MacStadium to enable Orka for VDI auto-start features.
+
+### Triage Decision Tree
+
+User reports issue  
+↓  
+Can OTHER users connect?  
+├─ NO → Check Citrix Cloud status, Cloud Connectors, network  
+└─ YES → Issue is specific to this user or their VM  
+↓  
+Can user connect to OTHER desktops?  
+├─ NO → User account issue, check Citrix permissions  
+└─ YES → Issue is specific to this user's assigned VM  
+↓  
+Is VM running?  
+├─ NO → Start VM, check why it stopped  
+└─ YES → Check VDA registration  
+↓  
+Is VDA registered?  
+├─ NO → Restart VDA service or restart VM  
+└─ YES → Performance or application issue  
+↓  
+Check host resources, VM resources, HDX settings
+
+### Escalation Procedures
+
+##### Level 1: Team Lead / Senior Admin
+
+Handle yourself:
+
+  * Single user connectivity issues
+
+  * VM restarts
+
+  * Minor performance tuning
+
+  * User account management
+
+
+
+
+##### Level 2: Infrastructure Team
+
+Escalate when:
+
+  * Multiple usersare affected
+
+  * Host hardware suspected failure or issue
+
+  * Network infrastructure is involved
+
+  * Capacity planning is needed
+
+
+
+
+##### Level 3: MacStadium Support
+
+Escalate when:
+
+  * Experiencing Orka Engine failures
+
+  * Host hardware failures
+
+  * You are impacted by network failures at a MacStadium datacenter
+
+  * You need to provision new hosts
+
+
+
+
+#####  **Level 4: Citrix Support**
+
+Escalate when:
+
+  * There is a Citrix Cloud outage
+
+  * VDA registration failures across all VMs
+
+  * You are experiencing HDX protocol issues
+
+  * Experiencing Citrix policy problems
+
+
+
+
+#####  **Escalation template email:**
+
+Subject: [URGENT] VDI Issue   
+  
+\- <brief description>   
+  
+Impact: \- Number of users affected: X \- Severity: High / Medium / Low   
+  
+\- Business impact: <description> Problem: <Clear description of the issue>   
+  
+Steps taken:   
+1\. <what you've already tried>   
+2\. <troubleshooting done>   
+3\. <results>   
+  
+Next steps needed: <what you need from the escalation team>   
+  
+Contact: <your name>, <phone>, <email>
+
+### Post-Incident Review Template
+
+After any incident affecting more than 10 users or lasting more than an hour:
+
+Incident Summary
+
+  * Date/Time:
+
+  * Duration:
+
+  * Users impacted:
+
+  * Services affected:
+
+
+
+
+Timeline
+
+  * Issue first reported
+
+  * Investigation started
+
+  * Root cause identified
+
+  * Resolution implemented
+
+  * Service restored
+
+
+
+
+Root Cause: (What actually caused the issue)
+
+Resolution: (What fixed it)
+
+Preventative Measures: (How to prevent this from happening again in the future)
+
+  * Short-term actions (taken this week):
+
+  * Long-term actions (to be taken this month):
+
+
+
+
+Action Items
+
+  * Task 1 - Assigned to <name> \- Due <date>
+
+  * Task 2 - Assigned to <name> \- Due <date>
+
+
+
+
+Store post-incident reviews in your documentation repository for future reference.
+
+## Change Management
+
+### Pre-Change Checklists
+
+####  **Before any production change, verify:**
+
+  * A change window has been scheduled and is communicated to users
+
+  * There is a backup/snapshot of the current image state available
+
+  * A rollback is plan documented and has been tested
+
+  * Testing has been completed in a non-production environment
+
+  * Required approvals have been obtained (if applicable)
+
+  * Monitoring is in place to detect any issues that may occur
+
+  * Team availability for the duration of the change process
+
+
+
+
+**For image updates specifically:**
+
+  * The new golden image has been tested on at least one VM
+
+  * Citrix VDA registration has been verified
+
+  * HDX features tested (clipboard, file transfer, USB)
+
+  * Applications tested and are functional
+
+  * A pilot group has been identified for gradual image rollout
+
+  * Previous image version is retained for rollback purposes
+
+
+
+
+### Testing Procedures
+
+Test checklist for new golden images:
+
+  1. Deployment test
+
+     * Deploy a single VM from the new image
+
+     * Verify the VM boots within 3 minutes
+
+     * Verify the VM gets network connectivity
+
+  2. VDA registration test
+
+     * Check System Preferences → Citrix VDA shows "Registered"
+
+     * Verify that the VM appears in Citrix Cloud Console as "Available"
+
+  3. User connectivity test
+
+     * Assign a test user to the VM
+
+     * Launch desktop from Citrix Workspace
+
+     * Verify successful connection
+
+  4. HDX feature test
+
+     * Test clipboard copy/paste
+
+     * Test file transfer (if enabled)
+
+     * Test printing (if enabled)
+
+     * Test application launching
+
+  5. Application functionality test
+
+     * Launch each business-critical application
+
+     * Perform a basic workflow in each app
+
+     * Check for any error messages or crashes
+
+  6. Performance test
+
+     * Measure login time (should be < 30 seconds)
+
+     * Check CPU/memory usage at idle
+
+     * Check responsiveness during typical tasks
+
+
+
+
+Document results:
+
+Image: [registry.example.com/citrix-vda/sonoma-finance:v2.2](http://registry.example.com/citrix-vda/sonoma-finance:v2.2 "http://registry.example.com/citrix-vda/sonoma-finance:v2.2")  
+Test Date: 2025-10-15  
+Tested By: IT Team Admin
+
+Results:  
+✓ Deployment successful  
+✓ VDA registration verified  
+✓ User connectivity successful  
+✓ HDX features working  
+✓ Excel, Word, Xcode tested - all functional  
+✓ Performance acceptable
+
+Approved for pilot deployment.
+
+### Rollback Plans
+
+Every change needs a documented rollback procedure _before_ you start the change process.
+
+Example rollback plan: Image update
+
+If a new image causes issues within the first 24 hours:
+
+  1. Stop new deployments immediately
+
+  2. Revert affected VMs to previous image:
+
+
+
+    
+    
+    # Delete old VMs
+    ansible-playbook -i inventory delete.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "delete_count=10"
+    
+    # Redeploy with previous version (rollback)
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=citrix-vda-finance" \
+      -e "desired_vms=10" \
+      -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"  # Previous version
+
+  3. Verify users can connect to the now rolled-back VMs
+
+  4. Document what went wrong for post-incident review
+
+
+
+
+Time to rollback: 30-45 minutes for 10 VMs
+
+Example rollback plan: Citrix policy change
+
+If a policy change causes user complaints:
+
+  1. Revert the policy in Citrix Cloud Console
+
+     * Policies → Select problematic policy → Edit → Restore previous settings
+
+  2. Force policy refresh (if immediate)
+
+     * Users log out and log back in
+
+     * Or wait for automatic policy refresh (30 minutes)
+
+
+
+
+Time to rollback: 5-10 minutes
+
+Keep rollback plans simple and actionable. Don't write complex procedures you won't remember under pressure.
+
+### Communication Templates
+
+Planned maintenance notification (send 3-5 business days in advance):
+
+Subject: Scheduled VDI Maintenance  
+  
+<Date>   
+<Time>   
+We will be performing maintenance on the macOS virtual desktop environment on <date> from <start time> to <end time> <timezone>.   
+  
+What to expect:   
+\- Brief interruption to desktop access (approximately 15 minutes)   
+\- You may need to reconnect through Citrix Workspace after maintenance   
+\- All data stored on network drives will be unaffected  
+  
+What we're doing:   
+\- Installing macOS security updates   
+\- Updating desktop images with latest applications   
+  
+If you have questions or concerns, please contact <support email>.   
+  
+Thank you,   
+IT Team
+
+Emergency maintenance notification (send immediately when issue detected):
+
+Subject: URGENT: VDI Service Interruption   
+  
+We are currently experiencing an issue with the macOS virtual desktop service. Some users may be unable to connect or experiencing poor performance.   
+  
+Current status: \- Issue first detected: <time>   
+\- Users impacted: <estimated number or "some" / "all">   
+  
+\- IT team actively working on resolution Workaround (if available): <any temporary workaround users can try>   
+  
+We will send updates every 30 minutes until resolved. Next update: <time>   
+  
+IT Team
+
+Resolution notification:
+
+Subject: RESOLVED: VDI Service Restored   
+  
+The macOS virtual desktop service issue has been resolved. All services are now operating normally.   
+  
+Summary: \- Issue duration: <start time> to <end time>   
+  
+\- Root cause: <brief, non-technical explanation>   
+\- Resolution: <what was done to fix it>   
+  
+If you continue to experience issues, please contact <support email>.   
+  
+Thank you for your patience, IT Team
+
+## Metrics and Reporting
+
+### Key Performance Indicators (KPIs)
+
+Availability
+
+  * Target: 99.5% uptime during business hours
+
+  * Measurement: % of time VMs are registered and available in Citrix
+
+
+
+
+Performance
+
+  * Login time: Target < 30 seconds from desktop launch to usable desktop
+
+  * Session latency: Target < 100ms round-trip time
+
+  * Frame rate: Target 30 FPS for typical office workloads
+
+
+
+
+Capacity
+
+  * Utilization: Target 70-80% of total VM capacity in use during peak hours
+
+  * Headroom: Maintain 20-30% spare capacity for growth and spikes
+
+
+
+
+User Satisfaction
+
+  * Support ticket volume: Track tickets related to VDI
+
+  * User survey: Quarterly satisfaction survey (target: 4.0/5.0 or higher)
+
+
+
+
+Cost Efficiency
+
+  * Cost per user per month: Total infrastructure cost / active users
+
+  * Resource efficiency: Average VMs per host (target varies by workload)
+
+
+
+
+### User Satisfaction Tracking
+
+Quarterly user survey questions:
+
+  1. Rate your overall satisfaction with the macOS virtual desktop (1-5 scale)
+
+  2. How often do you experience connectivity issues? (Never / Rarely / Sometimes / Often)
+
+  3. How would you rate desktop performance for your daily tasks? (Poor / Fair / Good / Excellent)
+
+  4. What applications or features would improve your experience?
+
+  5. Any other feedback?
+
+
+
+
+Analyze results by department or user type to identify trends.
+
+Proactive monitoring:
+
+Review support tickets weekly:
+
+  * Are there recurring issues?
+
+  * Are complaints concentrated in specific user groups?
+
+  * Are reported issues correlated with recent changes?
+
+
+
+
+Address any identified patterns before they become widespread problems.
+
+### Cost Analysis and Optimization
+
+Optimization opportunities:
+
+  1. Right-size VMs
+
+     * Are all users using high-spec VMs when they only need basic?
+
+     * Review resource allocation quarterly
+
+  2. Eliminate unused capacity
+
+     * Do you have VMs deployed that aren't assigned to users?
+
+     * Scale down during off-peak periods
+
+  3. Image efficiency
+
+     * Are you storing unnecessary applications in golden images?
+
+     * Can you consolidate multiple images into one?
+
+  4. Licensing optimization
+
+     * Are you paying for Citrix licenses for inactive users?
+
+     * Review user access quarterly and remove inactive accounts
+
+
+
+
+Track cost trends:
+
+Compare month-over-month:
+
+  * Total cost (should scale with user count)
+
+  * Cost per user (should remain stable or decrease with scale)
+
+  * Resource utilization (increasing = good efficiency)
+
+
+
+
+### Quarterly Business Reviews
+
+Present the following information to your organization’s leadership team or stakeholders every quarter:
+
+Section 1: Service Overview
+
+  * Total users: X
+
+  * Total VMs: Y
+
+  * Uptime: 99.X%
+
+  * Support tickets: Z (trend: ↑/↓/→)
+
+
+
+
+Section 2: Highlights
+
+  * Major improvements this quarter
+
+  * Issues resolved
+
+  * User feedback summary
+
+
+
+
+Section 3: Challenges
+
+  * Current pain points
+
+  * Resource constraints
+
+  * Technical debt
+
+
+
+
+Section 4: Roadmap
+
+  * Upcoming improvements
+
+  * Capacity planning
+
+  * Technology upgrades
+
+
+
+
+Section 5: Financials
+
+  * Current cost per user
+
+  * Budget vs. actual
+
+  * Cost optimization initiatives
+
+
+
+
+Keep this report business-focused, not technical. Leadership typically cares about user satisfaction, costs, and risks.
+
+## Appendices
+
+### Quick Reference: Common Ansible Commands
+
+#### Setup and verification:
+    
+    
+    # Test connectivity to all hosts
+    ansible hosts -i inventory -m ping
+    
+    # Check Orka engine version on all hosts
+    ansible hosts -i inventory \
+      -m shell \
+      -a "orka-engine --version"
+
+#### VM deployment:
+    
+    
+    # Deploy VMs
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=webapp" \
+      -e "desired_vms=10"
+    
+    # Plan deployment (dry-run)
+    ansible-playbook -i inventory deploy.yml \
+      -e "vm_group=webapp" \
+      -e "desired_vms=10" \
+      --tags plan
+
+#### VM lifecycle:
+    
+    
+    # Stop VM
+    ansible-playbook -i inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=stopped"
+    
+    # Start VM
+    ansible-playbook -i inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=running"
+    
+    # Delete VM
+    ansible-playbook -i inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=absent"
+    
+    # Restart VM (stop, wait, start)
+    ansible-playbook -i inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=stopped"
+    
+    sleep 30
+    
+    ansible-playbook -i inventory vm.yml \
+      -e "vm_name=webapp-abc123" \
+      -e "desired_state=running"
+
+#### VM deletion:
+    
+    
+    # Delete VMs
+    ansible-playbook -i inventory delete.yml \
+      -e "vm_group=webapp" \
+      -e "delete_count=5"
+    
+    # Plan deletion (dry-run)
+    ansible-playbook -i inventory delete.yml \
+      -e "vm_group=webapp" \
+      -e "delete_count=5" \
+      --tags plan
+
+#### List VMs:
+    
+    
+    # List all VMs
+    ansible-playbook -i inventory list.yml
+    
+    # List VMs in specific group
+    ansible-playbook -i inventory list.yml \
+      -e "vm_group=webapp"
+
+#### Image operations:
+    
+    
+    # Pull image from registry
+    ansible-playbook -i inventory pull_image.yml \
+      -e "remote_image_name=registry.example.com/app:v1.0"
+    
+    # Create and push custom image
+    ansible-playbook -i inventory create_image.yml \
+      -e "vm_image=base:latest" \
+      -e "remote_image_name=registry.example.com/custom:v1.0" \
+      -e "registry_username=user" \
+      -e "registry_password=pass"
+
+#### Ansible debugging:
+    
+    
+    # Run playbook on specific host only
+    ansible-playbook -i inventory <playbook> --limit mac-node-1
+    
+    # Verbose output
+    ansible-playbook -i inventory <playbook> -v
+    
+    # More verbose output
+    ansible-playbook -i inventory <playbook> -vv
+    
+    # Debug level output
+    ansible-playbook -i inventory <playbook> -vvv
+    
+    # Dry-run (check mode)
+    ansible-playbook -i inventory <playbook> --check
+
+### Quick Reference: Citrix Admin Tasks
+
+##### User management:
+
+  * Add user to a Delivery Group: Citrix Cloud Console → Manage → Delivery Groups → Edit → Users → Add
+
+  * Remove user: Same path → Remove
+
+  * View user's assigned desktop: Monitor → User tab → Search user
+
+
+
+
+##### Delivery Group management:
+
+  * Create a Delivery new group: Manage → Delivery Groups → Create Delivery Group
+
+  * Edit settings: Select group → Edit
+
+  * View VMs in a Delivery group: Select group → Machines tab
+
+
+
+
+##### Policy management:
+
+  * View policies: Policies → All Policies
+
+  * Create policy: Policies → Create Policy
+
+  * Apply policy to a Delivery Group: Create policy → Set filter → Delivery Group name
+
+
+
+
+##### Monitoring:
+
+  * View all desktops: Monitor → Machines → All
+
+  * Check desktop availability: Look for "Registered" status
+
+  * View active sessions: Monitor → Sessions
+
+  * Check Cloud Connector status: Monitor → Cloud Connectors
+
+
+
+
+##### Common policy settings:
+
+  * Clipboard: Policies → HDX Settings → Clipboard redirection → Allowed / Prohibited
+
+  * File transfer: Policies → HDX Settings → Client drive redirection → Allowed / Prohibited
+
+  * USB devices: Policies → HDX Settings → USB device redirection
+
+  * Session timeout: Policies → User Settings → Session limits → Idle session limit
+
+
+
+
+##### Troubleshooting:
+
+  * Force VDA re-registration: Restart VM
+
+  * Check Cloud Connector logs: Monitor → Cloud Connectors → Select connector → Logs
+
+  * Test HDX connection: Citrix Director → User Details → Troubleshoot
+
+
+
+
+## Vendor Contact Matrix
+
+**Vendor** |  **Purpose** |  **Contact Method** |  **SLA**  
+---|---|---|---  
+MacStadium | Host hardware, Orka Engine, network | [support@macstadium.com](mailto:support@macstadium.com "mailto:support@macstadium.com") | [Support portal](https://support.macstadium.com/hc/en-us/requests/new "https://support.macstadium.com/hc/en-us/requests/new") | 1 business day response  
+Citrix Support | Citrix Cloud, VDA, licensing | [](http://support.citrix.com/)[Loading...](http://support.citrix.com/) | 1-800-424-8749 | Varies by license tier  
+  
+###  **When to contact each vendor:**
+
+##### MacStadium:
+
+  * Your Orka for VDI host is down
+
+  * Experiencing Orka Engine failures
+
+  * New host provisioning
+
+  * Network issues at datacenter
+
+
+
+
+##### Citrix:
+
+  * VDA registration failures
+
+  * Cloud Connector issues
+
+  * Licensing problems
+
+  * HDX protocol issues
+
+
+
+
+## Compliance Checklist
+
+##### Security:
+
+  * VMs are patched monthly (e.g., MacOS updates)
+
+  * The installed Citrix VDA is the current version (or within 2 releases)
+
+  * Access logging is enabled in Citrix Cloud
+
+  * User access is reviewed quarterly (inactive users are offboarded)
+
+  * Network segmentation is enforced (VMs can't reach sensitive internal systems)
+
+  * Registry credentials are rotated every 90 days
+
+
+
+
+##### Data Protection:
+
+  * User data is not stored on VMs (network storage only)
+
+  * Golden images are backed up (at least 3 versions retained)
+
+  * Disaster recovery plan is documented and tested annually
+
+  * A VM deletion policy is enforced (no orphaned VMs)
+
+
+
+
+##### Operational:
+
+  * Capacity headroom is maintained (20-30% spare VMs)
+
+  * Monitoring is in place for VM availability
+
+  * Change management process is followed for all production changes
+
+  * Incident post-mortems are completed for major outages
+
+  * Documentation is kept current (update after each major change)
+
+
+
+
+##### Financial:
+
+  * Chargeback reporting (if multi-tenant)
+
+  * Monthly cost tracking vs. budget
+
+  * Unused licenses are identified and reclaimed
+
+  * Quarterly cost optimization review
+
+
+
+
+Review this checklist quarterly to ensure ongoing compliance.

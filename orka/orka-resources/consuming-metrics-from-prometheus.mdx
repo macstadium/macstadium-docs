@@ -1,0 +1,114 @@
+---
+title: "Consuming Metrics from Prometheus"
+zendesk_id: 28336861751963
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28336861751963-Consuming-Metrics-from-Prometheus"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2024-08-16T16:23:05Z"
+updated_at: "2025-08-01T14:02:57Z"
+promoted: false
+labels: ["configuration", "orka", "api", "prometheus", "metrics"]
+suggested_new_path: "/orka/orka-resources/consuming-metrics-from-prometheus"
+---
+
+How to aggregate data from Prometheus node exporters and access the Prometheus web console
+
+It is possible to collect Prometheus metrics directly from your Orka cluster, including host metrics for each node in the cluster as well as metrics for the Orka API server and operator.
+
+## Integrating Orka Metrics with an Existing Prometheus Instance
+
+If your organization is already using Prometheus and you wish to collect additional data from your Orka cluster, follow the instructions in this section.
+
+### Orka Server and Operator Metrics
+
+#### **A Note About the Orka Server**
+
+Starting with Orka 3.0, the API server is no longer primarily responsible for managing Orka VMs. Instead, the operator is primarily responsible for managing the lifecycle of Orka VMs and other resources. Clients such as the orka3 CLI speak directly to the Kubernetes API instead of the Orka API.
+
+As a consequence, metrics for the Orka API Server are generally less relevant, unless you are using workflows and integrations that still rely on the legacy API server.
+
+Metrics for the Orka server and operator are available via the /metrics endpoint of the Orka load balancer address. For most environments this is typically 10.221.188.20 or 10.221.188.100, but check your [IP plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) if you aren't sure.
+
+Use port 8080 in the endpoint for the operator metrics.
+
+To verify you are able to access the Orka server and operator metrics, try cURLing the endpoints:
+
+**curl**
+    
+    
+    curl -I 10.221.188.20/metrics  
+    curl -I 10.221.188.20:8080/metrics
+
+You should receive a response of 200 OK if all is well.
+
+#### **TIP**
+
+To view descriptions and additional information on the available Orka server metrics, try curl 10.221.188.20/metrics. For Orka operator metrics, try curl 10.221.188.20:8080/metrics
+
+In order to scrape the Orka server and operator metrics, add jobs to your Prometheus configuration:
+
+**prometheus.yml**
+    
+    
+    scrape_configs:  
+    # ...  
+      
+    - job_name: 'orka/orka-server'  
+    scrape_interval: 30s  
+    scrape_timeout: 30s  
+    metrics_path: /metrics  
+    scheme: http  
+    static_configs:  
+    - targets: ['10.221.188.20']  
+    labels:  
+    service: 'orka-server'  
+      
+    - job_name: 'orka/orka-operator'  
+    scrape_interval: 30s  
+    scrape_timeout: 30s  
+    metrics_path: /metrics  
+    scheme: http  
+    static_configs:  
+    - targets: ['10.221.188.20:8080']  
+    labels:  
+    service: 'orka-operator'
+
+### Prometheus Node Exporters
+
+Every node in the Orka cluster runs a Prometheus Node Exporter on port 9100. This includes both Intel and ARM nodes. To ensure you are able to scrape the node exporter data, try cURLing the metrics endpoint from any node:
+
+**curl**
+    
+    
+    curl -I http://10.221.188.31:9100/metrics
+
+If the node exporter is running and reachable from outside the cluster, you should receive a response of 200 OK.
+
+#### **Outside Access**
+
+If your Prometheus instance is hosted outside of the cluster, make sure that TCP traffic is permitted to port 9100 for all hosts on the Orka private network! For more information, see the section on IP plans.
+
+In order to scrape the node exporter data, add a job to your Prometheus configuration. For example:
+
+**prometheus.yml**
+    
+    
+    scrape_configs:  
+    # ...  
+      
+    - job_name: 'orka/node-exporter'  
+    scrape_interval: 5s  
+    static_configs:  
+    - targets: ['10.221.188.5:9100', '10.221.188.6:9100', '10.221.188.7:9100']  
+    labels:  
+    group: 'master'  
+    - targets: ['10.221.188.31:9100', '10.221.188.32:9100', '10.221.188.33:9100']  
+    labels:  
+    group: 'x86'  
+    - targets: ['10.221.188.34:9100']  
+    labels:  
+    group: 'arm'
+
+#### **TIP**
+
+As an alternative to the static config, you can use [file-based service discovery](https://prometheus.io/docs/guides/file-sd/) to scrape the targets.

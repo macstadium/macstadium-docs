@@ -1,0 +1,149 @@
+---
+title: "Allowing Specific IPs to Access MacStadium via Internet"
+zendesk_id: 28269995165083
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28269995165083-Allowing-Specific-IPs-to-Access-MacStadium-via-Internet"
+section: "Cisco Firewalls"
+category: "IaaS"
+created_at: "2024-08-14T16:52:01Z"
+updated_at: "2025-11-18T14:27:46Z"
+promoted: false
+labels: ["access", "IPs", "ip addresses", "whitelist", "internet"]
+suggested_new_path: "/iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet"
+---
+
+## Overview
+
+Static Network Address Translation (NAT) is used to conserve IP addresses. It allows private IP networks with unregistered IP addresses to connect to the Internet. NAT translates the private (not globally unique) addresses in the internal network into legal addresses before they are forwarded to another network.
+
+Think of NAT as a one-to-one mapping of private IP addresses to public IP addresses. It allows mapping of an IP address on the internal network to an IP address that you want to make public.
+
+Once that mapping is set, then there are a list of rules that are needed to grant or deny access, which is called an Access Control List (ACL). The ACL is a list of rules that specifies which users or systems are granted or denied access to a particular object. ACLs are also installed in routers or switches, where they act as filters, managing which traffic can access the network.
+
+This document describes how to configure a Static Network Address Translation (NAT) and Access Control List (ACL) on a Cisco ASA Firewall to allow external IP addresses to access the MacStadium hosts.
+
+## Prerequisites
+
+Cisco AnyConnect Client: Connect to the VPN using Cisco AnyConnect Client, then access the firewall via SSH or Cisco ASDM.
+
+## Considerations
+
+In this document, the source IP address is the public IP that needs to be whitelisted in the firewall. The destination hosts are the MacStadium servers behind the firewall Private interface.
+
+This document demonstrates how to allow TCP port 443 (HTTPS) in the Cisco Adaptive Security Appliance (ASA) firewall from an external IP address to the subnet 10.221.188.0/23 configured in the Private-1 interface as an example.
+
+**NOTE** : The example source IP address **76.76.21.241** is used in this document.
+
+## Install Options
+
+Updating the Cisco Adaptive Security Appliance (ASA) can be done two different ways:
+
+**Via Command Line Interface (CLI)**
+
+Using a CLI allows the user to write script changes in a notepad, and have those changes reviewed by someone before running those scripts. This method is good for users writing scripts.
+
+**Via Cisco Adaptive Security Device Manager (ASDM)**
+
+Using a ASDM allows the user to make line by line changes, while using a graphical user interface (GUI).
+
+## Configuring Static Network Address Translation (NAT)
+
+**NAT via Command Line Interface (CLI)**
+
+  1. Connect to the firewall via SSH using MacStadium credentials that are available in the IP Plan.
+  2. When the > prompt appears, type enable
+  3. Enter the password again. 
+     * It should look like this:  
+`ciscoasa>  
+ciscoasa>enable  
+ciscoasa>****  
+ciscoasa#``
+     * The privileged mode appears, as indicated by the # prompt.
+  4. Enter the configuration mode and create an object and static NAT rule for that host:
+
+
+
+` ciscoasa#configure terminal ciscoasa(config)#object network Example-Host-31 ciscoasa(config-network-object)#host 10.221.188.31 ciscoasa(config-network-object)#nat (Private-1,Outside) static 207.254.16.239 ciscoasa(config-network-object)#end ciscoasa#write memory `
+
+**NOTE:** Replace the example MacStadium NAT IP address (207.254.16.239) by an available Public IP listed in the MacStadium IP Plan.
+
+## NAT via Cisco Adaptive Security Device Manager (ASDM)
+
+  1. Connect to the ADSM using the MacStadium credentials from your IP Plan.
+  2. Navigate to Configuration > Firewall > NAT Rules > +Add > Add NAT Rule.  
+![1b26ce5-image.png](https://support.macstadium.com/hc/article_attachments/28269995146651)
+  3. Give the Object representing the internal MacStadium host a name (Example-Host-31).
+  4. Confirm the Type is set as Host.
+  5. In IP address enter the private IP address of the host (consult your IP Plan).
+  6. In the NAT section, confirm Static is selected and enter the MacStadium Public IP address to assign the host.
+  7. Click Advanced and set the Source Interface to Private-1 and Destination Interface to Outside.
+  8. Confirm the Protocol is set to tcp.
+  9. Click OK > OK > Apply.  
+![f5f9c6e-image.png](https://support.macstadium.com/hc/article_attachments/28269981349147)
+  10. Click Save
+  11. Click Apply Changes  
+![8a72d90-image.png](https://support.macstadium.com/hc/article_attachments/28269995148443)
+
+
+
+## Configuring Access Control Lists (ACLs)
+
+### ACL via Command Line Interface (CLI)
+
+**NOTE** : For external access to MacStadium hosts, a static NAT must be previously configured.1.
+
+**NOTE** : This guide assumes that the `Private-1-IPs` object has been configured in the firewall.
+
+  1. Confirm that `Private-1-IPs` was configured by running the following CLI command:  
+`ciscoasa#show running-config object id Private-1-IPs`
+  2. If `Private-1-IPs` has not been configured, then use the following commands to create it:  
+` ciscoasa#configure terminal ciscoasa(config)#object network Private-1-IPs ciscoasa(config-network-object)#subnet 10.221.188.0 255.255.254.0`
+  3. Connect to the firewall via SSH and from the command line enter the MacStadium credentials that are available in your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)
+  4. Confirm the privileged mode is enabled (indicated by the # prompt).
+  5. Enter the configuration mode and create an Object representing the source IP address.
+  6. Replace EXAMPLE with a name to use to identify the object and the source Public IP address (**76.76.21.241**) with the source IP address to whitelist on the firewall.  
+`ciscoasa#configure terminal ciscoasa(config)#object network EXAMPLE ciscoasa(config-network-object)#host 76.76.21.241`
+  7. Create an Access Control List to allow traffic through the Cisco ASA firewall. From the configuration mode enter the following access-list command:  
+`ciscoasa(config)#access-list Outside_access_in line 1 extended permit tcp object EXAMPLE object Private-1-IPs eq https`
+     * **NOTE** : To allow access to a single internal host instead of the entire Private-1 network, reference the object you created for that specific host. Example: `ciscoasa(config)#access-list Outside_access_in line 1 extended permit tcp object EXAMPLE object Example-Host-31 eq https`
+  8. Apply the new access-list to the Outside interface: `ciscoasa(config)#access-group Outside_access_in in interface Outside`
+     * **NOTE** : The command above only needs to be entered the first time the ACL is configured.
+  9. Exit and save the configuration:  
+`ciscoasa(config)#end ciscoasa(config)#write memory`
+
+
+
+**NOTE** : Instead of creating an object representing a single source IP Address, create a Network Object Group and then add a Network Object to that group. This is handy if there are liable to be more IP addresses to allow access in the future. For more information, see:
+
+<https://www.cisco.com/c/en/us/td/docs/security/asa/asa96/configuration/firewall/asa-96-firewall-config/access-objects.html>
+
+## NAT via Cisco Adaptive Security Device Manager (ASDM)
+
+For external access to your MacStadium hosts, a static NAT must be previously configured.
+
+  1. Connect to the firewall through ASDM using the MacStadium credentials that are available in your IP Plan.
+  2. Navigate to: Configuration > Firewall.
+  3. Click +Add and select Network Object on the right menu.
+  4. Give the object a name.
+  5. Confirm its type is set to Host.
+  6. Enter the source IP address and optionally a description.  
+![327ed52-image.png](https://support.macstadium.com/hc/article_attachments/28269995151259)
+  7. Click OK.
+  8. In the Access Rules section, confirm the Outside interface is selected. If rules are applied to the Outside interface, select the first rule from the top.  
+![189b42f-image.png](https://support.macstadium.com/hc/article_attachments/28269995154971)
+  9. Click +Add and select Add Access Rule.
+  10. Confirm the Outside interface is selected, and the Action is set to Permit.
+  11. Select the object host (or group) that was just created as the Source.
+  12. Select the Private-1-IPs object as the Destination.
+  13. In Service type the protocol/ports to be allowed (in this example tcp/https).
+  14. Click OK.  
+![4ab3a50-image.png](https://support.macstadium.com/hc/article_attachments/28269995156635)  
+
+     * **NOTE** : To allow access to a single internal host instead of the entire Private-1 network, reference the object created for that specific host in the Destination field.14
+  15. Make sure the new rule is at the TOP.  
+
+     * To move the new rule to the top, select the new rule and click the upper arrow highlighted.  
+![2f3cf6b-image.png](https://support.macstadium.com/hc/article_attachments/28269981359131)
+
+  16. Click Apply
+  17. Click Save
+  18. Click Apply Changes

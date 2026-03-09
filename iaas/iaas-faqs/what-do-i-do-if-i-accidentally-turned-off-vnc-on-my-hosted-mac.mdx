@@ -1,0 +1,31 @@
+---
+title: "What do I do if I accidentally turned off VNC on my hosted Mac?"
+zendesk_id: 28212256368155
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28212256368155-What-do-I-do-if-I-accidentally-turned-off-VNC-on-my-hosted-Mac"
+section: "IaaS FAQs"
+category: "IaaS"
+created_at: "2024-08-12T19:20:51Z"
+updated_at: "2024-12-09T14:18:47Z"
+promoted: false
+labels: ["hardware", "faq", "vnc", "off"]
+suggested_new_path: "/iaas/iaas-faqs/what-do-i-do-if-i-accidentally-turned-off-vnc-on-my-hosted-mac"
+---
+
+If you inadvertently turn off VNC / ARD on your hosted Mac, you can re-enable it through a console connection via SSH (which MacStadium turns on by default on all subscription based Mac servers) with these instructions:
+
+### **IMPORTANT!**
+
+If your Mac mini is running macOS 10.14 or higher DO NOT run the following commands in the terminal. They will put the OS in view-only mode.
+
+If you are accessing the hosted Mac from a local computer running OS X, you can click on Spotlight, and type ‘terminal’. Once in terminal, execute the command: ssh 192.168.1.200, where the number sequence is the IP of your hosted Mac.
+
+If you are on a Windows based PC or other local workstation, download a Telnet/SSH client such as PuTTY, and connect to the IP of your hosted Mac.
+
+When prompted, enter your administrator-privileged username and password (the account you use to access the remote Mac).
+
+Once logged in, you can execute the following command at the prompt to re-enable VNC (where it says mypasswd, insert your desired VNC Password):
+    
+    
+    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw mypasswd -restart -agent -privs -all
+
+You can now close your terminal/SSH window, and attempt to re-connect via your VNC / ARD client as normal.

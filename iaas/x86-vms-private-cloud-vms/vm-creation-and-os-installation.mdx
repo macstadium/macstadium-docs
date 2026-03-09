@@ -1,0 +1,113 @@
+---
+title: "VM Creation and OS Installation"
+zendesk_id: 29997155700763
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/29997155700763-VM-Creation-and-OS-Installation"
+section: "x86 VMs (Private Cloud VMs)"
+category: "IaaS"
+created_at: "2024-10-11T14:55:34Z"
+updated_at: "2025-12-01T23:39:30Z"
+promoted: false
+labels: []
+suggested_new_path: "/iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation"
+---
+
+1\. Once the file completes the download process and the files appear in the **Media Images** page, Navigate to the **Machines Dashboard**.
+
+2\. Click **New VM**.
+
+![Screenshot 2024-10-11 at 10.54.07 AM.png](https://support.macstadium.com/hc/article_attachments/29997155691931)
+
+_New VM_
+
+3\. On the _Select Type_ tab, select **New VM** and click **Next.**
+
+New VM is a blank recipe that allows for manual OS installation.
+
+![Screenshot 2024-10-11 at 10.57.14 AM.png](https://support.macstadium.com/hc/article_attachments/29997364030363)
+
+Select Type Tab
+
+4\. The _Virtual Machine Settings_ tab opens.
+
+![Screenshot 2024-10-11 at 10.58.24 AM.png](https://support.macstadium.com/hc/article_attachments/29997338332955)
+
+_Virtual Machine Settings Tab_
+
+5\. In the _VM Recipe Instance_ box, complete the following fields:
+
+  * **Name**
+
+  * **Cores**
+
+  * **RAM**
+
+  * **Cluster** (can be left as _Default_)
+
+  * **OS Family**
+
+
+
+
+![Screenshot 2024-10-11 at 11.14.40 AM.png](https://support.macstadium.com/hc/article_attachments/29998396849947)
+
+_VM Recipe Instance_
+
+It is important that the OS Family matches the OS type installed.
+
+6\. In the Drives box:
+
+  * **Create a CD-Rom Drive** , select _Use Local Media Image_
+  * **Attach Selected iso to CD-ROM** , select the file that was previously uploaded into Media Images
+  * **OS Drive Interface** , select _Virtio-SCSI_
+
+
+
+_![Screenshot 2024-10-11 at 11.16.01 AM.png](https://support.macstadium.com/hc/article_attachments/29998373270427)_
+
+_Drives_
+
+7\. In the Network box, make sure the Create Network Interface is checked and select the interface from the dropdown.
+
+![Screenshot 2024-10-11 at 11.17.08 AM.png](https://support.macstadium.com/hc/article_attachments/29998373273243)
+
+_Network_
+
+Unlike OS Recipe templates, manually created VMs require that IP configuration be done at the OS level, and cannot be configured when deploying the VM.
+
+8\. Click **Submit**.
+
+![Screenshot 2024-10-11 at 11.19.03 AM.png](https://support.macstadium.com/hc/article_attachments/29998396861979)
+
+_Submit_
+
+9\. The new VM screen opens. Click the **Power** button and the _Confirmation box_ opens.
+
+10\. Click **Power On**.
+
+![Screenshot 2024-10-11 at 11.20.46 AM.png](https://support.macstadium.com/hc/article_attachments/29998373283099)
+
+_Power On_
+
+11\. Next, the OS must be installed and configured. To access the machine, click **Console**.
+
+![Screenshot 2024-10-11 at 11.21.41 AM.png](https://support.macstadium.com/hc/article_attachments/29998396869659)
+
+_Console Button_
+
+12\. The **Console** opens.
+
+![Screenshot 2024-10-11 at 11.22.39 AM.png](https://support.macstadium.com/hc/article_attachments/29998373288731)
+
+_Console_
+
+Manually deployed VMs use a virtual screen, rather than a virtual terminal, meaning that text cannot be copied from the terminal.
+
+13\. Use the console to install the OS as usual.
+
+14\. The IP address configuration must be set manually as a part of installation. The process for this can differ, depending on the OS installed. In this example, we are setting a manual IP address for Ubuntu Server 24.04:
+
+![Screenshot 2024-10-11 at 11.25.57 AM.png](https://support.macstadium.com/hc/article_attachments/29998535767707)_Manual IP Address Assignment_
+
+DHCP is not supported. An IP address must be manually assigned, using a free IP address on the IP plan. All fields must be completed to ensure network connectivity.
+
+15\. Complete the installation as usual. Most Linux distributions include drivers for Virtio, which is required for optimal performance when virtualizing hardware.

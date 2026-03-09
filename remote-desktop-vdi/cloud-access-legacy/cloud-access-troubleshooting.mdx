@@ -1,0 +1,118 @@
+---
+title: "Cloud Access Troubleshooting"
+zendesk_id: 28313252601883
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28313252601883-Cloud-Access-Troubleshooting"
+section: "Cloud Access (Legacy)"
+category: "Remote Desktop (VDI)"
+created_at: "2024-08-15T20:50:25Z"
+updated_at: "2025-12-10T19:32:05Z"
+promoted: false
+labels: ["cloud", "access", "troubleshooting"]
+suggested_new_path: "/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting"
+---
+
+## Known Issues
+
+Versions 22.07 - 23.12.0 contain a bug that significantly reduced the amount of bandwidth the PCoIP Graphics Agent utilizes. To upgrade to the latest PCoIP Graphics Agent and Software Clients, please visit HP Anywhere.
+
+Switching users is not supported. A bug was introduced sometime before 23.12.2 that prevents user switching. If an administrator account logs in, exits, then a user attempts to access a different account it breaks. This appears as a 6405 error, avoid having users log out if sharing device across shifts, or if an administrator needs to access the device. This issue can be resolved with a reboot. More information can be found here.
+
+Conflicts with JAMF Connect or other Authentication methods. JAMF connect and other MDM authentication methods can cause a conflict with the authentication database.
+
+## 6405 Error
+
+Most 6405 errors can be resolved by rebooting the remote device. If you choose to SSH into the device to perform the reboot, check if Filevault is enabled using fdesetup status at the terminal command line, otherwise screenshare or VNC can me used to access your machine to reboot, again checking for Filevault. If Filevault is enabled reboot using the terminal and the command sudo fdesetup authrestart 0. More information can be found on this error on HP’s website here.
+
+### Specific Causes:
+
+**Switching users**
+
+If multiple accounts exist on the same mac and a user closes their PCoIP session while still logged in, a second account will be unable to log in. The graphics agent is unable to switch accounts resulting in a 6405 error.
+
+Resolved by rebooting or screensharing/VNCing in and selecting logout or switch users. The second method may require two attempts to log in with the PCoIP client before it allows access.
+
+**Multiple users attempting to access the same machine**
+
+If a device is in use and an additional user tries to access that account they will receive a 6405 error. Ensure that no one else is using the device before attempting to access as the PCoIP agent is a 1 to 1 connection.
+
+In rare cases this may result in a persistent 6405 error even once the user ends their session. Resolved by rebooting.
+
+**Graphics agent crash**
+
+In rare cases the Graphics agent may crash.
+
+Reboot or Screenshare/VNC in and relaunch the PCoIP agent found in Applications
+
+**Authentication database conflict**
+
+If JAMF Connect or another MDM SSO/MFA/Authentication method is enabled it may cause a conflict with the authentication database as both the PCoIP agent and the MDM solution try to take priority.
+
+Resolved with a reboot or mitigated by reinstalling the PCoIP agent on the host device.
+
+**Adding a new profile**
+
+If a new profile is created on the remote Mac and the device is not rebooted after adding the profile, the PCoIP Agent will be unable to launch on the new profile and as a result that user will be unable to log in with that account.
+
+Resolved by rebooting.
+
+**Unstable connection**
+
+If a connection is unstable it could result in a 6405 error if the user loses connectivity to the remote device prior to the PCoIP session being torn down.
+
+Resolved by rebooting or waiting several minutes for the session to be torn down
+
+## Poor Connectivity / Latency
+
+If the above 6405 error or the network connect lost error persists through reboots and the proper ports above are opened up, or if the client has graphical issues such as pixellation or low quality, there may be connectivity issues between the client and the agent. To check for connectivity issues you should run a trace route, a speed test, and a ping test.
+
+### Traceroute
+
+Traceroutes are invaluable tools in network troubleshooting and optimization. They allow users to pinpoint the exact path data packets take from their device to a destination server or website. This functionality offers several key benefits.
+
+Firstly, traceroutes provide transparency into network infrastructure, revealing each hop or intermediate network device that data packets encounter en route. This visibility helps identify bottlenecks, latency issues, or routing inefficiencies within a network. By analyzing the round-trip times (RTTs) and hop-by-hop delays, network administrators can isolate problematic nodes or links, facilitating targeted interventions to improve performance.
+
+Secondly, traceroutes aid in diagnosing connectivity problems between devices on disparate networks. When a user experiences connection failures or slow response times, running a traceroute can reveal where the communication breakdown occurs. This information is crucial for troubleshooting, as it enables technicians to determine whether the issue lies within the user's local network, their Internet Service Provider (ISP), or the destination server.
+
+**How to run a tracerout**
+
+Windows - Connect to the MacStadium provided VPN if applicable and then open command prompt and run ‘tracert ipaddress’ where ipaddress is the IP address of the host machine. This may be a private address if the machine is behind a MacStadium provided firewall or a publicly facing IP address. If you are unable to perform a trace route to a machine behind the firewall, insert the public IP address of the firewall instead.
+
+Mac/Linux - Connect to the MacStadium provided VPN if applicable and then open command prompt and run ‘traceroute ipaddress’ where ipaddress is the IP address of the host machine. This may be a private address if the machine is behind a MacStadium provided firewall or a publicly facing IP address. If you are unable to perform a trace route to a machine behind the firewall, insert the public IP address of the firewall instead.
+
+**Example on Mac:**
+
+% traceroute 208.52.182.247
+
+traceroute to 208.52.182.247 (208.52.182.247), 64 hops max, 52 byte packets
+
+1 redacted (10.0.0.1) 8.914 ms 2.984 ms 2.059 ms
+
+2 redacted (redacted) 17.696 ms 19.282 ms 34.165 ms
+
+3 redacted (redacted) 15.676 ms 26.239 ms 14.748 ms
+
+4 redacted (redacted) 20.247 ms 19.441 ms 28.480 ms
+
+5 redacted (redacted) 27.957 ms 23.794 ms 33.748 ms
+
+6 redacted (redacted) 25.332 ms 20.813 ms 21.579 ms
+
+7 redacted (redacted) 48.276 ms 48.302 ms 39.818 ms
+
+8 redacted (redacted) 45.972 ms 112.558 ms 123.796 ms
+
+9 redacted (redacted) 122.881 ms 174.712 ms 158.279 ms
+
+10 redacted (redacted) 177.364 ms 174.186 ms 159.230 ms
+
+11 208.52.182.247 (208.52.182.247) 180.874 ms 209.860 ms 88.596 ms
+
+### Speed Test
+
+Internet speed tests are invaluable tools for users offering several key benefits. Firstly, they provide an accurate measurement of the current download, upload, and latency speeds of an internet connection. This information is essential for users to assess whether their internet service provider (ISP) delivers the advertised speeds and to identify potential performance issues. Armed with this data, users can make informed decisions about their internet plans or troubleshoot connectivity problems.
+
+**To conduct a speed test**
+
+Open a browser on your local machine and navigate to [speedtest.net](https://www.speedtest.net/ww.speedtest.net/) and press go.
+
+Typically download speeds of at least 100 Mbps and upload speeds of 10 Mbps are considered fast enough to handle nearly any online activity.

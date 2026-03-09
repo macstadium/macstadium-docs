@@ -1,0 +1,214 @@
+---
+title: "Feature Parity: Orka Tools"
+zendesk_id: 28336307334939
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28336307334939-Feature-Parity-Orka-Tools"
+section: "Compatibility"
+category: "Orka"
+created_at: "2024-08-16T16:09:42Z"
+updated_at: "2024-09-18T21:47:43Z"
+promoted: false
+labels: ["orka", "api", "compatibility", "parity"]
+suggested_new_path: "/orka/compatibility/feature-parity-orka-tools"
+---
+
+## General features
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Use API IP to access Orka | ✅ | ✅ | ✅  
+Use built-in Orka domain to access Orka | ✅ | ✅ | ✅  
+Use external custom domain to access Orka | ✅ | ✅ | ✅  
+View output in TABLE format | ✅ | ❌ | ❌  
+View output in WIDE format | ✅ | ❌ | ❌  
+View output in JSON format | ✅ | ✅ | ❌  
+  
+## Tool configuration
+
+Feature | Orka3 CLI | Orka 3 API | Web UI  
+---|---|---|---  
+Configure API IP | ✅ | ✅ | ✅  
+Configure built-in Orka domain | ✅ | ✅* | ✅*  
+Configure external custom domain | ✅ | ✅* | ✅|*  
+Upload TLS certificate to use with an external custom domain | ❌ | ✅ | ❌  
+  
+* Requires additional configuration. See [Built-In Orka Domains](https://orkadocs.macstadium.com/docs/custom-domains) and [External Custom Domains](https://orkadocs.macstadium.com/docs/custom-tls-certificate).
+
+## Checks
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Check the current tool version | ✅ | ❌ | ✅  
+  
+## Users
+
+Feature | Orka 3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Log in | ✅ | ❌ | ✅*  
+Log out | ✅ | ❌ | ✅  
+Get token | ✅ | ❌ | ❌  
+Set token (authenticate with a pre-existing token) | ✅ | ✅ | ✅  
+Manage role bindings for the user | ✅ | ✅ | ❌  
+  
+* You need an authentication token obtained with the Orka3 CLI.
+
+## Service accounts
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Create service account | ✅ | ✅ | ❌  
+Get service account token | ✅ | ✅ | ❌  
+List service accounts | ✅ | ✅ | ❌  
+Delete service account | ✅ | ✅ | ❌  
+Manage role bindings for the service account | ✅ | ✅ | ❌  
+  
+## Namespaces
+
+Orka3 API | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+List namespaces | ✅ | ✅ | ❌  
+Create namespace | ✅ | ✅ | ❌  
+Delete namespace | ✅ | ✅ | ❌  
+Manage role bindings for the namespace | ✅ | ✅ | ❌  
+  
+## Nodes
+
+Feature | CLI: direct | API | Web UI  
+---|---|---|---  
+List nodes | ✅ | ✅ | ✅  
+Assign node to a namespace (formerly, grouping) | ✅ | ✅ | ❌  
+Assign node to a namespace with enabled custom pods (formerly, sandboxing) | ✅ | ✅ | ❌  
+Apply tag (node affinity) | ✅ | ✅ | ❌  
+Remove tag (node affinity) | ✅ | ✅ | ❌  
+  
+## VMs: Listing and info
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+List all users' VMs | ✅ | ✅ | ✅  
+List specific VMs | ✅ | ✅ | ❌  
+List all users' VM configurations | ✅ | ✅ | ✅  
+List specific VM configurations | ✅ | ✅ | ❌  
+List the VM's ports reserved for VNC, SSH, and Apple Screen Sharing | ✅ | ✅ | ✅  
+List the VM's ports reserved for port forwarding | ✅ | ✅ | ✅  
+  
+## VMs: Create VM configurations
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Create basic VM configuration (name, image) | ✅ | ✅ | ✅  
+Create VM configuration with custom memory | ✅ | ✅ | ✅  
+Create VM configuration with attached ISO | ✅ | ✅ | ❌  
+Create VM configuration with enabled/disabled VNC | ✅ | ✅ | ✅  
+Create VM configuration with enabled/disabled I/O boost | ✅ | ✅ | ✅  
+Create VM configuration with enabled/disabled Network boost setting | ✅ | ✅ | ✅  
+Create VM configuration with enabled/disabled GPU passthrough | ✅ | ✅ | ❌  
+Create VM configuration with custom serial number | ✅ | ✅ | ❌  
+Create VM configuration with preferred tag (node affinity) | ✅ | ✅ | ❌  
+Create VM configuration with required tag (node affinity) | ✅ | ✅ | ❌  
+Create VM configuration with custom scheduler | ✅ | ✅ | ❌  
+  
+## VMs: Deploy VMs
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Deploy basic VM (name, image) | ✅ | ✅ | ✅  
+Deploy VM with custom memory | ✅ | ✅ | ✅  
+Deploy VM with attached ISO | ✅ | ✅ | ❌  
+Deploy VM with enabled/disabled VNC | ✅ | ✅ | ✅  
+Deploy VM with enabled/disabled I/O boost | ✅ | ✅ | ✅  
+Deploy VM with enabled/disabled Network boost | ✅ | ✅ | ✅  
+Deploy VM with enabled/disabled GPU passthrough | ✅ | ✅ | ❌  
+Deploy VM with custom serial number | ✅ | ✅ | ❌  
+Deploy VM with preferred tag (node affinity) | ✅ | ✅ | ❌  
+Deploy VM with required tag (node affinity) | ✅ | ✅ | ❌  
+Deploy VM with custom scheduler | ✅ | ✅ | ❌  
+Deploy without VM configuration | ✅ | ✅ | ❌  
+Deploy from VM configuration | ✅ | ✅ | ✅  
+Deploy VM from VM configuration and override the VM configuration | ✅ | ✅ | ❌  
+  
+## VMs: Start/stop/suspend/resume
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Stop VM by name (power off) | ✅ | ✅ | ❌  
+Start VM by name (power on) | ✅ | ✅ | ❌  
+Suspend VM by name (sleep) | ✅ | ✅ | ❌  
+Resume VM by name (wake) | ✅ | ✅ | ❌  
+  
+## VMs: Delete and purge
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Delete VM by name | ✅ | ✅ | ✅  
+Purge VM config (delete the VM config and any instances) | ❌ | ❌ | ✅  
+  
+## VMs: Storage
+
+Feature | Orka3 CLI | API | Web UI  
+---|---|---|---  
+Shared VM storage** | ❌ | ❌ | ❌  
+I/O boost | ✅ | ✅ | ✅  
+  
+** You can access and manage the shared storage from within the VM.
+
+## VMs: Networking
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+VNC | ✅ | ✅ | ✅  
+SSH* | ❌ | ❌ | ❌  
+Apple Screen Sharing* | ❌ | ❌ | ❌  
+Port forwarding | ✅ | ✅ | ❌**  
+Network boost | ✅ | ✅ | ✅  
+  
+* Orka assigns an SSH and an Apple Screen Sharing port to all VMs during deployment. You can view the port information in the Orka CLI, Orka API, and the Orka Web UI. However, you need to manage SSH and Apple Screen Sharing from within the VM.  
+** You can see which ports are reserved for port forwarding.
+
+## VMs: Performance
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+GPU passthrough | ✅ | ✅ | ✅  
+I/O boost* | ✅ | ✅ | ✅  
+Network boost* | ✅ | ✅ | ✅  
+  
+* You cannot save or delete a saved state, or check if a VM configuration is using a saved state. However, if a VM configuration uses a saved state, any VMs deployed with the Orka Web UI (after applying the state to the configuration) will use the saved state.
+
+## Images
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+Deploy from public OCI-compatible images | ✅ | ✅ | ✅*  
+Deploy from private OCI-compatible images (with registry credentials configured locally) | ✅ | ✅ | ✅*  
+Push an image from a running VM to an OCI-compatible registry (with registry credentials configured locally) | ✅ | ✅ | ❌  
+List images | ✅ | ✅ | ✅  
+List remote images | ✅ | ✅ | ✅  
+Pull a remote image | ✅ | ✅ | ✅  
+Pull a remote image and rename it | ✅ | ✅ | ✅  
+Download an image on your local machine | ❌ | ✅ | ❌  
+Upload an image from your local machine | ❌ | ✅ | ❌  
+Generate a new empty image | ✅ | ✅ | ✅  
+Set an image description | ✅ | ✅ | ❌  
+Copy and rename an image | ✅ | ✅ | ✅  
+Save a new image from the specified VM (Save as) | ✅ | ✅ | ✅  
+Overwrite the existing image with its current state from the specified VM (Save) | ✅ | ✅ | ✅  
+Resize the disk and automatically resize the partition of the specified VM | ✅ | ✅ | ❌  
+Resize the disk and automatically resize the partition of a specified VM and automatically save a new image from it | ✅ | ✅ | ❌  
+Only resize the disk of the specified VM | ✅ | ✅ | ❌  
+Delete an image | ✅ | ✅ | ✅  
+  
+* If the respective VM configuration was created with the Orka3 CLI or the Orka3 API, and if the respective registry credentials are configured for the `orka-default` namespace.
+
+## ISOs
+
+Feature | Orka3 CLI | Orka3 API | Web UI  
+---|---|---|---  
+List ISOs | ✅ | ✅ | ✅  
+List remote ISOs | ✅ | ✅ | ✅  
+Pull a remote ISO | ✅ | ✅ | ✅  
+Pull a remote ISO and rename it | ✅ | ✅ | ✅  
+Rename an ISO | ✅ | ✅ | ✅  
+Copy and rename an ISO | ✅ | ✅ | ✅  
+Delete an ISO | ✅ | ✅ | ✅  
+Download an ISO | ❌ | ✅ | ❌  
+Upload an ISO | ❌ | ✅ | ❌

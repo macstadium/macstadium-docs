@@ -1,0 +1,139 @@
+---
+title: "Built-In Orka Domains"
+zendesk_id: 28329724250011
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28329724250011-Built-In-Orka-Domains"
+section: "Networking with Orka at MacStadium"
+category: "Orka"
+created_at: "2024-08-16T13:26:33Z"
+updated_at: "2024-09-18T21:47:47Z"
+promoted: false
+labels: ["network", "orka", "api", "networking", "domain", "domains"]
+suggested_new_path: "/orka/networking-with-orka-at-macstadium/built-in-orka-domains"
+---
+
+MacStadium provides built-in TLS-enabled domains (Orka domains). Learn how to work with your own built-in Orka domain.
+
+You can use an Orka domain (such as company.orka.app) to access your Orka environment instead of the default Orka endpoints (10.221.188.100 or 10.221.188.20). Starting with Orka 1.5.4, Orka domains are available to all users by default.
+
+Built-in Orka domains provide improved security. They are TLS-enabled and require access via HTTPS.
+
+## 1\. Configure your connection
+
+To be able to reach your Orka domain, you need to add the cluster [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) IP and the Orka domain name to your hosts file.
+
+#### **What's your Ingress IP?**
+
+If you reach your Orka endpoint at *.*.*.20, the Ingress IP is *.*.*.22.
+
+For example: 10.221.188.22.
+
+If you reach your Orka endpoint at *.*.*.100, the Ingress IP is *.*.*.241.
+
+For example: 10.221.188.241.
+
+### macOS and Linux
+
+  1. In the Terminal, run the following command: 
+         
+         sudo nano /etc/hosts
+
+  2. When prompted, provide your password.
+  3. At the bottom of the file, on a new line, add the Ingress IP and the Orka domain, separated by a space.  
+
+         
+         <INGRESS-IP> <ORKA-DOMAIN>  
+           
+         For example:  
+         10.221.188.22 company.orka.app
+
+  4. Press Ctrl+0 and then press Enter to save your changes.
+  5. Press Ctrl+X to exit nano.
+  6. (Optional, macOS) If you cannot reach your Orka domain, try flushing the DNS cache. 
+         
+         dscacheutil -flushcache
+
+
+
+
+### Windows
+
+  1. Press the Windows key and type Notepad in the search text box.
+  2. Right-click the Notepad icon and select Run as administrator.
+  3. In Notepad, select File > Open.
+  4. In the File name text box, type C:\Windows\System32\drivers\etc\hosts.
+  5. At the bottom of the file, on a new line, add the Ingress IP and the Orka domain, separated by a space.  
+
+         
+         <INGRESS-IP> <ORKA-DOMAIN>  
+           
+         For example:  
+         10.221.188.22 company.orka.app
+
+  6. Save your changes and close the file.
+
+
+
+## 2\. Use the Orka domain in your day-to-day work
+
+### Known limitation
+
+Due to Node.js limitations, the Orka CLI cannot work with Orka domains. You need to use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.100) with the Orka CLI, or switch to another Orka tool.
+
+### TIP
+
+You can use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.100) and your Orka domain (https://company.orka.app) interchangeably in your workflows.
+
+  1. If you don't know what your Orka domain is, contact the MacStadium team.
+
+  2. Configure your Orka tools to target the Orka domain. Note that you need to use https with your Orka domain.
+
+     * For the Orka API, change your API requests to target https://<orka-domain>.
+
+     * For the Orka Web UI, open https://<orka-domain> in your browser.
+
+     * For CI/CD integrations, switch to https://<orka-domain> in the respective plugin configuration.
+
+
+
+
+## 3\. (Orka API-only) Download and trust the Orka domain certificate
+
+To be able to run API calls against your Orka domain, you need to download the certificate for the Orka domain locally and add it to your trusted certificates.
+
+To download the certificate, complete the following steps:
+
+  1. Open Firefox and navigate to [https://<orka-domain>](https://<orka-domain>).
+  2. Click the padlock icon in the address bar. In the pop-up, click Connection secure and then More information.
+  3. In the Page Info dialog, click View Certificate.
+  4. Scroll down and locate the PEM download section. Download the PEM (cert) file.
+
+
+
+### macOS
+
+  1. Open Keychain Access.
+  2. Drag and drop the downloaded certificate to the login keychain.
+  3. Double-click the newly added certificate.
+  4. Expand the Trust section and for the When using this certificate setting, select Always Trust.
+  5. Close the certificate info window and when prompted, provide your password.
+
+
+
+## Linux
+
+Run the following commands:
+    
+    
+    sudo mkdir /usr/local/share/ca-certificates/extra  
+    sudo cp mycertificate.pem /usr/local/share/ca-certificates/extra/mycertificate.crt  
+    sudo update-ca-certificates
+
+### Windows
+
+  1. Rename the downloaded certificate and change its extension to .crt.
+  2. Double-click the file and confirm that you want to open it.
+  3. On the General tab, click Install Certificate.
+  4. For Store Location, select Local Machine and click Next.
+  5. When prompted, confirm that you want Windows host process to make changes to your device.
+  6. Select Place all certificates in the following store, click Browse and from the list, select Trusted Root Certification Authorities and click OK.
+  7. Click Next, review the settings, and click Finish.

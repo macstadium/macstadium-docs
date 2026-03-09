@@ -1,0 +1,1499 @@
+{
+  "name": "MacStadium Docs",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#0066CC",
+    "light": "#3399FF",
+    "dark": "#004499"
+  },
+  "topbar": {
+    "links": [
+      {
+        "name": "Support",
+        "url": "https://support.macstadium.com"
+      },
+      {
+        "name": "Portal",
+        "url": "https://portal.macstadium.com"
+      }
+    ]
+  },
+  "navigation": [
+    {
+      "group": "MacStadium",
+      "pages": [
+        {
+          "group": "MacStadium Overview",
+          "pages": [
+            "macstadium/macstadium-overview/macstadium-overview",
+            "macstadium/macstadium-overview/macstadium-portal"
+          ]
+        },
+        {
+          "group": "Account Management and SAML",
+          "pages": [
+            "macstadium/account-management-and-saml/first-time-sso-login-to-macstadium-portal",
+            "macstadium/account-management-and-saml/troubleshooting-credential-issues",
+            "macstadium/account-management-and-saml/add-a-new-user",
+            "macstadium/account-management-and-saml/two-factor-authentication-2fa",
+            "macstadium/account-management-and-saml/saml-sso",
+            "macstadium/account-management-and-saml/enable-saml-sso-with-okta",
+            "macstadium/account-management-and-saml/enable-saml-sso-with-azure-active-directory",
+            "macstadium/account-management-and-saml/enable-saml-sso-with-google-workspace-federation"
+          ]
+        },
+        {
+          "group": "Support",
+          "pages": [
+            "macstadium/support/support",
+            "macstadium/support/macstadium-support-tiers",
+            "macstadium/support/creating-slack-tickets",
+            "macstadium/support/mac-configuration-assistance",
+            "macstadium/support/remote-hands-service"
+          ]
+        },
+        {
+          "group": "Billing",
+          "pages": [
+            "macstadium/billing/vendor-management",
+            "macstadium/billing/accessing-invoices",
+            "macstadium/billing/billing-master-accounts",
+            "macstadium/billing/credit-card-declined",
+            "macstadium/billing/canceling-a-macstadium-subscription"
+          ]
+        },
+        {
+          "group": "Legal and Compliance",
+          "pages": [
+            "macstadium/legal-and-compliance/master-services-agreement",
+            "macstadium/legal-and-compliance/service-level-agreement",
+            "macstadium/legal-and-compliance/acceptable-use-policy",
+            "macstadium/legal-and-compliance/copyright-and-trademark-policy",
+            "macstadium/legal-and-compliance/security"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Orka",
+      "pages": [
+        {
+          "group": "Quick Start Guides",
+          "pages": [
+            "orka/quick-start-guides/orka3-cli-quick-start",
+            "orka/quick-start-guides/orka3-api-quick-start",
+            "orka/quick-start-guides/web-ui-quick-start",
+            "orka/quick-start-guides/cicd-integrations-quick-start"
+          ]
+        },
+        {
+          "group": "Orka Overview",
+          "pages": [
+            "orka/orka-overview/orka-overview",
+            "orka/orka-overview/tools-integrations",
+            "orka/orka-overview/compatibility-matrix",
+            "orka/orka-overview/licensing-faq"
+          ]
+        },
+        {
+          "group": "Orka Cluster Migration from 2.4->3.x",
+          "pages": [
+            "orka/orka-cluster-migration-from-24-3x/24x-and-30x-to-31x-and-above-backward-compatibility",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-what-persists",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping",
+            "orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping"
+          ]
+        },
+        {
+          "group": "Orka DevOps Integrations",
+          "pages": [
+            "orka/orka-devops-integrations/jenkins",
+            "orka/orka-devops-integrations/github-actions",
+            "orka/orka-devops-integrations/gitlab",
+            "orka/orka-devops-integrations/buildkite",
+            "orka/orka-devops-integrations/teamcity",
+            "orka/orka-devops-integrations/packer",
+            "orka/orka-devops-integrations/base-images"
+          ]
+        },
+        {
+          "group": "Orka on AWS and On-Prem",
+          "pages": [
+            "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
+            "orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
+            "orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws",
+            "orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started",
+            "orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350"
+          ]
+        },
+        {
+          "group": "Orka Upgrades and Release Notes",
+          "pages": [
+            "orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-35-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-34-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-33-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-32-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-31-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-30-release-notes",
+            "orka/orka-upgrades-and-release-notes/orka-upgrades"
+          ]
+        },
+        {
+          "group": "Orka3 CLI Reference",
+          "pages": [
+            "orka/orka3-cli-reference/orka3-cli-overview-configuration",
+            "orka/orka3-cli-reference/authentication-and-user-management",
+            "orka/orka3-cli-reference/image-management",
+            "orka/orka3-cli-reference/oci-registry-integration",
+            "orka/orka3-cli-reference/vm-deployment-and-configuration",
+            "orka/orka3-cli-reference/vm-lifecycle-management",
+            "orka/orka3-cli-reference/node-management",
+            "orka/orka3-cli-reference/namespace-management",
+            "orka/orka3-cli-reference/role-based-access-control-rbac",
+            "orka/orka3-cli-reference/command-quick-reference",
+            "orka/orka3-cli-reference/output-formats-and-getting-help"
+          ]
+        },
+        {
+          "group": "Orka Resources",
+          "pages": [
+            "orka/orka-resources/orka3-cli-command-reference",
+            "orka/orka-resources/working-with-vm-metadata",
+            "orka/orka-resources/image-caching",
+            "orka/orka-resources/shared-vm-storage",
+            "orka/orka-resources/burst",
+            "orka/orka-resources/apple-silicon-based-support",
+            "orka/orka-resources/orka-required-url-rules-for-filtering",
+            "orka/orka-resources/vm-tools",
+            "orka/orka-resources/cluster-configurations",
+            "orka/orka-resources/consuming-metrics-from-prometheus",
+            "orka/orka-resources/resiliency-high-availability-and-disaster-recovery"
+          ]
+        },
+        {
+          "group": "Orka Cluster Access",
+          "pages": [
+            "orka/orka-cluster-access/cluster-access-management-overview",
+            "orka/orka-cluster-access/customer-portal-manage-account-users",
+            "orka/orka-cluster-access/orka-cluster-access-the-cluster",
+            "orka/orka-cluster-access/orka-cluster-manage-access-to-resources",
+            "orka/orka-cluster-access/orka-cluster-manage-service-accounts"
+          ]
+        },
+        {
+          "group": "Networking with Orka at MacStadium",
+          "pages": [
+            "orka/networking-with-orka-at-macstadium/vpn-connection",
+            "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
+            "orka/networking-with-orka-at-macstadium/external-custom-domains",
+            "orka/networking-with-orka-at-macstadium/aws-orka-connections",
+            "orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel",
+            "orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file",
+            "orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel",
+            "orka/networking-with-orka-at-macstadium/4-aws-verifying-the-vpn-tunnel",
+            "orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting",
+            "orka/networking-with-orka-at-macstadium/gcp-orka-connections",
+            "orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel",
+            "orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file",
+            "orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel",
+            "orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel",
+            "orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
+          ]
+        },
+        {
+          "group": "Orka Configuration",
+          "pages": [
+            "orka/orka-configuration/performance-gpu-passthrough"
+          ]
+        },
+        {
+          "group": "OCI Images",
+          "pages": [
+            "orka/oci-images/oci-images-overview",
+            "orka/oci-images/oci-images-manage-registry-credentials",
+            "orka/oci-images/oci-images-deploy-vms",
+            "orka/oci-images/oci-images-preserve-changes",
+            "orka/oci-images/using-harbor-oci-storage-with-the-orka-cli",
+            "orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor"
+          ]
+        },
+        {
+          "group": "Compatibility",
+          "pages": [
+            "orka/compatibility/feature-parity-apple-hardware",
+            "orka/compatibility/feature-parity-orka-tools",
+            "orka/compatibility/compatibility-performance-improving-features"
+          ]
+        },
+        {
+          "group": "Kubernetes Native",
+          "pages": [
+            "orka/kubernetes-native/k8s-native-overview",
+            "orka/kubernetes-native/k8s-native-persistent-volumes",
+            "orka/kubernetes-native/k8s-native-orka3-crd-reference"
+          ]
+        },
+        {
+          "group": "Orka Desktop",
+          "pages": [
+            "orka/orka-desktop/orka-desktop-310-release-notes",
+            "orka/orka-desktop/welcome-to-orka-desktop-30"
+          ]
+        },
+        {
+          "group": "Orka Engine",
+          "pages": [
+            "orka/orka-engine/orka-engine-30"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Remote Desktop (VDI)",
+      "pages": [
+        {
+          "group": "Operational Guides",
+          "pages": [
+            "remote-desktop-vdi/operational-guides/ansible-quick-reference",
+            "remote-desktop-vdi/operational-guides/day-2-operations-guide",
+            "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+          ]
+        },
+        {
+          "group": "Cloud Access (Legacy)",
+          "pages": [
+            "remote-desktop-vdi/cloud-access-legacy/cloud-access",
+            "remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access",
+            "remote-desktop-vdi/cloud-access-legacy/cloud-access-customer-environment-tips",
+            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn",
+            "remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting",
+            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh",
+            "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-windows",
+            "remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect"
+          ]
+        },
+        {
+          "group": "Orka for VDI Deployment",
+          "pages": [
+            "remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
+            "remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
+            "remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
+            "remote-desktop-vdi/orka-for-vdi-deployment/citrix-daas-configuration",
+            "remote-desktop-vdi/orka-for-vdi-deployment/image-management",
+            "remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing",
+            "remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
+            "remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
+            "remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues"
+          ]
+        },
+        {
+          "group": "MacStadium Bare Metal with Citrix",
+          "pages": [
+            "remote-desktop-vdi/macstadium-bare-metal-with-citrix/citrix-macos-vda-on-macstadium"
+          ]
+        },
+        {
+          "group": "Supporting Documentation",
+          "pages": [
+            "remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
+            "remote-desktop-vdi/supporting-documentation/customer-environment-tips",
+            "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
+            "remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "IaaS",
+      "pages": [
+        {
+          "group": "IaaS Overview",
+          "pages": [
+            "iaas/iaas-overview/infrastructure-as-a-service-iaas",
+            "iaas/iaas-overview/data-center-locations"
+          ]
+        },
+        {
+          "group": "Connecting to Other Clouds",
+          "pages": [
+            "iaas/connecting-to-other-clouds/other-clouds",
+            "iaas/connecting-to-other-clouds/private-cloud-networking-setup",
+            "iaas/connecting-to-other-clouds/site-to-site-vpn-config"
+          ]
+        },
+        {
+          "group": "Bare Metal Macs",
+          "pages": [
+            "iaas/bare-metal-macs/bare-metal-hosts",
+            "iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks",
+            "iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time",
+            "iaas/bare-metal-macs/vnc-clients",
+            "iaas/bare-metal-macs/common-tools",
+            "iaas/bare-metal-macs/2018-mac-mini-deactivation-process",
+            "iaas/bare-metal-macs/mac-mini-comparison-chart"
+          ]
+        },
+        {
+          "group": "Networking",
+          "pages": [
+            "iaas/networking/networking-overview"
+          ]
+        },
+        {
+          "group": "AWS",
+          "pages": [
+            "iaas/aws/aws-troubleshooting",
+            "iaas/aws/aws-networking-setup",
+            "iaas/aws/site-to-site-vpn-configuration-with-aws",
+            "iaas/aws/aws-vpn-config-for-cisco-asaasav",
+            "iaas/aws/verify-aws"
+          ]
+        },
+        {
+          "group": "Cisco Firewalls",
+          "pages": [
+            "iaas/cisco-firewalls/network-onboarding-form",
+            "iaas/cisco-firewalls/prepare-the-vpn-configuration-for-input-into-cisco-asaasav",
+            "iaas/cisco-firewalls/network-firewalls-overview",
+            "iaas/cisco-firewalls/logging-into-cisco-firewall",
+            "iaas/cisco-firewalls/creating-local-user-accounts-on-a-cisco-asa",
+            "iaas/cisco-firewalls/backup-and-restore-firewall-config-using-asdm",
+            "iaas/cisco-firewalls/managing-interfaces",
+            "iaas/cisco-firewalls/network-firewalls-configuration",
+            "iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet",
+            "iaas/cisco-firewalls/checking-the-firewall-version",
+            "iaas/cisco-firewalls/changing-the-vpn-firewall-password",
+            "iaas/cisco-firewalls/firewall-change-request-form",
+            "iaas/cisco-firewalls/network-firewalls-mac-mini-connect",
+            "iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew",
+            "iaas/cisco-firewalls/network-firewalls-for-ci-build-node-ansible",
+            "iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn"
+          ]
+        },
+        {
+          "group": "Azure",
+          "pages": [
+            "iaas/azure/azure-networking-setup",
+            "iaas/azure/azure-troubleshooting",
+            "iaas/azure/site-to-site-vpn-configuration-with-azure",
+            "iaas/azure/azure-vpn-config-for-cisco-asaasav",
+            "iaas/azure/verify-azure"
+          ]
+        },
+        {
+          "group": "Storage",
+          "pages": [
+            "iaas/storage/private-cloud-network-attached-storage",
+            "iaas/storage/restorable-snapshots"
+          ]
+        },
+        {
+          "group": "x86 VMs (Private Cloud VMs)",
+          "pages": [
+            "iaas/x86-vms-private-cloud-vms/private-cloud-x86-vms",
+            "iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation",
+            "iaas/x86-vms-private-cloud-vms/creating-a-new-vm-with-a-recipe",
+            "iaas/x86-vms-private-cloud-vms/creating-a-new-vm-manually",
+            "iaas/x86-vms-private-cloud-vms/manual-windows-installation",
+            "iaas/x86-vms-private-cloud-vms/windows-2022-installation"
+          ]
+        },
+        {
+          "group": "Google Cloud Platform",
+          "pages": [
+            "iaas/google-cloud-platform/google-cloud-networking-setup",
+            "iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp",
+            "iaas/google-cloud-platform/gcp-troubleshooting",
+            "iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav",
+            "iaas/google-cloud-platform/verify-gcp"
+          ]
+        },
+        {
+          "group": "IaaS FAQs",
+          "pages": [
+            "iaas/iaas-faqs/troubleshooting-connectivity-issues",
+            "iaas/iaas-faqs/macstadium-api",
+            "iaas/iaas-faqs/reboot-your-mac",
+            "iaas/iaas-faqs/what-do-i-do-if-i-accidentally-turned-off-vnc-on-my-hosted-mac",
+            "iaas/iaas-faqs/whats-the-ola-on-rebooting-a-dedicated-mac-host",
+            "iaas/iaas-faqs/what-are-macstadiums-proprietary-mac-pro-upgrades",
+            "iaas/iaas-faqs/how-do-i-order-multiple-servers-at-one-time",
+            "iaas/iaas-faqs/does-macstadium-offer-a-hosted-imac-pro",
+            "iaas/iaas-faqs/why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources",
+            "iaas/iaas-faqs/what-is-instant-provisioning-and-how-long-does-it-take",
+            "iaas/iaas-faqs/is-there-macos-software-to-replace-the-popular-web-hosting-software-offered-by-l",
+            "iaas/iaas-faqs/do-i-need-a-vnc-server-installed-on-my-mac",
+            "iaas/iaas-faqs/do-i-have-root-and-admin-access-to-subscription-based-mac-servers",
+            "iaas/iaas-faqs/can-a-hosted-mac-server-offer-a-virtual-desktop-at-4k-resolution",
+            "iaas/iaas-faqs/can-i-use-a-remote-mac-for-ios-development",
+            "iaas/iaas-faqs/can-i-change-the-os-on-my-server-from-macos-to-linux"
+          ]
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/hc/en-us/articles/47496358655259-Network-Onboarding-Form",
+      "destination": "/iaas/cisco-firewalls/network-onboarding-form",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/45136159281819-First-Time-SSO-Login-to-MacStadium-Portal",
+      "destination": "/macstadium/account-management-and-saml/first-time-sso-login-to-macstadium-portal",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44468426757531-Vendor-Management",
+      "destination": "/macstadium/billing/vendor-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44274587277979-Troubleshooting-Credential-Issues",
+      "destination": "/macstadium/account-management-and-saml/troubleshooting-credential-issues",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44260623061915-IT-Administrator-Onboarding-Guide",
+      "destination": "/orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44260146530715-Ansible-Quick-Reference",
+      "destination": "/remote-desktop-vdi/operational-guides/ansible-quick-reference",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44257766268571-Overview-Architecture",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/43920779804571-Private-Cloud-Network-Attached-Storage",
+      "destination": "/iaas/storage/private-cloud-network-attached-storage",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/43215194564251-Troubleshooting-Connectivity-Issues",
+      "destination": "/iaas/iaas-faqs/troubleshooting-connectivity-issues",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42514244203419-Orka3-CLI-Overview-Configuration",
+      "destination": "/orka/orka3-cli-reference/orka3-cli-overview-configuration",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42141626434075-Orka-Desktop-3-1-0-Release-Notes",
+      "destination": "/orka/orka-desktop/orka-desktop-310-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/41858099174555-Orka-Desktop-3-1-0-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/41327066930459-Orka-3-5-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39595273667739-Citrix-MacOS-VDA-on-MacStadium",
+      "destination": "/remote-desktop-vdi/macstadium-bare-metal-with-citrix/citrix-macos-vda-on-macstadium",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39593054198427-Orka-3-4-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-34-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39592731793691-Orka-3-3-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-33-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39572301543323-Orka-3-2-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-32-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39572204477339-Orka-3-1-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-31-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39571763412763-Orka-3-0-Release-Notes",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-30-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39227685958043-MacStadium-Overview",
+      "destination": "/macstadium/macstadium-overview/macstadium-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/32098523283611-Orka-Engine-3-0",
+      "destination": "/orka/orka-engine/orka-engine-30",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29976656722587-Private-Cloud-x86-VMs",
+      "destination": "/iaas/x86-vms-private-cloud-vms/private-cloud-x86-vms",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29904434271387-Orka-Overview",
+      "destination": "/orka/orka-overview/orka-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29895649716891-Networking-Overview",
+      "destination": "/iaas/networking/networking-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29895572767387-Infrastructure-as-a-Service-IaaS",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28409372487707-Master-Services-Agreement",
+      "destination": "/macstadium/legal-and-compliance/master-services-agreement",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398867623835-Jenkins",
+      "destination": "/orka/orka-devops-integrations/jenkins",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398136435867-Orka3-CLI-Command-Reference",
+      "destination": "/orka/orka-resources/orka3-cli-command-reference",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28397141872539-MacStadium-API",
+      "destination": "/iaas/iaas-faqs/macstadium-api",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28349322137627-2-4-x-and-3-0-x-to-3-1-x-and-above-Backward-Compatibility",
+      "destination": "/orka/orka-cluster-migration-from-24-3x/24x-and-30x-to-31x-and-above-backward-compatibility",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28347376278299-Tools-Integrations",
+      "destination": "/orka/orka-overview/tools-integrations",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28346719813659-2-4-x-to-3-0-0-What-Persists",
+      "destination": "/orka/orka-cluster-migration-from-24-3x/24x-to-300-what-persists",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28346593518363-2-4-x-to-3-0-0-After-the-Migration",
+      "destination": "/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28346199889179-2-4-x-to-3-0-0-CLI-Mapping",
+      "destination": "/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28346085154971-2-4-x-to-3-0-0-API-Mapping",
+      "destination": "/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28336509227419-Compatibility-Matrix",
+      "destination": "/orka/orka-overview/compatibility-matrix",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28335951125915-K8s-Native-Overview",
+      "destination": "/orka/kubernetes-native/k8s-native-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28335731320603-K8s-Native-Persistent-Volumes",
+      "destination": "/orka/kubernetes-native/k8s-native-persistent-volumes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28335237180443-K8s-Native-Orka3-CRD-Reference",
+      "destination": "/orka/kubernetes-native/k8s-native-orka3-crd-reference",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28334504387995-OCI-Images-Overview",
+      "destination": "/orka/oci-images/oci-images-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28329406438683-VPN-Connection",
+      "destination": "/orka/networking-with-orka-at-macstadium/vpn-connection",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28328584628379-Cluster-Access-Management-Overview",
+      "destination": "/orka/orka-cluster-access/cluster-access-management-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28328236117787-Licensing-FAQ",
+      "destination": "/orka/orka-overview/licensing-faq",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28312073382299-AWS-Troubleshooting",
+      "destination": "/iaas/aws/aws-troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28307845176475-Other-Clouds",
+      "destination": "/iaas/connecting-to-other-clouds/other-clouds",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28307653163419-Private-Cloud-Networking-Setup",
+      "destination": "/iaas/connecting-to-other-clouds/private-cloud-networking-setup",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28300901563163-Google-Cloud-Networking-Setup",
+      "destination": "/iaas/google-cloud-platform/google-cloud-networking-setup",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28300434772891-Prepare-the-VPN-Configuration-for-Input-into-Cisco-ASA-ASAv",
+      "destination": "/iaas/cisco-firewalls/prepare-the-vpn-configuration-for-input-into-cisco-asaasav",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28297916166683-Site-to-Site-VPN-Config",
+      "destination": "/iaas/connecting-to-other-clouds/site-to-site-vpn-config",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28294500691739-AWS-Networking-Setup",
+      "destination": "/iaas/aws/aws-networking-setup",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28279691634075-Azure-Networking-Setup",
+      "destination": "/iaas/azure/azure-networking-setup",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28260744525723-Support",
+      "destination": "/macstadium/support/support",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28248658451995-Accessing-Invoices",
+      "destination": "/macstadium/billing/accessing-invoices",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28248666891035-Add-a-New-User",
+      "destination": "/macstadium/account-management-and-saml/add-a-new-user",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28248305179291-Billing-Master-Accounts",
+      "destination": "/macstadium/billing/billing-master-accounts",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28248213027739-Credit-Card-Declined",
+      "destination": "/macstadium/billing/credit-card-declined",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28248107367963-Canceling-a-MacStadium-Subscription",
+      "destination": "/macstadium/billing/canceling-a-macstadium-subscription",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28247812122267-MacStadium-Portal",
+      "destination": "/macstadium/macstadium-overview/macstadium-portal",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28247446745627-Cloud-Access",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/cloud-access",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28212528485275-Reboot-Your-Mac",
+      "destination": "/iaas/iaas-faqs/reboot-your-mac",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28212256368155-What-do-I-do-if-I-accidentally-turned-off-VNC-on-my-hosted-Mac",
+      "destination": "/iaas/iaas-faqs/what-do-i-do-if-i-accidentally-turned-off-vnc-on-my-hosted-mac",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28212125024539-What-s-the-OLA-on-rebooting-a-dedicated-Mac-host",
+      "destination": "/iaas/iaas-faqs/whats-the-ola-on-rebooting-a-dedicated-mac-host",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28212082593563-What-are-MacStadium-s-proprietary-Mac-Pro-upgrades",
+      "destination": "/iaas/iaas-faqs/what-are-macstadiums-proprietary-mac-pro-upgrades",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28212021105819-How-do-I-order-multiple-servers-at-one-time",
+      "destination": "/iaas/iaas-faqs/how-do-i-order-multiple-servers-at-one-time",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28212032501403-Does-MacStadium-offer-a-hosted-iMac-Pro",
+      "destination": "/iaas/iaas-faqs/does-macstadium-offer-a-hosted-imac-pro",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211986171931-Why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources",
+      "destination": "/iaas/iaas-faqs/why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211966289563-What-is-instant-provisioning-and-how-long-does-it-take",
+      "destination": "/iaas/iaas-faqs/what-is-instant-provisioning-and-how-long-does-it-take",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211972134555-Is-there-macOS-software-to-replace-the-popular-web-hosting-software-offered-by-Linux-VPS-providers",
+      "destination": "/iaas/iaas-faqs/is-there-macos-software-to-replace-the-popular-web-hosting-software-offered-by-l",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211858630427-Do-I-need-a-VNC-server-installed-on-my-Mac",
+      "destination": "/iaas/iaas-faqs/do-i-need-a-vnc-server-installed-on-my-mac",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211825553051-Do-I-have-root-and-admin-access-to-subscription-based-Mac-servers",
+      "destination": "/iaas/iaas-faqs/do-i-have-root-and-admin-access-to-subscription-based-mac-servers",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211700742171-Can-a-hosted-Mac-server-offer-a-virtual-desktop-at-4k-resolution",
+      "destination": "/iaas/iaas-faqs/can-a-hosted-mac-server-offer-a-virtual-desktop-at-4k-resolution",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211696893339-Can-I-use-a-remote-Mac-for-iOS-development",
+      "destination": "/iaas/iaas-faqs/can-i-use-a-remote-mac-for-ios-development",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211659541275-Can-I-change-the-OS-on-my-server-from-macOS-to-Linux",
+      "destination": "/iaas/iaas-faqs/can-i-change-the-os-on-my-server-from-macos-to-linux",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28198875080219-Bare-Metal-Hosts",
+      "destination": "/iaas/bare-metal-macs/bare-metal-hosts",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/45140992081691-Service-Level-Agreement",
+      "destination": "/macstadium/legal-and-compliance/service-level-agreement",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44261455694619-Day-2-Operations-Guide",
+      "destination": "/remote-desktop-vdi/operational-guides/day-2-operations-guide",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44259626250267-Deployment-Guide",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/43967899182619-Restorable-Snapshots",
+      "destination": "/iaas/storage/restorable-snapshots",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42515342171931-Authentication-and-User-Management",
+      "destination": "/orka/orka3-cli-reference/authentication-and-user-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39570388988059-Orka-on-AWS-Getting-Started",
+      "destination": "/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39459015068699-Working-with-VM-Metadata",
+      "destination": "/orka/orka-resources/working-with-vm-metadata",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29997155700763-VM-Creation-and-OS-Installation",
+      "destination": "/iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398644632091-GitHub-Actions",
+      "destination": "/orka/orka-devops-integrations/github-actions",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28336418107931-Feature-Parity-Apple-Hardware",
+      "destination": "/orka/compatibility/feature-parity-apple-hardware",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28334114762907-OCI-Images-Manage-Registry-Credentials",
+      "destination": "/orka/oci-images/oci-images-manage-registry-credentials",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28329724250011-Built-In-Orka-Domains",
+      "destination": "/orka/networking-with-orka-at-macstadium/built-in-orka-domains",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28328612687899-Customer-Portal-Manage-Account-Users",
+      "destination": "/orka/orka-cluster-access/customer-portal-manage-account-users",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28312694112539-Azure-Troubleshooting",
+      "destination": "/iaas/azure/azure-troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28301508345755-Site-to-Site-VPN-Configuration-with-GCP",
+      "destination": "/iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28300178337051-Site-to-Site-VPN-Configuration-with-Azure",
+      "destination": "/iaas/azure/site-to-site-vpn-configuration-with-azure",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28280561588507-Site-To-Site-VPN-Configuration-with-AWS",
+      "destination": "/iaas/aws/site-to-site-vpn-configuration-with-aws",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28264217018395-Network-Firewalls-Overview",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-overview",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28262506838555-MacStadium-Support-Tiers",
+      "destination": "/macstadium/support/macstadium-support-tiers",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28261237270043-Two-Factor-Authentication-2FA",
+      "destination": "/macstadium/account-management-and-saml/two-factor-authentication-2fa",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28247273430171-Getting-Started-with-Cloud-Access",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28199307605915-MacStadium-Bare-Metal-Mac-Benchmarks",
+      "destination": "/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/45531213762459-Risk-Assessment-and-Mitigation-Plan-for-Orka-on-AWS",
+      "destination": "/orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44332755734299-Ansible-Playbook-Implementation",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44261906056859-Troubleshooting-Quick-Reference",
+      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42514516825883-Image-Management",
+      "destination": "/orka/orka3-cli-reference/image-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42337346693019-Cloud-Access-Customer-Environment-Tips",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/cloud-access-customer-environment-tips",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/30115530131355-Image-Caching",
+      "destination": "/orka/orka-resources/image-caching",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29992540673051-Creating-a-New-VM-with-a-Recipe",
+      "destination": "/iaas/x86-vms-private-cloud-vms/creating-a-new-vm-with-a-recipe",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28409281170075-Acceptable-Use-Policy",
+      "destination": "/macstadium/legal-and-compliance/acceptable-use-policy",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398815172763-GitLab",
+      "destination": "/orka/orka-devops-integrations/gitlab",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28336307334939-Feature-Parity-Orka-Tools",
+      "destination": "/orka/compatibility/feature-parity-orka-tools",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28334437066139-OCI-Images-Deploy-VMs",
+      "destination": "/orka/oci-images/oci-images-deploy-vms",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28333784957211-Orka-Cluster-Access-the-Cluster",
+      "destination": "/orka/orka-cluster-access/orka-cluster-access-the-cluster",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28330039248923-External-Custom-Domains",
+      "destination": "/orka/networking-with-orka-at-macstadium/external-custom-domains",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28313080123547-GCP-Troubleshooting",
+      "destination": "/iaas/google-cloud-platform/gcp-troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28301505752219-GCP-VPN-Config-for-Cisco-ASA-ASAv",
+      "destination": "/iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28299207547547-Azure-VPN-Config-for-Cisco-ASA-ASAv",
+      "destination": "/iaas/azure/azure-vpn-config-for-cisco-asaasav",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28280625682587-AWS-VPN-Config-for-Cisco-ASA-ASAv",
+      "destination": "/iaas/aws/aws-vpn-config-for-cisco-asaasav",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28263569637275-SAML-SSO",
+      "destination": "/macstadium/account-management-and-saml/saml-sso",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28262283125787-Creating-Slack-Tickets",
+      "destination": "/macstadium/support/creating-slack-tickets",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28231599395355-Logging-into-Cisco-Firewall",
+      "destination": "/iaas/cisco-firewalls/logging-into-cisco-firewall",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211554037915-Connecting-to-your-Mac-for-the-first-time",
+      "destination": "/iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28198989946139-Data-Center-Locations",
+      "destination": "/iaas/iaas-overview/data-center-locations",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44332686963867-Citrix-DaaS-Configuration",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/citrix-daas-configuration",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42635030589083-Copyright-and-Trademark-Policy",
+      "destination": "/macstadium/legal-and-compliance/copyright-and-trademark-policy",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42514571440155-OCI-Registry-Integration",
+      "destination": "/orka/orka3-cli-reference/oci-registry-integration",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39570839057819-Orka-On-Prem-Getting-Started",
+      "destination": "/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29994702856603-Creating-a-New-VM-Manually",
+      "destination": "/iaas/x86-vms-private-cloud-vms/creating-a-new-vm-manually",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398803332123-Buildkite",
+      "destination": "/orka/orka-devops-integrations/buildkite",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398327991707-AWS-Orka-Connections",
+      "destination": "/orka/networking-with-orka-at-macstadium/aws-orka-connections",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28347375974555-Orka3-CLI-Quick-Start",
+      "destination": "/orka/quick-start-guides/orka3-cli-quick-start",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28340384486683-Shared-VM-Storage",
+      "destination": "/orka/orka-resources/shared-vm-storage",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28336079584155-Compatibility-Performance-Improving-Features",
+      "destination": "/orka/compatibility/compatibility-performance-improving-features",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28334328975643-OCI-Images-Preserve-Changes",
+      "destination": "/orka/oci-images/oci-images-preserve-changes",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28333357279387-Orka-Cluster-Manage-Access-to-Resources",
+      "destination": "/orka/orka-cluster-access/orka-cluster-manage-access-to-resources",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28298738716699-Verify-GCP",
+      "destination": "/iaas/google-cloud-platform/verify-gcp",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28298534785435-Verify-Azure",
+      "destination": "/iaas/azure/verify-azure",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28298236512539-Verify-AWS",
+      "destination": "/iaas/aws/verify-aws",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28269093228187-Creating-Local-User-Accounts-on-a-Cisco-ASA",
+      "destination": "/iaas/cisco-firewalls/creating-local-user-accounts-on-a-cisco-asa",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28263420263835-Enable-SAML-SSO-with-Okta",
+      "destination": "/macstadium/account-management-and-saml/enable-saml-sso-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28230568733979-Connect-to-Your-Cloud-via-VPN",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28213326050843-VNC-Clients",
+      "destination": "/iaas/bare-metal-macs/vnc-clients",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211578207515-Mac-Configuration-Assistance",
+      "destination": "/macstadium/support/mac-configuration-assistance",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44332794850971-Image-Management",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/image-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42514591292955-VM-Deployment-and-Configuration",
+      "destination": "/orka/orka3-cli-reference/vm-deployment-and-configuration",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/41318654531099-Using-Harbor-OCI-Storage-with-the-Orka-CLI",
+      "destination": "/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/41316947194139-Using-Bridge-Networking-with-Orka-3-5-0",
+      "destination": "/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39595293549723-Apple-Business-Manager-and-Mobile-Device-Management-with-MacStadium",
+      "destination": "/remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39255044972571-Burst",
+      "destination": "/orka/orka-resources/burst",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29998572425371-Manual-Windows-Installation",
+      "destination": "/iaas/x86-vms-private-cloud-vms/manual-windows-installation",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28409440948379-Security",
+      "destination": "/macstadium/legal-and-compliance/security",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28401777655707-1-AWS-Side-of-the-VPN-Tunnel",
+      "destination": "/orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398738308251-TeamCity",
+      "destination": "/orka/orka-devops-integrations/teamcity",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28349313921563-Orka3-API-Quick-Start",
+      "destination": "/orka/quick-start-guides/orka3-api-quick-start",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28337172185755-Performance-GPU-Passthrough",
+      "destination": "/orka/orka-configuration/performance-gpu-passthrough",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28333065069211-Orka-Cluster-Manage-Service-Accounts",
+      "destination": "/orka/orka-cluster-access/orka-cluster-manage-service-accounts",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28313252601883-Cloud-Access-Troubleshooting",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28277009696795-Backup-and-Restore-Firewall-Config-using-ASDM",
+      "destination": "/iaas/cisco-firewalls/backup-and-restore-firewall-config-using-asdm",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28263129284251-Enable-SAML-SSO-with-Azure-Active-Directory",
+      "destination": "/macstadium/account-management-and-saml/enable-saml-sso-with-azure-active-directory",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28262380590619-Remote-Hands-Service",
+      "destination": "/macstadium/support/remote-hands-service",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28200215732379-Common-Tools",
+      "destination": "/iaas/bare-metal-macs/common-tools",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/45409919351067-Orka-Self-Service-Migrating-NFS-Images-to-OCI-with-Harbor",
+      "destination": "/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44332879842587-Validation-and-Testing",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42514937795739-VM-Lifecycle-Management",
+      "destination": "/orka/orka3-cli-reference/vm-lifecycle-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/40640583440539-Customer-Environment-Tips",
+      "destination": "/remote-desktop-vdi/supporting-documentation/customer-environment-tips",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/29994435275931-Windows-2022-Installation",
+      "destination": "/iaas/x86-vms-private-cloud-vms/windows-2022-installation",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28401474359835-2-AWS-VPN-Tunnel-Configuration-File",
+      "destination": "/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28398243547803-Packer",
+      "destination": "/orka/orka-devops-integrations/packer",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28393197020059-Web-UI-Quick-Start",
+      "destination": "/orka/quick-start-guides/web-ui-quick-start",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28340672222363-Apple-Silicon-Based-Support",
+      "destination": "/orka/orka-resources/apple-silicon-based-support",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28277745764123-Managing-Interfaces",
+      "destination": "/iaas/cisco-firewalls/managing-interfaces",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28267150475803-Connect-to-Your-Cloud-SSH",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28262763988379-Enable-SAML-SSO-with-Google-Workspace-Federation",
+      "destination": "/macstadium/account-management-and-saml/enable-saml-sso-with-google-workspace-federation",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211037072283-2018-Mac-mini-Deactivation-Process",
+      "destination": "/iaas/bare-metal-macs/2018-mac-mini-deactivation-process",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44334107315611-Production-Rollout",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42514990363419-Node-Management",
+      "destination": "/orka/orka3-cli-reference/node-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/40892940519835-USB-Passthrough-Guide",
+      "destination": "/remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39459868610203-Orka-Required-URL-Rules-for-Filtering",
+      "destination": "/orka/orka-resources/orka-required-url-rules-for-filtering",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28401305336475-3-AWS-Orka-Side-of-the-VPN-Tunnel",
+      "destination": "/orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28394315916827-CI-CD-Integrations-Quick-Start",
+      "destination": "/orka/quick-start-guides/cicd-integrations-quick-start",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28337412701467-Orka-Upgrades",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-upgrades",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28332123227803-Base-Images",
+      "destination": "/orka/orka-devops-integrations/base-images",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28267671197339-Network-Firewalls-Configuration",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-configuration",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28247231280539-Connect-to-Your-Cloud-Windows",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-windows",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28211636270491-Mac-Mini-Comparison-Chart",
+      "destination": "/iaas/bare-metal-macs/mac-mini-comparison-chart",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44339727223451-Business-Outcomes-Use-Cases",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42515036530843-Namespace-Management",
+      "destination": "/orka/orka3-cli-reference/namespace-management",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/41205907064603-Shared-User-Responsibility-Guide-for-MacStadium-Customers",
+      "destination": "/remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28401167074331-4-AWS-Verifying-the-VPN-Tunnel",
+      "destination": "/orka/networking-with-orka-at-macstadium/4-aws-verifying-the-vpn-tunnel",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28396626048667-Welcome-to-Orka-Desktop-3-0",
+      "destination": "/orka/orka-desktop/welcome-to-orka-desktop-30",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28340435787163-VM-Tools",
+      "destination": "/orka/orka-resources/vm-tools",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28269995165083-Allowing-Specific-IPs-to-Access-MacStadium-via-Internet",
+      "destination": "/iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28230920203291-Setup-VPN-using-Cisco-AnyConnect",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/44333132574107-Troubleshooting-Common-Issues",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42515046091291-Role-Based-Access-Control-RBAC",
+      "destination": "/orka/orka3-cli-reference/role-based-access-control-rbac",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28401023073691-AWS-VPN-Tunnel-Troubleshooting",
+      "destination": "/orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28337413954843-Cluster-Configurations",
+      "destination": "/orka/orka-resources/cluster-configurations",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28278001459739-Checking-the-Firewall-Version",
+      "destination": "/iaas/cisco-firewalls/checking-the-firewall-version",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42515134370459-Command-Quick-Reference",
+      "destination": "/orka/orka3-cli-reference/command-quick-reference",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28400373391003-GCP-Orka-Connections",
+      "destination": "/orka/networking-with-orka-at-macstadium/gcp-orka-connections",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28336861751963-Consuming-Metrics-from-Prometheus",
+      "destination": "/orka/orka-resources/consuming-metrics-from-prometheus",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28231279421339-Changing-the-VPN-Firewall-Password",
+      "destination": "/iaas/cisco-firewalls/changing-the-vpn-firewall-password",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/42515256825499-Output-formats-and-Getting-Help",
+      "destination": "/orka/orka3-cli-reference/output-formats-and-getting-help",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/39571119584411-Resiliency-High-Availability-and-Disaster-Recovery",
+      "destination": "/orka/orka-resources/resiliency-high-availability-and-disaster-recovery",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28400298949147-1-GCP-Side-of-the-VPN-Tunnel",
+      "destination": "/orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28264058628251-Firewall-Change-Request-Form",
+      "destination": "/iaas/cisco-firewalls/firewall-change-request-form",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28400048105243-2-GCP-VPN-Tunnel-Configuration-File",
+      "destination": "/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28263965931931-Network-Firewalls-Mac-Mini-Connect",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-mac-mini-connect",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28399706953243-3-Orka-Side-of-the-GCP-VPN-Tunnel",
+      "destination": "/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28203289491099-Network-Firewalls-for-CI-Build-Node-Homebrew",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28399632896411-4-Verifying-the-GCP-VPN-Tunnel",
+      "destination": "/orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28203419090075-Network-Firewalls-for-CI-Build-Node-Ansible",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-ansible",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28399407505563-GCP-VPN-Tunnel-Troubleshooting",
+      "destination": "/orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/hc/en-us/articles/28244765690395-Network-Firewalls-Cloud-Connect-VPN",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn",
+      "permanent": true
+    }
+  ],
+  "contribution": {
+    "suggestEdit": {
+      "url": "https://github.com/macstadium/docs/edit/main/",
+      "label": "Suggest Edits"
+    }
+  },
+  "footerSocials": {
+    "twitter": "https://twitter.com/macstadium",
+    "github": "https://github.com/macstadium",
+    "linkedin": "https://www.linkedin.com/company/macstadium"
+  }
+}

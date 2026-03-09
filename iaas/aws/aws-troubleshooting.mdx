@@ -1,0 +1,210 @@
+---
+title: "AWS Troubleshooting"
+zendesk_id: 28312073382299
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28312073382299-AWS-Troubleshooting"
+section: "AWS"
+category: "IaaS"
+created_at: "2024-08-15T20:14:58Z"
+updated_at: "2024-10-08T13:23:55Z"
+promoted: false
+labels: ["cloud", "troubleshooting", "aws"]
+suggested_new_path: "/iaas/aws/aws-troubleshooting"
+---
+
+If you encounter any issues during or after the configuration of your site-to-site VPN connection between AWS and MacStadium, check this list of common issues and troubleshooting instructions.
+
+## Errors during the Cisco ASA/ASAv configuration
+
+Sometimes, the command line interface might return errors about the crypto isakmp policy block of commands.
+
+  * **Workaround** : Ignore the errors. They do not affect the configuration.
+
+
+
+The command-line interface returns `ERROR: unable to find interface "outside"`.
+
+  * **Workaround** : Sometimes, the command line interface is case-sensitive and you need to preserve the capitalization of the MacStadium network configuration as provided in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+
+
+  1. Clean up the ASA configuration. 
+     * For more information, see Cleaning up the ASA/ASAv configuration.
+  2. Rename outside in your configuration file to the precise name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. 
+     * For more information, see [AWS VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28280625682587).
+  3. Re-run the complete configuration in Cisco ASDM-IDM. 
+     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+
+
+
+## The tunnel is UP but there's no traffic between AWS and MacStadium
+
+If Amazon shows that one tunnel is UP but there's no traffic between AWS and your MacStadium private cloud, it might be because of some common mistakes when preparing the configuration file. Check for the following:
+
+### AWS checks
+
+All checks in this section are performed in the AWS Management Console.
+
+### Verify that your virtual private gateway is attached to the VPC.
+
+  1. Log in to your AWS Management Console and access your VPC service.
+  2. In the top right corner of the screen, make sure that you're working in the correct region.
+  3. In the VPC service sidebar, locate the Virtual Private Network menu and select Virtual Private Gateways.  
+![5b14f63-select-virtual-private-gatewa.png](https://support.macstadium.com/hc/article_attachments/28312073315739)
+  4. On the Virtual Private Gаteways dashboard, check the status of the virtual private gateway used in your site-to-site VPN.
+  5. If the virtual private gateway is detached, right-click it and select Attach to VPC.  
+![4c7e454-attach-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28312073318555)
+
+
+
+**Verify that the route tables for the Amazon Virtual Private Cloud (Amazon VPC) propagate traffic for the virtual private gateway you're using.**
+
+For more information about route tables in Amazon, see [Amazon VPC Documentation: Route Tables](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html).
+
+  1. Log in to your AWS Management Console and access your VPC service.
+  2. In the top right corner of the screen, make sure that you're working in the correct region.
+  3. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
+![117e2d9-select-route-tables.png](https://support.macstadium.com/hc/article_attachments/28312040787995)
+  4. In the list of routing tables, select the main table.  
+
+     * At the bottom of the screen, select Route Propagation and make sure that the propagation is enabled. If your virtual private gateway is not listed, make sure that it's attached to the VPC.
+     * If propagation is disabled, click Edit route propagation.
+     * Select the Propagate checkbox and click Save.  
+![e025068-route-propagation.png](https://support.macstadium.com/hc/article_attachments/28312040790811)
+
+
+
+### Cisco ASA/ASAv checks
+
+All checks in this section are performed against the site-to-site VPN configuration file downloaded from Amazon. For more information, see [AWS VPN Config for Cisco ASA/ASAv.](https://support.macstadium.com/hc/en-us/articles/28280625682587)
+
+**Verify that you've replaced <local_subnet> and <local_subnet_mask> with the correct values for the internal, private network of your MacStadium private cloud.**
+
+By default, this is the Private-1 network.
+
+You can find the networking information for this network in Appendix A of your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+
+**Verify that you've configured the NAT exemption rule properly.**
+
+  * The host and subnet mask required for obj-SrcNet are the host and mask for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network. You can find the networking information for this network in Appendix A of your IP Plan.
+  * The host and subnet mask required for obj-amzn are the host and mask for your Amazon VPC. You can find this information by logging into your AWS Management Console, navigating to your VPC dashboard, selecting your VPC, and checking the Description at the bottom of the screen. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the /16 notation converts to a 255.255.0.0 subnet mask).
+  * The values in the brackets after nat must be the name of the internal, private network of your MacStadium private cloud, followed by the name of the outside interface of your Cisco ASA/ASAv device. By default, these are Private-1 and Outside, respectively. You can find the names of these networks in Appendix A of your IP Plan.
+
+
+
+**To resolve any of the listed common problems with the Cisco ASA/ASAv configuration, complete the following steps:**
+
+  1. Clean up the firewall configuration. 
+     * For more information, see Cleaning up the ASA/ASAv configuration.
+  2. Make the necessary changes to the configuration file. 
+     * For more information, see [AWS VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28280625682587).
+  3. Re-run the complete configuration in Cisco ASDM-IDM. 
+     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+
+
+
+## There's traffic from AWS to MacStadium but you cannot access AWS from MacStadium
+
+Sometimes, you might be able to establish an SSH connection from AWS to MacStadium but you might not be able to see or access AWS from MacStadium.
+
+This might be due to AWS being configured to stop inbound traffic.
+
+For information about how to enable inbound traffic, see [Amazon VPC Documentation: Security Groups for Your VPC ](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html)and [Amazon VPC Documentation: Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html).
+
+## Troubleshooting
+
+### Cleaning up the ASA/ASAv configuration
+
+Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start over.
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud. 
+     * For more information about how to connect to the VPN, see [Connecting to Your Cloud (via VPN)](https://support.macstadium.com/hc/en-us/articles/28230568733979).
+  2. Run Cisco ASDM-IDM and log in. 
+     * For more information about how to log in to your firewall, see [Logging in to Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).
+  3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface**.  
+![bd5bfc2-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28312073324955)
+  4. Select Single Line.
+  5. Run the following commands one by one, clicking Send in between. Replace the placeholders with their respective values. Use **Table 1: Placeholders** for reference.
+
+
+    
+    
+    clear configure tunnel-group <tunnel_1>  
+    clear configure tunnel-group <tunnel_2>  
+    clear configure group-policy <policy_name>  
+    clear configure crypto map <map_name>  
+    clear configure access-list <outside_access_in>  
+    clear configure access-list amzn-filter  
+    clear configure access-list acl-amzn (likely: acl-amzn)  
+    clear configure crypto ipsec transform-set transform-amzn  
+    clear configure sla monitor 1  
+    no nat (<private_lan>,<outside_interface>) 1 source static obj-SrcNet obj-SrcNet destination static obj-amzn obj-amzn  
+    no object network obj-SrcNet  
+    no object network obj-amzn
+
+### Table 1: Placeholders
+
+Placeholder | Description | Example  
+---|---|---  
+      
+    
+    <tunnel_1> 
+
+| The IP of the tunnel, configured with the first set of tunnel-group commands in the Amazon configuration file. | 
+    
+    
+    192.168.0.0  
+      
+    
+    <tunnel_2> 
+
+| The IP of the tunnel, configured with the second set of tunnel-group commands in the Amazon configuration file. | 
+    
+    
+    192.168.0.0  
+      
+    
+    <policy_name> 
+
+| The name of the policy configured with the group-policy commands in the Amazon configuration file. By default: filter. | 
+    
+    
+    filter  
+      
+    
+    <map_name> 
+
+| The name of the crypto map configured with the crypto map commands in the Amazon configuration file. | 
+    
+    
+    amzn_vpn_map  
+      
+    
+    <outside_access_in> 
+
+| The unique name of the access control list created with the configuration file in the Amazon configuration file. | 
+    
+    
+    outside_access_in  
+      
+    
+    <private_lan> 
+
+| The name of the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network. You can find the networking information for this network in Appendix A of your IP Plan. | 
+    
+    
+    Private-1  
+      
+    
+    <outside_interface> 
+
+| The name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. You can find the networking information for this network in Appendix A of your IP Plan. | 
+    
+    
+    Outside  
+  
+## More troubleshooting by Amazon
+
+For more detailed troubleshooting instructions, [see Amazon VPC Documentation: Troubleshooting Cisco ASA Customer Gateway Connectivity](https://docs.aws.amazon.com/vpc/latest/adminguide/Cisco_ASA_Troubleshooting.html).
+
+## More troubleshooting by Cisco
+
+For more detailed troubleshooting instructions, see [Cisco Documentation: IPsec Troubleshooting](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html).

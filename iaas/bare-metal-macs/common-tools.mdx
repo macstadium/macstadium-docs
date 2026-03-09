@@ -1,0 +1,159 @@
+---
+title: "Common Tools"
+zendesk_id: 28200215732379
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28200215732379-Common-Tools"
+section: "Bare Metal Macs"
+category: "IaaS"
+created_at: "2024-08-12T14:44:58Z"
+updated_at: "2024-10-08T16:20:29Z"
+promoted: false
+labels: ["hardware", "bare", "metal", "bare metal", "host", "hosts", "tools"]
+suggested_new_path: "/iaas/bare-metal-macs/common-tools"
+---
+
+These tools enable the provisioning and use of hosted Mac resources for Apple platform development.
+
+# Xcode
+
+Xcode is the Apple IDE, enabling the development of applications for Apple platforms, including iOS and macOS. In order to download Xcode, a valid Apple ID is required, regardless of the method used. There are several ways to install it:
+
+## Xcodes.app (recommended)
+
+The Xcodes app is the fastest and easiest way to install Xcode. By leveraging multithreaded downloads, as well as accelerated decompression of Xcode packages, Xcodes is much faster than directly downloading from the Apple Developer Portal or using the App Store, while still using signed official packages from Apple. Additionally, while it does require an Apple ID, it does not sign the Mac into iCloud, which prevents issues with Find My Mac.
+
+## Installation
+
+Download the latest version of Xcodes from the following link:
+
+<https://github.com/XcodesOrg/XcodesApp/releases/latest>
+
+Once downloaded, drag Xcodes.app to the Applications folder to install the app.
+
+Alternatively, if Homebrew is installed, then run the following command in Terminal:
+    
+    
+    brew install --cask xcodes
+
+## Usage
+
+Once Xcodes is installed, launch the app from the Applications folder. Xcodes displays all of the available releases of Xcode. In order to download and install a release, authentication with an Apple ID is required. To do this, click on the Account icon in the upper right corner of the app:
+
+![506d6fb-Screenshot_2024-03-08_at_1.58.23_PM.png](https://support.macstadium.com/hc/article_attachments/28200215712667)
+
+### Recommended: Enable experimental unxip
+
+The decompression (unxip) process for Xcode is typically quite lengthy. To help accommodate this, Xcodes has an experimental decompression method that speeds things up. In our testing, this has been shown to be both stable and effective. To enable this, navigate to Xcodes>Settings>Experiments in the menu bar, and then check "When unxipping, use experiment":
+
+![58bc189-Screenshot_2024-03-08_at_2.03.38_PM.png](https://support.macstadium.com/hc/article_attachments/28200206302235)
+
+Once authenticated, Xcode and individual platform SDKs may be downloaded and installed by clicking the Install button next to the desired release. During installation, Xcodes may prompt for elevated access; if so, then enter a username/password to allow this.
+
+## Download from Apple's Developer Portal (recommended)
+
+Xcode may also be downloaded directly from Apple using a web browser. While slower than Xcodes, this method may be preferred if there are concerns around third-party software:
+
+<https://developer.apple.com/download/all/?q=Xcode>
+
+As with other methods, it is necessary to sign in with an Apple ID to download and install the software. Once downloaded, double-click the xip file to extract Xcode, then copy to the Applications folder to install.
+
+## Download from the App Store (not recommended)
+
+Xcode is officially distributed by Apple via the App Store. To install Xcode this way, visit the following link:
+
+[https://apps.apple.com/us/app/xcode/id497799835?mt=12](https://apps.apple.com/us/app/xcode/id497799835?mt=12/)
+
+This method is not recommend, as it requires binding the Mac to an Apple ID, which may inadvertently enable iCloud/Find My Mac. Machines with Find My Mac enabled are Activation Locked, and cannot be used by other users until the machine is unlocked by the original account. As a result, machines returned with Find My Mac enabled are subject to recovery fees.
+
+# Homebrew
+
+Homebrew is a package manager that makes installing packages from the Mac terminal quick and easy. It is generally the preferred method used to install system utilities and libraries.
+
+### Prerequisites:
+
+Homebrew relies upon Xcode Command Line Tools, so Xcode must be installed. To install it via the Command Line Tools by entering the following command into Terminal:
+    
+    
+    xcode-select --install
+
+Once this command is run, a system prompt appears offering to install the Xcode Command Line Tools. Click Install and wait for the installation to finish before proceeding.
+
+The Mac Terminal App is located in the Utilities Folder under the Applications Folder, and allows for access to the system shell, which is zsh by default.
+
+### Process:
+
+Once prerequisites are installed, installing Homebrew can be done with a single line of code in the Terminal.
+
+1\. Open your Terminal App.
+
+2\. Copy and paste the following command, and then press ENTER.
+    
+    
+    /bin/bash -c "$(curl -fsSL <https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)">
+
+3\. Hit the RETURN key when prompted.
+
+4\. Follow the installation process on screen.
+
+Update Homebrew when necessary, by using the following command in the Terminal App:
+    
+    
+    brew update
+
+Enable auto completion by entering the command:
+    
+    
+    brew install bash-completion
+
+### Uninstalling Homebrew:
+
+1\. Open the Terminal App.
+
+2\. Copy and paste the following command and then press ENTER:
+    
+    
+    /bin/bash -c "$(curl -fsSL <https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)">
+
+# Ansible
+
+[Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+
+[Ansible Docs](https://docs.ansible.com/ansible/latest/index.html)
+
+Ansible is a largely free and open source server configuration tool. It must be installed, along with Python, on the control machine, which might be the local desktop. From there, Ansible requires SSH access to the target server -- in this case the Mac Cloud.
+
+Once Ansible has gained access to the target environment via SSH, it can run provisioning scripts and the like to prepare the environment for whatever work needs to be done -- be it CI or anything else.
+
+## Starter Scripts
+
+MacStadium maintains a handful of example scripts to get started.
+
+## Ansible Roles
+
+Roles are sets of tasks and files used to configure a host machine to perform a specific role (thus, the name).
+
+[Ansible Role: macOS CI](https://github.com/macstadium/ansible-role-osx-ci)
+
+[Ansible Role: Xcode](https://github.com/macstadium/ansible-role-xcode)
+
+## Ansible Playbooks
+
+Playbooks are mappings of Ansible Roles and the various host machines they are meant to configure for a given process.
+
+[Ansible Playbook: macOS CI Setup](https://github.com/macstadium/ansible-playbook-osx-ci-setup)
+
+# Packer
+
+[Installation Guide](https://www.packer.io/intro/getting-started/install.html)
+
+[Packer Docs](https://www.packer.io/docs/index.html)  
+Packer is a powerful, open-source tool that stores a live image of a virtual machine, which can be cloned in seconds, rather than minutes or hours. It utilizes JSON to define the VM template, and because it is command-line-driven, it can easily be integrated into the build pipeline.
+
+Packer is not a direct substitute for provisioning solutions. In fact, it is built to interface easily with Chef, Puppet, and Ansible for the provisioning of the base VM image.
+
+## VM Templates
+
+## OSX VM Templates for Packer and VeeWee
+
+Virtual machine templates for your building pleasure.
+
+[VM Templates](https://github.com/timsutton/osx-vm-templates)

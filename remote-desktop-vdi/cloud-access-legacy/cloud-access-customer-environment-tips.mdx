@@ -1,0 +1,155 @@
+---
+title: "Cloud Access Customer Environment Tips"
+zendesk_id: 42337346693019
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/42337346693019-Cloud-Access-Customer-Environment-Tips"
+section: "Cloud Access (Legacy)"
+category: "Remote Desktop (VDI)"
+created_at: "2025-10-20T17:46:27Z"
+updated_at: "2025-12-10T19:31:46Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/cloud-access-legacy/cloud-access-customer-environment-tips"
+---
+
+# 
+
+Cloud Access, powered by [HP Anyware](https://anyware.hp.com/), enables secure, high-performance remote access to dedicated macOS systems hosted by MacStadium.
+
+This guide outlines how end users can optimize connection quality, reduce latency, and recognize when to contact MacStadium Support for host-side assistance.
+
+### Network and Connectivity
+
+**Goal:** Maintain a stable, low-latency connection to your remote Mac.
+
+  * Use a wired Ethernet connection whenever possible. Wi-Fi interference often causes pixelation or dropped sessions.
+
+  * Avoid hotel, guest, or captive Wi-Fi networks that may throttle UDP traffic.
+
+  * Confirm that your network allows TCP 4172 and UDP 4172, which HP Anyware uses for the PCoIP protocol.
+
+  * If you are on a corporate network, ask your IT team to whitelist these ports or exclude them from VPN tunnels.
+
+  * Disable VPNs, packet-inspection firewalls, or content-filtering software during testing if frequent disconnects occur.
+
+  * Restart your modem or router if you notice high latency or inconsistent throughput.
+
+
+
+
+If performance remains unstable after checking these items, record the time of the issue and contact MacStadium Support for network-path diagnostics.
+
+### Display and Performance
+
+**Goal:** Preserve image clarity and minimize lag while using macOS remotely.
+
+  * Start with your local display set to 1080p or lower; 4K or Retina scaling requires greater bandwidth.
+
+  * When troubleshooting, connect with a single monitor. Multiple displays increase GPU and network load.
+
+  * In the HP Anyware Client preferences, select H.264 for best overall compatibility with macOS hosts.
+
+  * Close background apps that use bandwidth such as streaming, video calls, or large downloads.
+
+  * If you encounter a black or frozen screen, end the session, wait 30 seconds, then reconnect. If the issue continues, MacStadium Support can verify the host’s virtual display configuration.
+
+
+
+
+### Session Stability and Timeouts
+
+**Goal:** Avoid unplanned session interruptions or idle timeouts.
+
+  * Stay active within your session; extended inactivity may trigger an automatic disconnect.
+
+  * If disconnected unexpectedly, reconnect within one to two minutes; your macOS session usually remains active.
+
+  * If the HP Anyware Client re-prompts for credentials after a disconnect, note the message and contact Support.
+
+  * Keep the Client window open if stepping away briefly. Frequent reconnects in short intervals can create session conflicts.
+
+
+
+
+### Client Software and Updates
+
+**Goal:** Maintain compatibility between the HP Anyware Client and the macOS agent.
+
+  * Download the latest Client for your platform at https://www.hpanyware.com/downloads.
+
+  * Avoid beta or outdated versions; macOS agents are maintained on current release tracks.
+
+  * Restart your local computer periodically to clear cached network sessions.
+
+  * If switching between Wi-Fi and Ethernet, reconnect the Client to re-establish the PCoIP session.
+
+  * Include your Client version and OS type (for example, Windows 11 v24.06 Client or macOS 14.5 Client) in any Support request.  
+
+
+
+
+
+### Common Symptoms and Recommended Actions  
+  
+
+
+Symptom |  Likely Cause |  Recommended Action  
+---|---|---  
+Screen remains black or frozen | macOS host display adapter not initialized | End session and reconnect; if persistent, MacStadium Support can refresh the host display service  
+Image quality drops or becomes blocky | Network congestion or limited bandwidth | Run a speed test at https://www.speedtest.net; share results with Support  
+Repeated disconnects | VPN or firewall interference | Try wired Ethernet or temporarily disable VPN  
+Session ends after idle time | Broker timeout policy | Reconnect and report if the timeout seems unusually short  
+“Unable to connect to agent” | macOS host agent service offline | Contact Support with the timestamp and error text  
+  
+###    
+When to Contact MacStadium Support
+
+MacStadium Support must intervene on the macOS host side for the following:
+
+  * Sessions repeatedly fail to connect or drop after a few seconds.
+
+  * The display remains blank after multiple reconnects.
+
+  * “Agent unreachable” or “Connection refused” messages appear.
+
+  * Login succeeds but the desktop never renders.
+
+  * A recent macOS update, reboot, or sleep state appears to have interrupted access.
+
+
+
+
+### When opening a ticket, include:
+
+  * Approximate time and timezone of the failure
+
+  * Any error messages shown in the HP Anyware Client
+
+  * Your Client OS and version
+
+  * A short description of what you were doing when the issue occurred
+
+
+
+
+MacStadium Support can then inspect host logs, restart services, or re-establish the Cloud Access agent as needed.
+
+### Quick Checklist Before Opening a Ticket
+
+  * Verify your internet speed (10 Mbps minimum, 25 Mbps recommended)
+
+  * Try a wired connection if on Wi-Fi
+
+  * Update to the latest HP Anyware Client
+
+  * Note the exact error message and time of occurrence
+
+  * Submit a ticket at [](https://support.macstadium.com/)[MacStadium](https://support.macstadium.com/)
+
+
+
+
+### Need help?
+
+Visit <https://support.macstadium.com> to open a ticket or review additional MacStadium Cloud Access documentation.
+
+Support can verify macOS host availability, check agent health, and ensure your Cloud Access environment is running as expected.

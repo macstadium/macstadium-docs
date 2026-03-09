@@ -1,0 +1,364 @@
+---
+title: "VM Deployment and Configuration"
+zendesk_id: 42514591292955
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/42514591292955-VM-Deployment-and-Configuration"
+section: "Orka3 CLI Reference"
+category: "Orka"
+created_at: "2025-10-23T21:57:00Z"
+updated_at: "2025-10-23T22:18:31Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka3-cli-reference/vm-deployment-and-configuration"
+---
+
+## VM Configuration Templates
+
+VM configurations (templates) allow you to define reusable settings for deploying virtual machines. All VM configurations reside in the `orka-default` namespace and are available to all users and service accounts with access to orka-default.
+
+The shorthand alias for `vm-config` is `vmc`.
+
+**orka3 vm-config create**
+
+Create a VM configuration (template) with the specified settings. The required minimum configuration consists of a base image to use.
+
+**VM Configuration Name Requirements:**
+
+  * Does not exceed 50 characters
+  * Consists of lowercase alphanumeric characters or dashes (-)
+  * Starts with an alphabetic character and ends with an alphanumeric character
+  * Must be unique to the cluster
+
+
+
+**Syntax:**
+    
+    
+    orka3 vm-config create VM_CONFIGURATION_NAME [flags]
+
+**Options:**
+    
+    
+    -c, --cpu int                (Optional) Number of CPU cores for the VM (default 3)
+    --disable-net-boost          (Optional) (Intel-only) Disables network performance boost
+    --disable-vnc                (Optional) Disable VNC (ensure SSH/Screen Sharing is enabled)
+    -g, --gpu                    (Optional) (Intel-only) Enable GPU passthrough
+    -h, --help                   Display help for create
+    -i, --image string           (Required) Base image (local or OCI)
+    --iso string                 (Optional) (Intel-only) ISO name to attach
+    -m, --memory float           (Optional) RAM in gigabytes
+    --scheduler string           (Optional) Scheduler: 'default' or 'most-allocated'
+    --system-serial string       (Optional) (Intel-only) Custom serial number
+    --tag string                 (Optional) Node affinity tag
+    --tag-required               (Optional) Require tagged nodes for deployment
+
+**Examples:**
+    
+    
+    # Create a template for an Intel-based VM
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --cpu 6
+    
+    # Create a template for an Apple silicon VM using an OCI image
+    orka3 vmc create small-arm-vm -i ghcr.io/my-org/orka-images/orka-arm:latest --cpu 4
+    
+    # Create a template with 5GB RAM
+    orka3 vmc create medium-ventura-arm-vm --image 90gbventurassh.orkasi --memory 5
+    
+    # (Intel-only) Create a template for OS install from ISO
+    orka3 vmc create fresh-ventura-vm --image 90gbempty.img --iso ventura.iso
+    
+    # (Intel-only) Create a template with a custom serial number
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --system-serial A00BC123D4
+    
+    # Create a template with flexible node affinity
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-builds --tag-required=false
+    
+    # Create a template with strict node affinity
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-builds --tag-required=true
+    
+    # Create a template that uses the most-allocated scheduler
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --scheduler most-allocated
+    
+    # (Intel-only) Create a template with GPU passthrough
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disable-vnc
+    
+    # Create a template with disabled VNC
+    orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --disable-vnc
+
+**orka3 vm-config list**
+
+Show basic or extended information about the available VM configurations. You can list all available configurations or show information about one or more specified VM configurations.
+
+**Syntax:**
+    
+    
+    orka3 vm-config list [VM_CONFIGURATION_1 [VM_CONFIGURATION_2 ...]] [--output wide|json] [flags]
+
+**Options:**
+    
+    
+    -h, --help            Display help for list
+    -o, --output string   (Optional) Output format: table (default)|wide|json
+
+**Examples:**
+    
+    
+    # List basic information about available VM configurations
+    orka3 vmc list
+    
+    # List extended information
+    orka3 vmc list --output wide
+    
+    # Find all VM configurations belonging to a specific owner
+    orka3 vmc list --output wide | grep 'user@company.com'
+    
+    # Show basic information about a specific VM configuration
+    orka3 vmc list small-ventura-vm
+    
+    # Show extended information about a specific VM configuration
+    orka3 vmc list small-ventura-vm --output wide
+    
+    # Show information about multiple VM configurations
+    orka3 vmc list small-monterey small-ventura
+    
+    # Return output as JSON
+    orka3 vmc list --output json
+
+**orka3 vm-config delete**
+
+Delete the specified VM configurations (templates).
+
+**Syntax:**
+    
+    
+    orka3 vm-config delete VM_CONFIGURATION_NAME [VM_CONFIGURATION_NAME_2 ...] [flags]
+
+**Options:**
+    
+    
+    -h, --help   Display help for delete
+
+**Examples:**
+    
+    
+    # Delete a VM configuration
+    orka3 vmc delete small-ventura-arm-vm
+    
+    # Delete multiple VM configurations
+    orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
+
+## Deploying VMs
+
+**orka3 vm deploy**
+
+Deploy a VM with the specified configuration. The minimum required configuration consists of an image and a number of CPU cores to assign to the VM.
+
+**VM Name Behavior:**
+
+  * **When VM_NAME is not provided:** Orka generates a unique name consisting of 'vm-' and a unique suffix
+  * **When VM_NAME is provided:** Orka attempts to create the VM using the provided name (must be unique)
+  * **When both VM_NAME and --generate-name are provided:** Orka generates a unique name based on VM_NAME with a unique suffix
+
+
+
+**VM Name Requirements (when provided):**
+
+  * Does not exceed 63 characters (including any generated suffix)
+  * Consists of lowercase alphanumeric characters or dashes (-)
+  * Starts with an alphabetic character and ends with an alphanumeric character
+  * Must be unique to the namespace
+
+
+
+**Note:** Some settings are Intel-only (amd64 architecture) and some settings might be mutually exclusive.
+
+**Syntax:**
+    
+    
+    orka3 vm deploy [VM_NAME] --image IMAGE_NAME [flags]
+    orka3 vm deploy [VM_NAME] --config VM_CONFIGURATION_NAME [flags]
+
+**Options:**
+    
+    
+    --config string              (Optional) VM template name
+    -c, --cpu int                (Optional) Number of CPU cores
+    --disable-net-boost          (Optional) (Intel-only) Disable network boost
+    --disable-vnc                (Optional) Disable VNC
+    --generate-name              (Optional) Generate unique name with suffix
+    -g, --gpu                    (Optional) (Intel-only) Enable GPU passthrough
+    -h, --help                   Display help for deploy
+    -i, --image string           (Required) Base image (local or OCI)
+    --iso string                 (Optional) (Intel-only) ISO name
+    -m, --memory float           (Optional) RAM in gigabytes
+    --metadata stringToString    (Optional) Custom metadata (key1=value1,key2=value2)
+    --node string                (Optional) Specific node for deployment
+    -o, --output string          (Optional) Output format: json|wide
+    -p, --ports strings          (Optional) Port mapping (NODE_PORT:VM_PORT)
+    --scheduler string           (Optional) Scheduler: 'default' or 'most-allocated'
+    --system-serial string       (Optional) (Intel-only) Custom serial number
+    --tag string                 (Optional) Node affinity tag
+    --tag-required               (Optional) Require tagged nodes
+    --timeout int                (Optional) Deployment timeout in minutes (default 10)
+    -n, --namespace string       (Optional) Namespace scope (default "orka-default")
+
+**Examples - Basic Deployments:**
+    
+    
+    # Deploy a VM from a local Orka image
+    orka3 vm deploy -i 90gbventurassh.orkasi
+    
+    # Deploy a VM from an OCI image
+    orka3 vm deploy -i ghcr.io/my-organization/orka-images/orka-arm:latest
+    
+    # Deploy with specified name, image, and CPU
+    orka3 vm deploy small-ventura-vm -i 90gbventurassh.orkasi -c 4
+    
+    # Deploy with unique name generation
+    orka3 vm deploy small-ventura-vm -i 90gbventurassh.orkasi --generate-name
+    
+    # Deploy with specified memory and random name
+    orka3 vm deploy -i 90gbventurassh.orkasi -m 10
+    
+    # Deploy and display extended information
+    orka3 vm deploy -i 90gbventurassh.orkasi --output wide
+    
+    # Deploy with custom timeout
+    orka3 vm deploy -i 90gbventurassh.orkasi --timeout 1
+
+**Examples - Targeted Deployments:**
+    
+    
+    # Deploy on a selected node
+    orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14
+    
+    # Deploy on a selected node in a specific namespace
+    orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14 --namespace orka-test
+    
+    # Deploy in a specific namespace
+    orka3 vm deploy -i 90gbventurassh.orkasi --namespace orka-test
+    
+    # Deploy with flexible node affinity
+    orka3 vm deploy -i 90gbventurassh.orkasi --tag jenkins-builds --tag-required=false
+    
+    # Deploy with strict node affinity
+    orka3 vm deploy -i 90gbventurassh.orkasi --tag jenkins-builds --tag-required=true
+    
+    # Deploy using the most-allocated scheduler
+    orka3 vm deploy -i 90gbventurassh.orkasi --scheduler most-allocated
+
+**Examples - Advanced Deployments:**
+    
+    
+    # Deploy with disabled VNC
+    orka3 vm deploy -i 90gbventurassh.img --disable-vnc
+    
+    # Deploy with custom metadata
+    orka3 vm deploy -i 90gbventurassh.img --metadata 'foo=1,baz=https://example.com'
+    
+    # Deploy with custom port mapping
+    orka3 vm deploy -i 90gbventurassh.img --ports 9000:4000,9001:4001
+
+**Examples - Intel-Only Deployments:**
+    
+    
+    # Deploy with ISO for fresh macOS install
+    orka3 vm deploy -i emptydisk.img --iso ventura.iso
+    
+    # Deploy with custom serial number
+    orka3 vm deploy -i 90gbventurassh.img --system-serial A00BC123D4
+    
+    # Deploy with GPU passthrough
+    orka3 vm deploy -i 90gbventurassh.img --gpu=true --disable-vnc
+    
+    # Deploy with disabled network boost
+    orka3 vm deploy -i 90gbmontereyssh.img --disable-net-boost
+
+**Examples - VM Configuration Deployments:**
+    
+    
+    # Deploy from existing VM config with random name
+    orka3 vm deploy --config small-ventura-config
+    
+    # Deploy from existing VM config with specified name
+    orka3 vm deploy small-ventura-vm --config small-ventura-config
+    
+    # Deploy from VM config and override CPU and memory
+    orka3 vm deploy --config small-ventura-config -c 6 --memory 16
+
+## Listing VMs
+
+**orka3 vm list**
+
+Show basic or extended information about the specified VM(s).
+
+**Note:** Stopped or suspended VMs appear as 'Running' when listed.
+
+**Syntax:**
+    
+    
+    orka3 vm list [VM_NAME_1 [VM_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for list
+    -o, --output string      (Optional) Output format: table (default)|wide|json
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # List all VMs in the 'orka-default' namespace
+    orka3 vm list
+    
+    # List all VMs (extended table)
+    orka3 vm list --output wide
+    
+    # List all VMs deployed on a specific node
+    orka3 vm list --output wide | grep 'mini-arm-14'
+    
+    # List all VMs in a specific namespace
+    orka3 vm list --namespace orka-test
+    
+    # List all VMs in a specific namespace (extended table)
+    orka3 vm list --namespace orka-test --output wide
+    
+    # Show basic information about a specific VM
+    orka3 vm list small-ventura-vm
+    
+    # Show detailed information about a specific VM
+    orka3 vm list small-ventura-vm --output wide
+    
+    # Show information about multiple VMs
+    orka3 vm list small-ventura-vm small-monterey-vm
+    
+    # Print information in JSON format
+    orka3 vm list --output json
+
+## Deleting VMs
+
+**orka3 vm delete**
+
+Delete the specified VMs. This frees up the respective resources and ports on the respective Orka node.
+
+**🚧 CAUTION:** This operation cannot be undone. You will not be able to restore any unsaved or uncommitted data from the VM.
+
+**Syntax:**
+    
+    
+    orka3 vm delete VM_NAME [VM_NAME_2 ...] [--namespace CURRENT_VM_NAMESPACE] [flags]
+
+**Options:**
+    
+    
+    -h, --help               Display help for delete
+    -n, --namespace string   (Optional) Namespace scope (default "orka-default")
+
+**Examples:**
+    
+    
+    # Delete a VM from the 'orka-default' namespace
+    orka3 vm delete small-ventura-vm
+    
+    # Delete VMs from a specific namespace
+    orka3 vm delete small-ventura-vm small-ventura-arm-vm --namespace orka-test

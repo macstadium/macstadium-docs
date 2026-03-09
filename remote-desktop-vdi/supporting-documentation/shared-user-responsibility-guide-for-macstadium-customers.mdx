@@ -1,0 +1,190 @@
+---
+title: "Shared User Responsibility Guide for MacStadium Customers"
+zendesk_id: 41205907064603
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/41205907064603-Shared-User-Responsibility-Guide-for-MacStadium-Customers"
+section: "Supporting Documentation"
+category: "Remote Desktop (VDI)"
+created_at: "2025-09-18T17:11:53Z"
+updated_at: "2025-12-10T19:28:44Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers"
+---
+
+## 
+
+This shared responsibility framework is designed to provide clarity and transparency for customers utilizing MacStadium infrastructure with a Citrix Service Provider. The model explicitly defines responsibilities across infrastructure, Citrix integration, and end-user applications, assigning ownership to MacStadium, a Citrix Service Provider, or the customer, and delivers:
+
+  * Accelerated problem resolution
+
+  * Constructive, blame-free incident analysis
+
+  * Well-defined support expectations from day one
+
+
+
+
+### MacStadium Responsibilities
+
+MacStadium provides the infrastructure and foundational macOS environment. Responsibilities include:
+
+#### Provisioning & Infrastructure
+
+  * Supply dedicated Apple hardware (bare metal) or virtualized Orka environments.
+
+
+
+  * Install base macOS image.
+
+
+
+  * Configure and maintain networking, power, and data center infrastructure.
+
+
+
+
+#### Data Center Technician (DCT) Support
+
+  * Remote-hands services: hardware diagnostics, drive reimaging, hard resets, KVM console access.
+
+
+
+  * Assist with FileVault unlock or system recovery when the machine is in an inaccessible state.
+
+
+
+  * Replace or repair failed hardware components as required.
+
+
+
+
+#### Support Boundaries
+
+  * Citrix VDA configuration, SSO setup, and customer application support
+
+
+
+  * User account management or customer data/application troubleshooting.
+
+
+
+
+### Citrix Service Provider (CSP) Responsibilities
+
+The [CSP](https://www.citrix.com/buy/partnerlocator/) acts as the integration and application layer, making MacStadium systems usable in a VDI context. Responsibilities include:
+
+#### Citrix Stack Deployment
+
+  * Install and configure Citrix Virtual Delivery Agent (VDA) on MacStadium systems.
+
+
+
+  * Set up Citrix Cloud or DaaS components needed for user sessions.
+
+
+
+  * Manage licensing and entitlement of Citrix software (if part of their agreement).
+
+
+
+
+#### Identity & Access Integration
+
+  * Configure Single Sign-On (SSO) and identity provider integrations.
+
+
+
+  * Set policies for authentication, authorization, and session security.
+
+
+
+
+#### Optional Application/Service Integration
+
+  * Install and configure additional applications as contracted (e.g., developer IDEs, browsers, multimedia tools).
+
+
+
+  * Tune Citrix HDX policies and Workspace app configurations for performance.
+
+
+
+
+#### Support Boundaries
+
+  * Responsible for troubleshooting Citrix VDA sessions, connection failures, and policy/application misconfigurations.
+
+
+
+  * Not responsible for underlying Mac hardware or network failures (These are to be directed to MacStadium).
+
+
+
+  * Not responsible for customer-owned application setup unless contracted.
+
+
+
+
+### Customer Responsibilities
+
+The customer owns the user experience and business applications that run on top of the Citrix + MacStadium environment. Responsibilities include:
+
+#### User Management
+
+  * Manage your organization’s user accounts, entitlements, and workspace assignments.
+
+
+
+  * Define security and compliance requirements.
+
+
+
+
+#### Application Layer
+
+  * Configure and manage end-user applications not installed by CSP.
+
+
+
+  * Provide licenses for customer-owned apps.
+
+
+
+  * Ensure application-level support (bug reports, vendor escalations).
+
+
+
+
+#### Operational Use
+
+  * Train and support end users in accessing Citrix desktops and applications.
+
+
+
+  * First-line help desk support for user password resets, lost access, and business application issues.
+
+
+
+
+#### Escalation
+
+  * Direct hardware or system-level issues to MacStadium.
+
+
+
+  * Direct Citrix platform/session/application delivery issues to CSP.
+
+
+
+  * Handle end-user business application and process issues internally per your organization’s existing policies.
+
+
+
+
+### Escalation Flow (Who to Call First)
+
+  * Hardware/OS access issues (machine won’t boot, locked FileVault, no console access): [Contact MacStadium](https://support.macstadium.com/hc/en-us/requests/new)
+
+  * Citrix session/login/SSO problems (users can’t connect, profiles failing, Citrix policy issues): Contact Citrix Service Provider. MacStadium currently partners with [Whitehat](https://whitehatvirtual.com/) for CSP services.
+
+  * End-user app or business workflow issues (bug in IDE, build tool failing, team-specific config): Contact your organization’s IT/Application team

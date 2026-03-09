@@ -1,0 +1,117 @@
+---
+title: "Working with VM Metadata"
+zendesk_id: 39459015068699
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39459015068699-Working-with-VM-Metadata"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2025-07-29T17:26:16Z"
+updated_at: "2025-09-12T15:03:27Z"
+promoted: false
+labels: []
+suggested_new_path: "/orka/orka-resources/working-with-vm-metadata"
+---
+
+When you deploy a VM, Orka assigns default metadata to the VM. You can also add your own custom metadata during deployment with the Orka API.
+
+With VM metadata, you have more ways to identify and manage running VMs in addition to the data visible with `list` and `status` operations. You might find this helpful for your CI/CD workflows.
+
+Metadata is stored in the format `{"key": "my key", "value": "my value"}`. Every VM stores its metadata on a metadata server. You can query this metadata server to [retrieve the metadata](doc:retrieving-vm-metadata) only from within the VM. 
+
+> **📘 IMPORTANT**
+> 
+> To use VM metadata with Apple silicon-based VMs, you need to have [a compatible version of Orka VM Tools](downloads#orka-vm-tools-for-arm-vms) installed on the VM.
+
+## Types of VM metadata
+
+Orka always defines a **default metadata set** that provides information about your VM. Every VM has access to its default VM metadata.
+
+All default metadata keys (reserved keys) are prefixed with `orka_`.
+
+Default metadata key | Description  
+---|---  
+`orka_vm_id` | The VM ID. This is a unique ID that is generated and assigned by Orka.  
+`orka_vm_name` | The VM name, as specified by the VM configuration.  
+`orka_node_name` | The name of the node where the VM is deployed.  
+`orka_base_image` | The base image used by the VM.  
+`orka_cpu` | The number of CPUs for the VM.  
+`orka_memory` | The RAM memory for the VM.  
+  
+**Custom metadata** is stored in the format `{"key": "my key", "value": "my value"}`. You can use it to pass string values to your VM.
+
+## Limitations to working with VM metadata
+
+  * You cannot override the default VM metadata.
+  * You can set custom VM metadata only via the Orka API.
+  * You cannot modify the metadata after the VM is deployed.
+  * You cannot store the VM metadata for use from other VMs with the `vm save` and `vm commit` operations.
+  * You cannot reset your VM metadata with the `vm revert` operation. This operation does not affect VM metadata.
+  * The custom VM metadata applies only to the VM instance for which it was specified.
+  * Тhe VM metadata is not protected by authentication or cryptographic methods. It is, however, accessible only from the VM.
+  * The VM metadata is not affected by the `vm start/ stop/ suspend/ resume` operations.
+  * The VM metadata server is not protected by authentication or cryptographic methods.
+  * The VM metadata server cannot handle special characters in metadata retrieval requests (for example, space).
+
+
+
+## Deploy a VM with custom metadata
+
+> **📘 IMPORTANT**
+> 
+> Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
+
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](doc:vpn-connect)
+  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. See [VNC, SSH and Screen Sharing for Orka VMs](doc:orka-vms-ssh-vnc-screen-sharing). 
+  3. Send a POST request to `http://<orka-api-url>/api/v1/namespaces/{namespace}/vms` with the `vm_metadata` option in the body of the request. For example: 
+
+
+    
+    
+    curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{namespace}/vms' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer <TOKEN>' \
+    --data-raw '{
+        "orka_vm_name": "<VM_NAME>",
+        "vm_metadata": { "items": [{"key": "<MY_METADATA_KEY>", "value": "<MY_METADATA_VALUE>" }] }
+    }'
+    
+
+## Retrieve VM metadata
+
+> **📘 IMPORTANT**
+> 
+> Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
+
+To retrieve your VM metadata, you need to query the metadata server. This server is accessible only from within the VM, and is **not** protected by authentication or cryptographic methods. When you request information from the metadata server, your request and the subsequent metadata response never leaves the Orka macOS VM.
+
+The server returns the metadata in a JSON format.
+
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](doc:vpn-connect)
+  2. Connect to the VM via [VNC, SSH, or Screen Sharing](doc:orka-vms-ssh-vnc-screen-sharing).
+  3. From within the VM, query the metadata server. This retrieves all the available metadata for the VM.
+
+
+    
+    
+    curl http://169.254.169.254/metadata/
+    
+
+The IP address `169.254.169.254` is a [link-local address](https://en.wikipedia.org/wiki/Link-local_address) and is accessible only from within the VM. All metadata values are defined as sub-paths below this root URL.
+
+  4. To retrieve a specific VM metadata value for a specific key, pass the following request:
+
+
+    
+    
+    curl http://169.254.169.254/metadata/<DEFAULT_ORKA_KEY>
+    curl http://169.254.169.254/metadata/<MY_METADATA_KEY>
+    
+
+> **👍 Using special characters in your keys?**
+> 
+> Replace special characters in your key names with their correct encoded versions in your request. For example, run `curl 169.254.169.254/metadata/my%20key` instead of `curl 169.254.169.254/metadata/my key`.
+
+## Use VM metadata in CI/CD
+
+  1. Pass the VM metadata when deploying the build agent instances OR use a permanent agent already deployed with VM metadata.
+  2. Retrieve the metadata as part of your CI/CD workflow.
+  3. Use the metadata values as needed to identify or manage the build agents.

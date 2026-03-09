@@ -1,0 +1,58 @@
+---
+title: "Customer Portal: Manage Account Users"
+zendesk_id: 28328612687899
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28328612687899-Customer-Portal-Manage-Account-Users"
+section: "Orka Cluster Access"
+category: "Orka"
+created_at: "2024-08-16T12:56:08Z"
+updated_at: "2024-09-18T21:47:47Z"
+promoted: false
+labels: ["access", "orka", "api", "cluster"]
+suggested_new_path: "/orka/orka-cluster-access/customer-portal-manage-account-users"
+---
+
+Because your cluster is configured to rely on Single-Sign-On (SSO) with your Customer Portal credentials, all user management for your cluster occurs in the Customer Portal.
+
+## Before you begin
+
+Log into the MacStadium Customer Portal.
+
+## Invite new account users
+
+As an administrator, you might need to add new users or administrators to the account and determine their roles.
+
+If a member of your team needs to access the Orka cluster, you can invite them to your Customer Portal account.
+
+  1. Click the account menu in the top right corner of the screen.
+  2. In the account menu, click Users.  
+![36c44fa-account-menu.jpg](https://support.macstadium.com/hc/article_attachments/28328612678939)
+  3. Click + Add, fill in the New User form, and click Create. 
+     * Note that you cannot invite users who already belong to another account.
+     * When choosing a role for the user, keep in mind the [role-based access matrix](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+
+
+
+This sends an invitation to the specified email. The invited user must accept the invite and complete the process.
+
+## Edit account users
+
+If needed, you can update the details for a user of your account. You can also change their account role.
+
+  1. Click the account menu in the top right corner of the screen.
+  2. In the account menu, click Users.  
+![36c44fa-account-menu.jpg](https://support.macstadium.com/hc/article_attachments/28328612678939)
+  3. Locate the user whose details or role you want to modify and click Edit. If you don't see the user in the list, select the Show disabled checkbox and look through the list again.
+  4. Update the user details or role. Note that а role change will not affect the respective cluster user directly, if they are currently logged in the Orka cluster. For the change to take effect, the user must obtain a new authentication token by logging out and logging back in. 
+     * When choosing a role for the user, keep in mind the [role-based access matrix](https://support.macstadium.com/hc/en-us/articles/28328584628379).
+
+
+
+## Disable account users
+
+If you need to revoke the access of a member of your team to the Orka cluster, you can disable their account user in the Customer Portal. Note that this will not affect the respective cluster user directly, if they are currently logged in the Orka cluster. For the change to take effect, the user must obtain a new authentication token by logging out and logging back in.
+
+  1. Click the account menu in the top right corner of the screen.
+  2. In the account menu, click Users.  
+![36c44fa-account-menu.jpg](https://support.macstadium.com/hc/article_attachments/28328612678939)
+  3. Select the Show disabled checkbox and locate the user that you want to re-enable.
+  4. Click Enable.

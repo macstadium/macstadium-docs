@@ -1,0 +1,108 @@
+---
+title: "Apple Business Manager and Mobile Device Management with MacStadium"
+zendesk_id: 39595293549723
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/39595293549723-Apple-Business-Manager-and-Mobile-Device-Management-with-MacStadium"
+section: "Supporting Documentation"
+category: "Remote Desktop (VDI)"
+created_at: "2025-08-01T21:58:58Z"
+updated_at: "2025-12-10T19:28:13Z"
+promoted: false
+labels: []
+suggested_new_path: "/remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium"
+---
+
+To support IT management activities for MacStadium customers, it is important to understand the interaction and constraints between Apple Business Manager (ABM) and common Mobile Device Management (MDM) or Unified Endpoint Management (UEM) tools.
+
+[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#to-support-it-management-activities-for-macstadium-customers-it-is-important-to-understand-the-interaction-and-constraints-between-apple-business-manager-abm-and-common-mobile-device-management-mdm-or-unified-endpoint-management-uem-tools)
+
+### Key Concepts[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#key-concepts)
+
+**ABM** is the Apple tool that enables an organization to register their Mac devices with their organization.
+
+**MDM/UEM tools****** enable enterprise configuration and management of Mac devices. Integration with ABM can often enable scalable workflows such as auto-enrollment of new and existing ABM devices to the MDM/UEM directory. Common examples of MDM/UEM tools are Jamf, Kandji, Workspace ONE, and Microsoft Intune.
+
+Apple Business Manager, when paired with a robust MDM/UEM platform, provides a scalable and secure foundation for deploying, configuring, and managing Mac devices across the enterprise. This seamless integration supports zero-touch provisioning, centralized policy enforcement, and secure access to organizational resources—empowering IT teams to efficiently manage Apple devices at scale.
+
+### Key Functions of ABM[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#key-functions-of-abm)
+
+![](https://files.readme.io/cd167336f08f2d57b186da178df11ce2537da382d22edcf2c94e4626d7c9c502-ABMKeyFunctions.png)
+
+Automated Device Enrollment (ADE): Ensures that Mac computers are automatically enrolled in MDM during setup, enforcing organizational policies from the first boot.
+
+App License Distribution: Allows IT teams to purchase and assign App Store licenses in bulk via Apple’s Volume Purchase Program (VPP), now integrated into ABM.
+
+Managed Apple IDs: Enables the creation of organization-owned Apple IDs for staff with role-based access to Apple services.
+
+Federated Authentication: Supports integration with Microsoft Azure AD for Single Sign-On (SSO) using existing enterprise credentials.
+
+### How ABM Works with MDM/UEM Tools[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#how-abm-works-with-mdmuem-tools)
+
+Apple Business Manager acts as the authoritative source of truth for Apple devices in the organization, while MDM tools handle configuration, compliance, and ongoing management.
+
+![](https://files.readme.io/76513fcbb175c67ac192f292015254b783688dbb0837372ad9bc207623b0ebb4-UEMTools.png)
+
+#### Device Enrollment Workflow[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#device-enrollment-workflow)
+
+  1. Mac devices purchased from Apple or authorized resellers are automatically added to the ABM portal via the reseller ID.
+  2. Devices are assigned to an MDM server within ABM (e.g., Jamf, Kandji).
+  3. During macOS Setup Assistant, the device contacts Apple and retrieves its assigned MDM configuration.
+  4. The MDM profile is automatically installed, enforcing zero-touch deployment with pre-defined settings and restrictions.
+
+
+
+### Configuration Management[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#configuration-management)
+
+Once enrolled, MDM/UEM tools apply configuration profiles to the Mac, such as:
+
+  * Wi-Fi, VPN, and email settings
+  * Security policies (FileVault, Gatekeeper, firewall)
+  * Dock and system preferences
+
+
+
+MDM tools can also install required software and scripts, manage certificates, and monitor device compliance.
+
+### Content and License Distribution[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#content-and-license-distribution)
+
+ABM seamlessly integrates with MDM tools to provide efficient delivery and management of Volume Purchase Program (VPP) app licenses. This integration allows organizations to purchase large quantities of app licenses and distribute them effortlessly across all managed devices. By leveraging MDM tools, IT administrators can assign, reassign, and revoke licenses as needed, ensuring optimal use of purchased apps without manual intervention.
+
+Furthermore, with ABM and MDM working in tandem, applications can be silently installed and managed on devices without the need for end-user Apple IDs. This capability significantly enhances user experience by eliminating the need for manual app installations or personal Apple account involvement. IT departments maintain control over app deployment and updates, ensuring that devices are consistently equipped with the necessary applications while maintaining security and compliance within the organization.
+
+### Lifecycle and Security Management[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#lifecycle-and-security-management)
+
+MDM and UEM tools are essential for organizations looking to secure and manage their devices efficiently. These tools offer robust capabilities such as remote lock, wipe, and reset options, which allow administrators to safeguard sensitive data in case a device is lost or stolen. This functionality ensures that confidential information remains protected even outside the physical confines of the workplace.
+
+Additionally, MDM/UEM solutions provide real-time device inventory and reporting, giving IT teams comprehensive visibility into the status, usage, and compliance of all managed devices. They support conditional access based on compliance policies, ensuring that only devices meeting security standards can access corporate resources. Furthermore, these tools seamlessly integrate with identity providers, enabling Single Sign-On (SSO) and Multi-Factor Authentication (MFA) for enhanced security and streamlined user experiences. Together, these features help maintain a secure, compliant, and efficient IT environment.
+
+### Supported MDM/UEM Platforms[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#supported-mdmuem-platforms)
+
+Tool | Notable Features  
+---|---  
+Jamf Pro | Deep Apple platform integration, customizable scripts, AppConfig support  
+Kandji | Pre-built automation library ("Blueprints"), strong security posture  
+Workspace ONE | Cross-platform UEM, robust identity and access control  
+Microsoft Intune | Integrated with Microsoft 365 ecosystem, Azure AD compliance policies  
+  
+  
+
+
+### Registering Your MacStadium Devices[](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#registering-your-macstadium-devices)
+
+![](https://files.readme.io/ecd074c1754281e381130bc0bf82a959d0741481c2dc406878ea40e229d28fc2-MDMAssignment.png)  
+
+
+  1. We create your MDM Server in MacStadium’s ABM system
+  2. You provide us your MDM server’s public key
+  3. We generate an ABM MDM Server Token from your public key
+  4. You install the MDM Server Token into your MDM server
+  5. We add your MacStadium Apple servers into the ABM MDM
+
+
+
+_All Apple servers now added to this ABM MDM Server will auto-enroll themselves into the customer’s MDM Server._
+
+### Get Started![](https://docs.macstadium.com/docs/apple-business-manager-and-mobile-device-management-with-macstadium#get-started)
+
+Interested in evaluating how MacStadium’s offerings work together with MDM, UEM, and ABM to solve your business needs? [Contact us for consultation specific to your implementation.](https://www.macstadium.com/contact-sales)
+
+Want to learn more about technical details, onboarding, and support? [Read our existing documentation for Citrix MacOS VDA on MacStadium](https://docs.macstadium.com/docs/macstadium-on-citrix).

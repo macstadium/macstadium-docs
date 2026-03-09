@@ -1,0 +1,146 @@
+---
+title: "GCP Troubleshooting"
+zendesk_id: 28313080123547
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28313080123547-GCP-Troubleshooting"
+section: "Google Cloud Platform"
+category: "IaaS"
+created_at: "2024-08-15T20:44:45Z"
+updated_at: "2024-10-08T13:24:13Z"
+promoted: false
+labels: ["troubleshooting", "gcp", "google cloud platform"]
+suggested_new_path: "/iaas/google-cloud-platform/gcp-troubleshooting"
+---
+
+If you encounter any issues during or after the configuration of your site-to-site VPN connection between Google Cloud Platform (GCP) and MacStadium, check this list of common issues and troubleshooting instructions.
+
+  * Unrecognized interface during the Cisco ASA/ASAv configuration
+  * The tunnel is connected but there's no traffic between GCP and MacStadium
+  * There's traffic from GCP to MacStadium but you cannot access GCP from MacStadium  
+Troubleshooting
+
+
+
+## Unrecognized interface during the Cisco ASA/ASAv configuration
+
+Sometimes, the command line interface might return `ERROR: unable to find interface “outside”`. The command-line interface might be case-sensitive and you might need to preserve the capitalization of the MacStadium network configuration as provided in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+
+  1. Clean up the ASA configuration. 
+     * For more information, see Cleaning up the ASA/ASAv configuration.
+  2. Rename outside in your configuration to the precise name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. 
+     * For more information, see [GCP VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28301505752219).
+  3. Re-run the complete configuration in Cisco ASDM-IDM. 
+     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+
+
+
+## The tunnel is connected but there's no traffic between GCP and MacStadium
+
+If GCP shows that the tunnel is Established but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [GCP VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28301505752219).
+
+  * Verify that your { shared_key } is correct. The { shared_key } in the configuration must match the key set for the VPN connection.
+  * Verify that you've replaced { macstadium_network_address } and { macstadium_network_mask } with the correct values for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network.
+  * You can find the networking information for this network in Appendix A of your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  * Verify that you've configured the NAT exemption rule properly. 
+    * The host and subnet mask required for ONPREM-NET are the host and mask for the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network. You can find the networking information for this network in Appendix A of your IP Plan.
+    * The host and subnet mask required for GCP-NET are the host and mask for your GCP virtual network. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the /16 notation converts to a 255.255.0.0 subnet mask).
+    * The values in the brackets after nat must be the name of the internal, private network of your MacStadium private cloud, followed by the name of the outside interface of your Cisco ASA/ASAv device. By default, these are Private-1 and Outside, respectively. 
+      * You can find the names of these networks in Appendix A of your IP Plan.
+
+
+
+To resolve any of the listed common problems with the Cisco ASA/ASAv configuration, complete the following steps:
+
+  1. Clean up the firewall configuration. 
+     * For more information, see Cleaning up the ASA/ASAv configuration.
+  2. Make the necessary changes to the configuration.  
+
+     * For more information, see [GCP VPN Config for Cisco ASA/ASAv](https://support.macstadium.com/hc/en-us/articles/28301505752219).
+  3. Re-run the complete configuration in Cisco ASDM-IDM.  
+
+     * For more information, see [Site-to-Site VPN Config](https://support.macstadium.com/hc/en-us/articles/28297916166683).
+
+
+
+## There's traffic from GCP to MacStadium but you cannot access GCP from MacStadium
+
+Sometimes, you might be able to establish an SSH connection from GCP to MacStadium but you might not be able to see or access GCP from MacStadium. This might be due to any of the following issues:
+
+  * The GCP firewall is not configured to allow ingress traffic.  
+For information about how to enable ingress traffic, see [Google Cloud Documentation: Configuring firewall rules > Example configurations](https://cloud.google.com/vpn/docs/how-to/configuring-firewall-rules#example_configurations).
+  * Your GCP instances don't allow OS login.  
+For more information about user login on GCP instances, see [Google Cloud Documentation: Setting up and configuring OS Login](https://cloud.google.com/compute/docs/instances/managing-instance-access).
+
+
+
+## Troubleshooting
+
+### Cleaning up the ASA/ASAv configuration
+
+Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start over.
+
+  1. Verify that you are connected via VPN to your MacStadium private cloud.  
+For more information about how to connect to the VPN, see [Connecting to Your Cloud (via VPN](https://support.macstadium.com/hc/en-us/articles/28230568733979)).
+  2. Run Cisco ASDM-IDM and log in.
+  3. For more information about how to log in to your firewall, see [Logging into Your Cisco Firewall](https://support.macstadium.com/hc/en-us/articles/28231599395355).  
+In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface**.  
+![3e9a00a-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28313096629019)
+  4. Select Single Line.
+  5. Run the following commands one by one, clicking Send in between. Replace the placeholders with their respective values. Use Table 1: Placeholders for reference.
+
+
+    
+    
+    clear configure tunnel-group { gcp_vpn_ip }  
+    clear configure group-policy gcp  
+    clear configure access-list gcp-in  
+    clear configure access-list gcp-acl  
+    clear configure access-list gcp-filter  
+    clear configure crypto map gcp-vpn-map  
+    clear configure crypto ipsec ikev2 ipsec-proposal gcp  
+    no nat ({ macstadium_network_name },{ macstadium_outside_interface }) 1 source static ONPREM-NET ONPREM-NET destination static GCP-NET GCP-NET  
+    no object-group network GCP-NET  
+    no object-group network ONPREM-NET
+
+### Table 1: Placeholders
+
+Placeholder |  Description |  Example  
+---|---|---  
+      
+    
+    { gcp_vpn_ip }
+
+|    
+The public IP address of the cloud VPN gateway in GCP.   
+| 
+    
+    
+    192.168.0.0  
+      
+      
+    
+    { macstadium_network_name } 
+
+|    
+The name of the private network in MacStadium that needs to be accessed by GCP. You can find the information about your private network in Appendix A of the IP Plan.   
+| 
+    
+    
+    Private-1  
+      
+      
+    
+    { macstadium_outside_interface }
+
+|    
+You can find the information about your outside interface in Appendix A of the IP Plan.  | 
+    
+    
+    Outside  
+  
+## More troubleshooting by Google
+
+For more detailed troubleshooting instructions, see [Google Cloud Documentation: Cloud VPN Troubleshooting](https://cloud.google.com/vpn/docs/support/troubleshooting).
+
+## More troubleshooting by Cisco
+
+For more detailed troubleshooting instructions, see [Cisco Documentation: IPsec Troubleshooting](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html).

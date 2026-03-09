@@ -1,0 +1,121 @@
+---
+title: "Apple Silicon-Based Support"
+zendesk_id: 28340672222363
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/28340672222363-Apple-Silicon-Based-Support"
+section: "Orka Resources"
+category: "Orka"
+created_at: "2024-08-16T17:54:37Z"
+updated_at: "2025-08-01T14:02:57Z"
+promoted: false
+labels: ["configuration", "orka", "api", "apple", "silicon-based", "silicon"]
+suggested_new_path: "/orka/orka-resources/apple-silicon-based-support"
+---
+
+How to create VMs on Apple silicon-based nodes (also: Apple ARM-based nodes). Features and limitations.
+
+## Overview
+
+Starting with Orka 2.0, it is now possible to deploy an Orka cluster of Apple silicon-based nodes (also: Apple ARM-based nodes) and run your CI/CD workflows there. The Apple silicon-based nodes can also be added to an existing cluster with Intel-based nodes. Then, it will have both Intel- and Apple silicon-based nodes. A prerequisite for that is to upgrade to Orka 2.0 before adding the new Apple silicon-based nodes.
+
+Orka 2.0 allows performing all the basic VM operations that are needed to run your CI/CD workflows on Apple silicon-based nodes. This includes deploy, delete and list VMs as well as connecting to a VM via SSH or Screenshare.
+
+VMs deployed on Apple silicon-based nodes use Apple Silicon images. A VM is deployed on an Apple silicon-based or Intel-based node depending on the chosen image. VMs based on Intel images (with the amd64 type) are deployed on Intel nodes and VMs based on Apple Silicon images (with the arm64 type) are deployed on Apple silicon-based nodes.
+
+![b51e602-image.png](https://support.macstadium.com/hc/article_attachments/28340672209947)
+
+#### **Deployment on Apple silicon-based nodes**
+
+When a VM is deployed on an Apple silicon-based node and this is the first time the image is used on the node, the deployment takes longer - about 4 minutes. Further deployments of VMs using the same image on the same node happen almost immediately and take about 5 seconds.
+
+#### **TIP**
+
+To keep deployment times fast, you might want to make sure you deploy a VM on all nodes every time you create a new image. Keep in mind though, that images are cached on the nodes. If you try to deploy a VM from an image that is not cached and there is not enough space on the node, the oldest cached image(s) will be deleted to free space for the new one.
+
+Below is a full list of features included in the Apple silicon-based support:
+
+Orka 3.0:
+
+  * Enable custom pods (formerly, sandboxing)
+  * OCI-compatible images
+
+
+
+Orka 2.3:
+
+  * VMs - macOS Ventura support, VNC connectivity
+
+
+
+Orka 2.2:
+
+  * VMs - VM metadata
+  * Images - resize
+  * Integration with TeamCity
+
+
+
+Orka 2.1:
+
+  * VM port mappings
+  * VM Internet Isolation
+  * VM Network Isolation
+  * Images - copy, rename
+  * Storage - shared attached disk, secondary storage
+  * Integration with Tekton
+
+
+
+Orka 2.0:
+
+  * VM configs - create, get, purge
+  * VMs - deploy, delete, list, check status, connect via SSH, connect via Screenshare
+  * Nodes - list, check status, list ports, dedicate
+  * Images - list, rename, list remote, pull, delete, commit, save
+  * Kube accounts - list, create, delete, regenerate, download kube-config
+  * Users - all operations
+  * Tokens - all operations
+  * Logs - all operations
+  * Environment checks - all operations
+  * Integration with Jenkins, Gitlab, Buildkite, Github Actions, Packer
+
+
+
+#### **GPU Passthrough and IO Boost**
+
+With VMs based on Apple Silicon images, GPU Passthrough comes out of the box. Therefore, the corresponding option --gpuis not applicable to them and will be ignored.
+
+## Limitations
+
+**IMPORTANT**
+
+You can deploy up to 2 VMs per Apple silicon-based node.
+
+  1. The Apple silicon-based Support includes all the features needed to run your CI/CD workflows on Apple silicon-based nodes. Below is a full list of the ones that are still not there and will be considered in future versions of Orka:
+
+
+  * VMs - stop, start, suspend, resume
+  * Images - download, upload
+
+
+
+Below is a list of the ones that are not applicable to Apple silicon-based VMs:
+
+  * Images - generate empty storage
+  * ISOs - all operations
+  * Nested virtualization
+  * Bring your own macOS serial number feature
+
+
+  2. If you deploy a VM on an Apple silicon-based node and try to log in to your iCloud account you might receive an error 'The action could not be completed'. This is a limitation of the Apple Virtualization Framework. As a workaround, you can download the needed software via a web browser and install it manually.
+
+  3. There are cases reported by customers that some VMs might not be accessed via ScreenShare, but only SSH. Further investigation shows that this is caused by a failed GPU module under the new Apple Silicon architecture. There are also some external bug reports related to the issue [here](https://discuss.bitrise.io/t/known-issue-with-the-m1-open-beta-simulator-gpu-hang/20268) and [here](https://support.bitrise.io/hc/en-us/articles/5362027816093-Known-issue-with-the-M1-open-beta-Simulator-GPU-hang-).
+
+  4. VM revert is not supported due to limitations of the Apple Virtualization Framework.
+
+  5. Starting with [Orka 2.4.0](https://orkadocs.macstadium.com/docs/orka-v240), shared VM storage is **deprecated** for Apple silicon-based VMs running macOS Monterey and **will be removed** in Orka 2.5.0. To continue using shared VM storage with Orka 2.5.0 and later, you will need to upgrade your Apple Silicon-based Monterey VMs to macOS Ventura, OR switch to Intel-based Monterey VMs.
+
+  6. After you resize an Apple silicon-based VM running macOS Ventura and attempt to upgrade to a newer macOS version, the upgrade might fail or you might experience other issues with your VM. This is a limitation of the current resize design and the Apple virtualization framework.  
+**Workaround:** If possible, upgrade the image before resizing.
+
+  7. After you resize an Apple silicon-based VM running macOS Monterey and attempt to upgrade to a newer macOS version, the upgrade might fail or you might experience other issues with your VM. This is a limitation of the current resize design and the Apple virtualization framework.  
+**Workaround:** If possible, upgrade the image before resizing.

@@ -1,0 +1,462 @@
+---
+title: "Private Cloud Network Attached Storage"
+zendesk_id: 43920779804571
+zendesk_url: "https://support.macstadium.com/hc/en-us/articles/43920779804571-Private-Cloud-Network-Attached-Storage"
+section: "Storage"
+category: "IaaS"
+created_at: "2025-12-02T00:50:24Z"
+updated_at: "2025-12-03T01:57:35Z"
+promoted: false
+labels: []
+suggested_new_path: "/iaas/storage/private-cloud-network-attached-storage"
+---
+
+Network Attached Storage (NAS) devices are specialized servers that handle only data storage and file-sharing requests. They provide fast, secure, and reliable storage services to private networks.
+
+NAS is managed through the same interface as other virtual servers in the network, so it can move from one physical host to another. NAS functionality can be added by downloading and implementing an instance of the standard NAS VM Recipe.
+
+The NAS service is a dedicated virtual machine that presents itself as a service providing users the ability the create and manage file based storage without the need for using physical or virtual appliances. Each NAS service is complete with its own dashboard and is completely managed from the user interface.
+
+## About NAS
+
+NAS allows users to take storage in Private Cloud and expose it to other machines, and then share that storage between machines. It is literally a virtual NAS, with redundancy. The reason NAS is beneficial to users, is that NAS storage can be exposed to other machines over the network.
+
+NAS allows for virtual machines to share storage with assets inside or outside of the Private cloud, then use a file share to move files back and forth between machines.
+
+NAS is used to expand storage and to share files between Macs, and users can configure this for themselves.
+
+## Create the NAS Service
+
+The NAS service is a dedicated virtual machine that presents itself as a service providing users the ability the create and manage file based storage without the need for using physical or virtual appliances. Each NAS service includes its own dashboard and is fully managed from the user interface. Using the integrated NAS service takes advantage of the VergeIO snapshot engine and deduplication algorithm to get the most of usable storage space.
+
+  1. From the Cloud Dashboard, select **NAS** from the left menu.
+
+
+
+
+![Screenshot 2024-11-01 at 9.42.56 AM.png](https://support.macstadium.com/hc/article_attachments/43920779757211)
+
+NAS
+
+  2. The**NAS Dashboard** opens.
+
+
+
+
+For a new user, when this dashboard is opened for the first time, there are no NAS services or volumes. A NAS Service is the virtual machine in Private Cloud that runs the virtual NAS.
+
+![Screenshot 2024-11-01 at 9.46.26 AM.png](https://support.macstadium.com/hc/article_attachments/43920792310939)
+
+NEW NAS Services
+
+  3. Click **New NAS Service** to open a recipe that is used to create the new NAS service.
+
+
+
+
+![Screenshot 2024-11-02 at 12.59.51 PM.png](https://support.macstadium.com/hc/article_attachments/43920792311323)
+
+VM Recipe Instance
+
+This recipe only deploys NAS appliances for Private Cloud.
+
+  4. Complete the following information:
+
+
+
+  * Enter a  __**Name**__ for the new NAS Service.
+
+  * The default setting for  __**Cores**__ is 4.
+
+  * The default setting for  __**RAM**__ is 4 GB
+
+
+
+
+8 GB of RAM is required for antivirus to be enabled. If fewer that 8 GB of RAM are used, then a warning message appears. The message can be disabled, or the RAM can be set to 8 GB. The antivirus only protects the computers connected to the NAS, which is done by scanning the files on the volume. Some users may decide to keep the Antivirus and some users may decide to use less RAM. The system-defined-default  __**Cluster**__ is automatically selected.
+
+  * Select the  __**Network**__ on which the NAS should run. Options include Internal and External networks.
+
+  * Select  __**IP Address Type**__ for the NAS Service. 
+
+    * Select **Static**
+
+
+
+
+Consult the IP Plan in your MacStadium Portal account to determine an IP Address that does not conflict with existing machines.
+
+  * Define a  __**Hostname**__ for the NAS Service VM.
+
+  * **OPTIONAL** : Enter a  __**domain.**__ (If the Domain field is left blank, the system defaults the domain to __workgroup__.)
+
+  * __**Timezone**__ defaults to the default time zone.
+
+  * The **default**  __**NTP****Servers**__ setting is recommended. This defines the Network Time Protocol (NTP) servers list, which is used for keeping the NAS service time synchronized.
+
+  * **OPTIONAL** : Enter the address of a  __**Remote Syslog server.**__
+
+  * **OPTIONAL** : Enter a  __**Remote Syslog Template.**__
+
+
+
+  4. Click **Submit** , and the NAS appears in the **NAS Service list**. 
+
+
+
+
+![Screenshot 2024-11-02 at 1.03.05 PM.png](https://support.macstadium.com/hc/article_attachments/43920792315163)Newly Create NAS Service
+
+  5. To disable the **Antivirus** checkbox, deselect the checkmark and the **Antivirus Settings** box opens.
+
+
+
+
+![Screenshot 2024-11-02 at 1.06.52 PM.png](https://support.macstadium.com/hc/article_attachments/43920779762331)
+
+Antivirus Checkbox
+
+  6. Uncheck the box and click **Submit**.
+
+
+
+
+![Screenshot 2024-11-02 at 1.08.28 PM.png](https://support.macstadium.com/hc/article_attachments/43920792320027)
+
+Antivirus Setting
+
+  7. Double-click the**Service** to bring up the Dashboard for the Service.
+
+  8. Select **Power On** to start the NAS.
+
+
+
+
+![Screenshot 2024-11-02 at 1.26.10 PM.png](https://support.macstadium.com/hc/article_attachments/43920792320667)
+
+Power On
+
+  9. Click the **Yes** to confirm power on.
+
+
+
+
+To utilize the NAS service, at least one **Volume** needs to be implemented. A NAS service consists of one or more Volumes. Each Volume is a separate directory structure with its own settings for security, snapshots, storage tier, max size, antivirus, and sharing.
+
+  10. The next step is to create a NAS User.
+
+
+
+
+### Create a NAS User
+
+  1. From the Main Dashboard, select **NAS**.
+
+  2. Select **NAS Services** → **Select a Service**.
+
+
+
+
+![Screenshot 2024-11-04 at 2.51.05 PM.png](https://support.macstadium.com/hc/article_attachments/43920792322203)
+
+Select a Service
+
+  3. Double click on a Service.
+
+
+
+
+![Screenshot 2024-11-04 at 2.56.52 PM.png](https://support.macstadium.com/hc/article_attachments/43920792323483)
+
+NAS User
+
+  4. Select **NAS User**.
+
+
+
+
+![Screenshot 2024-11-04 at 2.54.11 PM.png](https://support.macstadium.com/hc/article_attachments/43920779767195)
+
+NAS User
+
+  5. Select **New** to add a new NAS User. (This page is also used to edit or delete a user.)
+
+
+
+
+![Screenshot 2024-11-05 at 4.33.18 PM.png](https://support.macstadium.com/hc/article_attachments/43920792324635)
+
+NAS User
+
+This is per service. For every virtual NAS appliance, there must be a set of users assigned to it.
+
+  * Required: **Username**
+
+  * Required: **Password**
+
+  * Optional: **Display Name**
+
+  * Optional: **Description**
+
+  * Optional: **Home Share**
+
+  * Optional: **Home Drive Letter**
+
+
+
+  6. Click **Submit**.
+
+
+
+
+![Screenshot 2024-11-05 at 4.43.10 PM.png](https://support.macstadium.com/hc/article_attachments/43920779768731)
+
+New User
+
+  7. The next step is to create a Volume.
+
+
+
+
+## Volumes
+
+A NAS service consist of one or more Volumes. Each Volume is a separate directory structure with its own settings for security, snapshots, storage tier, max size, antivirus, and sharing. Multiple volumes can be set up on the NAS, and the size of the volume determines the space available to deploy files on the NAS.
+
+Volume-level snapshots allow for customizing snapshot schedule and retention rules per individual NAS volume and provide the option for a quiesced snapshot. (Non-quiesced NAS volumes can be imported from Cloud snapshots to be used for restore.)
+
+Quiesced volume snapshots freeze file system during the snapshot process. The Quiesce option can be selected when taking a manual volume snapshot and can be enabled within the snapshot profile for automated snapshots.
+
+### About Volumes
+
+There are two types of Volumes:
+
+  * **Local Volumes** are file systems stored within Private Cloud and consume storage in the vSAN. Each local volume can have different sharing, syncing, tiering, and permission settings.
+
+  * **Remote Volumes** are external file systems that are mounted to the VergeIO system and presented as if local.
+
+
+
+
+### Creating Local Volumes
+
+  1. From the Main Dashboard, select **NAS**.
+
+  2. Select **Volumes** from the left menu.
+
+
+
+
+![Screenshot 2024-11-02 at 2.21.25 PM.png](https://support.macstadium.com/hc/article_attachments/43920792325659)
+
+Volumes
+
+When the NAS is first created, one volume (for log files) is automatically created.
+
+  2. Select **New** from the left menu.
+
+
+
+
+![Screenshot 2024-11-02 at 2.26.07 PM.png](https://support.macstadium.com/hc/article_attachments/43920779771291)
+
+New
+
+  3. Select the appropriate  __**NAS Service**__ from the dropdown list.
+
+
+
+
+![Screenshot 2024-11-02 at 2.28.25 PM.png](https://support.macstadium.com/hc/article_attachments/43920779777947)
+
+NAS Service
+
+  * Enter a  __**Name**__ for the volume (required).
+
+
+
+
+Spaces are not permitted.
+
+  * Enter a  __**Description**__ for the volume (optional).
+
+  * In the  __**Filesystem Type**__ dropdown list, select **Local Volume (****EXT4****)**.
+
+  * The  __**Encrypt Volume**__ option can be selected to encrypt the entire volume (AES-XTS).
+
+
+
+
+**Encryption Considerations**
+
+  * **Encryption selection is only available during creation creating** ; a volume cannot be changed from encrypted to unencrypted or vice-versa after creation.
+  * **Minor to moderate performance implications** are involved with enabling volume encryption.
+  * The **original encryption key** (defined when creating the volume) is needed for the lifetime of the volume; this encryption key must be **entered each time the volume is brought online** (for example, after disabling/enabling a volume or after its NAS service is rebooted).
+  * **Without the encryption key, it is possible to bring the volume back online.**
+
+
+  4. Click **Submit.**
+
+  5. The next step is to create a Share (NFS or CIFS).
+
+
+
+
+## Shares: NFS and CIFS 
+
+Network File System (NFS) and Common Internet File System (CIFS) are both file access protocols that allow client systems to access files on remote devices. 
+
+### About NFS and CIFS
+
+  * NFS uses a lightweight protocol with less overhead, which results in faster file access and transfer speeds.
+
+  * CIFS has more protocol overhead due to its support for various Windows-specific features. This can impact performance, especially in high-latency networks.
+
+
+
+
+MacStadium recommends using CIFS.
+
+### Creating a CIFS Share on an Existing Volume
+
+CIFS (Common Internet File System) is a network protocol that allows clients to communicate with servers and access file sharing and print services as if they were stored locally. CIFS offers robust security features, which make them suitable for secure environments. They are important in Private Cloud because they allow access to a NAS volume over CIFS/SMB.
+
+  1. Navigate to the **NAS Dashboard**.
+
+  2. Click **New CIFS Shares**.
+
+
+
+
+![Screenshot 2024-11-04 at 9.54.27 AM.png](https://support.macstadium.com/hc/article_attachments/43920792328475)
+
+New CIFS Shares
+
+  3. In the **CIFS Shares** screen enter the necessary information.
+
+
+
+
+![Screenshot 2024-11-02 at 5.39.45 PM.png](https://support.macstadium.com/hc/article_attachments/43920792328987)
+
+CIFS Shares
+
+  * Required: Enter a **Name** for the CIFS share.
+
+  * Optional: **Share Path** can be entered to define a specific path within the Volume; **otherwise** , this field **can be left blank** to share the entire Volume.
+
+  * Optional: A **Description** can be entered for the Share to record additional information about the Share.
+
+  * Optional: A **Comment** can be entered for the Share.
+
+  * Optional: A **Valid Users** list can be specified. This defines the users that are allowed to connect to the Share.
+
+  * Optional: A **Valid Groups** list can be specified. Users of the specified groups are allowed connection to the Share.
+
+  * Optional: **Allowed Hosts** field is to define one or more hosts that are permitted to access the Share. Hostname, IP address, domain name, netgroup, and subnet are all valid entries.
+
+  * Optional: **Denied Hosts** field is to define one or more hosts that are NOT permitted access to the Share. **Hostname, IP address, domain name, netgroup, and subnet are all valid entries.**
+
+  * Optional: **Read-Only** option can be selected to deny any write operations via this Share.
+
+  * **Browseable** option can be selected to make the Share visible in lists of available shares. **This option is disabled by default**.
+
+
+
+
+Optional:**Users / Admin Groups** allow is to grant administrative privileges to the Share. This means that all file operations will be done as the super-user (root). Use this option carefully, as those in the list can do anything on the Share, regardless of individual file permissions.
+
+  * Optional:**User / Force Group** options can be specified to define a user or group used for all file operations performed via this Share.
+
+  * Optional:**Configuration Options** (advanced samba share options) can be specified to handle special-case scenarios.
+
+
+
+  3. Click **Submit**.
+
+
+
+
+![Screenshot 2024-11-04 at 8.50.49 AM.png](https://support.macstadium.com/hc/article_attachments/43920792329499)
+
+Newly Created CIFS Share
+
+### Creating a NFS File Share on an Existing Volume
+
+  1. From the Main Dashboard, select **NAS**.
+
+
+
+
+![Screenshot 2024-11-19 at 10.00.40 AM.png](https://support.macstadium.com/hc/article_attachments/43920792330011)
+
+NAS
+
+  2. Select **Volumes**.
+
+
+
+
+![Screenshot 2024-11-19 at 10.02.47 AM.png](https://support.macstadium.com/hc/article_attachments/43920779782299)
+
+Volumes
+
+  3. Select the **Volume**.
+
+
+
+
+![Screenshot 2024-11-19 at 10.15.43 AM.png](https://support.macstadium.com/hc/article_attachments/43920792332443)
+
+View
+
+  4. Select **View**.
+
+
+
+
+![Screenshot 2024-11-19 at 10.18.06 AM.png](https://support.macstadium.com/hc/article_attachments/43920792333083)
+
+Volumes
+
+  5. Select **NFS Shares**.
+
+
+
+
+![Screenshot 2024-11-19 at 10.27.27 AM.png](https://support.macstadium.com/hc/article_attachments/43920792333339)
+
+NFS Shares
+
+  6. Select **New** to create a new share.
+
+
+
+
+![Screenshot 2024-11-19 at 10.29.48 AM.png](https://support.macstadium.com/hc/article_attachments/43920779792539)
+
+New
+
+  * Enter a Name for the share
+
+  * Enter a Share Path to define a specific path within the volume
+
+  * Enter a Description for the share
+
+  * Select Allow Everyone to allow all hosts, or specify one or more allowed hosts
+
+  * Choose a Data Access option
+
+  * Select a User/Group Squashing option 
+
+
+
+  7. Click **Submit**.
+
+
+
+
+## Connecting to the Share
+
+Now that the NAS Service, Volume, Users, and Share are created, end users can map to the shared drive from their Mac mini or other devices on the network. 
+
+##
