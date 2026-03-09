@@ -11,6 +11,45 @@ labels: ["sso", "saml", "azure", "active directory"]
 suggested_new_path: "/macstadium/account-management-and-saml/enable-saml-sso-with-azure-active-directory"
 ---
 
+<!-- schema:injected -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Enable SAML SSO with Azure Active Directory",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "text": "Navigate to **Enterprise applications**."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Create a new application by clicking **New Application**."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Create an application by clicking **Create your own application**."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Click **Edit** on the _Basic SAML settings._"
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Configure SAML (Steps 11 to 15)"
+    },
+    {
+      "@type": "HowToStep",
+      "text": "**IMPORTANT** : Next, edit the Attributes & Claims for your SAML app. You will need the email field to be mapped to user.mail."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Once the attributes & claims are updated, please provide our support team with the app federation metadata URL. You can copy the federation metadata URL in section 3 of your SAML app, as shown in the below screenshot."
+    }
+  ]
+}
+</script>
+
 ## About
 
 SAML SSO is a paid offering.

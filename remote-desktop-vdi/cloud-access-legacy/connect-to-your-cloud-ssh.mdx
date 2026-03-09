@@ -11,6 +11,37 @@ labels: ["cloud", "connect", "ssh"]
 suggested_new_path: "/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh"
 ---
 
+<!-- schema:injected -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Connect to Your Cloud (SSH)",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "text": "Navigate to your ESXi server\u2019s embedded host client using the IP address or domain name."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Select Manage in the left sidebar Navigator to access the settings for your host"
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Highlight the **TSM-SSH service (SSH)** and either right-click or use the menu item at the top of the window to select Start."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Persistent SSH access across ESXi host reboots"
+    },
+    {
+      "@type": "HowToStep",
+      "text": "By right-clicking on a service or clicking the Actions menu item, you can adjust the policy for the service. This means you can set the service to remain on based on firewall ports or with the host and after restart."
+    }
+  ]
+}
+</script>
+
 MacStadium understands that your workflow shouldn't need to be retooled to use our infrastructure as a service. To that end, we also offer simple connections to your private cloud via SSH.
 
 ## Preqrequisite:
