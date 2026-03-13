@@ -205,6 +205,18 @@ To use the CLI, you need access to the Orka API service, which is also utilized 
 
 We recommend using the [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/) to expose the service.
 
+### Cluster Admin Access
+
+By default, Orka's validator webhooks restrict certain operations — including deleting another user's VM — to cluster admins only. Cluster admin status is determined by membership in a designated Kubernetes RBAC group.
+
+The default group is `orka:cluster-admins`. To use a different group, set the `cluster_admin_group` Ansible variable before running the installation playbook.
+
+To grant a user cluster admin access, add them to the `orka:cluster-admins` group (or your configured group) in your identity provider.
+
+### Web UI
+
+The Orka Web UI is not actively maintained and is not recommended for production use. If you need to access it, you can expose the web UI service using an ingress controller or load balancer — the same approach used for the Orka API above.
+
 ## EC2 Mac Install Steps
 
 Before deploying a Mac EC2 instance, ensure that an IAM role exists meeting the below requirements. An EKS access policy must be added to grant the role permissions in Kubernetes. Additionally, a security group that allows access to the EKS control plane from the Mac instance is required.
