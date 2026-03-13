@@ -187,7 +187,7 @@ One way to expose the service is to use something like [MetalLB](https://metallb
 
 ### Cluster Admin Access
 
-By default, Orka's validator webhooks restrict certain operations — including deleting another user's VM — to cluster admins only. On AWS and on-prem deployments, cluster admin status must be explicitly configured. This differs from MacStadium-hosted clusters, where kubeadm automatically establishes the `kubeadm:cluster-admins` group.
+By default, Orka's validator webhooks restrict certain operations (including deleting another user's VM) to cluster admins only. On AWS and on-prem deployments, cluster admin status must be explicitly configured. This differs from MacStadium-hosted clusters, where kubeadm automatically establishes the `kubeadm:cluster-admins` group.
 
 The default admin group for AWS and on-prem is `orka:cluster-admins`. To use a different group, set the `cluster_admin_group` Ansible variable before running the installation playbook.
 
@@ -195,7 +195,7 @@ To grant a user cluster admin access, add them to the `orka:cluster-admins` grou
 
 ### Web UI
 
-The Orka Web UI is not actively maintained and is not recommended for production use. If you need to access it, you can expose the web UI service using an ingress controller or load balancer — see [Exposing the Orka API Service](#exposing-the-orka-api-service) for the approach.
+The Orka Web UI is not actively maintained and is not recommended for production use. If you need to access it, you can expose the web UI service using an ingress controller or load balancer; see [Exposing the Orka API Service](#exposing-the-orka-api-service) for the approach.
 
 ## Setting Up Mac Nodes[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#setting-up-mac-nodes)
 
