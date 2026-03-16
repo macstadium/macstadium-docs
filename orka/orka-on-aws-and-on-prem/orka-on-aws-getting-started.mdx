@@ -201,9 +201,21 @@ To set up the provider:
 
 ### Exposing the Orka API Service[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#exposing-the-orka-api-service)
 
-To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins). Please review the [Orka API User Guide](/orka/quick-start-guides/orka3-api-quick-start) for more details.
+To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins). Please review the [Orka API reference](https://macstadium.github.io/orka-api-docs/) for more details.
 
 We recommend using the [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/) to expose the service.
+
+### Cluster Admin Access
+
+By default, Orka's validator webhooks restrict certain operations (including deleting another user's VM) to cluster admins only. On AWS and on-prem deployments, cluster admin status must be explicitly configured. This differs from MacStadium-hosted clusters, where kubeadm automatically establishes the `kubeadm:cluster-admins` group.
+
+The default admin group for AWS and on-prem is `orka:cluster-admins`. To use a different group, set the `cluster_admin_group` Ansible variable before running the installation playbook.
+
+To grant a user cluster admin access, add them to the `orka:cluster-admins` group (or your configured group) in your identity provider.
+
+### Web UI
+
+The Orka Web UI is not actively maintained and is not recommended for production use. If you need to access it, you can expose the web UI service using an ingress controller or load balancer; see [Exposing the Orka API Service](#exposing-the-orka-api-service) for the approach.
 
 ## EC2 Mac Install Steps
 
