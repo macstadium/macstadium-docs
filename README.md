@@ -1,6 +1,6 @@
 # MacStadium Docs
 
-The source for [MacStadium's documentation site](https://support.macstadium.com), built on [Mintlify](https://mintlify.com).
+The source for [MacStadium's documentation site](https://docs.macstadium.com), built on [Mintlify](https://mintlify.com).
 
 ## How it works
 
