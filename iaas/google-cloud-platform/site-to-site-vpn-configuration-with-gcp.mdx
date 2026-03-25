@@ -71,7 +71,7 @@ To create a new VPN Gateway, complete the following steps:
 ```
   9. For Routing options, select Policy-based.
 
-  10. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). By default, this is the Private-1 network. For more information about CIDR notations, see Understanding IP Addresses, Subnets, and CIDR Notation for Networking. You can also use a CIDR calculator such as this CIDR/Netmask Lookup Tool.
+  10. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the [IP Plan](/macstadium/macstadium-overview/ip-plan). By default, this is the Private-1 network. For more information about CIDR notations, see Understanding IP Addresses, Subnets, and CIDR Notation for Networking. You can also use a CIDR calculator such as this CIDR/Netmask Lookup Tool.
 
   11. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your MacStadium private cloud.
 
@@ -236,7 +236,7 @@ Manually replace the placeholders in the configuration template with the values 
      * `{ macstadium_public_ip }`
        * This is the IP address of the public network of the MacStadium private cloud. By default, this is FW1-Outside. Information about the public network is located in Appendix B of the IP Plan.  
 `{ macstadium_network_name } Commented [FM20]: New image, highlight CLOUD VPN GATEWAYS, VPC network and Region Commented [FM21]: New image, highlight CLOUD VPN`
-       * GATEWAYS and the IP address field. This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Information about the public network is located in Appendix B of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+       * GATEWAYS and the IP address field. This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Information about the public network is located in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
      * `{ macstadium_network_address }`
        * This is the Subnet ID of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1 Subnet ID. Information about the public network is located in Appendix B of the IP Plan
      * `{ macstadium_network_mask }`

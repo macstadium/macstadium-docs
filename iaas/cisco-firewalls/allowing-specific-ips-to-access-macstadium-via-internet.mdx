@@ -98,7 +98,7 @@ ciscoasa#``
 `ciscoasa#show running-config object id Private-1-IPs`
   2. If `Private-1-IPs` has not been configured, then use the following commands to create it:  
 ` ciscoasa#configure terminal ciscoasa(config)#object network Private-1-IPs ciscoasa(config-network-object)#subnet 10.221.188.0 255.255.254.0`
-  3. Connect to the firewall via SSH and from the command line enter the MacStadium credentials that are available in your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)
+  3. Connect to the firewall via SSH and from the command line enter the MacStadium credentials that are available in your [IP Plan](/macstadium/macstadium-overview/ip-plan)
   4. Confirm the privileged mode is enabled (indicated by the # prompt).
   5. Enter the configuration mode and create an Object representing the source IP address.
   6. Replace EXAMPLE with a name to use to identify the object and the source Public IP address (**76.76.21.241**) with the source IP address to whitelist on the firewall.  

@@ -1,0 +1,73 @@
+---
+title: "IP Plan"
+description: "Your IP Plan contains the access and networking information for your MacStadium environment, including VPN credentials, IP allocations, and firewall details."
+zendesk_id: 28230867289883
+zendesk_url: "/macstadium/macstadium-overview/ip-plan "MacStadium Overview"
+category: "MacStadium"
+---
+
+The IP Plan is a document prepared and provided by MacStadium that contains access and networking information for your environment and any dedicated firewalls.
+
+## Overview
+
+With the data in your IP Plan, you can:
+
+- Access the environment via VPN
+- Access the management interface for your environment
+- Access and manage the firewall
+- Configure a private, secure network for virtual machines using the available IP address range
+- Enable internet access for virtual machines
+- Assign public IPs and allow non-VPN access to one or more virtual machines
+- Create a secure site-to-site VPN tunnel between your enterprise network or another cloud, and the MacStadium environment
+- Review web purchases
+
+## Accessing the IP Plan
+
+MacStadium provides the IP Plan as an XLSX spreadsheet, available for download in the MacStadium Portal.
+
+1. Navigate to [portal.macstadium.com](https://portal.macstadium.com/login) and log in.
+2. Select the account **menu > Files**.
+3. Download and open the XLSX spreadsheet.
+
+> MacStadium uses this naming convention for the IP Plan: **\<COMPANY-PREFIX>--A-001-IP_PLAN.xlsx**
+
+## IP Plan Contents
+
+The IP Plan consists of two sheets: **One Page** and **MISC**.
+
+> If both sheets are not visible, try opening the spreadsheet in a different app. The IP Plan may contain additional sheets depending on your plan and environment configuration.
+
+### One Page
+
+The **One Page** sheet contains all the data needed for remote access.
+
+### MISC
+
+The **MISC** sheet contains information about your firewall, if you have one.
+
+#### VPN
+
+This section lists the server address and credentials for connecting to the environment through VPN. Download Cisco AnyConnect before using this information.
+
+#### Appendix A: IP Allocation
+
+Network information for connectivity within the environment to the outside world.
+
+| Row | Description |
+|-----|-------------|
+| `Outside` | Outside interface of the Cisco ASA/ASAv firewall. IPs in this range are publicly accessible. The network name is needed when setting up NAT exemption for a site-to-site VPN tunnel. |
+| `Inside-1` | Inside interface of the Cisco ASA/ASAv firewall. IPs in this range are not publicly accessible and have the highest security setting by default. |
+| `ESXi-MGMT` | Used to set up connectivity between vSphere components. Not accessible from outside your environment by default. |
+| `Private-1` | Private network of the MacStadium cloud. Default recommended network for virtual machines. The network name and IP range in CIDR notation are needed when setting up a site-to-site VPN tunnel. |
+
+#### Appendix B: IP Host Assignments
+
+Network information for VMware vSphere components (`vCenter Support Server`, `vCenter`, `ESXi-HostXX`), if applicable.
+
+`FW1-Outside` is the endpoint needed for site-to-site VPN connections.
+
+### MISC Sheet
+
+The MISC sheet contains instructions for reaching the Cisco firewall and downloading the Cisco ASDM-IDM interface for firewall management.
+
+> If the MISC sheet is not visible, try opening the IP Plan in a different app.

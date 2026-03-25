@@ -16,9 +16,9 @@ Download the VPN configuration file from Amazon and fill it in with your Orka ne
 
 > #### **You need:**
 > 
->   * The name `Outside` from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
->   * The IP address for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
->   * The subnet mask for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The name `Outside` from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+>   * The IP address for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+>   * The subnet mask for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
 >   * The IPv4 address of your Amazon VPC.
 >   * The subnet mask for your Amazon VPC converted from its CIDR notation (i.e. `255.255.0.0` instead of `/16`).
 > 
@@ -66,14 +66,14 @@ Amazon provides a semi-prefilled configuration file with very detailed instructi
 
 Placeholder | Value | Description | More information  
 ---|---|---|---  
-`<outside_interface>` | `Outside` | The **name** of the outside interface of your Cisco ASAv device (the `Outside` network). | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)  
+`<outside_interface>` | `Outside` | The **name** of the outside interface of your Cisco ASAv device (the `Outside` network). | [The IP Plan](/macstadium/macstadium-overview/ip-plan)  
 `<outside_access_in>` | (Sample) `outside_access_in` | Any unique name. This will be the name for the access control list that permits the creation of the tunnel and the traffic over it. | [Cisco Documentation: Cisco Access Control Lists](https://www.cisco.com/c/en/us/support/docs/security/ios-firewall/23602-confaccesslists.html)  
 `<vpc_subnet>` | (Sample) `192.168.0.0` | The IPv4 address of your Amazon VPC (without the subnet mask bit notation). | You can get this value by selecting your VPC in AWS > VPC dashboard and checking the **Details** at the bottom of the screen.  
 `<vpc_subnet_mask>` | (Sample) `255.255.0.0` | The subnet mask for your Amazon VPC, converted from its CIDR notation. | You can get this value by selecting your VPC in AWS > VPC dashboard and checking the **Description** at the bottom of the screen. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the `/16` notation converts to a `255.255.0.0` subnet mask).  
 `<amzn_vpn_map>` | (Sample) `amzn_vpn_map` | Any unique name for the crypto map. It must not be already in use by any other crypto maps you might have configured. | [Cisco Doumentation: Configuring Crypto Maps](https://www.cisco.com/c/en/us/td/docs/security/vpn_modules/6342/vpn_cg/6342site3.html#wp1036915)  
 `<sla_monitor_address>` | (Sample) `192.168.0.1` | An IP address in your Amazon VPC that can serve as an SLA monitor keeping the site-to-site tunnel alive. | You can set this to the `<vpc_subnet>` address plus one.  
-`<local_subnet>` | `10.221.188.0` | The IP address for the `Private-1` network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)  
-`<local_subnet_mask>` | `255.255.255.0` | The subnet mask for the `Private-1` network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883)  
+`<local_subnet>` | `10.221.188.0` | The IP address for the `Private-1` network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan)  
+`<local_subnet_mask>` | `255.255.255.0` | The subnet mask for the `Private-1` network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan)  
   
   3. Uncomment the following lines. To uncomment, remove `! `at the start of the line. 
      * `access-list amzn-filter extended permit ip ...`
@@ -86,7 +86,7 @@ Placeholder | Value | Description | More information
 ```
 object network obj-SrcNet subnet 0.0.0.0 0.0.0.0
 ```
-Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883). If you choose to modify this line, **do not** configure the `<sla_monitor_address>` value.
+Note that based on your network configuration and requirements, you can modify this line to map to the subnet and the subnet mask for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan). If you choose to modify this line, **do not** configure the `<sla_monitor_address>` value.
 
   5. Change `nat (inside,outside)` to `nat (Private-1,Outside)`.
   6. (Optional) Delete the remaining commented lines to clean up the file. Commented lines are indicated by `! `at the beginning of the line.
