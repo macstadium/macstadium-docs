@@ -18,7 +18,7 @@ With Orka On-Prem, you can now effortlessly integrate macOS development and macO
 
 The diagram below illustrates the architecture of an Orka Cluster On-Prem, detailing how it integrates with Kubernetes 1.33, Mac compute hosts, and OCI Registries for image storage.
 
-![OrkaOnPrem.png](https://support.macstadium.com/hc/article_attachments/44003753966363)
+![OrkaOnPrem.png](/images/attachments/44003753966363.png)
 
 The Kubernetes 1.33 Cluster provides a runtime for the Orka Cluster Services. The Mac hosts are set up with Orka Engine (VM Runtime), which provides a stable runtime for virtual machines. VMs are deployed to the host using an OCI image, which can be fetched from any OCI registry, such as Artifactory, GitHub Container Repo (GHCR), or Amazon ECR. The use of OCI images enables sub-minute deployment of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac without Orka VMs. CI tools will integrate via the Orka API installed into Kubernetes, or the CLI or API it exposes to orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
 

@@ -30,9 +30,9 @@ The feature TCP State Bypass in the ASA / ASAv firewall is required for HA VPN o
 To create a site-to-site VPN from your GCP private cloud to your MacStadium private cloud, you need to go through the following high-level steps:
 
   1. Log into GCP  
-![9b85272-image.png](https://support.macstadium.com/hc/article_attachments/28301508306971)
+![9b85272-image.png](/images/attachments/28301508306971.png)
   2. Create the VPN connection  
-![ff8d27b-image.png](https://support.macstadium.com/hc/article_attachments/28301513766683)  
+![ff8d27b-image.png](/images/attachments/28301513766683.png)  
 
 ```
  * **NOTE** : Classic and HA VPN connections in GCP require a Cloud VPN Tunnel and a Cloud VPN Gateway. Both elements can be at once or you can add a new Cloud VPN Tunnel to an existing Cloud VPN Gateway.
@@ -83,8 +83,8 @@ To create a new VPN Gateway, complete the following steps:
   13. Click Done.
 
   14. Click Create.  
-![f5b24fa-image.png](https://support.macstadium.com/hc/article_attachments/28301513770523)  
-![0858a5f-image.png](https://support.macstadium.com/hc/article_attachments/28301508314139)
+![f5b24fa-image.png](/images/attachments/28301513770523.png)  
+![0858a5f-image.png](/images/attachments/28301508314139.png)
 
 
 
@@ -135,23 +135,23 @@ After the creation is complete, the VPN tunnel status is: No incoming packets.
 
 The following images shows a sample configuration for the HA VPN gateway and tunnel.
 
-![30bd8a1-image.png](https://support.macstadium.com/hc/article_attachments/28301508316443)
+![30bd8a1-image.png](/images/attachments/28301508316443.png)
 
-![5fc4eaa-image.png](https://support.macstadium.com/hc/article_attachments/28301508318875)
+![5fc4eaa-image.png](/images/attachments/28301508318875.png)
 
-![93df192-image.png](https://support.macstadium.com/hc/article_attachments/28301513779227)
+![93df192-image.png](/images/attachments/28301513779227.png)
 
-![fb646f7-image.png](https://support.macstadium.com/hc/article_attachments/28301508320155)
+![fb646f7-image.png](/images/attachments/28301508320155.png)
 
-![235ac27-image.png](https://support.macstadium.com/hc/article_attachments/28301513782171)
+![235ac27-image.png](/images/attachments/28301513782171.png)
 
-![28687f9-image.png](https://support.macstadium.com/hc/article_attachments/28301513784091)
+![28687f9-image.png](/images/attachments/28301513784091.png)
 
-![d4091f5-image.png](https://support.macstadium.com/hc/article_attachments/28301513785883)
+![d4091f5-image.png](/images/attachments/28301513785883.png)
 
-![3367c1b-image.png](https://support.macstadium.com/hc/article_attachments/28301508324891)
+![3367c1b-image.png](/images/attachments/28301508324891.png)
 
-![159e03a-image.png](https://support.macstadium.com/hc/article_attachments/28301508326043)
+![159e03a-image.png](/images/attachments/28301508326043.png)
 
 ## Ensure that GCP Firewall Allows Ingress Traffic
 
@@ -205,9 +205,9 @@ Manually replace the placeholders in the configuration template with the values 
 ### Get the Configuration Values
 
   1. Confirm login to the GCP console.  
-![6e081ee-image.png](https://support.macstadium.com/hc/article_attachments/28302550932123)
+![6e081ee-image.png](/images/attachments/28302550932123.png)
   2. In the GCP search bar, type VPN and select VPN Hybrid Connectivity.  
-![1cabbfb-image.png](https://support.macstadium.com/hc/article_attachments/28302601437467)  
+![1cabbfb-image.png](/images/attachments/28302601437467.png)  
 
 ```
  * { gcp_network_address }, { gcp_network_mask_cidr } and { gcp_network_mask_cidr }
@@ -216,7 +216,7 @@ Manually replace the placeholders in the configuration template with the values 
 ```
   3. Select Cloud VPN Gateways.
   4. Locate the gateway used by the GCP-MacStadium tunnel and note the value for Region.  
-![0ec2771-image.png](https://support.macstadium.com/hc/article_attachments/28302601443483)
+![0ec2771-image.png](/images/attachments/28302601443483.png)
   5. Click the value listed under VPC network.  
 
 ```
@@ -232,7 +232,7 @@ Manually replace the placeholders in the configuration template with the values 
 ```
   8. In the VPN Hybrid Connectivity service page, select Cloud VPN Gateways.
   9. Locate the gateway used by the GCP-MacStadium tunnel and use the values listed under IP address.  
-![002bb6e-image.png](https://support.macstadium.com/hc/article_attachments/28302550950555)
+![002bb6e-image.png](/images/attachments/28302550950555.png)
      * `{ macstadium_public_ip }`
        * This is the IP address of the public network of the MacStadium private cloud. By default, this is FW1-Outside. Information about the public network is located in Appendix B of the IP Plan.  
 `{ macstadium_network_name } Commented [FM20]: New image, highlight CLOUD VPN GATEWAYS, VPC network and Region Commented [FM21]: New image, highlight CLOUD VPN`
@@ -253,23 +253,23 @@ Manually replace the placeholders in the configuration template with the values 
        * In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
   10. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
   11. Locate the VPN tunnels used by your GCP-MacStadium VPN and use the values listed under Cloud Router BGP IP address.  
-![f368878-image.png](https://support.macstadium.com/hc/article_attachments/28302550961563)  
+![f368878-image.png](/images/attachments/28302550961563.png)  
 
 ```
  * ` { macstadium_bgp_ip_address0 } and { macstadium_bgp_ip_address1 }`
 ```
   12. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
   13. Locate the VPN tunnels used by your GCP-MacStadium VPN and use the values listed under Peer BGP IP address.  
-![d5d9744-image.png](https://support.macstadium.com/hc/article_attachments/28302601458971)  
+![d5d9744-image.png](/images/attachments/28302601458971.png)  
 
 ```
  * `{ gcp_bgp_asn }`
 ```
   14. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
   15. Locate the VPN tunnels used by your GCP-MacStadium VPN, click on the Actions button and select View.  
-![bb3a56b-image.png](https://support.macstadium.com/hc/article_attachments/28302601464219)
+![bb3a56b-image.png](/images/attachments/28302601464219.png)
   16. Use the value of the Cloud Router ASN field. Both tunnels should have the same value for this parameter.  
-![523c2c7-image.png](https://support.macstadium.com/hc/article_attachments/28302601474715)  
+![523c2c7-image.png](/images/attachments/28302601474715.png)  
 
 ```
  * `{ macstadium_bgp_asn }`
@@ -277,9 +277,9 @@ Manually replace the placeholders in the configuration template with the values 
   17. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
   18. Locate the VPN tunnels used by the GCP-MacStadium VPN, and click on Actions.
   19. Select View.  
-![19590a0-image.png](https://support.macstadium.com/hc/article_attachments/28302601480475)
+![19590a0-image.png](/images/attachments/28302601480475.png)
   20. Use the value of the Cloud Router ASN field. Both tunnels should have the same value for this parameter.  
-![946d5e3-image.png](https://support.macstadium.com/hc/article_attachments/28302550993691)
+![946d5e3-image.png](/images/attachments/28302550993691.png)
 
 
 

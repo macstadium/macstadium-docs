@@ -53,11 +53,11 @@ sudo mount_9p orka
 ```
 The volume will be mounted at /Volumes/orka. The first time you attempt to access the filesystem via Terminal, you will be asked to grant the Terminal application permissions to access files on a network volume:
 
-![fe2b601-Screen_Shot_2021-07-23_at_5.07.33_PM.png](https://support.macstadium.com/hc/article_attachments/28340384462491)
+![fe2b601-Screen_Shot_2021-07-23_at_5.07.33_PM.png](/images/attachments/28340384462491.png)
 
 Click the OK button to allow access. You will then be able to access files on the volume:
 
-![e84d4f8-Screen_Shot_2021-07-23_at_6.11.28_PM.png](https://support.macstadium.com/hc/article_attachments/28340339123227)
+![e84d4f8-Screen_Shot_2021-07-23_at_6.11.28_PM.png](/images/attachments/28340339123227.png)
 
 ## Automount Shared Storage in Intel-based VMs
 
@@ -151,15 +151,15 @@ If you are using the default primary storage export in your cluster for shared V
 
 When connecting to the VM over SSH and attempting to access the shared storage volume, you may encounter the error orka: Operation not permitted:
 
-![1f2144e-Screen_Shot_2021-07-26_at_11.24.03_AM.png](https://support.macstadium.com/hc/article_attachments/28340339125531)
+![1f2144e-Screen_Shot_2021-07-26_at_11.24.03_AM.png](/images/attachments/28340339125531.png)
 
 To fix this issue, connect to the VM via VNC and navigate to System Preferences → Security & Privacy and click on the Privacy tab. From the list select Full Disk Access and click the padlock in the lower lefthand corner to make changes:
 
-![520ff79-Screen_Shot_2021-07-26_at_11.29.14_AM.png](https://support.macstadium.com/hc/article_attachments/28340384468251)
+![520ff79-Screen_Shot_2021-07-26_at_11.29.14_AM.png](/images/attachments/28340384468251.png)
 
 You will then be prompted to enter your password. Next, click the checkbox next to sshd-keygen-wrapper:
 
-![2199d4a-Screen_Shot_2021-07-26_at_11.32.14_AM.png](https://support.macstadium.com/hc/article_attachments/28340339129371)
+![2199d4a-Screen_Shot_2021-07-26_at_11.32.14_AM.png](/images/attachments/28340339129371.png)
 
 Click the padlock again to prevent further changes. You should now be able to access the shared storage volume over an SSH connection.
 
