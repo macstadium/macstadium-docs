@@ -14,9 +14,9 @@ suggested_new_path: "/orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-c
 
 > #### **You need:**
 > 
->   * The name `Outside` from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
->   * The IP address for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
->   * The subnet mask for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+>   * The name `Outside` from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+>   * The IP address for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+>   * The subnet mask for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
 >   * The IPv4 address of your Amazon VPC.
 >   * The subnet mask for your Amazon VPC converted from its CIDR notation (i.e. `255.255.0.0` instead of `/16`).
 > 
@@ -123,20 +123,20 @@ This is the IP address of the GCP local network that needs to have access to Ork
 
 
 
-![f0991bb-project-select.png](https://support.macstadium.com/hc/article_attachments/28400048061979)
+![f0991bb-project-select.png](/images/attachments/28400048061979.png)
 
   2. From the GCP console sidebar, scroll to the  _Networking_ section and select **Hybrid Connectivity** > **VPN**.
 
 
 
-![8116e23-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28400048065563)
+![8116e23-select-vpn.png](/images/attachments/28400048065563.png)
 
   3. Select **Cloud VPN Gateways**.
   4. Locate the gateway used by your GCP-Orka tunnel and note the value for **Region**.
 
 
 
-![4b8bd20-gcp-network.png](https://support.macstadium.com/hc/article_attachments/28400037412123)
+![4b8bd20-gcp-network.png](/images/attachments/28400037412123.png)
 
   5. Click the value listed under **VPC network**.  
 The GCP console redirects you to the list of subnets for the selected network.
@@ -153,20 +153,20 @@ This is the subnet mask of the GCP local network that needs to have access to Or
 
 
 
-![7f2e79f-project-select.png](https://support.macstadium.com/hc/article_attachments/28400037417755)
+![7f2e79f-project-select.png](/images/attachments/28400037417755.png)
 
   2. From the GCP console sidebar, scroll to the  _Networking_ section and select **Hybrid Connectivity** > **VPN**.
 
 
 
-![56e32f9-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28400037421339)
+![56e32f9-select-vpn.png](/images/attachments/28400037421339.png)
 
   3. Select **Cloud VPN Gateways**.
   4. Locate the gateway used by your GCP-Orka tunnel and note the value for **Region**.
 
 
 
-![d9742e8-gcp-network.png](https://support.macstadium.com/hc/article_attachments/28400037424539)
+![d9742e8-gcp-network.png](/images/attachments/28400037424539.png)
 
   5. Click the value listed under **VPC network**.  
 The GCP console redirects you to the list of subnets for the selected network.
@@ -183,20 +183,20 @@ This is the public IP address of the cloud VPN gateway in GCP.
 
 
 
-![7c32947-project-select.png](https://support.macstadium.com/hc/article_attachments/28400048083227)
+![7c32947-project-select.png](/images/attachments/28400048083227.png)
 
   2. From the GCP console sidebar, scroll to the  _Networking_ section and select **Hybrid Connectivity** > **VPN**.
 
 
 
-![32c2c0c-select-vpn.png](https://support.macstadium.com/hc/article_attachments/28400048087963)
+![32c2c0c-select-vpn.png](/images/attachments/28400048087963.png)
 
   3. Select **Cloud VPN Gateways**.
   4. Locate the gateway used by your GCP-Orka tunnel and use the value listed under **IP address**.
 
 
 
-![f3a73e4-gcp-vpn-ip.png](https://support.macstadium.com/hc/article_attachments/28400048091803)
+![f3a73e4-gcp-vpn-ip.png](/images/attachments/28400048091803.png)
 
 `{ macstadium_network_name }`
 
@@ -204,15 +204,15 @@ This is `Private-1`.
 
 `{ macstadium_network_address }`
 
-This is the IP address of the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+This is the IP address of the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
 `{ macstadium_network_mask }`
 
-This is the subnet mask of the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+This is the subnet mask of the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
 `{ macstadium_public_ip }`
 
-This is the IP address of the `FW1-Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+This is the IP address of the `FW1-Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
 `{ macstadium_outside_interface }`
 

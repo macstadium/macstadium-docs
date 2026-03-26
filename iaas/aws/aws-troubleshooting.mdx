@@ -24,7 +24,7 @@ Sometimes, the command line interface might return errors about the crypto isakm
 
 The command-line interface returns `ERROR: unable to find interface "outside"`.
 
-  * **Workaround** : Sometimes, the command line interface is case-sensitive and you need to preserve the capitalization of the MacStadium network configuration as provided in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  * **Workaround** : Sometimes, the command line interface is case-sensitive and you need to preserve the capitalization of the MacStadium network configuration as provided in the [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
 
   1. Clean up the ASA configuration. 
@@ -49,10 +49,10 @@ All checks in this section are performed in the AWS Management Console.
   1. Log in to your AWS Management Console and access your VPC service.
   2. In the top right corner of the screen, make sure that you're working in the correct region.
   3. In the VPC service sidebar, locate the Virtual Private Network menu and select Virtual Private Gateways.  
-![5b14f63-select-virtual-private-gatewa.png](https://support.macstadium.com/hc/article_attachments/28312073315739)
+![5b14f63-select-virtual-private-gatewa.png](/images/attachments/28312073315739.png)
   4. On the Virtual Private Gаteways dashboard, check the status of the virtual private gateway used in your site-to-site VPN.
   5. If the virtual private gateway is detached, right-click it and select Attach to VPC.  
-![4c7e454-attach-virtual-private-gateway.png](https://support.macstadium.com/hc/article_attachments/28312073318555)
+![4c7e454-attach-virtual-private-gateway.png](/images/attachments/28312073318555.png)
 
 
 
@@ -63,7 +63,7 @@ For more information about route tables in Amazon, see [Amazon VPC Documentation
   1. Log in to your AWS Management Console and access your VPC service.
   2. In the top right corner of the screen, make sure that you're working in the correct region.
   3. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
-![117e2d9-select-route-tables.png](https://support.macstadium.com/hc/article_attachments/28312040787995)
+![117e2d9-select-route-tables.png](/images/attachments/28312040787995.png)
   4. In the list of routing tables, select the main table.  
 
 ```
@@ -71,7 +71,7 @@ For more information about route tables in Amazon, see [Amazon VPC Documentation
  * If propagation is disabled, click Edit route propagation.
  * Select the Propagate checkbox and click Save.  
 ```
-![e025068-route-propagation.png](https://support.macstadium.com/hc/article_attachments/28312040790811)
+![e025068-route-propagation.png](/images/attachments/28312040790811.png)
 
 
 
@@ -83,7 +83,7 @@ All checks in this section are performed against the site-to-site VPN configurat
 
 By default, this is the Private-1 network.
 
-You can find the networking information for this network in Appendix A of your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+You can find the networking information for this network in Appendix A of your [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
 **Verify that you've configured the NAT exemption rule properly.**
 
@@ -123,7 +123,7 @@ Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start
   2. Run Cisco ASDM-IDM and log in. 
      * For more information about how to log in to your firewall, see [Logging in to Your Cisco Firewall](/iaas/cisco-firewalls/logging-into-cisco-firewall).
   3. In the Cisco ASDM-IDM application toolbar, select **Tools > Command Line Interface**.  
-![bd5bfc2-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28312073324955)
+![bd5bfc2-cisco-asdm-tools-menu.png](/images/attachments/28312073324955.png)
   4. Select Single Line.
   5. Run the following commands one by one, clicking Send in between. Replace the placeholders with their respective values. Use **Table 1: Placeholders** for reference.
 

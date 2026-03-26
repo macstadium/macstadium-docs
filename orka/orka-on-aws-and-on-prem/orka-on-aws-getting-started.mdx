@@ -20,7 +20,7 @@ With Orka (also referred to as Orka Cluster) on AWS, you can now effortlessly in
 
 The diagram below illustrates the architecture of an Orka Cluster on AWS, detailing how it integrates with Amazon EC2 Mac instances, Amazon EKS (Elastic Kubernetes Service), and Amazon ECR (Elastic Container Registry) within a customer’s AWS account.
 
-![OrkaClusterAWS.png](https://support.macstadium.com/hc/article_attachments/44003706780059)  
+![OrkaClusterAWS.png](/images/attachments/44003706780059.png)  
 The EC2 Mac hosts are set up with Orka AMIs, which provide a stable runtime for virtual machines. Each VM is deployed on the host using an OCI image, which can be fetched from Amazon ECR or an external OCI Registry. The use of OCI images enables rapid deployment (within a few minutes) of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac EC2 without Orka VMs. An EKS cluster will integrate with CI tools, CLI, or API, and orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
 
 Key elements in the architecture include:

@@ -29,7 +29,7 @@ The goal of this documentation is to update the Site-To-Site VPN configuration w
   1. Check the software version and model ( of the Cisco ASA/ASAv device of the MacStadium cloud.
   2. Configure the private cloud to connect to your MacStadium cloud. One or more of the following must be configured: 
      * Provide the public endpoint of the MacStadium cloud. 
-       * This is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+       * This is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
      * Enable policy-based routing between the private cloud and the internal private network the MacStadium cloud (default the Private-1 network). 
        * This is the private network host and range listed in Appendix A of the IP Plan.
      * Enable inbound traffic to the private cloud.
@@ -74,7 +74,7 @@ To establish a stable and persistent connection, between the entire private clou
   2. Configure the private cloud to connect to the MacStadium cloud. 
      * One or more of the following might need to be configured. 
        * Provide the public endpoint of the MacStadium cloud. 
-         * Usually, this is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+         * Usually, this is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
        * Enable routing between the private cloud and the internal private network of the MacStadium cloud (by, default the Private-1 network). 
          * Usually, this is the private network host and range listed in Appendix A of the IP Plan (.).
          * Enable inbound traffic to the private cloud.
@@ -118,12 +118,12 @@ This is done from an Amazon VPC to the MacStadium private cloud.
 
 ## Creating Customer Gateway
 
-In AWS, the customer gateway represents the MacStadium endpoint of the Site-To-Site VPN connection. When you configure the customer gateway, use the networking information of the public network. By default, this is the FW1-Outside network. The networking information for this network in your [IP plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+In AWS, the customer gateway represents the MacStadium endpoint of the Site-To-Site VPN connection. When you configure the customer gateway, use the networking information of the public network. By default, this is the FW1-Outside network. The networking information for this network in your [IP plan](/macstadium/macstadium-overview/ip-plan).
 
 **NOTE** : For more information about the customer gateway, see Amazon VPC Documentation: Components of YourSite-To-Site VPN.
 
   1. In the VPC service sidebar, locate the Virtual Private Network (VPN) menu and select Customer gateways.  
-![cc3b204-image.png](https://support.macstadium.com/hc/article_attachments/28280561568795)
+![cc3b204-image.png](/images/attachments/28280561568795.png)
   2. Click Create Customer Gateway.
   3. Provide a Name. Set a name that is easy to remember.
   4. In BGP ASN, use a private ASN in the range of 64,512–65,534. This is used later as the BGP process number in the MacStadium firewall.
@@ -132,7 +132,7 @@ In AWS, the customer gateway represents the MacStadium endpoint of the Site-To-S
 
 
 
-![3a7c313-image.png](https://support.macstadium.com/hc/article_attachments/28280561569691)
+![3a7c313-image.png](/images/attachments/28280561569691.png)
 
 ## Setting Up Virtual Private Gateway
 
@@ -145,15 +145,15 @@ In AWS, the virtual private gateway represents the Amazon endpoint of the Site-T
   3. Provide a Name tag. Set a name that is easy to remember.
   4. Select Amazon default ASN and click Create Virtual Private Gateway.
   5. Connect to the VPN. 
-     * After signing up, the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) is sent. Review that information to configure access to the cloud environment. The recommended method of gaining access is via a Virtual Private Network (VPN), which is both easy to implement and secure.  
-![65f35b0-image.png](https://support.macstadium.com/hc/article_attachments/28280561571355)
+     * After signing up, the [IP Plan](/macstadium/macstadium-overview/ip-plan) is sent. Review that information to configure access to the cloud environment. The recommended method of gaining access is via a Virtual Private Network (VPN), which is both easy to implement and secure.  
+![65f35b0-image.png](/images/attachments/28280561571355.png)
   6. On the Virtual Private Gateways dashboard, right-click the newly created virtual private gateway and select Attach to VPC.  
-![c7e601a-image.png](https://support.macstadium.com/hc/article_attachments/28280561573019)
+![c7e601a-image.png](/images/attachments/28280561573019.png)
   7. Select the VPC to attach the Virtual Private Gateway to and click Attach to VPC.  
-![3df10bf-image.png](https://support.macstadium.com/hc/article_attachments/28280561574811)
+![3df10bf-image.png](/images/attachments/28280561574811.png)
   8. Select the Propagation Enable checkbox.
   9. Click Save.  
-![ebd2e0c-image.png](https://support.macstadium.com/hc/article_attachments/28280513704859)
+![ebd2e0c-image.png](/images/attachments/28280513704859.png)
 
 
 
@@ -185,7 +185,7 @@ During setup, choose the customer gateway and the virtual private gateway to use
 ```
   8. Do not edit the Tunnel Options section.
   9. Click Create VPN Connection.  
-![089ae6a-image.png](https://support.macstadium.com/hc/article_attachments/28280561577499)
+![089ae6a-image.png](/images/attachments/28280561577499.png)
 
 
 
@@ -226,7 +226,7 @@ Amazon has prefilled configurations ready for download, from a variety of vendor
 
 
 
-![4664a5f-image.png](https://support.macstadium.com/hc/article_attachments/28294681888539)
+![4664a5f-image.png](/images/attachments/28294681888539.png)
 
 ## Configuration Blanks
 
@@ -277,7 +277,7 @@ AWS VPC. The host must reply to ICMP echo requests | 172.31.0.5
 <local_subnet>
 ```
 | The IP address for the internal private network of the MacStadium cloud as provided in Appendix A of your IP Plan.  
-By default, this is the Private-1 network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | 10.221.254.0  
+By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 10.221.254.0  
   
   1. Verify the configuration file from the AWS Management Console.
   2. Open the configuration file.
@@ -320,7 +320,7 @@ Placeholder Examples | Description | More Information |  Example
 ```
 | The name of the outside interface of the Cisco ASA/ASAv device as provided in Appendix A of your IP  
 Plan.  
-By default, the value is Outside. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | Outside  
+By default, the value is Outside. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | Outside  
       
     
 ```
@@ -328,13 +328,13 @@ By default, the value is Outside. | [The IP Plan](https://support.macstadium.com
 ```
 |  The IP address for the internal private network of your  
 MacStadium cloud as provided in  
-Appendix A of your IP Plan. By default, this is the Private-1 network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | 10.221.254.0  
+Appendix A of your IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 10.221.254.0  
       
     
 ```
 <local_subnet_mask>
 ```
-|  The subnet mask for the internal private LAN of the MacStadium cloud as provided in Appendix A of the IP Plan. By default, this is the Private-1 network. | [The IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883) | 255.255.255.0  
+|  The subnet mask for the internal private LAN of the MacStadium cloud as provided in Appendix A of the IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 255.255.255.0  
       
     
 ```
@@ -414,11 +414,11 @@ Manually enable route propagation for the virtual private gateway.
 For more information about VPN routing, see [Amazon VPC Documentation: Site-To-Site VPN Routing Options](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html).
 
   1. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
-![3f83127-image.png](https://support.macstadium.com/hc/article_attachments/28297099978011)
+![3f83127-image.png](/images/attachments/28297099978011.png)
   2. In the list of routing tables, select the main route table for your VPC.
   3. Select Route Propagation. If the virtual private gateway is not listed, the make sure that it is attached to the VPC.
   4. Click Edit route propagation.  
-![8b4497b-image.png](https://support.macstadium.com/hc/article_attachments/28297115653403)
+![8b4497b-image.png](/images/attachments/28297115653403.png)
 
 
 

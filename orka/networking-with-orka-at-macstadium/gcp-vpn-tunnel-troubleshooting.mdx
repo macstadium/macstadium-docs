@@ -16,7 +16,7 @@ What to look for when you're experiencing issues with your GCP-Orka VPN tunnel a
 
 ## Unrecognized interface during the Cisco ASA/ASAv configuration
 
-Sometimes, the command line interface might return `ERROR: unable to find interface “outside”`. The command-line interface might be case-sensitive and you might need to preserve the capitalization of the Orka network configuration as provided in the [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+Sometimes, the command line interface might return `ERROR: unable to find interface “outside”`. The command-line interface might be case-sensitive and you might need to preserve the capitalization of the Orka network configuration as provided in the [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
   1. Clean up the ASA configuration.  
 For more information, see Cleaning up the ASA/ASAv configuration.
@@ -31,7 +31,7 @@ For more information, see [Setting Up the Orka Side of the Site-to-Site VPN](/or
 If GCP shows that the tunnel is `Established` but there is no visibility and connectivity between the two clouds, it might be because of some common mistakes when preparing the configuration. Check for the following in the site-to-site VPN configuration. For more information, see [Preparing the VPN Configuration for Input into Cisco ASA/ASAv](/orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel).
 
   * Verify that your `{ shared_key }` is correct. The `{ shared_key }` in the configuration must match the key set for the VPN connection.
-  * Verify that you've replaced `{ macstadium_network_address }` and `{ macstadium_network_mask }` with the correct values for the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).
+  * Verify that you've replaced `{ macstadium_network_address }` and `{ macstadium_network_mask }` with the correct values for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
   * Verify that you've configured the NAT exemption rule properly. 
     * The host and subnet mask required for `ONPREM-NET` are the host and mask for `Private-1` network from your [IP Plan](https://orkadocs.macstadium.com/docs/ip-plan).
     * The host and subnet mask required for `GCP-NET` are the host and mask for your GCP virtual network. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the `/16` notation converts to a `255.255.0.0` subnet mask).
@@ -70,7 +70,7 @@ Sometimes, you might need to clean up the Cisco ASAv configuration and start ove
 
 
 
-![749b9d6-cisco-asdm-tools-menu.png](https://support.macstadium.com/hc/article_attachments/28399407496219)
+![749b9d6-cisco-asdm-tools-menu.png](/images/attachments/28399407496219.png)
 
   4. Select **Single Line**.
   5. Run the following commands one by one, clicking **Send** in between. Replace the placeholders with their respective values. Use **Table 1: Placeholders** for reference.
@@ -95,8 +95,8 @@ no object-group network ONPREM-NET
 Placeholder | Value | Description  
 ---|---|---  
 `{ gcp_vpn_ip }` | (Sample) `192.168.0.0` | The public IP address of the cloud VPN gateway in GCP.  
-`{ macstadium_network_name }` | `Private-1` | The name of the `Private-1` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).  
-`{ macstadium_outside_interface }` | `Outside` | The name of the `Outside` network from your [IP Plan](https://support.macstadium.com/hc/en-us/articles/28230867289883).  
+`{ macstadium_network_name }` | `Private-1` | The name of the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).  
+`{ macstadium_outside_interface }` | `Outside` | The name of the `Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).  
   
 ## More troubleshooting by Google
 
