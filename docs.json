@@ -2,14 +2,14 @@
   "theme": "mint",
   "name": "MacStadium Docs",
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#0066CC",
-    "light": "#3399FF",
-    "dark": "#004499"
+    "primary": "#FE9000",
+    "light": "#FE9000",
+    "dark": "#323151"
   },
   "topbar": {
     "links": [
