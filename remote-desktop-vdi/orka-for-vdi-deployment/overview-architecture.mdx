@@ -6,63 +6,48 @@ zendesk_url: "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture"
 section: "Orka for VDI Deployment"
 category: "Remote Desktop (VDI)"
 created_at: "2025-12-10T19:45:58Z"
-updated_at: "2026-02-24T22:03:15Z"
+updated_at: "2026-03-17T15:13:36Z"
 promoted: false
 labels: []
 suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture"
 ---
 
-Orka for VDI delivers enterprise-grade macOS virtual desktops accessible from anywhere, combining Apple hardware, Orka Engine virtualization, Ansible-based orchestration, and the Virtual Desktop solution of your choice (Citrix VDA for macOS is the example we'll use in these guides).  
+Orka for VDI delivers enterprise-grade macOS virtual desktops accessible from anywhere, combining Apple hardware, Orka Engine virtualization, Ansible-based orchestration, and the Virtual Desktop solution of your choice (Citrix VDA for macOS is the example we'll use in these guides).
 This solution extends your existing Citrix investment to include macOS, enabling:
 
-  * **Rapid provisioning** of macOS VMs in minutes instead of weeks
-
-  * **Flexible deployments** across any Apple Silicon hardware, data center, or cloud vendor
-
-  * **Repeatable MacOS VMs** that simplify workload virtualization and support hybrid environments
-
-  * **Data security** with centralized storage and VM management
-
-  * **MDM integration** supporting tools like JAMF and Kandji for desktop configuration
-
-
+* **Rapid provisioning** of macOS VMs in minutes instead of weeks
+* **Flexible deployments** across any Apple Silicon hardware, data center, or cloud vendor
+* **Repeatable MacOS VMs** that simplify workload virtualization and support hybrid environments
+* **Data security** with centralized storage and VM management
+* **MDM integration** supporting tools like JAMF and Kandji for desktop configuration
 
 
 Unlike traditional approaches requiring physical Mac procurement and shipping, Orka for VDI provides instant access to macOS resources through familiar Citrix Workspace clients.
 
 ## Prerequisites
 
-  * A MacOS device with Apple Silicon
-
-  * Orka for VDI software installed
-
-  * A VM or container configured to run generated Ansible playbooks
-
-  * macOS 13 (Ventura), 14 (Sonoma), 15 (Sequoia), or Tahoe (26)
-
-```
-* Note: MacOS Tahoe is supported by Engine and the Citrix VDA. The HP Anyware engine Cloud Access only supports access through MacOS Sequoia.
-```
-  * Firewall and network configured as outlined in: [](https://docs.citrix.com/en-us/mac-vda/system-requirements#network-requirements)[System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements#network-requirements)
-
-  * An active Citrix DaaS or CVAD subscription
-
-  * Citrix Workspace app 2402 or later
-
-  * Citrix VDA for macOS downloaded to your macOS device from [Citrix Downloads](https://www.citrix.com/downloads/citrix-virtual-apps-and-desktops/components/mac-vda-2409.html "https://www.citrix.com/downloads/citrix-virtual-apps-and-desktops/components/mac-vda-2409.html").
+* A MacOS device with Apple Silicon
+* Orka for VDI software installed
+* A VM or container configured to run generated Ansible playbooks
+* macOS 13 (Ventura), 14 (Sonoma), 15 (Sequoia), or Tahoe (26) Note: MacOS Tahoe is supported by Engine and the Citrix VDA. The HP Anyware engine Cloud Access only supports access through MacOS Sequoia.
 
 
+For Citrix VDI deployments:
+
+
+* Firewall and network configured as outlined in: [](https://docs.citrix.com/en-us/mac-vda/system-requirements#network-requirements)[System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements#network-requirements)
+* An active Citrix DaaS or CVAD subscription
+* Citrix Workspace app 2402 or later
+* Citrix VDA for macOS downloaded to your macOS device from [Citrix Downloads](https://www.citrix.com/downloads/citrix-virtual-apps-and-desktops/components/mac-vda-2409.html).
 
 
 ### Architecture Diagram
-
-#  ![Orka for VDI architecture overview](/images/attachments/44257766264347.png)
-
+![orka-ansible-vdi (4).png](/images/attachments/orka-vdi-architecture.png)
 ### 
 
 Citrix VDA for macOS supports macOS Ventura (13), Sonoma (14), Sequoia (15), and Tahoe (26). MacStadium provides multiple base images to choose from during provisioning. Note that Intel-based Mac devices are not supported.
 
-For the latest compatibility information, see: [Citrix VDA for macOS documentation](https://docs.citrix.com/en-us/mac-vda.html "https://docs.citrix.com/en-us/mac-vda.html").
+For the latest compatibility information, see: [Citrix VDA for macOS documentation](https://docs.citrix.com/en-us/mac-vda.html).
 
 ### Supported Hardware Platforms:
 
@@ -70,36 +55,24 @@ Orka for VDI supports any Apple Silicon Mac that meets the following specificati
 
 **Minimum specifications per Orka host:**
 
-  * Apple Silicon processor (any M-series chip)
-
-  * 8GB RAM
-
-  * 512GB storage
-
-  * 1GB Ethernet
-
-  * macOS 13 (Ventura) or later
-
-
+* Apple Silicon processor (any M-series chip)
+* 8GB RAM
+* 512GB storage
+* 1GB Ethernet
+* macOS 13 (Ventura) or later
 
 
 **Recommended specifications per Orka host:**
 
-  * M2 Pro, M4 Pro, or higher
-
-  * 16GB+ RAM (32GB+ recommended for high-density deployments)
-
-  * 1TB+ storage
-
-  * 10GB Ethernet (recommended)
-
-  * macOS 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe)
+* M2 Pro, M4 Pro, or higher
+* 16GB+ RAM (32GB+ recommended for high-density deployments)
+* 1TB+ storage
+* 10GB Ethernet (recommended)
+* macOS 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe)
 
 
+**Capacity planning:** Reserve at least 2GB RAM and 20GB of disk space for the host OS and Orka Engine. Each Citrix VDA VM typically requires 4-8GB RAM. Higher-spec hardware improves individual VM performance and supports larger VM disk images.
 
-
-**Capacity planning:** Reserve 4-8GB RAM for the host OS and Orka Engine. Each Citrix VDA VM typically requires 4-8GB RAM. Higher-spec hardware improves individual VM performance and supports larger VM disk images.  
-  
 **Apple licensing limitation:** Each physical Mac can run a maximum of two concurrent macOS VMs due to Apple's EULA restrictions. To deploy additional VMs, provision additional physical Mac hosts.
 
 **MacStadium hosted:** Select any bare metal Mac configuration meeting the above requirements from [](https://www.macstadium.com/bare-metal-mac)[Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
@@ -108,10 +81,7 @@ Orka for VDI supports any Apple Silicon Mac that meets the following specificati
 
 #### Required accounts and credentials:
 
-  * Orka Engine access
-
-  * Citrix Cloud/DaaS credentials
-
-  * Ansible control node access
-
-  * MacOS device credentials
+* Orka Engine access
+* Citrix Cloud/DaaS credentials (or alternative VDI tool credentials)
+* Ansible control node access
+* MacOS device credentials

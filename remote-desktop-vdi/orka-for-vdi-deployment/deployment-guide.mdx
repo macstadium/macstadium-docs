@@ -6,485 +6,518 @@ zendesk_url: "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide"
 section: "Orka for VDI Deployment"
 category: "Remote Desktop (VDI)"
 created_at: "2025-12-10T20:19:06Z"
-updated_at: "2026-03-06T07:59:26Z"
+updated_at: "2026-03-11T08:15:18Z"
 promoted: false
 labels: []
 suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide"
 ---
 
-## Environment Preparation
+# Overview
 
-Orka-Engine-Orchestration is the control plane for managing virtual desktops. It runs in a dedicated VM and connects to physical Mac hosts with Orka Engine deployed. Orka Engine provides the virtualization layer that enables macOS VMs to run on physical Macs.
+This guide walks through the full setup of Orka Engine Orchestration for VDI deployments. It covers network preparation, controller and host configuration, Orka Engine installation, VM deployment, and the optional Semaphore web interface.
 
-### Network Configuration (VLANs, Bridged Networking)
+There are three roles in this setup:
 
-#### Pre-installation network configuration setup:
+* **Controller:** the machine running Ansible and the orchestration playbooks. This is typically a dedicated VM.
+* **Hosts:** physical Mac hardware running Orka Engine and the macOS VMs.
+* **VMs:** macOS virtual machines provisioned and managed through the orchestration library.
 
-Before installing Orka Engine, configure the network settings on each Mac host as follows:
 
-**Static IP assignment (recommended):**
+**Note:** Total deployment time can depend on node count, but budget 30-60 minutes to set up your initial controller and host.
 
-  1. Open System Settings → Network → Select interface (Ethernet or Wi-Fi)
+# Prerequisites
 
-  2. Configure manually:
+* An Ansible controller (macOS or Linux, minimum: 2 vCPU, 4 GB RAM, 20 GB storage; recommended: 4 vCPU, 8 GB RAM, 50 GB storage)
+* One or more physical Apple Silicon based Mac hosts with macOS Sonoma, Sequoia, or Tahoe Minimum specifications per Orka host: • Apple Silicon processor (any M-series chip) • 8GB RAM • 512GB storage • 1GB Ethernet • macOS 13 (Ventura) or later
+* Recommended specifications per Orka host: • M2 Pro, M4 Pro, or higher • 16GB+ RAM (32GB+ recommended for high-density deployments) • 1TB+ storage • 10GB Ethernet • macOS 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe)
+
+
+An Orka Engine license key and installer URL (contact your MacStadium account representative)
+An administrator account on each machine
+Network connectivity between the controller and all Mac hosts
+
+**Note:** Orka 3.5.0 or later is required for bridged networking support. This guide assumes that the controller is being deployed on a dedicated macOS device.
+
+# Network Configuration
+
+## Static IP Assignment
+
+Assign a static IP address to each Mac host before installing Orka Engine. Either configure the IP manually or use a DHCP reservation.
+
+To configure manually:
+
+1. Open System Settings then Network, then select your interface (Ethernet or Wi-Fi).
+2. Set IP Address, Subnet Mask, Router, and DNS Servers from your management VLAN.
+3. Apply settings and verify connectivity.
+
+
+To use a DHCP reservation:
+
+1. Note the MAC address of each host from System Settings then Network then Details then Hardware.
+2. Configure your DHCP server to assign a fixed IP to each MAC address.
+3. Verify the host receives the reserved IP.
+
+
+Document the following for each host before proceeding. This information populates the Ansible inventory file.
+
+| Field | Example |
+| --- | --- |
+| Hostname | mac-node-1 |
+| IP address | 10.0.100.10 |
+| MAC address | a1:b2:c3:d4:e5:f6 |
+| Hardware model | Mac mini M4 |
+| Network interface | en0 |
+
+
+## Firewall Requirements (Citrix DaaS)
+
+If deploying Orka for VDI with Citrix DaaS, ensure the following traffic is permitted:
+
+Outbound from VMs (TCP 443):
+
+* `[customer_ID].xendesktop.net` - Citrix DaaS controller
+* `*.*.nssvc.net` - Citrix Gateway Service
+* `*.citrixworkspacesapi.net` - Gateway connectivity checks
+* On-premises delivery controller FQDNs (for CVAD deployments)
+* If Citrix Rendezvous is enabled, also allow outbound TCP/UDP 443 to *.*.nssvc.net.
+
+
+Inbound to VMs:
+
+* TCP/UDP 1494 and 2598 for HDX sessions
+
+
+# 1.  Controller Setup
+
+Run the steps in this section on the designated Ansible controller machine.
+
+## 1.1  Set the Hostname
+
+**Run on: Controller**
+Set a consistent hostname before configuring anything else. This ensures that your VDI tools are able to label the host devices accordingly. Replace example-controller with your chosen name.
 
 ```
- * IP Address: Assign from your management VLAN (e.g., 10.0.100.10)
-
- * Subnet Mask: Match your network (e.g., 255.255.255.0)
-
- * Router: Gateway address (e.g., 10.0.100.1)
-
- * DNS Servers: Your organization's DNS servers
+sudo scutil --set ComputerName "example-controller"
+sudo scutil --set LocalHostName "example-controller"
+sudo scutil --set HostName "example-controller"
+dscacheutil -flushcache
 ```
-  3. Apply settings and verify connectivity
 
+## 1.2  Install Homebrew
 
-
-
-**DHCP reservation (alternative):**
-
-  1. Note the Mac's MAC address (System Settings → Network → Details → Hardware)
-
-  2. Configure DHCP server to always assign the same IP to this MAC address
-
-  3. Verify the Mac receives the reserved IP address
-
-
-
-
-#### Document information for each host:
-
-  * Hostname (e.g., mac-node-1, mac-node-2)
-
-  * IP address (e.g., 10.0.100.10, 10.0.100.11)
-
-  * MAC address
-
-  * Hardware model (e.g., Mac mini M4, Mac Studio M2 Ultra)
-
-  * Network interface used (en0, en1, etc.)
-
-
-
-
-**This documentation serves as your source for creating the Ansible inventory file that drives Orka Engine Orchestration operations.**
-
-## **Network Configuration for Orka VMs**
-
-### **Bridged vs. NAT Networking**
-
-Orka Engine supports two networking modes for VMs:
-
-**NAT Mode (Default)**
-
-  * VMs receive internal IP addresses not directly accessible from the network
-  * Requires port forwarding to access VMs from outside the host
-  * Suitable for CI/CD workloads where direct network access isn't required
-
-
-
-**Bridged Mode (Recommended for VDI)**
-
-  * VMs receive IP addresses on the same subnet as the physical Mac hosts
-  * Direct Layer 2 connectivity simplifies network configuration
-  * No NAT complications for inbound Citrix HDX connections
-  * VMs are directly reachable by Citrix Cloud and end users
-
-
-
-**Enabling Bridged Networking**
-
-To deploy VMs with bridged networking, specify the `network_interface` variable (typically `en0` for Ethernet) when running playbooks:
-    
-    
-```
-ansible-playbook deploy.yml -i inventory -e "vm_group=citrix-vda" -e "desired_vms=2" -e "network_interface=en0"
-```
-When `network_interface` is not specified, VMs deploy in NAT mode.
-
-**Network Requirements**
-
-Ensure your network meets these requirements for bridged VDI deployments:
-
-  * **DHCP:** Sufficient IP address scope to assign addresses to VMs, or configure static reservations
-  * **DNS:** VMs must resolve Citrix Cloud domains (see Firewall Configuration below)
-  * **Routing:** VMs on the bridged network must have outbound internet access for Citrix registration
-
-
-
-**Note:** Detailed network segmentation (VLANs, firewall zones) should be planned based on your organization's security requirements. Consult your network team for enterprise deployments.
-
-**Firewall Configuration (Citrix-specific)**
-
-If you are deploying Orka for VDI with Citrix DaaS, ensure the following connections are permitted:
-
-**Outbound from VMs (TCP 443):**
-
-  * `[customer_ID].xendesktop.net` \- Citrix DaaS controller
-  * `*.*.nssvc.net`\- Citrix Gateway Service
-  * `*.citrixworkspacesapi.net `\- Gateway connectivity checks
-  * On-premises delivery controller FQDNs (for CVAD deployments)
-
-
-
-**Inbound to VMs:**
-
-  * TCP ports 1494 and 2598 - HDX sessions
-  * UDP ports 1494 and 2598 - HDX sessions
-
-
-
-**Outbound HDX via Rendezvous (if enabled):**
-
-  * TCP/UDP port 443 to `*.*.nssvc.net`
-
-
-
-**Proxy support:** Citrix VDA supports proxy configuration for both enrollment/registration and HDX sessions. Be sure to document your proxy settings including any authentication requirements, bypass lists, and PAC file URLs.
-
-## Install Orka-Engine-Orchestration in a VM and Orka Engine on Mac Hardware
-
-### Getting Started
-
-  1. Obtain Orka Engine installer and License:
+**Run on: Controller**
 
 ```
- * Work with your MacStadium Solution Engineer and Account Exec to obtain Orka License Keys for your environment.
 
- * Obtain the Orka Engine download URL from your MacStadium Solution Engineer. This URL is passed to the installation playbook as the engine_url variable (e.g., [https://distribution.macstadium.com/orka-engine/official/3.5.](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)[2](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)[/orka-engine.pkg](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)).
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-   * Note: Orka Engine version 3.5.0 or later is required for bridge networking support
-
- * Orka Engine requires a valid license key to operate. To request a license key:
+brew doctor
 ```
-1\. Contact your MacStadium account representative
 
-2\. Provide: Your organization's name, deployment details, use case
+## 1.3  Install Ansible
 
-3\. Your sales representative will submit your information to our team for provisioning
+**Run on: Controller**
 
-4\. Receive license key via email
-
-5\. Activate: ``orka-engine license set --key YOUR_KEY``
+Modern versions of macOS protect against installing python packages system-wide. Install Ansible through pipx in a virtual environment so it is isolated from system Python packages.
 
 ```
- * Orka Engine is installed on macOS Hosts using the Ansible playbook from the [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orchestration "https://github.com/macstadium/orka-engine-orchestration") repository. Orka Engine is supported on macOS Sonoma, Sequoia, or Tahoe
+brew install pipx
+pipx install ansible-core==2.18.4
+pipx install ansible==11.4.0
 ```
-  2. Set up the [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orchestration "https://github.com/macstadium/orka-engine-orchestration") repository on your control machine:
+
+**Note: **Optionally install sshpass if you prefer password-based authentication instead of key exchange: brew tap esolitos/ipa && brew install esolitos/ipa/sshpass
+
+# 2.  Host Setup
+
+Run the steps in this section on each physical Mac host. Repeat for every host in your fleet.
+
+## 2.1  Set the Hostname
+
+**Run on: Host(s)**
+
+Replace example-host0 with the appropriate hostname for each machine. Use a short name (no dots) for HostName.
 
 ```
- 1. Fork or clone the repository: `git clone https://github.com/macstadium/orka-engine-orchestration.git`
- 2. Install required Ansible dependencies.
- 3. Create or update the inventory file with the IPs of your physical macOS nodes (see the Ansible Inventory Management section below).
+sudo scutil --set ComputerName "example-host0"
+sudo scutil --set LocalHostName "example-host0"
+sudo scutil --set HostName "host0"
+dscacheutil -flushcache
 ```
-Control Machine Requirements:
 
-  * Minimum: 2 vCPU cores, 4GB RAM, 20GB available storage
+## 2.2  Install Homebrew
 
-  * Recommended: 4 vCPU cores, 8GB RAM, 50GB available storage
+**Run on: Host(s)**
 
-
-
-
-#### Set up SSH key-based authentication to Mac nodes:
-    
-    
 ```
-cat >> ~/.ssh/config << 'EOF'
-Host mac-node-*
-    User admin
-    IdentityFile ~/.ssh/ansible_orka_key
-    StrictHostKeyChecking no
-    UserKnownHostsFile /dev/null
-EOF
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-chmod 600 ~/.ssh/config
+brew doctor
 ```
-#### Deploy SSH keys
 
-###### Copy public key to each Orka host
-    
-    
+## 2.3  Check Python
+
+**Run on: Host(s)**
+
+Python 3 is required for Ansible to manage the host. It will be installed in macOS by default, but running the below command will ensure it is present and configured.
+
 ```
-ssh-copy-id -i ~/.ssh/ansible_orka_key.pub admin@10.0.100.10
-ssh-copy-id -i ~/.ssh/ansible_orka_key.pub admin@10.0.100.11
-ssh-copy-id -i ~/.ssh/ansible_orka_key.pub admin@10.0.100.12
+python3 --version
 ```
-### Register and Configure Mac Hosts with Ansible Inventory Management
 
-Ansible inventory management enables centralized orchestration of Orka hosts and VMs. Proper inventory structure simplifies deployment, updates, and lifecycle management.
+# 3.  Configure SSH Access
 
-Organize your Ansible inventory file (inventory.ini) to reflect your infrastructure:
+Run the steps in this section on the controller. Ansible uses SSH key authentication to connect to each host.
 
-Host groups:
+## 3.1  Generate an SSH Key
 
-  * `[hosts]` \- Physical Mac machines running Orka Engine
+**Run on: Controller**
 
+If you do not already have an SSH key, generate one. Accept the default file path or specify your own.
 
-
-Essential host variables:
-
-  * `ansible_user` \- SSH username (typically admin) 
-  * `vm_image` \- Default VM image for deployments 
-  * `max_vms_per_host` \- Maximum VMs allowed per host (optional)
-  * `engine_binary` - Path to the Orka engine binary (default: defined in your inventory or group vars)
-
-
-
-Example dev/inventory.ini configuration:
-    
-    
 ```
-[hosts] 
+ssh-keygen -t ed25519
+```
 
-10.0.100.10 
-10.0.100.11 
+## 3.2  Copy the Key to Each Host
+
+**Run on: Controller**
+
+Run ssh-copy-id once per host, substituting the correct IP address each time.
+
+```
+ssh-copy-id administrator@10.254.235.xx
+```
+
+Verify the connection works before moving on:
+
+```
+ssh administrator@10.254.235.xx
+```
+
+# 4.  Configure the Orchestration Library
+
+Run all steps in this section on the controller.
+
+## 4.1  Clone the Repository
+
+**Run on: Controller**
+
+The orchestration library lives at `~/orka-automation/orka-engine-orchestration` on the controller.
+
+```
+mkdir -p ~/orka-automation
+cd ~/orka-automation
+git clone https://github.com/macstadium/orka-engine-orchestration.git
+cd orka-engine-orchestration
+```
+
+## 4.2  Create the Inventory File
+
+**Run on: Controller**
+
+The inventory file tells Ansible which hosts to manage. Create it at `./inventory` inside the repository.
+
+```
+mkdir -p dev/group_vars/all
+touch dev/group_vars/all/main.yml
+```
+
+Create the inventory file
+
+```
+vim inventory
+```
+
+Inventory file contents - add the IP address of each host:
+
+```
+[hosts]
+10.0.100.10
+10.0.100.11
 10.0.100.12
 ```
-Example group_vars/all/main.yml configuration:
-    
-    
-```
-ansible_user=admin
-vm_image=ghcr.io/macstadium/orka-images/sequoia:latest
-max_vms_per_host=2
-engine_binary=/usr/local/bin/orka-engine
-```
-#### Network Accessibility
 
-##### Confirm each host is reachable at its assigned IP address:
-    
-    
-```
-ansible hosts -i inventory -m setup
-```
-### Install Orka Engine 
+## 4.3  Configure Group Variables
 
-Perform the following installation after updating the `inventory` files with info for each physical Mac
-    
-    
+**Run on: Controller**
+
+Group variables apply settings to all hosts in your inventory. Open the file created in the previous step:
+
+```
+vim dev/group_vars/all/main.yml
+```
+
+File contents:
+
+```
+max_vms_per_host: 2
+engine_binary: /usr/local/bin/orka-engine
+
+ansible_user: administrator
+vm_image: ghcr.io/macstadium/orka-images/sequoia:latest
+```
+
+Variable reference:
+
+| max_vms_per_host | Maximum VMs allowed per host |
+| --- | --- |
+| engine_binary | Path to the Orka Engine binary |
+| ansible_user | SSH username on each host |
+| vm_image | Default base image for VM deployments |
+| network_interface | (Optional) Network interface for bridged networking, e.g. en0 |
+
+
+# 5.  Install Orka Engine
+
+This playbook downloads and installs the Orka Engine package on every host in your inventory. It applies the license key and starts the Orka Engine service automatically.
+
+**Run on: Controller**
+
 ```
 cd ~/orka-automation/orka-engine-orchestration
 
-ansible-playbook install_engine.yml -i environments/production/inventory -e "orka_license_key=YOUR-LICENSE-KEY-HERE" -e "engine_url=ORKA-ENGINE-URL-HERE"
+ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICENSE-KEY" -e "engine_url=https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg"
 ```
-What the playbook does:
 
-  1. Downloads the Orka Engine package from the URL provided via the `[engine_url]` variable.
+**Note: **Obtain your license key and installer URL from your MacStadium account representative.
 
-  2. Installs the Orka Engine package on each Mac host with administrative privileges
+## 5.1  Verify the Installation
 
-  3. Applies license key configuration
+**Run on: Controller**
 
-  4. Starts Orka Engine service
-
-
-
-  * **Note:** This installs Orka Engine on EACH physical Mac host defined in your inventory file. The installation is automated and runs in parallel across your Mac fleet.
-
-
-
-
-#### Force Redeployment or Upgrade
-
-To force reinstallation or upgrade to a newer version:
-    
-    
 ```
-ansible-playbook install_engine.yml -i environments/production/inventory -e "orka_license_key=YOUR-LICENSE-KEY-HERE" -e "engine_url=ORKA-ENGINE-URL-HERE" -e "install_engine_force=true"
+ansible hosts -i inventory -m shell -a "orka-engine --version"
+ansible hosts -i inventory -m shell -a "/usr/local/bin/orka-engine info"
 ```
-### Post-Installation Configuration and Verification
 
-After installation completes:
+## 5.2  Force Reinstall or Upgrade
 
-Orka Engine Service:
+**Run on: Controller**
 
-  * Service starts automatically via `launchd`
+Add the install_engine_force flag to reinstall or upgrade to a newer version:
 
-  * Service status: Verify with `orka-engine info`
-
-
-
-
-### Verification
-
-Verify Orka Engine is properly installed and running using the following commands
-    
-    
 ```
-ansible hosts -i environments/production/inventory -m shell -a "orka-engine --version" 
-
-ansible hosts -i environments/production/inventory -m shell -a "ps aux | grep -v grep | grep orka-engine" 
-
-ansible hosts -i environments/production/inventory -m shell -a " /usr/local/bin/orka-engine info"
+ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICENSE-KEY" -e "engine_url=https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg" -e "install_engine_force=true"
 ```
-### Network Validation
 
-Before deploying Orka for VDI at scale, you may wish to validate your network configuration by reviewing the following:
+# 6.  Deploy and Manage VMs
 
-  1. Connectivity tests: Verify VMs can reach all required Citrix endpoints
+All playbook commands are run from the controller inside ~/orka-automation/orka-engine-orchestration.
 
-  2. Port tests: Confirm TCP 443 outbound and HDX ports inbound
+## 6.1  Deploy VMs
 
-  3. DNS resolution: Test name resolution for Citrix domains
+**Run on: Controller**
 
-  4. Latency measurement: Establish baseline network performance
+Deploy a group of VMs. The `vm_group` name is used to track and manage the VMs as a set.
 
-  5. Bandwidth testing: Verify sufficient throughput for HDX sessions
-
-
-
-
-Create an Ansible playbook that performs these checks automatically across all Orka hosts. Run this validation after any network changes and before production deployments. The `deploy.yml` and `delete.yml` playbooks support --tags plan to preview what will be deployed or deleted without making any changes. Document your network architecture in your Git repository, including VLAN diagrams, IP allocation tables, and firewall rules.
-
-### Create a Git repository
-
-Start by forking the orka-engine-orchestration repository on GitHub. This gives you a versioned starting point with all required playbooks, roles, and inventory structure already in place. You can customize it for your environment and track your changes over time. When setting up a Git repository, it is important to consider the following best practices:
-
-  * Create a `.gitignore` file to exclude sensitive data from Git (SSH keys, vault files, or other secure credentials)
-
-  * Commit your Ansible playbook structure, golden templates, and role definitions
-
-  * Never commit passwords, tokens, or private keys
-
-  * Tag releases for production deployments
-
-  * Maintain separate branches for staging, deployment, and production
-
-  * Document your playbook’s purpose and its directory structure in your project’s README
-
-
-
-
-### Create an OCI registry
-
-You will need an OCI-compliant container registry to store and distribute MacOS VM images. MacStadium provides public base images through GitHub Container Registry at `ghcr.io/macstadium/orka-images`. This includes:
-
-  * macOS Tahoe, Sequoia, Ventura, and Sonoma base images
-
-  * Regular updates aligned with macOS releases
-
-
-
-
-This option requires no additional setup or authentication. Simply reference the public image paths in your playbooks using the standard naming pattern: 
-    
-    
 ```
-ghcr.io/macstadium/orka-images/[os-version]:latest
+ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4"
 ```
-If you are using Packer in addition to Ansible, MacStadium offers [Packer templates](https://github.com/macstadium/packer-plugin-macstadium-orka/tree/main/examples "https://github.com/macstadium/packer-plugin-macstadium-orka/tree/main/examples") leveraging our Sequoia and Tahoe base images extended with common MacOS development tools.
 
-For production environments, you may also opt to deploy images to an internal, self-hosted registry such as Harbor, Docker, or JFrog Artifactory.
+For VDI workloads, use bridged networking so VMs receive IP addresses directly on your LAN. Specify the network interface (typically `en0` for Ethernet):
 
-This option provides:
-
-  * Full control over image versions and distribution
-
-  * Faster image pulls within your network
-
-  * The ability to store customized golden images with Citrix VDA pre-installed
-
-  * Compliance with corporate security policies
-
-  * Image scanning and vulnerability assessment
-
-
-
-
-**Registry naming conventions**
-
-Structure your private registry paths logically:
-    
-    
 ```
-registry.example.com/orka/citrix-vda/sonoma-finance:v1.0
-
-
-registry.example.com/orka/citrix-vda/sequoia-engineering:v2.1
-
-
-registry.example.com:5000/orka/citrix-vda/tahoe-marketing:latest
+ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4" -e "network_interface=en0"
 ```
-This format includes the registry URL, project/organization, image purpose, and a semantic version tag.
 
-**Credential Management**
+**Note:**** **When network_interface is not specified, VMs deploy in NAT mode. Bridged mode is recommended for VDI because VMs are directly reachable by Citrix Cloud and end users without port forwarding.
 
-Store your registry credentials in an Ansible Vault, never in plain text. Your vault file should include:
+To preview what will be deployed without making any changes, add `--tags plan`:
 
-  * Container registry URL and port
-
-  * Username and password or API tokens
-
-  * Citrix enrollment token and customer ID
-
-
-
-
-Reference these vault variables in your playbooks, and configure Ansible to automatically decrypt them using a vault password file (kept secure and excluded from Git).
-
-**Image workflow:**
-
-  1. Start with a MacStadium base image. Reference it by its OCI path (e.g. ghcr.io/macstadium/orka-images/sonoma:latest).
-  2. Customize it with Citrix VDA and your organization's software
-  3. Build and push the image by running `create_image.yml`. This deploys a temporary VM from the base image, runs your scripts, pushes the resulting image to your registry, then cleans up the VM, for example:
-
-
-    
-    
 ```
-ansible-playbook create_image.yml -i inventory -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
+ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4" --tags plan
 ```
-  1. Cache the image on all hosts so it's available for fast deployment, for example:
 
+## 6.2  List VMs
 
-    
-    
+**Run on: Controller**
+
 ```
-ansible-playbook pull_image.yml -i inventory -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0" 
+ansible-playbook list.yml -i inventory -e "vm_group=vdi-group"
 ```
-  1. Deploy VMs from this golden image, for example:
 
+## 6.3  Manage Individual VMs
 
-    
-    
+**Run on: Controller**
+
+Start, stop, or delete a specific VM by name. Valid values for desired_state are running, stopped, and absent.
+
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=citrix-vda" -e "desired_vms=2" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v1.0"
+ansible-playbook vm.yml -i inventory -e "vm_name=my-vm-name" -e "desired_state=running"
 ```
-### Support Resources
 
-For additional assistance with Ansible playbooks and Orka operations:
+## 6.4  Delete VMs
 
-  * **MacStadium Support Portal:** [](https://support.macstadium.com/)[MacStadium](https://support.macstadium.com/)
+**Run on: Controller**
 
-  * **Orka CLI Reference:**
+Delete a specific number of VMs from a group. Add --tags plan to preview before deleting.
 
-
-
-    
-    
 ```
-orka-engine --help
+ansible-playbook delete.yml -i inventory -e "vm_group=vdi-group" -e "delete_count=2"
 ```
-  * **VM Commands:**
 
+## 6.5  Pull Images
 
+**Run on: Controller**
 
-    
-    
+Pre-pull an image to all hosts so it is ready for fast deployment:
+
 ```
-orka-engine vm --help
+ansible-playbook pull_image.yml -i inventory -e "remote_image_name=ghcr.io/macstadium/orka-images/sequoia:latest"
 ```
-  * **Image Commands:**
 
+# 7.  Semaphore Web UI (Optional)
 
+Semaphore provides a browser-based interface for running orchestration playbooks without CLI access. All task templates, inventory, and repository configuration are set up automatically on first launch.
 
-    
-    
+## 7.1  Install Docker
+
+**Run on: Controller**
+
+Docker is required to run Semaphore. Install it through Homebrew:
+
 ```
-orka-engine image --help
+brew install docker docker-compose
 ```
-  * **Ansible Documentation:** [](https://docs.ansible.com/)[Ansible Community | Ansible documentation](https://docs.ansible.com/)
 
-  * **Citrix VDA Documentation:** [](https://docs.citrix.com/en-us/mac-vda)[Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
+**Note:** Docker Desktop is an alternative if you prefer a GUI installer. Either option works.
+
+## 7.2  Configure the Environment
+
+**Run on: Controller**
+
+Copy the example environment file and generate an encryption key:
+
+```
+cd ~/orka-automation/orka-engine-orchestration
+
+cp semaphore/.env.example semaphore/.env
+```
+
+Generate a 32-byte base64 key
+
+```
+head -c32 /dev/urandom | base64
+```
+
+Open semaphore/.env and paste the generated key as the value for SEMAPHORE_ACCESS_KEY_ENCRYPTION:
+
+```
+vim semaphore/.env
+```
+
+Set this value to the key generated above:
+
+```
+SEMAPHORE_ACCESS_KEY_ENCRYPTION=your-generated-key-here
+```
+
+Also set your admin username and password in the same file before starting Semaphore.
+
+## 7.3  Start Semaphore
+
+**Run on: Controller**
+
+```
+cd ~/orka-automation/orka-engine-orchestration
+docker compose up -d
+```
+
+Semaphore is available at `http://localhost:3000`. Log in with the admin credentials you set in the `.env` file.
+
+## 7.4  Configure SSH Credentials
+
+After logging in, navigate to Key Store and edit the Mac Hosts SSH key. Replace the placeholder credentials with the actual SSH username and private key (or password) for your Mac hosts.
+
+## 7.5  Available Task Templates
+
+The following templates are pre-configured and ready to use in the Orka Engine Orchestration project. Each template prompts for required inputs when you click Run.
+
+| Template | Playbook | Required Inputs |
+| --- | --- | --- |
+| Deploy VMs | deploy.yml | vm_group, desired_vms |
+| Delete VMs | delete.yml | vm_group, delete_count |
+| Manage VM | vm.yml | vm_name, desired_state |
+| List VMs | list.yml | vm_group (optional) |
+| Pull Image | pull_image.yml | remote_image_name |
+| Install Engine | install_engine.yml | orka_license_key, engine_url |
+| Create Image | create_image.yml | remote_image_name, vm_image |
+
+
+## 7.6  Stop Semaphore
+
+Stop containers but keep data
+
+```
+docker compose down
+```
+
+Stop and remove all data (database, task history)
+
+```
+docker compose down -v
+```
+
+# 8.  Image Management
+
+## 8.1  Using MacStadium Public Images
+
+MacStadium maintains public base images through GitHub Container Registry. No authentication is required. Reference them by OCI path: `ghcr.io/macstadium/orka-images/[os-version]:latest`
+
+Available images include Tahoe, Sequoia, Ventura, and Sonoma. Use the image name matching your target macOS version.
+
+## 8.2  Building a Custom Golden Image
+
+For VDI deployments, build a golden image with Citrix VDA and your organization's software pre-installed. The `create_image.yml` playbook deploys a temporary VM from a base image, runs your customization scripts, pushes the resulting image to your registry, then cleans up the VM.
+
+Add your customization scripts to the /scripts folder in the repository, then run:
+
+**Run on: Controller**
+
+```
+ansible-playbook create_image.yml -i inventory -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" -e "remote_image_name=registry.example.com/citrix-vda/sequoia-golden:v1.0"
+```
+
+## 8.3  Distributing Images to Hosts
+
+Pre-pull images to all hosts before deploying VMs to avoid pull delays at deployment time:
+
+**Run on: Controller**
+
+```
+ansible-playbook pull_image.yml -i inventory -e "remote_image_name=registry.example.com/citrix-vda/sequoia-golden:v1.0"
+```
+
+## 8.4  Private Registry Naming
+
+If using a self-hosted registry (Harbor, Docker Registry, JFrog Artifactory), use a consistent naming convention:
+
+`registry.example.com/orka/citrix-vda/sequoia-finance:v1.0`
+`registry.example.com/orka/citrix-vda/sequoia-engineering:v2.1`
+`registry.example.com/orka/citrix-vda/tahoe-marketing:latest`
+
+**Note:** Store registry credentials in Ansible Vault, never in plain text. Exclude vault files from Git using .gitignore.
+
+# 9.  Repository and Version Control
+
+Fork the `orka-engine-orchestration` repository on GitHub so you can customize it and track changes over time.
+•    Add a `.gitignore` to exclude SSH keys, vault files, and other secrets.
+•    Never commit passwords, tokens, or private keys.
+•    Tag releases used in production.
+•    Use separate branches for staging and production changes.
+•    Document your inventory structure and playbook customizations in the repository `README`.
+
+# Support Resources
+
+**Note:** The following remote host CLI commands are for advanced troubleshooting and diagnostics. It is recommended to use the Ansbile playbooks or Semaphore UI when available.
+
+
+| MacStadium Support | https://support.macstadium.com |
+| --- | --- |
+| orka-engine-orchestration repo | https://github.com/macstadium/orka-engine-orchestration |
+| Orka Engine CLI help | orka-engine --help |
+| VM commands | orka-engine vm --help |
+| Image commands | orka-engine image --help |
+| Ansible docs | https://docs.ansible.com |
+| Citrix VDA for macOS | https://docs.citrix.com |
