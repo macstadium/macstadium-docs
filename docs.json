@@ -449,7 +449,7 @@
     { "source": "/docs/faqs", "destination": "https://support.macstadium.com" },
     { "source": "/docs/bare-metal-hosts", "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas" },
     { "source": "/docs/cloud-automation", "destination": "/orka/orka-overview/orka-overview" },
-    { "source": "/docs/homebrew", "destination": "https://support.macstadium.com" },
+    { "source": "/docs/homebrew", "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew" },
     { "source": "/docs/ansible", "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide" },
     { "source": "/docs/:path*", "destination": "/" },
     {
