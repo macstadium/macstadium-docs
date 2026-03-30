@@ -451,7 +451,7 @@
     { "source": "/docs/cloud-automation", "destination": "/orka/orka-overview/orka-overview" },
     { "source": "/docs/homebrew", "destination": "https://support.macstadium.com" },
     { "source": "/docs/ansible", "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide" },
-    { "source": "/docs/:path*", "destination": "https://support.macstadium.com" },
+    { "source": "/docs/:path*", "destination": "/" },
     {
       "source": "/hc/en-us/articles/47496358655259-Network-Onboarding-Form",
       "destination": "/iaas/cisco-firewalls/network-onboarding-form",
