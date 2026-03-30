@@ -11,6 +11,7 @@
     "light": "#FE9000",
     "dark": "#323151"
   },
+  "versions": ["Orka 3.x", "Orka 2.x (Legacy)"],
   "topbar": {
     "links": [
       {
@@ -86,6 +87,7 @@
         "pages": [
           {
             "group": "Overview",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-overview/orka-overview",
               "orka/orka-overview/tools-integrations",
@@ -95,6 +97,7 @@
           },
           {
             "group": "Quick Start Guides",
+            "version": "Orka 3.x",
             "pages": [
               "orka/quick-start-guides/orka3-cli-quick-start",
               "orka/quick-start-guides/orka3-api-quick-start",
@@ -104,6 +107,7 @@
           },
           {
             "group": "Cluster Access",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-cluster-access/cluster-access-management-overview",
               "orka/orka-cluster-access/customer-portal-manage-account-users",
@@ -114,6 +118,7 @@
           },
           {
             "group": "Networking",
+            "version": "Orka 3.x",
             "pages": [
               "orka/networking-with-orka-at-macstadium/vpn-connection",
               "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
@@ -134,6 +139,7 @@
           },
           {
             "group": "DevOps Integrations",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-devops-integrations/jenkins",
               "orka/orka-devops-integrations/github-actions",
@@ -147,6 +153,7 @@
           },
           {
             "group": "OCI Images",
+            "version": "Orka 3.x",
             "pages": [
               "orka/oci-images/oci-images-overview",
               "orka/oci-images/oci-images-manage-registry-credentials",
@@ -158,6 +165,7 @@
           },
           {
             "group": "Kubernetes",
+            "version": "Orka 3.x",
             "pages": [
               "orka/kubernetes-native/k8s-native-overview",
               "orka/kubernetes-native/k8s-native-persistent-volumes",
@@ -166,6 +174,7 @@
           },
           {
             "group": "CLI Reference",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka3-cli-reference/orka3-cli-overview-configuration",
               "orka/orka3-cli-reference/authentication-and-user-management",
@@ -182,6 +191,7 @@
           },
           {
             "group": "Resources",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-resources/orka3-cli-command-reference",
               "orka/orka-resources/working-with-vm-metadata",
@@ -198,12 +208,14 @@
           },
           {
             "group": "Configuration",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-configuration/performance-gpu-passthrough"
             ]
           },
           {
             "group": "Compatibility",
+            "version": "Orka 3.x",
             "pages": [
               "orka/compatibility/feature-parity-apple-hardware",
               "orka/compatibility/feature-parity-orka-tools",
@@ -212,6 +224,7 @@
           },
           {
             "group": "Desktop",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-desktop/orka-desktop-310-release-notes",
               "orka/orka-desktop/welcome-to-orka-desktop-30"
@@ -219,12 +232,14 @@
           },
           {
             "group": "Engine",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-engine/orka-engine-30"
             ]
           },
           {
             "group": "On AWS and On-Prem",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
               "orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
@@ -245,6 +260,7 @@
           },
           {
             "group": "Release Notes",
+            "version": "Orka 3.x",
             "pages": [
               "orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
               "orka/orka-upgrades-and-release-notes/orka-35-release-notes",

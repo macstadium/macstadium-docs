@@ -12,6 +12,10 @@ labels: []
 suggested_new_path: "/orka/orka-resources/image-caching"
 ---
 
+<Note>
+  **Requires Orka 3.2 or later** on an Apple Silicon cluster. If you're on an earlier version, this feature is not available.
+</Note>
+
 # About
 
 Orka 3.2 introduces a helpful new feature called Image Caching. This feature allows users with admin privileges to download Orka images ahead of time, to any node in the Orka cluster. This means users enjoy a faster and more reliable VM deployment experience as it helps to reduce delays caused by network bandwidth issues. Without Image Caching, users would likely encounter delays during VM deployment, as automated CI jobs pull new images from the local cluster datastore (NFS mount) or a remote registry (cloud OCI registry service) during CI runtime.
