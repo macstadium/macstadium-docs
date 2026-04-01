@@ -30,11 +30,11 @@ Orka 3.3.3 addresses an issue that may cause ARM nodes to become non-operational
 
 This causes Orka to crash, which could lead to VMs not being cleaned up.
 
-### Who is affected:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#who-is-affected)
+### Who is affected:
 
 All customers running workloads that rapidly deploy multiple VMs may be affected. This includes any environment with medium-high utilization of ARM-based nodes.
 
-### Impact:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#impact)
+### Impact:
 
 When this issue occurs:
 
@@ -43,11 +43,11 @@ When this issue occurs:
 
 
 
-### Customer downtime:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#customer-downtime)
+### Customer downtime:
 
 This is a zero-downtime operation and has no effect on already running VMs.
 
-### Next steps:[](https://orkadocs.macstadium.com/docs/orka-333-release-notes#next-steps)
+### Next steps:
 
 We recommend that all customers using Orka 3.3.0 and above apply this hotfix immediately, especially those that are operating medium or large-load ARM-based infrastructure, or high-volume VM deployments.
 
@@ -78,27 +78,27 @@ Orka 3.3.1 is a patch release that addresses compatibility issues with JAMF MDM.
 
 # Orka 3.3.0
 
-## New Features[](https://orkadocs.macstadium.com/docs/orka-33-release-notes#new-features)
+## New Features
 
-  * [Orka Burst](https://orkadocs.macstadium.com/docs/burst) is now available to customers, providing dedicated, on-demand access to elastic cluster capacity as needed. If you are interested in adding burst nodes to your account, please get in touch with MacStadium through your Account Portal.
+  * [Orka Burst](/orka/orka-resources/burst) is now available to customers, providing dedicated, on-demand access to elastic cluster capacity as needed. If you are interested in adding burst nodes to your account, please get in touch with MacStadium through your Account Portal.
   * Component versions are now shown with the `orka3 version`and `orka3 node list -o wide` commands.
   * Orka worker nodes are upgraded to macOS 15.5.
 
 
 
-## Fixes and Improvements[](https://orkadocs.macstadium.com/docs/orka-33-release-notes#fixes-and-improvements)
+## Fixes and Improvements
 
-  * Orka has been updated from Kubernetes v1.30 to v1.33. [Upgrade Information.](https://orkadocs.macstadium.com/v3.3.0/docs/orka-upgrades)
+  * Orka has been updated from Kubernetes v1.30 to v1.33. [Upgrade Information.](/orka/orka-upgrades-and-release-notes/orka-upgrades)
     * Internal upgrades to Kubernetes networking components for greater stability on the control plane.
   * Orka now handles the permission alert for non-privileged applications in Sequoia 15.4.
     * Starting with macOS Sequoia, macOS triggers a graphical permissions alert whenever a non-privileged application attempts to communicate with anything on the local network (e.g., pulling an image from an OCI registry hosted on a separate machine on the local network). As a result of this change, the Orka Engine is now deployed as a LaunchDaemon.
   * Custom certificates uploaded by clients will persist on API restart and upgrades.
   * VMs now generate unique identifiers under Apple's guidelines—more details on the impact of this change in the Known Issues section.
-  * All fixes released in the Orka 3.2 series are included. [3.2.2](https://orkadocs.macstadium.com/v3.3.0/docs/orka-322-release-notes) [3.2.1](https://orkadocs.macstadium.com/v3.3.0/docs/orka-321-release-notes)
+  * All fixes released in the Orka 3.2 series are included. [3.2.2](/orka/orka-upgrades-and-release-notes/orka-32-release-notes) [3.2.1](/orka/orka-upgrades-and-release-notes/orka-32-release-notes)
 
 
 
-**Known Issues[](https://orkadocs.macstadium.com/docs/orka-33-release-notes#known-issues)**
+**Known Issues**
 
 > If you implement code signing workflows in Orka this message pertains to you. Please consider your workflows before deciding to upgrade to 3.3.0
 

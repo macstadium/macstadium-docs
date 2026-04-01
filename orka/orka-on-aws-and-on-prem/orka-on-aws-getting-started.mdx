@@ -16,7 +16,7 @@ Orka is an orchestration and virtualization layer for Mac build infrastructures 
 
 With Orka (also referred to as Orka Cluster) on AWS, you can now effortlessly integrate macOS development and macOS CI/CD into your AWS workflows and environments.
 
-## How does Orka on AWS work?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#how-does-orka-on-aws-work)
+## How does Orka on AWS work?
 
 The diagram below illustrates the architecture of an Orka Cluster on AWS, detailing how it integrates with Amazon EC2 Mac instances, Amazon EKS (Elastic Kubernetes Service), and Amazon ECR (Elastic Container Registry) within a customer’s AWS account.
 
@@ -33,7 +33,7 @@ Key elements in the architecture include:
 
 
 
-## Considerations for Deployment in AWS[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#considerations-for-deployment-in-aws)
+## Considerations for Deployment in AWS
 
   * EKS Deployment
     * Orka must be deployed in a dedicated EKS cluster running v1.33. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive. We will use a set of Ansible scripts (a common deployment method we follow, independent of the deployment location). For AWS, we will provide an image with the required playbooks & roles. It will be flexible and easy to parameterize, customize, and troubleshoot in case something goes wrong.
@@ -73,7 +73,7 @@ By default:
 
 
 
-### Networking and VPC Considerations[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#networking-and-vpc-considerations)
+### Networking and VPC Considerations
 
 We recommend that you deploy the Orka services to a distinct VPC and implement your networking via VPC peering. This will allow the necessary networking to interact with VMs and the control plane. Within the VPC, the following are ports that should be exposed for different services.
 
@@ -85,7 +85,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 
 
-## Install Overview[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#install-overview)
+## Install Overview
 
   1. **Talk to your MacStadium Account Team about your Orka on AWS install.** MacStadium will create an internal service ID for you, and **will provide you with the details you need to connect to our Public ECR repo**.
   2. Follow the installation steps below for the EKS Cluster and the CodeBuild role.
@@ -98,7 +98,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 
 
-## EKS Install Steps[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#eks-install-steps)
+## EKS Install Steps
 
   1. Orka must be deployed in a dedicated EKS cluster for running v1.33.
      1. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive.
@@ -123,7 +123,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 
 
-### Setup a CodeBuild project to run Orka Installation into the EKS Cluster[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster)
+### Setup a CodeBuild project to run Orka Installation into the EKS Cluster
 
 MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. You will need to supply MacStadium with the ARN for the role that has permission to pull the image. To set up a CodeBuild project as an Ansible runner:
 
@@ -182,7 +182,7 @@ Click `Next → Create`.
 
 Please capture your `EKS cluster name`and `EKS cluster VPC region`for use in bootstrap script needed for Configuring EC2 Macs.
 
-### OIDC Provider Setup[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#oidc-provider-setup)
+### OIDC Provider Setup
 
 To use the Orka API/CLI, you need to set up the OIDC provider.
 
@@ -199,7 +199,7 @@ To set up the provider:
 
 
 
-### Exposing the Orka API Service[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#exposing-the-orka-api-service)
+### Exposing the Orka API Service
 
 To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins). Please review the [Orka API reference](https://macstadium.github.io/orka-api-docs/) for more details.
 
@@ -245,7 +245,7 @@ The node IAM role must have EKS Cluster Admin permissions. This is necessary as 
 
 You must attach a security group to allow traffic between the managed Kubernetes control plane and the Mac node. For more information: [Amazon EKS security group requirements and considerations](https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html?icmpid=docs_eks_help_panel_hp_cluster_configure_security_groups)
 
-## Provisioning Steps[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#ec2-mac-install-steps)
+## Provisioning Steps
 
   1. We will provide an AMI based on an official AWS macOS base image that includes our tooling (Virtual Kubelet, Orka Engine)
   2. The AMI will additionally include a bootstrap script that should be run via user data. See the section below for more detailed information
@@ -273,7 +273,7 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 You can also download Orka Engine directly at: \<https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
 
-### Bootstrap Script[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#bootstrap-script)
+### Bootstrap Script
 
 The AMI includes a bootstrap script that can be run via [user data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) and accepts the following parameters to connect as an Orka worker node:
 
@@ -289,7 +289,7 @@ This will attach the node to the EKS cluster as a self-managed node.
 
 ### 
 
-## Using ECR for Image Storage and Management[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#using-ecr-for-image-storage-and-management)
+## Using ECR for Image Storage and Management
 
 You will need to have the following for use with ECR:
 
@@ -298,7 +298,7 @@ You will need to have the following for use with ECR:
 
 
 
-### ECR Authentication[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#ecr-authentication)
+### ECR Authentication
 
 You can get credentials for use with a private ECR registry with the aws CLI as follows:
     
@@ -328,11 +328,11 @@ aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --passwo
 > 
 > A future release will improve upon this with a credential helper.
 
-### IAM Policies for ECR[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#iam-policies-for-ecr)
+### IAM Policies for ECR
 
 The entity that fetches the authentication token needs to have appropriate permissions to push and/or pull images.
 
-#### Private Registry[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#private-registry)
+#### Private Registry
 
 For a private registry, the following policies contain the minimum set of permissions:
 
@@ -341,7 +341,7 @@ For a private registry, the following policies contain the minimum set of permis
 
 
 
-#### Public Registry[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#public-registry)
+#### Public Registry
 
 For a public registry, the following policies contain the minimum set of permissions:
 
@@ -350,7 +350,7 @@ For a public registry, the following policies contain the minimum set of permiss
 
 
 
-## Mac Node Deprovisioning Steps[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#mac-node-deprovisioning-steps)
+## Mac Node Deprovisioning Steps
 
 To deprovision a Mac Node you need to:
 
@@ -360,9 +360,9 @@ To deprovision a Mac Node you need to:
 
 
 
-## Logging, Monitoring, and Alerting[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#logging-monitoring-and-alerting)
+## Logging, Monitoring, and Alerting
 
-### OpenTelemetry Standards[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#opentelemetry-standards)
+### OpenTelemetry Standards
 
 Logging and monitoring conform to OpenTelemetry best practices, meaning that metrics can be scraped from the appropriate resources via Prometheus and visualized with Grafana using Prometheus as a data source.
 
@@ -370,7 +370,7 @@ Logs can be exposed on EC2 Mac workers via CloudWatch or by installing a `promta
 
 If you prefer to use CloudWatch, you can reference [AWS documentation for consuming OpenTelemetry endpoints](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OpenTelemetry-Sections.html) and the [agent installation guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html) to integrate with your existing logging system.
 
-#### Key Log Sources[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#key-log-sources)
+#### Key Log Sources
 
 What | Resource | Accessing | Purpose  
 ---|---|---|---  
@@ -380,19 +380,19 @@ Orka VM Logs | Mac EC2 Node | Via promtail
 /Users/administrator/.local/state/virtual-kubelet/vm-logs/* | Logs pertaining to the lifecycle of a specific VM  
 Pod Logs | EKS | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
   
-#### Key Metrics[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#key-metrics)
+#### Key Metrics
 
 A list of metrics covering the following is available: Orka API Server, Orka Operator Metrics.
 
 Any metrics exposed by default within EC2 Mac instances can be referenced via CloudWatch. CPU utilization and network traffic are examples of metrics that are made available natively through CloudWatch.
 
-## FAQ[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#faq)
+## FAQ
 
-### Does Orka Cluster support Intel nodes on AWS?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#does-orka-cluster-support-intel-nodes-on-aws)
+### Does Orka Cluster support Intel nodes on AWS?
 
 Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x version of Orka Cluster generally supports Intel, the support requires a wipe of the machine and an install of our custom-built Linux-based OS. This operation is not supported on AWS EC2 Mac.
 
-### How is macOS 15 Sequoia supported on AWS?[](https://orkadocs.macstadium.com/docs/orka-on-aws-getting-started#how-is-macos-15-sequoia-supported-on-aws)
+### How is macOS 15 Sequoia supported on AWS?
 
 macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the Apple Virtualization documentation \<https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines>. Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
 

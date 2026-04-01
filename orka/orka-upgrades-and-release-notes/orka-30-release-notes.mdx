@@ -12,17 +12,17 @@ labels: []
 suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-30-release-notes"
 ---
 
-# Orka v3.0.3[](https://orkadocs.macstadium.com/docs/orka-v300#orka-v303)
+# Orka v3.0.3
 
-## Improvements and fixes[](https://orkadocs.macstadium.com/docs/orka-v300#improvements-and-fixes)
+## Improvements and fixes
 
   * Deploying two or more Intel VMs from the same config or with no config at all on the same node resulted in incorrect networking rules. This could cause connections (SSH, VNC, etc...) to one of the VMs to be redirected to another VM on the same node
 
 
 
-# Orka v3.0.2[](https://orkadocs.macstadium.com/docs/orka-v300#orka-v302)
+# Orka v3.0.2
 
-## Improvements and fixes[](https://orkadocs.macstadium.com/docs/orka-v300#improvements-and-fixes-1)
+## Improvements and fixes
 
   * Allow creation of non-expiring ServiceAccount tokens
   * Improve VM stability when deploying on Mac Studios
@@ -32,16 +32,16 @@ suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-30-release-notes
 
 
 
-# Orka v3.0.1[](https://orkadocs.macstadium.com/docs/orka-v300#orka-v301)
+# Orka v3.0.1
 
-## Improvements and fixes[](https://orkadocs.macstadium.com/docs/orka-v300#improvements-and-fixes-2)
+## Improvements and fixes
 
   * Fixed a sporadic issue when saving an image
   * Enhance cluster resource management when arm nodes encounter limitations that prevent the deployment of more than 2 VMs.
 
 
 
-### OCI images[](https://orkadocs.macstadium.com/docs/orka-v300#oci-images)
+### OCI images
 
   * Image pull performance has improved and is faster now.
   * Memory consumption during image pull operations is reduced for a smoother experience.
@@ -50,20 +50,20 @@ suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-30-release-notes
 
 
 
-### CLI[](https://orkadocs.macstadium.com/docs/orka-v300#cli)
+### CLI
 
   * The CLI now ensures stable connectivity by addressing an issue where it sporadically connected to the IPv6 address of Cognito, leading to login failures.
   * The image save command is fixed now to provide accurate error messages when using image names with uppercase letters. Previously, an incorrect error message was displayed in such scenarios.
 
 
 
-# Orka v3.0.0[](https://orkadocs.macstadium.com/docs/orka-v300#orka-v300)
+# Orka v3.0.0
 
 Orka 3.0.0 is a major Orka release that brings Single Sign-On and native Kubernetes capabilities to your Orka clusters. All Orka tools and services have been completely reworked to provide improved usability, native Kubernetes interaction, more scalability, and improved performance. To benefit from the latest Orka release, you must migrate to Orka 3.0.0. This is both an Orka and a virtualization and orchestration layer upgrade.
 
-## New features[](https://orkadocs.macstadium.com/docs/orka-v300#new-features)
+## New features
 
-### Orka 3.0.0 now provides vanilla macOS 14 Sonoma images and ISOs[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-now-provides-vanilla-macos-14-sonoma-images-and-isos)
+### Orka 3.0.0 now provides vanilla macOS 14 Sonoma images and ISOs
 
 You can now deploy and work with Intel-based and Apple silicon-based VMs running on macOS 14 Sonoma. The latest vanilla Sonoma images and ISOs reside in the remote repository.
     
@@ -80,11 +80,11 @@ Orka 3.0.0 also provides an OCI-compatible Apple silicon-based macOS 14 Sonoma i
 ```
 orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
 ```
-### Orka 3.0.0 now provides truly native Kubernetes functionality[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-now-provides-truly-native-kubernetes-functionality)
+### Orka 3.0.0 now provides truly native Kubernetes functionality
 
 All Orka resources are rewritten to be Kubernetes native. This lets you use `kubectl` in addition to the Orka3 CLI and the new Orka3 API in Orka 3.0.0.
 
-### Orka 3.0.0 lets you work with images from OCI-compatible registries[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-lets-you-work-with-images-from-oci-compatible-registries)
+### Orka 3.0.0 lets you work with images from OCI-compatible registries
 
 You can now deploy VMs that pull an image straight from an OCI-compatible registry (such as GitHub Packages).
     
@@ -102,19 +102,19 @@ This feature is available only for Apple silicon-based VMs and images. Registry 
 
 Check \<https://github.com/macstadium/orka-images> for the latest OCI-compatible images offered by MacStadium.
 
-### Orka 3.0.0 now runs on Kubernetes 1.27[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-now-runs-on-kubernetes-127)
+### Orka 3.0.0 now runs on Kubernetes 1.27
 
 Orka's virtualization and orchestration layer now runs on Kubernetes 1.27. If you're working with the Kubernetes layer directly, review the deprecated and removed Kubernetes features and resolve any pending issues before requesting an upgrade of your environment.
 
 To update your custom pods, review the official Kubernetes guides on how to upgrade between versions.
 
-### The new Orka 3.0.0 API is more straightforward and more powerful[](https://orkadocs.macstadium.com/docs/orka-v300#the-new-orka-300-api-is-more-straightforward-and-more-powerful)
+### The new Orka 3.0.0 API is more straightforward and more powerful
 
 Orka 3.0.0 now provides a more unrestrained and powerful API to manage your cluster. All endpoints are organized in a more streamlined method and follow enterprise industry standards.
 
 In addition, Orka 3.0.0 now provides a Swagger UI, which lets you use the Orka3 API straight from your cluster. Navigate to `http://<ORKA_API_URL>/api/v1/swagger`, provide an authentication token, and start utilizing the new Orka3.0.0 API.
 
-### The new Orka 3.0.0 CLI is automation-friendly and kubectl-inspired[](https://orkadocs.macstadium.com/docs/orka-v300#the-new-orka-300-cli-is-automation-friendly-and-kubectl-inspired)
+### The new Orka 3.0.0 CLI is automation-friendly and kubectl-inspired
 
 The new Orka 3.0.0 CLI took inspiration from `kubectl` and follows its well-known syntax. If you're familiar with `kubectl`, you will find the new and improved Orka3 CLI easier to use. If you're new to Kubernetes, the new Orka3 CLI will help you stride into the world of native Kubernetes understanding.
 
@@ -122,11 +122,11 @@ The Orka3 CLI was rewritten with automation in mind. You will find that it no lo
 
 Autocompletion and many command aliases are now available to ensure that the Orka3 CLI is as easy to use as possible.
 
-### Orka 3.0.0 brings Single Sign-On, RBAC, and service accounts[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-brings-single-sign-on-rbac-and-service-accounts)
+### Orka 3.0.0 brings Single Sign-On, RBAC, and service accounts
 
 Starting with Orka 3.0, Orka relies on Single Sign-On (SSO), service accounts, and the Kubernetes concept of role-based access control (RBAC) for user management. Orka users log in to their clusters with their MacStadium Customer Portal credentials. All user management happens in the MacStadium Customer Portal, including assigning user roles. Based on the role bindings configured for the respective user in the cluster, they can access one or more namespaces. For improved security, user authentication tokens (generated during login) have a lifecycle of one hour.
 
-### Orka 3.0.0 introduces namespaces, native resource isolation, and dedication[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-introduces-namespaces-native-resource-isolation-and-dedication)
+### Orka 3.0.0 introduces namespaces, native resource isolation, and dedication
 
 Among the native Kubernetes capabilities of Orka 3.0.0 are namespaces. By default, all Orka users have access to the `orka-default` namespace. However, to apply resource dedication and isolation in your cluster, you can create more namespaces with the `orka-` prefix. Next, you need to move one or more nodes to the new namespace and configure the role binding for the namespace.
     
@@ -138,7 +138,7 @@ orka3 rb add-subject --namespace orka-dedicated --user user@company.com,user2@co
 ```
 Nodes moved to a namespace become dedicated to this namespace, and only users and service accounts added to the respective role binding have access to this node and its computational resources. Formerly, you were able to create node dedication by creating user groups and applying the groups to the respective node.
 
-### Orka 3.0.0 handles sandboxing via namespaces[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-handles-sandboxing-via-namespaces)
+### Orka 3.0.0 handles sandboxing via namespaces
 
 Orka 3.0 introduces a new way to handle sandboxing - with namespaces. First, you need to create a dedicated namespace with enabled custom pods. Next, you need to move one or more nodes to that namespace. You also need to provide access to the namespace to all users and service accounts that require access.
     
@@ -154,7 +154,7 @@ After that, you can deploy custom pods. For any custom pods you want to run, add
 ```
 {"key": "orka.macstadium.com/namespace-reserved", "value": "orka-sandbox"}
 ```
-### Orka 3.0.0 no longer requires VM configurations[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-no-longer-requires-vm-configurations)
+### Orka 3.0.0 no longer requires VM configurations
 
 You can now deploy a VM without creating or specifying a VM configuration. Deploying a VM as now simple as running:
     
@@ -164,7 +164,7 @@ orka3 vm deploy --image <IMAGE_NAME>
 ```
 You can specify an image stored locally in your cluster or the complete image path to an OCI-compatible registry.
 
-### Orka 3.0.0 lets you download ISOs on your local machine[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-lets-you-download-isos-on-your-local-machine)
+### Orka 3.0.0 lets you download ISOs on your local machine
 
 You can now download any ISO stored in your cluster to your local machine for editing and testing.
     
@@ -176,35 +176,35 @@ curl -X 'GET' \
   -H 'Authorization: Bearer <TOKEN>' \
   -o '<FILE_PATH>'
 ```
-### Orka 3.0.0 lets you add comprehensive descriptions for images and ISOs[](https://orkadocs.macstadium.com/docs/orka-v300#orka-300-lets-you-add-comprehensive-descriptions-for-images-and-isos)
+### Orka 3.0.0 lets you add comprehensive descriptions for images and ISOs
 
 Images and ISOs now have an extra field - description. You can use it to provide important details about the image, such as macOS version, origin (local, remote, copied or pulled), owner, or even specific OS settings. It's up to you. Use the `orka3 image set-description` or `orka3 iso set-description` command, or the `POST /api/v1/namespaces/{namespace}/images/{image}/description` or `/api/v1/namespaces/{namespace}/isos/{iso}/description` endpoints.
 
-## Removed and deprecated features[](https://orkadocs.macstadium.com/docs/orka-v300#removed-and-deprecated-features)
+## Removed and deprecated features
 
-### Orka 2.x API[](https://orkadocs.macstadium.com/docs/orka-v300#orka-2x-api)
+### Orka 2.x API
 
-Orka 2.x API and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) and [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping).
+Orka 2.x API and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x API, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
-### Orka 2.x CLI[](https://orkadocs.macstadium.com/docs/orka-v300#orka-2x-cli)
+### Orka 2.x CLI
 
-Orka 2.x CLI and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) and [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping).
+Orka 2.x CLI and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x CLI, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
-### User logs[](https://orkadocs.macstadium.com/docs/orka-v300#user-logs)
+### User logs
 
-[Logging 1.0](https://orkadocs.macstadium.com/docs/logging) and [Logging 2.0](https://orkadocs.macstadium.com/docs/logging-20)are now **removed**. The Orka team is gathering information about this feature and might consider implementing an updated version or an alternative solution.
+Logging 1.0 and Logging 2.0are now **removed**. The Orka team is gathering information about this feature and might consider implementing an updated version or an alternative solution.
 
-### Shared VM storage for Apple silicon-based Monterey VMs[](https://orkadocs.macstadium.com/docs/orka-v300#shared-vm-storage-for-apple-silicon-based-monterey-vms)
+### Shared VM storage for Apple silicon-based Monterey VMs
 
-[Shared VM storage](https://orkadocs.macstadium.com/docs/shared-vm-storage) is now **removed** for Apple silicon-based VMs running macOS Monterey. Intel-based Monterey VMs are not affected.
+[Shared VM storage](/orka/orka-resources/shared-vm-storage) is now **removed** for Apple silicon-based VMs running macOS Monterey. Intel-based Monterey VMs are not affected.
 
 To continue using shared VM storage, upgrade your Apple silicon-based Monterey VMs to macOS Ventura OR switch to Intel-based Monterey VMs.
 
-### Saved state[](https://orkadocs.macstadium.com/docs/orka-v300#saved-state)
+### Saved state
 
 The following features are now **removed:**
 
@@ -214,7 +214,7 @@ The following features are now **removed:**
 
 
 
-### Attached storage (from Orka images)[](https://orkadocs.macstadium.com/docs/orka-v300#attached-storage-from-orka-images)
+### Attached storage (from Orka images)
 
 The following features are now **removed:**
 
@@ -224,21 +224,21 @@ The following features are now **removed:**
 
 
 
-### Node dedication[](https://orkadocs.macstadium.com/docs/orka-v300#node-dedication)
+### Node dedication
 
-The [earlier implementation of node dedication](https://orkadocs.macstadium.com/docs/node-dedication) is now **removed**. To configure user access to a particular node, use namespaces instead. For more information, see [here](https://orkadocs.macstadium.com/docs/post-300-migration-actions#re-create-user-and-node-grouping-node-dedication).
+The earlier implementation of node dedication is now **removed**. To configure user access to a particular node, use namespaces instead. For more information, see [here](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration).
 
-### Sandboxing[](https://orkadocs.macstadium.com/docs/orka-v300#sandboxing)
+### Sandboxing
 
-The [earlier implementation of sandboxing](https://orkadocs.macstadium.com/docs/nodes#enable-sandbox) is now **removed**. You need to use a namespace with enabled custom pods to run custom pods in your cluster. For more information, see [here](https://orkadocs.macstadium.com/docs/post-300-migration-actions#re-create-sandboxed-nodes-and-redeploy-custom-pods).
+The earlier implementation of sandboxing is now **removed**. You need to use a namespace with enabled custom pods to run custom pods in your cluster. For more information, see [here](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration).
 
-### Yes/no argument values[](https://orkadocs.macstadium.com/docs/orka-v300#yesno-argument-values)
+### Yes/no argument values
 
 Passing `yes` or `no` as arguments to boolean flags is now **removed**.
 
 Use `true` or `false` instead.
 
-### Re-configuring I/O Boost[](https://orkadocs.macstadium.com/docs/orka-v300#re-configuring-io-boost)
+### Re-configuring I/O Boost
 
 The following features are now **removed:**
 
@@ -249,7 +249,7 @@ The following features are now **removed:**
 
 I/O Boost is now always enabled. You **will not be able** to work with VMs running macOS versions earlier than Mojave 10.14.5.
 
-## Improvements[](https://orkadocs.macstadium.com/docs/orka-v300#improvements)
+## Improvements
 
 Orka 3.0.0. introduces the following improvements:
 
@@ -262,7 +262,7 @@ Orka 3.0.0. introduces the following improvements:
 
 
 
-## Known issues[](https://orkadocs.macstadium.com/docs/orka-v300#known-issues)
+## Known issues
 
   * Nested virtualization is not available on macOS 14 Sonoma VMs. This is a limitation of the Apple virtualization framework.  
 **Workaround:** None.
@@ -300,7 +300,7 @@ Orka 3.0.0. introduces the following improvements:
 **Workaround:** Always upgrade to the latest macOS version.
   * macOS Ventura VMs created from ISO return to the Recovery (ISO install) screen after restart if you don't manually select to boot macOS from the boot menu.  
 **Workaround:** Choose the second option from the boot menu (`macOS Installer` during the final steps of the setup or `Macintosh HD` after you have completed the installation) after every restart. If you miss the boot menu and end up at the Recovery screen, restart the VM from the Apple menu in the top left corner.  
-Once you're done with your current OS configuration, [commit the changes or save a new image](https://orkadocs.macstadium.com/docs/existing-images-upload-management#create-or-update-a-base-image-from-a-deployed-vm) from the VM. Use the image to create and deploy macOS Ventura VMs.
+Once you're done with your current OS configuration, [commit the changes or save a new image](/orka/orka3-cli-reference/image-management) from the VM. Use the image to create and deploy macOS Ventura VMs.
   * Intel-based Ventura VMs created with the Orka Web UI might not work as expected. This occurs because the **Net Boost** option is disabled by default when creating new VM configs in the Web UI. However, Intel-based Ventura VMs require **Net Boost** to be enabled to work properly.  
 **Workaround:** Select the **Net Boost** checkbox when creating Intel-based Ventura VMs.
   * You cannot access your shared VM storage after you update your Orka VM Tools from 2.3.x or earlier to 2.4.0 or later on an existing Monterey VM. The storage will still be listed under the /Volumes/orka`but you will not be able to access any content on it.<br/>**Workaround:**`Commit`or`save`the base image with the updated Orka VM Tools and re-create your Monterey VMs. Alternatively, use the latest default`.orkasi` image to re-create your VMs.
@@ -332,15 +332,15 @@ Wait for the operation to complete.
 ```
 xattr -d com.apple.quarantine '/Applications/Xcode.app'
 ```
-## How to upgrade[](https://orkadocs.macstadium.com/docs/orka-v300#how-to-upgrade)
+## How to upgrade
 
 > **Scheduled maintenance window required**
 > 
-> Orka 3.0.0 is a virtualization and orchestration layer upgrade. For more information, see [Orka Upgrades](https://orkadocs.macstadium.com/docs/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
+> Orka 3.0.0 is a virtualization and orchestration layer upgrade. For more information, see [Orka Upgrades](/orka/orka-upgrades-and-release-notes/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
 > 
 > **This release requires a maintenance window of up to 3 hours depending on the size of the cluster.**
 
   1. Submit a ticket through the [MacStadium portal](https://portal.macstadium.com/).
   2. Schedule a time for the maintenance window that works for you through the link provided in the ticket.  
 The suggested time(s) must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
-  3. Follow [this migration guide](https://orkadocs.macstadium.com/docs/post-300-migration-actions) to configure your cluster and tools after the migration. If you have any CLI-based or API-based custom automation, review the [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) to decide how to migrate it.
+  3. Follow [this migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you have any CLI-based or API-based custom automation, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) to decide how to migrate it.
