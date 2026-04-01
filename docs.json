@@ -17,6 +17,14 @@
       {"name": "Portal", "url": "https://portal.macstadium.com"}
     ]
   },
+  "github": {
+    "owner": "macstadium",
+    "repo": "macstadium-docs"
+  },
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
   "navigation": {
     "versions": [
       {
