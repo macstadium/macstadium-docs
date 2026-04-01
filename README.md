@@ -39,4 +39,6 @@ The site will be available at `http://localhost:3000`.
 
 ## Questions
 
-Reach out in Slack or open an issue.
+**MacStadium customers:** [open a GitHub issue](https://github.com/macstadium/macstadium-docs/issues) or email [support@macstadium.com](mailto:support@macstadium.com).
+
+**Internal team:** open an issue or reach out on Slack.
