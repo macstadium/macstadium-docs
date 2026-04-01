@@ -1,0 +1,278 @@
+---
+title: "Jamf Enrollment for Orka VDI Desktops"
+description: "Enroll Orka-provisioned macOS VMs into Jamf Pro using a golden image with LaunchDaemon and LaunchAgent scripts. Covers setup, enrollment flow, and known limitations."
+---
+
+This guide walks through how to enroll Orka-provisioned macOS VMs into your Jamf Pro instance, what options are available, and how to set up the most scalable approach using your golden image.
+
+---
+
+## What's Different About VMs
+
+Jamf's standard automated enrollment uses Apple Business Manager (ABM) and Automated Device Enrollment (ADE). Apple does not support ABM registration for virtual machines, so that path isn't available for Orka VDI desktops.
+
+On modern macOS (10.13 and later), Jamf's User-Initiated Enrollment installs an MDM profile on the device. Installing an MDM profile on an unsupervised machine requires the user to explicitly approve it. Since VMs can't be supervised through ABM, you can't skip that approval step entirely.
+
+What you can do is get it down to a single click. The recommended approach below kicks off enrollment automatically at first boot and puts a System Settings notification in front of the user asking them to approve the MDM profile. That's as hands-off as Apple allows on an unsupervised device.
+
+---
+
+## How It Works
+
+Two components go into your golden image.
+
+A **LaunchDaemon** runs at boot as root. It downloads the Jamf binary from your Jamf Pro server, installs the management framework, and creates a computer record in Jamf Pro. No user interaction required.
+
+A **LaunchAgent** runs at each login. If MDM enrollment isn't complete, it shows the user a dialog and opens Safari to the Jamf enrollment page. The user completes SSO authentication, clears the pre-filled username field on the enrollment page, clicks Enroll, clicks Download, then approves the profile in System Settings > General > Device Management. The prompt repeats at each login until enrollment is confirmed, then removes itself.
+
+Both components remove themselves once MDM enrollment is confirmed.
+
+---
+
+## What You Need
+
+- Your Jamf Pro instance URL (e.g., `https://yourcompany.jamfcloud.com`)
+- Jamf Pro admin access to configure User-Initiated Enrollment
+- Access to your Orka golden image
+
+**These instructions were written and verified against Jamf Pro 11.25.2 and macOS 15.6.1.**
+
+Navigation and feature placement have changed across major versions of Jamf Pro. If your instance looks different, refer to the [Jamf Pro documentation](https://learn.jamf.com) for your specific version.
+
+---
+
+## Step-by-Step Instructions
+
+### Step 1: Enable User-Initiated Enrollment
+
+1. Click **Settings** at the bottom of the left sidebar.
+2. Under the **Global** tab, select **User-Initiated Enrollment**.
+3. On the **Computers** tab, confirm user-initiated enrollment is enabled. Save if you made changes.
+
+### Step 2: Create an Enrollment Invitation
+
+Enrollment invitations in Jamf Pro 11 live under Computers, but may be inside the UIE settings screen in previous versions.
+
+1. Click **Computers** at the top of the left sidebar.
+2. Click **Enrollment Invitations** in the sidebar.
+3. Click **New** and follow the prompts. Set the expiration date as far out as your instance allows — align it to your image rotation schedule so the invitation doesn't go stale before you re-seal the image.
+4. Scope the invitation to a specific Jamf site or LDAP group if needed.
+5. After saving, open the invitation record and copy the **Invitation ID**. This is the value you'll use as `INVITATION_CODE` in both scripts below.
+
+### Step 3: Create the LaunchDaemon Script
+
+Add the following script to your golden image at `/usr/local/bin/jamf-enroll.sh`. Fill in your `JSS_URL` and `INVITATION_CODE`, and swap out `com.yourcompany` for your reverse-domain identifier throughout.
+
+```bash
+mkdir -p /usr/local/bin
+```
+
+```bash
+#!/bin/bash
+# Runs at boot via LaunchDaemon. Installs the Jamf management framework
+# and creates a computer record in Jamf Pro. MDM profile installation
+# is handled separately via the login prompt.
+
+JSS_URL="https://yourcompany.jamfcloud.com"
+INVITATION_CODE="YOUR_INVITATION_CODE_HERE"
+JAMF_BINARY="/usr/local/jamf/bin/jamf"
+TMP_JAMF="/tmp/jamf"
+DAEMON_PLIST="/Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist"
+LOG="/var/log/jamf-enroll.log"
+MAX_ATTEMPTS=10
+ATTEMPT_FILE="/var/tmp/.jamf-enroll-attempts"
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOG"
+}
+
+attempts=0
+[ -f "$ATTEMPT_FILE" ] && attempts=$(cat "$ATTEMPT_FILE")
+
+if [ "$attempts" -ge "$MAX_ATTEMPTS" ]; then
+    log "Max attempts ($MAX_ATTEMPTS) reached. Verify invitation code and JSS reachability."
+    exit 1
+fi
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    log "MDM enrolled. Cleaning up LaunchDaemon."
+    launchctl unload "$DAEMON_PLIST" 2>/dev/null
+    rm -f "$DAEMON_PLIST" "/usr/local/bin/jamf-enroll.sh" "$ATTEMPT_FILE"
+    exit 0
+fi
+
+network_ready=false
+for i in $(seq 1 12); do
+    if curl -s --connect-timeout 5 -o /dev/null "${JSS_URL}/healthCheck.html"; then
+        network_ready=true
+        break
+    fi
+    log "Waiting for network... attempt $i"
+    sleep 5
+done
+
+if [ "$network_ready" = false ]; then
+    log "Network not available. Will retry at next boot."
+    echo $((attempts + 1)) > "$ATTEMPT_FILE"
+    exit 1
+fi
+
+if [ ! -f "$JAMF_BINARY" ]; then
+    log "Downloading Jamf binary."
+    curl -ks --connect-timeout 10 --max-time 60 "${JSS_URL}/bin/jamf" -o "$TMP_JAMF"
+    if [ $? -ne 0 ] || [ ! -s "$TMP_JAMF" ]; then
+        log "Download failed. Will retry."
+        echo $((attempts + 1)) > "$ATTEMPT_FILE"
+        exit 1
+    fi
+    chmod +x "$TMP_JAMF"
+    JAMF_BINARY="$TMP_JAMF"
+fi
+
+"$JAMF_BINARY" createConf -url "$JSS_URL" >> "$LOG" 2>&1
+
+log "Initiating Jamf framework enrollment."
+echo $((attempts + 1)) > "$ATTEMPT_FILE"
+"$JAMF_BINARY" enroll -invitation "$INVITATION_CODE" -jssUrl "$JSS_URL" >> "$LOG" 2>&1
+log "Enrollment command finished with exit code $?."
+```
+
+```bash
+chmod 755 /usr/local/bin/jamf-enroll.sh
+```
+
+### Step 4: Create the LaunchDaemon
+
+Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist`. Update the label to use your reverse-domain identifier.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.jamf-enroll</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/jamf-enroll.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>StartInterval</key>
+      <integer>300</integer>
+      <key>StandardOutPath</key>
+      <string>/var/log/jamf-enroll.log</string>
+      <key>StandardErrorPath</key>
+      <string>/var/log/jamf-enroll.log</string>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist
+chmod 644 /Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist
+```
+
+### Step 5: Create the LaunchAgent Script
+
+Add the following script to your golden image at `/usr/local/bin/jamf-enroll-prompt.sh`. Fill in your `JSS_URL`, `INVITATION_CODE`, and reverse-domain identifier.
+
+```bash
+#!/bin/bash
+# Runs at login via LaunchAgent. Prompts the user to complete MDM enrollment
+# via Safari. Cleans itself up once enrollment is confirmed.
+
+JSS_URL="https://yourcompany.jamfcloud.com"
+INVITATION_CODE="YOUR_INVITATION_CODE_HERE"
+AGENT_PLIST="/Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist"
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    launchctl unload "$AGENT_PLIST" 2>/dev/null
+    rm -f "$AGENT_PLIST" "/usr/local/bin/jamf-enroll-prompt.sh"
+    exit 0
+fi
+
+button=$(osascript <<EOF
+button returned of (display dialog "Your Mac desktop needs to be enrolled in your organization's device management system before you can access company resources.
+
+Click Enroll Now to open the enrollment page in Safari. You will need your company login credentials. When the page loads, clear the username field and click Enroll, then approve the profile in System Settings." \
+buttons {"Remind Me Later", "Enroll Now"} \
+default button "Enroll Now" \
+with title "Device Enrollment Required" \
+with icon caution)
+EOF
+)
+
+[ "$button" = "Enroll Now" ] && open -a /Applications/Safari.app "${JSS_URL}/enroll?invitation=${INVITATION_CODE}"
+```
+
+```bash
+chmod 755 /usr/local/bin/jamf-enroll-prompt.sh
+```
+
+### Step 6: Create the LaunchAgent
+
+Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist`. Update the label to use your reverse-domain identifier.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.jamf-enroll-prompt</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/jamf-enroll-prompt.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
+chmod 644 /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
+```
+
+### Step 7: Seal the Golden Image
+
+1. Don't load the LaunchDaemon or LaunchAgent in the image itself — they load on first boot and first login of each provisioned VM.
+2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
+3. Confirm no Jamf management framework is already installed. If `/Library/Application Support/JAMF/` exists, remove it before sealing: `sudo rm -rf "/Library/Application Support/JAMF/"`.
+4. Publish the image in Orka.
+
+---
+
+## Verifying Enrollment
+
+After provisioning a VM from your updated golden image:
+
+```bash
+# Check what the LaunchDaemon did
+cat /var/log/jamf-enroll.log
+
+# Confirm MDM profile was installed after the user approved
+profiles status -type enrollment
+```
+
+In Jamf Pro, go to **Computers > Search Computers** and search for the VM by hostname or hardware UUID (get it with `system_profiler SPHardwareDataType | grep UUID`). Confirm a computer record was created and check the **Management** tab to verify the MDM profile is listed.
+
+---
+
+## A Few Things Worth Knowing
+
+**Each VM gets its own record.** Orka assigns each VM a unique hardware UUID, so every desktop shows up as a separate computer in Jamf. When you destroy and reprovision a VM, the new instance creates a new record. Stale records from old VMs stick around until you clean them up manually — plan for that if you're running a high-churn environment.
+
+**Watch your invitation expiry.** If the enrollment invitation expires, the script hits its retry limit and stops trying. For long-lived golden images, set the invitation to "Never Expires." If you rotate invitations, update the script and re-seal the image before the old code goes stale.
+
+**The image contains credentials.** The enrollment script has your Jamf server URL and invitation code baked in. Apply the same access controls to this image that you'd use for any artifact holding credentials.
+
+**Supervision isn't available for VMs.** Apple doesn't support ABM registration for virtual machines, which means Orka desktops can't be supervised. MDM features that require supervision (remote lock, certain profile payloads, kernel extension management on older macOS) won't work. Standard policy and profile management is fine.
+
+**If enrollment isn't triggering,** check `/var/log/jamf-enroll.log`. The most common causes are the VM not having network access when the daemon first runs, an expired invitation code, or an MDM profile already present in the image before sealing.
