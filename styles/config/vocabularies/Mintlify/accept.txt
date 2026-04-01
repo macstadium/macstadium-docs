@@ -1,0 +1,46 @@
+# MacStadium product names
+Orka
+orka3
+MacStadium
+macstadium
+
+# Orka-specific terms
+orka-default
+kubeconfig
+kubectl
+RBAC
+namespace
+namespaces
+
+# Third-party integrations
+Buildkite
+Tekton
+TeamCity
+Packer
+Homebrew
+Xcode
+ESXi
+VMware
+vSphere
+Kubernetes
+
+# File formats and protocols
+IPSW
+MDX
+YAML
+TLS
+VNC
+macOS
+
+# Common tech abbreviations
+CLI
+API
+SSH
+DNS
+VM
+VMs
+CI/CD
+OCI
+SAML
+SSO
+DMCA
