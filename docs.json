@@ -280,6 +280,7 @@
                   "remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
                   "remote-desktop-vdi/orka-for-vdi-deployment/citrix-daas-configuration",
                   "remote-desktop-vdi/orka-for-vdi-deployment/image-management",
+                  "remote-desktop-vdi/orka-for-vdi-deployment/jamf-enrollment",
                   "remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing",
                   "remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
                   "remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
