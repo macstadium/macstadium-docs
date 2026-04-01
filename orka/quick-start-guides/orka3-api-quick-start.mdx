@@ -492,11 +492,11 @@ curl -X 'DELETE' \
 
 
 **cURL**
-    
-    
+
+
 ```
-curl -X 'DELETE' \  
-'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>' \  
--H 'accept: application/json' \  
+curl -X 'GET' \
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \
+-H 'accept: application/json' \
 -H 'Authorization: Bearer <TOKEN>'
 ```
