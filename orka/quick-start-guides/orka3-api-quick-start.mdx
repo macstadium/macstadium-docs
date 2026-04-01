@@ -64,7 +64,7 @@ You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overvie
 
   * For clusters deployed before Orka 2.1, it's the `.100` address for your `Private-1` network (usually, `10.221.188.100`), prefixed with `http`. For example: `http://10.221.188.100`.
   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
-  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](https://orkadocs.macstadium.com/docs/custom-tls-certificate).
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 
 
 
@@ -349,7 +349,7 @@ The good news is that `sonoma-90gb-orka3-arm` is already preconfigured for you, 
 
 **Are you not using the official Sonoma images?**
 
-If you're using another image as your starting point or if you are installing your OS from ISO, you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to [connect to the VM via VNC](https://orkadocs.macstadium.com/docs/vnc-to-a-vm). You can then [enable SSH and Screen Sharing](https://orkadocs.macstadium.com/docs/orka-vms-ssh-vnc-screen-sharing#managing-ssh-or-screen-sharing) connectivity in the OS.
+If you're using another image as your starting point or if you are installing your OS from ISO, you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to connect to the VM via VNC. You can then enable SSH and Screen Sharing connectivity in the OS.
 
   3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password one more time - when Apple connects to the VM.
 

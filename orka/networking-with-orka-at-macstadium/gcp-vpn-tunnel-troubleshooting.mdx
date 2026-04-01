@@ -33,7 +33,7 @@ If GCP shows that the tunnel is `Established` but there is no visibility and con
   * Verify that your `{ shared_key }` is correct. The `{ shared_key }` in the configuration must match the key set for the VPN connection.
   * Verify that you've replaced `{ macstadium_network_address }` and `{ macstadium_network_mask }` with the correct values for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
   * Verify that you've configured the NAT exemption rule properly. 
-    * The host and subnet mask required for `ONPREM-NET` are the host and mask for `Private-1` network from your [IP Plan](https://orkadocs.macstadium.com/docs/ip-plan).
+    * The host and subnet mask required for `ONPREM-NET` are the host and mask for `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
     * The host and subnet mask required for `GCP-NET` are the host and mask for your GCP virtual network. You need to convert the [subnet mask bit notation](http://www.steves-internet-guide.com/subnetting-subnet-masks-explained/) to the correct subnet mask (e.g., the `/16` notation converts to a `255.255.0.0` subnet mask).
     * The values in the brackets after `nat` must be the `Private-1`, followed by `Outside`.
 

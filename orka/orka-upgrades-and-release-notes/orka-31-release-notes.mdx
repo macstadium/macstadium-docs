@@ -15,19 +15,19 @@ suggested_new_path: "/orka/orka-upgrades-and-release-notes/orka-31-release-notes
 New features, improved functionality, and bug fixes in Orka v3.1.x  
 Released: May 9, 2024
 
-[__](https://orkadocs.macstadium.com/edit/orka-v310)____
+
 
 > **IMPORTANT**
 > 
 > Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions.
 
-# Orka v3.1.0[](https://orkadocs.macstadium.com/docs/orka-v310#orka-v310)
+# Orka v3.1.0
 
 Orka 3.1.0 is a major Orka release that brings support for public IPs for all integrations. It also contains performance improvements for big clusters.
 
-## New features[](https://orkadocs.macstadium.com/docs/orka-v310#new-features)
+## New features
 
-### Orka 3.1.0 now provides support for public IPs in the CLI and integrations[](https://orkadocs.macstadium.com/docs/orka-v310#orka-310-now-provides-support-for-public-ips-in-the-cli-and-integrations)
+### Orka 3.1.0 now provides support for public IPs in the CLI and integrations
 
 In Orka 3.0.x you were able to use public IPs only from the Jenkins and TeamCity plugins. Orka 3.1.0 allows you to use public IPs from the CLI and other integrations. To do that, use the public API IP provided by the Orka team to configure the CLI or the integrations
     
@@ -35,7 +35,7 @@ In Orka 3.0.x you were able to use public IPs only from the Jenkins and TeamCity
 ```
 orka3 config set --api-url <API_PUBLIC_IP>
 ```
-### (Intel-only) Support for old OS versions[](https://orkadocs.macstadium.com/docs/orka-v310#intel-only-support-for-old-os-versions)
+### (Intel-only) Support for old OS versions
 
 Orka 3.1.0 allows the deployment of High Sierra and Mojave. To do that, ensure that legacy IO is enabled and net boost is disabled for the VM
     
@@ -43,7 +43,7 @@ Orka 3.1.0 allows the deployment of High Sierra and Mojave. To do that, ensure t
 ```
 orka3 vm deploy -i mojave.img --legacy-io --disable-net-boost
 ```
-### Image size details[](https://orkadocs.macstadium.com/docs/orka-v310#image-size-details)
+### Image size details
 
 Orka 3.1.0 provides information about the image disk size as well as the actual size it takes on the storage. To get this information, run
     
@@ -58,21 +58,21 @@ _size_ \- This is the disk size of any VM deployed with that image
 
 _storage size_ \- This is the size the image takes on the storage
 
-## Removed and deprecated features[](https://orkadocs.macstadium.com/docs/orka-v310#removed-and-deprecated-features)
+## Removed and deprecated features
 
-### Orka 2.x API[](https://orkadocs.macstadium.com/docs/orka-v310#orka-2x-api)
+### Orka 2.x API
 
-Orka 2.x API and earlier versions are now **removed**. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) and [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping).
+Orka 2.x API and earlier versions are now **removed**. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x API, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
-### Orka 2.x CLI[](https://orkadocs.macstadium.com/docs/orka-v310#orka-2x-cli)
+### Orka 2.x CLI
 
-Orka 2.x CLI and earlier versions are now **removed**. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) , [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping) and [2.4.x and 3.0.x to 3.1.x and above: Backward Compatibility](https://orkadocs.macstadium.com/docs/24x-to-300-backward-compatibility-copy).
+Orka 2.x CLI and earlier versions are now **removed**. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) , [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x and 3.0.x to 3.1.x and above: Backward Compatibility](/orka/orka-cluster-migration-from-24-3x/24x-and-30x-to-31x-and-above-backward-compatibility).
 
 If you need help moving away from the Orka 2.x CLI, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
-## Improvements[](https://orkadocs.macstadium.com/docs/orka-v310#improvements)
+## Improvements
 
 Orka 3.1.0. introduces the following improvements:
 
@@ -81,7 +81,7 @@ Orka 3.1.0. introduces the following improvements:
 
 
 
-## Known issues[](https://orkadocs.macstadium.com/docs/orka-v310#known-issues)
+## Known issues
 
   * Nested virtualization is not available on macOS 14 Sonoma VMs. This is a limitation of the Apple virtualization framework.  
 **Workaround:** None.
@@ -115,7 +115,7 @@ Orka 3.1.0. introduces the following improvements:
 **Workaround:** Always upgrade to the latest macOS version.
   * macOS Ventura VMs created from ISO return to the Recovery (ISO install) screen after restart if you don't manually select to boot macOS from the boot menu.  
 **Workaround:** Choose the second option from the boot menu (`macOS Installer` during the final steps of the setup or `Macintosh HD` after you have completed the installation) after every restart. If you miss the boot menu and end up at the Recovery screen, restart the VM from the Apple menu in the top left corner.  
-Once you're done with your current OS configuration, [commit the changes or save a new image](https://orkadocs.macstadium.com/docs/existing-images-upload-management#create-or-update-a-base-image-from-a-deployed-vm) from the VM. Use the image to create and deploy macOS Ventura VMs.
+Once you're done with your current OS configuration, [commit the changes or save a new image](/orka/orka3-cli-reference/image-management) from the VM. Use the image to create and deploy macOS Ventura VMs.
   * Intel-based Ventura VMs created with the Orka Web UI might not work as expected. This occurs because the **Net Boost** option is disabled by default when creating new VM configs in the Web UI. However, Intel-based Ventura VMs require **Net Boost** to be enabled to work properly.  
 **Workaround:** Select the **Net Boost** checkbox when creating Intel-based Ventura VMs.
   * You cannot access your shared VM storage after you update your Orka VM Tools from 2.3.x or earlier to 2.4.0 or later on an existing Monterey VM. The storage will still be listed under the /Volumes/orka`but you will not be able to access any content on it.<br/>**Workaround:**`Commit`or`save`the base image with the updated Orka VM Tools and re-create your Monterey VMs. Alternatively, use the latest default`.orkasi` image to re-create your VMs.
@@ -147,15 +147,15 @@ Wait for the operation to complete.
 ```
 xattr -d com.apple.quarantine '/Applications/Xcode.app'
 ```
-## How to upgrade[](https://orkadocs.macstadium.com/docs/orka-v310#how-to-upgrade)
+## How to upgrade
 
 > **Scheduled maintenance window required**
 > 
-> Orka 3.1.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](https://orkadocs.macstadium.com/docs/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
+> Orka 3.1.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](/orka/orka-upgrades-and-release-notes/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
 > 
 > **This release requires a maintenance window of up to 3 hours depending on the size of the cluster.**
 
   1. Submit a ticket through the [MacStadium portal](https://portal.macstadium.com/).
   2. Schedule a time for the maintenance window that works for you through the link provided in the ticket.  
 The suggested time(s) must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
-  3. Follow [this migration guide](https://orkadocs.macstadium.com/docs/post-300-migration-actions) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) to decide how to migrate it.
+  3. Follow [this migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) to decide how to migrate it.

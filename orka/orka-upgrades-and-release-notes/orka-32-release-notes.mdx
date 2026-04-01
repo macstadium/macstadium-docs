@@ -18,13 +18,13 @@ Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools 
 
 # Orka 3.2.2
 
-## Improvements and fixes[](https://orkadocs.macstadium.com/docs/orka-322-release-notes#improvements-and-fixes)
+## Improvements and fixes
 
-### Fix: incomplete VM deletion[](https://orkadocs.macstadium.com/docs/orka-322-release-notes#fix-incomplete-vm-deletion)
+### Fix: incomplete VM deletion
 
 Addressed an issue with Orka preventing Kubernetes garbage collector from fully deleting a VM after the underlying pod is deleted first, particularly if a Kubernetes `foregroundDeletion` finalizer is present in the VM.
 
-### Fix: Custom users created during authentication[](https://orkadocs.macstadium.com/docs/orka-322-release-notes#fix-custom-users-created-during-authentication)
+### Fix: Custom users created during authentication
 
 Custom users created during authentication now have Orka cluster admin privileges. The change is proactive and prevents a future patch release to elevate users with cluster admin privileges.
 
@@ -71,31 +71,31 @@ Ensure that your host system meets the requirements above before creating your S
 
 # Orka 3.2.1
 
-## Improvements and fixes[](https://orkadocs.macstadium.com/docs/orka-321-release-notes#improvements-and-fixes)
+## Improvements and fixes
 
-### Image caching deletion fix[](https://orkadocs.macstadium.com/docs/orka-321-release-notes#image-caching-deletion-fix)
+### Image caching deletion fix
 
 The Orka Operator can in rare occurrences fail to update an Orka node status if a cache deletion operation does not fully complete. This can cause numerous unexpected errors including subsequent image cache failures. The Operator can now recover node status properly even after a cache deletion operation fails.
 
-### Fix: Issue where image import directory was removed by the cache clearing processs[](https://orkadocs.macstadium.com/docs/orka-321-release-notes#fix-issue-where-image-import-directory-was-removed-by-the-cache-clearing-processs)
+### Fix: Issue where image import directory was removed by the cache clearing processs
 
 Previously, when importing an image, the destination directory was created prior to extracting the image to a temporary location. Users were experiencing an issue where the extraction process did not complete prior to a caching process starting. Upon seeing that space is needed, empty directories would then be pruned in the cache. This would then result in the destination directory being removed, and when trying to move files into place, the process would fail due to the destination directory no longer existing. This was fixed in Orka 3.2.1, and the destination directory is now created at the time when the extracted files are moved into place.
 
 Additionally, temporary files are now cleaned up during caching, resolving an issue where users were unable to cache additional images due to temporary files previously not being deleted as expected.
 
-### Orka node status logic update[](https://orkadocs.macstadium.com/docs/orka-321-release-notes#orka-node-status-logic-update)
+### Orka node status logic update
 
 In corner cases during cache operations, an incorrect/outdated node status is returned during the operation resulting in a failure. The logic was improved to prevent this condition.
 
-### Improved Orka node architecture detection[](https://orkadocs.macstadium.com/docs/orka-321-release-notes#improved-orka-node-architecture-detection)
+### Improved Orka node architecture detection
 
 To ensure a node type is properly identified in mixed node environments, Intel vs. Apple Silicon (M-series) systems, the system info is checked with the node label to identify architecture type.
 
-### GitHub Actions Plugin null VM name issue[](https://orkadocs.macstadium.com/docs/orka-321-release-notes#github-actions-plugin-null-vm-name-issue)
+### GitHub Actions Plugin null VM name issue
 
 A recent upstream change to the ARC project caused previously used variables that Orka runners used to provide unique names to Orka runners return null VM names. The [v1.1.5 GitHub Actions Orka plugin](https://github.com/macstadium/orka-github-actions-integration/releases/tag/1.1.5) was changed to use natively created VM names from Kubernetes. The plugin also now implements `jobId` to identify jobs to improve support of concurrent/multiple runners.
 
-# Orka 3.2.0 What’s New in the Release[](https://orkadocs.macstadium.com/docs/orka-32-release-notes-1#whats-new-in-the-release)
+# Orka 3.2.0 What’s New in the Release
 
 Orka Cluster version 3.2 introduces a new feature, Scheduled Caching, and also provides support for Sequoia 15.0 VM images.
 
@@ -103,7 +103,7 @@ Orka Cluster version 3.2 introduces a new feature, Scheduled Caching, and also p
 > 
 > Sequoia support is dependent on requesting that some or all nodes are upgraded to Sequoia 15.0 in the upgrade request service ticket.
 
-## Scheduled Caching[](https://orkadocs.macstadium.com/docs/orka-32-release-notes-1#scheduled-caching)
+## Scheduled Caching
 
 Scheduled caching enables users to configure their Orka clusters to proactively pull VM images, avoiding long startup times when the VM is first run.
 
@@ -113,15 +113,15 @@ The scheduled caching feature requires planning for target nodes and optimal mai
 > 
 > The cache downloads directly from OCI repositories are currently slower than normal image download times by approximately 2-3x. For the beta release it is better to cache from NFS stores. If necessary, pull repo images down to NFS stores and then begin cache downloads to cluster nodes. Caching an image to more than five nodes simultaneously also adds delay to cache download completion time.
 
-## Sequoia Support[](https://orkadocs.macstadium.com/docs/orka-32-release-notes-1#sequoia-support)
+## Sequoia Support
 
 The Orka Cluster 3.2 release also introduces official support for macOS Sequoia release 15.0. To deploy Sequoia based VMs on your cluster you will need to have your cluster nodes upgraded to the Sequoia 15.0 release as well as the host OS is a dependency of running a Sequoia guest OS. When requesting your Orka Cluster upgrade to release 3.2 you should also specify any nodes you wish to run Sequoia VMs on as well so the OS can be upgraded.
 
-## Kubernetes update[](https://orkadocs.macstadium.com/docs/orka-32-release-notes-1#kubernetes-update)
+## Kubernetes update
 
 While upgrading Orka Cluster to release 3.2, MacStadium will also upgrade the cluster to Kubernetes stable version 1.3.0. This process must be done serially upgrading to each successive version from the current version, typically 1.5.3. Therefore, an Orka Cluster upgrade requires a longer maintenance window, and coupled with a possible node OS update, adds additional potential steps extending the entire upgrade duration even longer. For larger install bases, over 25 nodes, it is important to consider these upgrade duration factors when requesting your software upgrade.
 
-## Upgrading[](https://orkadocs.macstadium.com/docs/orka-32-release-notes-1#upgrading)
+## Upgrading
 
 > **WARNING**
 > 
@@ -132,7 +132,7 @@ While upgrading Orka Cluster to release 3.2, MacStadium will also upgrade the cl
 
 > **🗒️NOTES**
 > 
->   * Orka 3.2.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](https://orkadocs.macstadium.com/docs/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
+>   * Orka 3.2.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](/orka/orka-upgrades-and-release-notes/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
 >   * For customers who have not yet upgraded to Orka Cluster 3.0.0 please read the [migration guide](https://dash.readme.com/project/orka/v3.2.0/docs/post-300-migration-actions) before submitting a ticket.
 > 
 
@@ -140,4 +140,4 @@ While upgrading Orka Cluster to release 3.2, MacStadium will also upgrade the cl
   1. Submit a ticket through the [MacStadium portal](https://idp.macstadium.com/login?scope=aws.cognito.signin.user.admin+email+openid+phone+profile&response_type=code&client_id=os594upi12pn9ab16hmtk0akp&redirect_uri=https%3A%2F%2Fportal.macstadium.com%2Foauth%2Fredirect&state=eyJsYXN0VmlzaXRlZFVybCI6Ii8ifQ).
   2. Schedule a time for the maintenance window that works using the link provided in the ticket.  
 The suggested time must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
-  3. Follow this [migration guide](https://orkadocs.macstadium.com/docs/post-300-migration-actions) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](https://orkadocs.macstadium.com/docs/240-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](https://orkadocs.macstadium.com/docs/24-to-30-cli-mapping-copy) to decide how to migrate it.
+  3. Follow this [migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) to decide how to migrate it.

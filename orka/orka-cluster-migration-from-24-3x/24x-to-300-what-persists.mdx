@@ -24,9 +24,9 @@ The following table outlines which environment features persist and which [you'l
 
 Environment feature | Does it persist after the migration? | Details | Do I need to do anything?  
 ---|---|---|---  
-[Cluster configurations](https://orkadocs.macstadium.com/docs/cluster-configurations) | ✅ | Cluster settings like GPU passthrough, VM Internet and network isolation, and nested virtualization continue to work as expected. | No.  
+[Cluster configurations](/orka/orka-resources/cluster-configurations) | ✅ | Cluster settings like GPU passthrough, VM Internet and network isolation, and nested virtualization continue to work as expected. | No.  
 Self-signed or custom TLS certificates for access via custom domains and HTTPs | ✅ | All self-signed or custom TLS certificates are retained. | No.  
-Sandboxed nodes | ❌ | All sandboxed nodes are returned to their original state. | Re-create your sandboxing with [custom namespaces](https://orkadocs.macstadium.com/docs/orka-cluster-resource-access#create-a-namespace) with the `--enable-custom-pods` setting.  
+Sandboxed nodes | ❌ | All sandboxed nodes are returned to their original state. | Re-create your sandboxing with [custom namespaces](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources#create-a-namespace) with the `--enable-custom-pods` setting.  
 Node dedication (grouping) | ❌ | All user and node grouping is removed. | Re-create node dedication with [custom namespaces](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).  
 Users | ❗️ | Orka 3.0 introduces a new way to manage users and log in to your cluster.  
   

@@ -14,7 +14,7 @@ suggested_new_path: "/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started"
 
 With Orka On-Prem, you can now effortlessly integrate macOS development and macOS CI/CD into your On-Prem Mac Compute and Kubernetes-based workflows and environments. Don't have Kubernetes experience on-prem? Don't worry, Macstadium can configure a Hybrid Cluster using any Managed k8s Service like AWS Elastic Kubernetes Service, Google Kubernetes Engine, Azure Kubernetes Service, or using MacStadium hosted Kubernetes.
 
-# How does Orka On-Prem work?[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#how-does-orka-on-prem-work)
+# How does Orka On-Prem work?
 
 The diagram below illustrates the architecture of an Orka Cluster On-Prem, detailing how it integrates with Kubernetes 1.33, Mac compute hosts, and OCI Registries for image storage.
 
@@ -32,15 +32,15 @@ Key elements in the architecture include:
 
 
 
-## Networking Considerations[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#networking-considerations)
+## Networking Considerations
 
 The Orka VMs use the 192.168.64.0/24 network. This is a virtual network on each of the host and it is not directly accessible.
 
 You might experience issues if your Orka VMs need to access services that are in a network that overlaps with their virtual network.
 
-# Install Steps[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#install-steps)
+# Install Steps
 
-## Kubernetes Requirements and Initial Steps[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#kubernetes-requirements-and-initial-steps)
+## Kubernetes Requirements and Initial Steps
 
 Orka requires a dedicated Kubernetes 1.33 cluster to run.
 
@@ -50,13 +50,13 @@ Orka requires a dedicated Kubernetes 1.33 cluster to run.
 
 We recommend following the [official guidelines](https://kubernetes.io/docs/setup/) for setting up a Kubernetes cluster. The official recommended tool for setting up Kubernets clusters is [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/).
 
-If you are familiar with Ansible, you could also use [Kubespray](https://orkadocs.macstadium.com/docs/Kubespray) to set up your cluster.
+If you are familiar with Ansible, you could also use [Kubespray](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started) to set up your cluster.
 
 If you do not have experience with Kubernetes, MacStadium can host and manage the Kubernetes cluster for you in our Data Centers, or you can use an AWS EKS service to run your Orka Cluster Services.
 
 The following assumes you are installing and managing your own Kubernetes cluster.
 
-### Setting up OIDC for Authentication[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#setting-up-oidc-for-authentication)
+### Setting up OIDC for Authentication
 
 Orka uses OIDC for user authentication. Make sure to configure the MacStadium OIDC provider in your Kubernetes cluster.
 
@@ -106,7 +106,7 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 Download Orka Engine directly at: \<https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
 
-### Installing the Orka Cluster Services[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#installing-the-orka-cluster-services)
+### Installing the Orka Cluster Services
 
 MacStadium distributes the Service Images needed to install Orka Cluster On Prem via AWS. As a result, the easiest way to perform an installation is to use some credentials that the MacStadium Support team will provide to gain access to the Ansible image with runners that are used to install.
 
@@ -177,7 +177,7 @@ where` <kube_config_location>` is the location of the kube config file on the ho
 ```
 ansible-playbook site.yml
 ```
-### Exposing the Orka API Service[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#exposing-the-orka-api-service)
+### Exposing the Orka API Service
 
 To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins).
 
@@ -197,9 +197,9 @@ To grant a user cluster admin access, add them to the `orka:cluster-admins` grou
 
 The Orka Web UI is not actively maintained and is not recommended for production use. If you need to access it, you can expose the web UI service using an ingress controller or load balancer; see [Exposing the Orka API Service](#exposing-the-orka-api-service) for the approach.
 
-## Setting Up Mac Nodes[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#setting-up-mac-nodes)
+## Setting Up Mac Nodes
 
-### Prerequisites[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#prerequisites)
+### Prerequisites
 
 All of your Mac nodes need to:
 
@@ -210,7 +210,7 @@ All of your Mac nodes need to:
 
 
 
-### Setup[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#setup)
+### Setup
 
 MacStadium provides another Ansible playbook that allows you to configure your Mac nodes with the software needed to run these nodes as Kubernetes worker nodes.
 
@@ -255,7 +255,7 @@ ansible-playbook configure-arm.yml -i hosts --ask-become-pass
 ```
 You will be asked for the ansible_user password. This is needed to that Ansible can setup autologin for the hosts. This is needed so you can run Sequoia VMs.
 
-## Setting Up Backups[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#setting-up-backups)
+## Setting Up Backups
 
 Orka backups are exports of the Orka specific resources within the cluster:
 
@@ -279,7 +279,7 @@ There are two main ways to backup the Orka resources:
 
 
 
-### Using The MacStadium Provided Backup[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#using-the-macstadium-provided-backup)
+### Using The MacStadium Provided Backup
 
 To use the MacStadium provided functionality you need to:
 
@@ -302,7 +302,7 @@ To use the MacStadium provided functionality you need to:
 ```
      ansible-playbook backup.yml
 ```
-### Implementing Your Own Backup[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#implementing-your-own-backup)
+### Implementing Your Own Backup
 
 The recommended way to backup Orka resources is via a CronJob, similar to what MacStadium provides out of the box.
 
@@ -325,15 +325,15 @@ Note - you need to remove some metadata from these resources. To do that, run th
 ```
 These resources can be stored in an yml file, which you can archive and store somewhere.
 
-# Logging, Monitoring, and Alerting[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#logging-monitoring-and-alerting)
+# Logging, Monitoring, and Alerting
 
-## OpenTelemetry Standards[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#opentelemetry-standards)
+## OpenTelemetry Standards
 
 Logging and monitoring conform to OpenTelemetry best practices, meaning that metrics can be scraped from the appropriate resources via Prometheus and visualized with Grafana using Prometheus as a data source.
 
 Logs can be exposed on Mac workers installing a `promtail` service, allowing them to be aggregated through Loki.
 
-#### Key Log Sources[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#key-log-sources)
+#### Key Log Sources
 
 What | Resource | Accessing | Purpose  
 ---|---|---|---  
@@ -355,7 +355,7 @@ Orka Engine Logs | Engine Node | `/opt/orka/logs/com.macstadium.orka-engine.serv
 Pod Logs | k8s | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
   
 ####    
-Key Metrics[](https://orkadocs.macstadium.com/docs/orka-cluster-32-on-prem-getting-started#key-metrics)
+Key Metrics
 
 A list of metrics covering the following is available: Orka API Server, Orka Operator Metrics.
 
