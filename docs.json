@@ -25,6 +25,11 @@
     "suggestEdit": true,
     "raiseIssue": true
   },
+  "integrations": {
+    "telemetry": {
+      "enabled": true
+    }
+  },
   "navigation": {
     "versions": [
       {
