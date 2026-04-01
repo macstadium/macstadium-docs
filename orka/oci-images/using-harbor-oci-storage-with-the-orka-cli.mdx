@@ -123,7 +123,11 @@ As a Project Admin, you can:
 
 Add credentials to Orka to access the Harbor OCI repository:
 
-`orka3 regcred add -u <OCI.User> -p <OCI.Pass> <OCI.FQDN>`
+`orka3 regcred add -u <OCI.User> -p <OCI.Pass> https://<OCI.FQDN>`
+
+<Warning>
+  The `https://` scheme is required. Omitting it or using `http://` will cause push operations to fail with an App Transport Security (ATS) error on the Orka nodes.
+</Warning>
 
 ### Pulling images:
 
@@ -223,6 +227,25 @@ For more detailed information about Harbor’s advanced features and capabilitie
 
 
 
+
+### Troubleshooting:
+
+#### Push fails with an App Transport Security error
+
+If `orka3 vm get-push-status` returns an error referencing App Transport Security (ATS) or a secure connection requirement:
+
+```
+pushing image failed — The resource could not be loaded because the App Transport Security policy requires the use of a secure connection.
+```
+
+This means the Orka node attempted to connect to Harbor over HTTP instead of HTTPS. The most common cause is a registry credential added without the `https://` scheme.
+
+To fix it, remove the existing credential and re-add it with `https://`:
+
+```bash
+orka3 regcred remove <OCI.FQDN>
+orka3 regcred add -u <OCI.User> -p <OCI.Pass> https://<OCI.FQDN>
+```
 
 ### Additional support:
 
