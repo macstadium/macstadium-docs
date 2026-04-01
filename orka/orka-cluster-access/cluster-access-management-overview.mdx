@@ -18,20 +18,16 @@ Users log in to their cluster with their MacStadium Customer Portal credentials.
 
 ## Terminology
 
-Domain | Term | Definition  
----|---|---  
-Customer Portal   
-| Account |  The account managing one or more Orka clusters in the MacStadium Customer Portal. Every account has a unique ID in the Customer Portal. One account might have multiple account users in various account roles. If one Customer Portal account manages multiple Orka clusters, all account users are shared between the clusters.  
-Customer Portal  | Account user  |  A user belonging to the managing account in the MacStadium Customer Portal. One Customer Portal account user can assume only one account role at a time. If one Customer Portal account manages multiple Orka clusters, all account users are shared between the clusters. Any account user can log in to the Orka cluster belonging to the account. Only Admin and Tech users can work with the cluster.  
-Customer Portal  | Account role  | An account user can assume only one of the following account roles at a time: Admin, Billing, or Tech. Account users with the Admin role are also administrators for the Orka cluster. Account users with the Tech role are considered developers and have non-administrative access to the Orka cluster. Account users with the Billing role can only log in to the cluster but cannot perform any actions.  
-  
-Orka cluster  | Cluster user  |  A Customer Portal account user logged in to the Orka cluster. Based on their account role, they belong to the Administrator or the Technical role. If one Customer Portal account manages multiple Orka clusters, all account users are shared between the clusters.  
-Orka cluster  | Service account  | A special type of Orka cluster account intended for use with the available Orka CI/CD integrations. A service account is not related to a Customer Portal account and cannot be shared across clusters.  
-  
-Orka cluster  | Namespace  | A [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) is a way to isolate resources and dedicate them to a specific user, group of users, or service account(s). For a user or a service account to be able to access the namespace, they must be added as a subject to the respective role binding. Role bindings are created automatically, but administrators need to add subjects manually.  
-  
-Orka cluster  | Role |  A Kubernetes [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole) role for your Orka cluster. The two default roles: Administrator and Technical correspond directly to the Admin and Tech account roles. When an administrator creates a new namespace, Orka automatically creates a predefined role for the namespace. You can control which cluster users and service accounts can access the namespace by adding or removing subjects to the respective role binding.  
-Orka cluster  | Role bindings and subjects  | A way to indicate which cluster users have access to which namespaces. By default, all Administrator and Tech users can access the orka-default namespace. All Administrators can access all custom orka- namespaces. Tech users have access to a custom namespace when they are added as a subject to the respective role binding.  
+| Domain | Term | Definition |
+|---|---|---|
+| Customer Portal | Account | The account managing one or more Orka clusters in the MacStadium Customer Portal. Every account has a unique ID. One account might have multiple account users in various roles. If one account manages multiple clusters, all account users are shared between them. |
+| Customer Portal | Account user | A user belonging to the managing account in the Customer Portal. An account user can assume only one account role at a time. If one account manages multiple clusters, all users are shared. Any account user can log in to the Orka cluster; only Admin and Tech users can work with it. |
+| Customer Portal | Account role | An account user can assume one of: Admin, Billing, or Tech. Admin users are also cluster administrators. Tech users are developers with non-administrative access. Billing users can only log in and cannot perform any cluster actions. |
+| Orka cluster | Cluster user | A Customer Portal account user logged in to the Orka cluster. Based on their account role, they belong to the Administrator or Technical role. |
+| Orka cluster | Service account | A special type of Orka cluster account intended for use with CI/CD integrations. Not related to a Customer Portal account and cannot be shared across clusters. |
+| Orka cluster | Namespace | A [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) isolates resources and dedicates them to a specific user, group of users, or service accounts. Users and service accounts must be added as subjects to the respective role binding to access the namespace. Role bindings are created automatically, but administrators add subjects manually. |
+| Orka cluster | Role | A Kubernetes [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole) role for your Orka cluster. The two default roles — Administrator and Technical — correspond to the Admin and Tech account roles. When an administrator creates a new namespace, Orka automatically creates a predefined role for it. |
+| Orka cluster | Role bindings and subjects | Indicates which cluster users have access to which namespaces. By default, all Administrator and Tech users can access the orka-default namespace. All Administrators can access all custom orka- namespaces. Tech users access a custom namespace when added as a subject to the respective role binding. |  
   
   
 ## Role-based access matrix
@@ -50,47 +46,32 @@ Within the Customer Portal, the Admin, Tech, and Billing roles have the followin
 
 Within the Orka cluster, the Admin, Tech, and Billing roles have the following capabilities:
 
-Operation | Admin | Tech | Billing | Admin SA  
-(Orka Small  
-Teams-only) | Regular SA  
----|---|---|---|---|---  
-Log in with CP credentials | ✅ | ✅ | ✅ | ❌ | ❌  
-Log in with authentication token | ✅ | ✅ | ❌ | ✅ | ✅  
-Log out | ✅ | ✅ | ✅ | ✅ | ✅  
-Manage users | ✅ | ❌ | ❌ | ❌ | ❌  
-Manage service accounts,  
-including token generation | ✅ | ❌ | ❌ | ✅ | ❌  
-Print authentication token | ✅ | ✅ | ✅ | ✅ | ✅  
-Manage namespaces | ✅ | ❌ | ❌ | ✅ | ❌  
-Manage role bindings | ✅ | ❌ | ❌ | ✅ | ❌  
-List nodes | ✅ | ✅ | ❌ | ✅ | ✅  
-Manage nodes | ✅ | ❌ | ❌ | ✅ | ❌  
-Access and work in the `orka-default` namespace | ✅ | By default, yes.  
-An administrator  
-can revoke access  
-to `orka-default`. | ❌ | ✅ | Yes,  
-if created in the `orka-default`  
-namespace.  
-Otherwise, based on  
-role bindings.  
-Access and work in custom `orka-` namespaces | ✅ | Based on  
-role bindings. | ❌ | ✅ | Yes,  
-if created in the respective  
-namespace.  
-Otherwise, based on  
-role bindings.  
-View information about all VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅  
-Deploy VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅  
-Manage the VM state of all VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅  
-Delete own VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅  
-Delete other subjects' VMs in the namespace | ✅ | ❌ | ❌ | ✅ | ❌  
-Manage VM configs (except deleting) | ✅ | ✅ | ❌ | ✅ | ✅  
-Delete own VM configs | ✅ | ✅ | ❌ | ✅ | ✅  
-Delete other owners' VMs | ✅ | ❌ | ❌ | ✅ | ❌  
-Manage images | ✅ | ✅ | ❌ | ✅ | ✅  
-List and pull remote images | ✅ | ✅ | ❌ | ✅ | ✅  
-Manage ISOs | ✅ | ✅ | ❌ | ✅ | ✅  
-List and pull remote ISOs | ✅ | ✅ | ❌ | ✅ | ✅  
+| Operation | Admin | Tech | Billing | Admin SA (Orka Small Teams-only) | Regular SA |
+|---|---|---|---|---|---|
+| Log in with CP credentials | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Log in with authentication token | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Log out | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Manage users | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Manage service accounts, including token generation | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Print authentication token | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Manage namespaces | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Manage role bindings | ✅ | ❌ | ❌ | ✅ | ❌ |
+| List nodes | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Manage nodes | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Access and work in the `orka-default` namespace | ✅ | Yes (Admin can revoke access) | ❌ | ✅ | If created in `orka-default`; otherwise based on role bindings |
+| Access and work in custom `orka-` namespaces | ✅ | Based on role bindings | ❌ | ✅ | If created in the namespace; otherwise based on role bindings |
+| View information about all VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Deploy VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Manage the VM state of all VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Delete own VMs in the namespace | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Delete other subjects' VMs in the namespace | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Manage VM configs (except deleting) | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Delete own VM configs | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Delete other owners' VMs | ✅ | ❌ | ❌ | ✅ | ❌ |
+| Manage images | ✅ | ✅ | ❌ | ✅ | ✅ |
+| List and pull remote images | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Manage ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
+| List and pull remote ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |  
   
 ## Workflow Overview
 
