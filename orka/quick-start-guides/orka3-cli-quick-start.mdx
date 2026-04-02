@@ -47,7 +47,7 @@ The Orka3 CLI will be helpful to:
 
 
 
-## 1\. Before you begin
+## 1. Before you begin
 
   1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](/macstadium/macstadium-overview/ip-plan) it from the [MacStadium portal](https://portal.macstadium.com/).
@@ -57,7 +57,7 @@ The Orka3 CLI will be helpful to:
 
 
 
-## 2\. Download and configure the Orka3 CLI
+## 2. Download and configure the Orka3 CLI
 
   1. Download and install the latest [Orka3 CLI](/orka/orka-overview/tools-integrations) that matches your environment version.
      * On macOS, run the `pkg` executable.
@@ -73,9 +73,9 @@ Try `brew install orka3`.
   2. Launch your preferred command-line tool (e.g., the Terminal on macOS) and run the following command:
 
 
-    
-    
-```
+
+
+```bash
 orka3 config set --api-url <ORKA_API_URL>
 ```
 This operation is a one-time effort. With it, you set the Orka service endpoint for your cluster.
@@ -98,45 +98,45 @@ The Orka3 CLI works only with trusted custom domains and valid TLS certificates 
   3. Enable command autocompletion for the Orka3 CLI
 
 
-    
-    
-```
+
+
+```bash
 orka3 completion {bash|fish|powershell|zsh}
 ```
 The Orka3 CLI prints detailed instructions for the selected shell type.
 
-## 3\. Authenticate with your cluster
+## 3. Authenticate with your cluster
 
 Orka lets you log in with your MacStadium Customer Portal credentials. Your access privileges are based on the role configured by your account admin in the Customer Portal. By default, you will have access to the orka-default namespace. You can access additional namespaces if you have been added to additional role bindings.
-    
-    
-```
+
+
+```bash
 orka3 login
 ```
 Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional`orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
 
-## 4\. Some CLI basics
+## 4. Some CLI basics
 
 The Orka3 CLI is a powerful tool in the hands of both inexperienced and advanced users.
 
 The default Orka3 CLI output for list commands is table-formatted. You can switch to an expanded table format with the `--output wide` flag or to JSON with the `--output json` flag.
 
 To get help, run:
-    
-    
-```
+
+
+```bash
 orka3 help
 orka3 <command> --help
 orka3 <parent_command> <command> --help
 ```
-## 5\. Create and deploy your first VM instance
+## 5. Create and deploy your first VM instance
 
   1. Open a new command-line prompt and run:
 
 
-    
-    
-```
+
+
+```bash
 orka3 nodes list
 ```
 This command shows basic information about the nodes in the `orka-default` namespace. Re-run this command as you deploy VM instances later on to keep track of the available resources on your nodes.
@@ -156,9 +156,9 @@ The resources within a namespace are completely isolated from one another and ca
   2. Run:
 
 
-    
-    
-```
+
+
+```bash
 orka3 vm list
 ```
 This command lists all VM instances in the `orka-default` namespace. If nothing prints, no one has created any VM instances yet.
@@ -170,9 +170,9 @@ Run `orka3 vm list --output wide`.
   3. List the available base images that you can use to deploy a VM:
 
 
-    
-    
-```
+
+
+```bash
 orka3 remote-image list
 ```
 This command shows all of the standard base images in MacStadium's remote repository. You will likely see a `sonoma-90gb-orka3-arm` item. It is a fully installed and configured Apple Silicon-based macOS Sonoma image with a 90GB disk size. It also has an admin user configured, SSH and Apple Screen Sharing access enabled, and Orka VM Tools installed.
@@ -186,9 +186,9 @@ A disk image that represents VM storage. Base images are bootable disk images th
   4. Deploying a VM is as simple as just specifying a base image. Run:
 
 
-    
-    
-```
+
+
+```bash
 orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest
 ```
 Orka creates a simple VM with the specified image and 3CPU and assigns a randomly generated name.
@@ -198,9 +198,9 @@ Orka creates a simple VM with the specified image and 3CPU and assigns a randoml
 Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
 
 So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest Sonoma image from GitHub packages.
-    
-    
-```
+
+
+```bash
 orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
 ```
   7. Check your nodes and your VMs.
@@ -210,9 +210,9 @@ orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
   * List your VMs:
 
 
-    
-    
-```
+
+
+```bash
 orka3 vm list
 ```
 You should now see your VM in the list.
@@ -223,7 +223,7 @@ For more detailed output, you can run `orka vm list --output wide`. In addition 
 
 When you have a lot of VMs, the output of `orka3 vm list` might become too crowded to use efficiently. Run `orka3 vm list <VM_NAME>` instead and get the system information for a single VM.
 
-## 6\. Experience your VM instance
+## 6. Experience your VM instance
 
   1. Look at the last output of `orka3 vm list` again. Get that IP and `Screenshare` port.
   2. Launch Apple Screen Sharing on your local machine (`Cmd+K` in Finder). Type `vnc://<VM-IP>:<Screenshare-port>`.
@@ -239,9 +239,9 @@ The good news is that `ghcr.io/macstadium/orka-images/sonoma:latest` is already 
   5. (Optional) Launch the Terminal and run the following command.
 
 
-    
-    
-```
+
+
+```bash
 brew install orka-vm-tools OR brew upgrade orka-vm-tools
 ```
 This action ensures that your VM is running the latest version of the [Orka VM Tools](/orka/orka-resources/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables key features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
@@ -252,7 +252,7 @@ If your cluster and CLI are not running the latest Orka version, download and in
 
 
 
-## 7\. Preserve the image changes
+## 7. Preserve the image changes
 
 Changing a running VM's configuration or file system does not affect its base image. As soon as you delete the VM, your changes will be lost, and you will need to recreate them manually on other VMs.
 
@@ -287,9 +287,9 @@ To create changes that stick and appear on future deployments, you can commit yo
 This operation will retain the new admin password and the latest OS updates. You might need to share the new admin password with future users who follow this guide.
 
 Return to the command line on your local machine and run:
-    
-    
-```
+
+
+```bash
 orka3 vm commit <VM_NAME>
 
 OR
@@ -308,16 +308,16 @@ Registry credentials are required to push an image. For more information, run `o
   2. See how the changes are preserved for yourself. Deploy a new VM instance:
 
 
-    
-    
-```
+
+
+```bash
 orka3 vm deploy --image <IMAGE_NAME>
 ```
   3. Launch Apple Screen Sharing and connect to the newly deployed VM instance. Use the updated admin credentials to log in.
 
 
 
-## 8\. Delete VMs
+## 8. Delete VMs
 
 _This section is optional._
 
@@ -326,16 +326,21 @@ When your VM instances have served their purpose, you can `delete` them.
   1. Remove all VM instances you created until now:
 
 
-    
-    
-```
+
+
+```bash
 orka3 vm delete <VM_NAME>
 ```
   2. List your VMs again.
 
-
-    
-    
-```
+```bash
 orka3 vm list
 ```
+
+## Next steps
+
+Now that you've deployed and managed your first VM, you're ready to integrate Orka with your CI/CD pipeline:
+
+- [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) — set up a service account, create a VM template, and connect Orka to your build system
+- [Orka VM Tools](/orka/orka-resources/vm-tools) — install Orka VM Tools on Apple Silicon VMs to enable shared storage and other features
+- [Tools and Integrations](/orka/orka-overview/tools-integrations) — browse all available Orka CLI versions and CI/CD integrations

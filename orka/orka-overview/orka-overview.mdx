@@ -63,9 +63,9 @@ This document will focus on using k8s as the control plane for Orka. For details
 
 
 
-> 🗒️NOTE
-> 
-> Orka running in the MacStadium Cloud or AWS may be behind a firewall and may require a VPN to access.
+<Note>
+  Orka running in the MacStadium Cloud or AWS may be behind a firewall and may require a VPN to access.
+</Note>
 
 ## Terminology
 
@@ -118,11 +118,11 @@ Once installed and configured, the following steps and commands quickly introduc
 
 
 
-> 🗒️NEXT STEPS
-> 
-> Take the customized VM and integrate it with a CI tool.
+<Note>
+  Take the customized VM and integrate it with a CI tool.
+</Note>
 
-## 1\. First Time Setup
+## 1. First Time Setup
 
 **Review IP Plan and Setup Networking**
 
@@ -161,11 +161,11 @@ If deploying within AWS or On-Prem, make sure to connect to the network such tha
 
 
 
-> 🗒️NOTE
-> 
-> Invite users in the Portal via the [**Users- >Add New Users**](/orka/orka-cluster-access/customer-portal-manage-account-users) flow.
+<Note>
+  Invite users in the Portal via the [**Users- >Add New Users**](/orka/orka-cluster-access/customer-portal-manage-account-users) flow.
+</Note>
 
-## 2\. Run orka3 Login to Sign into the Control Plane
+## 2. Run orka3 Login to Sign into the Control Plane
 
 orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh network, login and retrieve a token that can be used for subsequent interactions.
 
@@ -186,7 +186,7 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
 
 
-## 3\. Learn the 3 Main Objects
+## 3. Learn the 3 Main Objects
 
 **Nodes** , **images** , and **VMs**
 
@@ -196,7 +196,7 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
 
 
-## 4\. Deploy and Connect to a New VM
+## 4. Deploy and Connect to a New VM
 
   * Launch a VM from a base image, including options to load from the OCI registry.
   * For legacy users, there is a demonstrated loading from an NFS mount.
@@ -204,18 +204,18 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
 
 
-> 🗒️NOTE
-> 
-> To deploy a VM, an image is required. Check the MacStadium registry on ghcr.io and pull an image, if the local image list is empty, or use an image from an OCI-compatible registry. Check \<https://github.com/macstadium/orka-images> for the latest available OCI-compatible images provided by MacStadium. The images available out-of-the-box provide a pre-configured disk size and a pre-installed OS.
+<Note>
+  To deploy a VM, an image is required. Check the MacStadium registry on ghcr.io and pull an image, if the local image list is empty, or use an image from an OCI-compatible registry. Check [https://github.com/macstadium/orka-images](https://github.com/macstadium/orka-images) for the latest available OCI-compatible images provided by MacStadium. The images available out-of-the-box provide a pre-configured disk size and a pre-installed OS.
+</Note>
 
-## 5\. Modify, Save, and Stop the VM
+## 5. Modify, Save, and Stop the VM
 
   * Install dependencies or configure the environment for CI builds.
   * Once customized, save the VM configuration as a new image for future use.
 
 
 
-## 6\. Manage Image Caches
+## 6. Manage Image Caches
 
 Manage images stored on Orka nodes. By adding images to a node before deployment of a VM using that base image, DevOps and engineering staff can manage and control the delay caused by remote or even local cluster storage image pulls, providing consistent deployment times.
 

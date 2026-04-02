@@ -35,23 +35,25 @@ This is the most common type of Orka upgrade. Orka releases bring new CLI and AP
 Make sure that during the maintenance window there are no running workflows (for example, deploying a VM and running a build.).  
 As part of this upgrade, you might need to [download and install](/orka/orka-overview/tools-integrations) a new Orka CLI version.
 
-Aspect | Notes  
----|---  
-Maintenance window | Up to 3 hours.  
-  
-Must be scheduled with the MacStadium support team.  
-Access to the environment | During the maintenance window, the environment is inaccessible.  
-  
-After the maintenance window, access to the environment is restored. You can reach your environment at the original IP, Orka domain, or external custom domain.  
-Orka users | Orka users persist.  
-Service Accounts | Your custom service accounts persist.  
-  
-PLEASE NOTE: Your Service Account Tokens will need to be regenerated after the upgrade.  
-VMs and VM configs |  VM configs persist. VMs may be deleted. After the upgrade completes, you can redeploy them from the respective VM configs.  
-Images and ISOs | Images and ISOs persist.  
-Image cache (Apple silicon nodes) | The image cache is removed from each node.  
-Namespaces | Your custom namespaces persist.  
-RoleBindings | Your custom permissions persist.  
+<Warning>
+  Service Account tokens must be regenerated after this upgrade. Any automated workflows using service account tokens will fail until tokens are regenerated with `orka3 serviceaccount token <name>`.
+</Warning>
+
+Aspect | Notes
+---|---
+Maintenance window | Up to 3 hours.
+
+Must be scheduled with the MacStadium support team.
+Access to the environment | During the maintenance window, the environment is inaccessible.
+
+After the maintenance window, access to the environment is restored. You can reach your environment at the original IP, Orka domain, or external custom domain.
+Orka users | Orka users persist.
+Service Accounts | Your custom service accounts persist.
+VMs and VM configs | VM configs persist. VMs may be deleted. After the upgrade completes, you can redeploy them from the respective VM configs.
+Images and ISOs | Images and ISOs persist.
+Image cache (Apple silicon nodes) | The image cache is removed from each node.
+Namespaces | Your custom namespaces persist.
+RoleBindings | Your custom permissions persist.
 Kubernetes Pods and services | Your custom Pods and services persist.  
   
 ### Virtualization and orchestration layer upgrades (Kubernetes, Docker, or Linux)
@@ -63,26 +65,28 @@ Occasionally, the Orka team upgrades the components of the virtualization and or
   * Make sure that during the maintenance window there are no running workflows (for example, deploying a VM and running a build.).
   * If this is a Kubernetes upgrade and you are working with the Kubernetes layer directly, make sure to address any deprecated APIs.
 
-Aspect | Notes  
----|---  
-Maintenance window | Up to 3 hours  
-  
-Must be [scheduled](/orka/orka-upgrades-and-release-notes/orka-upgrades#requesting-an-upgrade) with the MacStadium support team.  
-Access to the environment | During the maintenance window, the environment is inaccessible.  
-  
-After the maintenance window, the access to the environment is restored. You can reach your environment at the original IP, Orka domain, or external custom domain.  
-Orka users | Orka users persist.  
-Service Accounts | Your custom service accounts persist.  
-  
-PLEASE NOTE: Your Service Account Tokens will need to be regenerated after the upgrade.  
-VMs and VM configs | VM configs persist.  
-  
-VMs are deleted. After the upgrade completes, you can redeploy them from the respective VM configs.  
-Registry credentials | Registry credentials do not persist, and will need to be regenerated after the upgrade.  
-Images & ISOs | Images and ISOs persist.  
-Image cache (Apple silicon nodes) | The image cache is removed from each node.  
-Namespaces | Your custom namespaces persist.  
-RoleBindings | Your custom permissions persist.  
-Kubernetes Pods and services | Your custom Pods and services are lost.  
-  
+<Warning>
+  Service Account tokens must be regenerated after this upgrade. Any automated workflows using service account tokens will fail until tokens are regenerated with `orka3 serviceaccount token <name>`.
+</Warning>
+
+Aspect | Notes
+---|---
+Maintenance window | Up to 3 hours
+
+Must be [scheduled](/orka/orka-upgrades-and-release-notes/orka-upgrades#requesting-an-upgrade) with the MacStadium support team.
+Access to the environment | During the maintenance window, the environment is inaccessible.
+
+After the maintenance window, the access to the environment is restored. You can reach your environment at the original IP, Orka domain, or external custom domain.
+Orka users | Orka users persist.
+Service Accounts | Your custom service accounts persist.
+VMs and VM configs | VM configs persist.
+
+VMs are deleted. After the upgrade completes, you can redeploy them from the respective VM configs.
+Registry credentials | Registry credentials do not persist, and will need to be regenerated after the upgrade.
+Images & ISOs | Images and ISOs persist.
+Image cache (Apple silicon nodes) | The image cache is removed from each node.
+Namespaces | Your custom namespaces persist.
+RoleBindings | Your custom permissions persist.
+Kubernetes Pods and services | Your custom Pods and services are lost.
+
 You need to recreate them.
