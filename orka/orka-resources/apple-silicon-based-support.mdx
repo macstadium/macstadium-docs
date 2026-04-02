@@ -113,7 +113,7 @@ Below is a list of the ones that are not applicable to Apple silicon-based VMs:
 
   4. VM revert is not supported due to limitations of the Apple Virtualization Framework.
 
-  5. Starting with Orka 2.4.0, shared VM storage is **deprecated** for Apple silicon-based VMs running macOS Monterey and **will be removed** in Orka 2.5.0. To continue using shared VM storage with Orka 2.5.0 and later, you will need to upgrade your Apple Silicon-based Monterey VMs to macOS Ventura, OR switch to Intel-based Monterey VMs.
+  5. Starting with Orka 2.4.0, shared VM storage was **deprecated** for Apple silicon-based VMs running macOS Monterey and was **removed** in Orka 2.5.0. To use shared VM storage on Orka 2.5.0 and later, upgrade your Apple Silicon-based Monterey VMs to macOS Ventura, or switch to Intel-based Monterey VMs.
 
   6. After you resize an Apple silicon-based VM and attempt to upgrade to a newer macOS version, the upgrade might fail or you might experience other issues with your VM. This is a limitation of the Apple Virtualization framework and applies to all macOS versions.
 **Workaround:** Upgrade the macOS image before resizing. If you have already resized, deploy a fresh VM from an unresized image and upgrade from there.
