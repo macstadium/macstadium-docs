@@ -42,7 +42,7 @@ The Orka UI will be most beneficial to:
 
 
 
-## 1\. Before you begin
+## 1. Before you begin
 
   1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](/macstadium/macstadium-overview/ip-plan) it from the [MacStadium portal](https://portal.macstadium.com/).
@@ -52,7 +52,7 @@ The Orka UI will be most beneficial to:
 
 
 
-## 2\. Authenticate with the cluster
+## 2. Authenticate with the cluster
 
 Orka lets you log in with your MacStadium Customer Portal credentials. Your access privileges are based on the role configured by your account admin in the Customer Portal. By default, you will have access to the `orka-default` namespace. You can access additional namespaces if you have been added to additional role bindings.
 
@@ -61,20 +61,20 @@ Orka lets you log in with your MacStadium Customer Portal credentials. Your acce
 > A way to isolate and dedicate resources to users and teams within the cluster.
 > 
 > The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
-    
-    
-```
+
+
+```bash
 orka3 login
 ```
 Orka will launch a new browser tab (or window) and let you log in via the SSO-enabled form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
 
 You now need to get your Orka authentication token from your `~/.kube/config`:
-    
-    
-```
+
+
+```bash
 orka3 user get-token
 ```
-## 3\. Launch the Orka UI
+## 3. Launch the Orka UI
 
   * In your browser, navigate to your Orka API URL.
 
@@ -94,7 +94,7 @@ orka3 user get-token
 
 ![f3f5e8d-Screenshot_2023-10-10_at_23.37.22.png](/images/attachments/28393224419867.png)
 
-## 4\. Create and deploy your first VM instance
+## 4. Create and deploy your first VM instance
 
 > #### **Known limitations**
 > 
@@ -193,7 +193,7 @@ Note: this screen shows essential and detailed connection information about your
 
 
 
-## 5\. Experience your VM instance
+## 5. Experience your VM instance
 
   1. Return to the **VMs** page and click the **Connection** button for your VM.
 
@@ -222,13 +222,13 @@ The good news is that `sonoma-90gb-orka3-arm` is already preconfigured for you, 
   5. (Optional) Launch the Terminal application and run the following command.
 
 
-    
-    
-```
-brew install orka-vm-tools  
-  
-OR  
-  
+
+
+```bash
+brew install orka-vm-tools
+
+OR
+
 brew upgrade orka-vm-tools
 ```
 This action ensures that your VM (Virtual Machine) is running the latest version of the [Orka VM Tools](/orka/orka-resources/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs (Virtual Machines) more efficiently and enables vital features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
@@ -239,7 +239,7 @@ If your cluster is not running the latest Orka version, download and install an 
 
 
 
-## 6\. Create a new base image
+## 6. Create a new base image
 
 Changing the configuration or the file system of a running VM (Virtual Machine) does not affect its base image. As soon as you delete the VM (Virtual Machine), your changes will be lost; in other words, they are ephemeral, and you will need to recreate them manually on other VMs (Virtual Machines).
 
@@ -273,7 +273,7 @@ Wait for the operation to complete. It might take a while. There is no progress 
 > 
 > To use your newly created image, you need to create a new VM config.
 
-## 7\. Delete VMs
+## 7. Delete VMs
 
  _This section is optional._
 
@@ -292,3 +292,9 @@ When your VM configs and instances have served their purpose, you can remove the
 When the page refreshes, you should not see any more VM instances. Your VM config is still available on the **VM Configs** page, and you can deploy new instances from it.
 
 Note that the changes you made to your deleted VM instance will not be present on newly deployed instances.
+
+## Next steps
+
+- [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) — automate VM deployment in your build pipeline
+- [Orka VM Tools](/orka/orka-resources/vm-tools) — enable shared storage and additional features on Apple Silicon VMs
+- [Tools and Integrations](/orka/orka-overview/tools-integrations) — browse available integrations
