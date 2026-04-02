@@ -28,11 +28,6 @@
   "integrations": {
     "telemetry": {
       "enabled": true
-    },
-    "algolia": {
-      "appId": "IU97R5QB9I",
-      "indexName": "MacStadium Docs",
-      "apiKey": "c7de82e2890abba5f6bd60c702a281b4"
     }
   },
   "navigation": {
