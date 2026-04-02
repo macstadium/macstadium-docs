@@ -23,6 +23,18 @@ ESXi
 VMware
 vSphere
 Kubernetes
+Citrix
+Jamf
+Kandji
+Intune
+Harbor
+Ansible
+GitLab
+GitHub
+CircleCI
+Bitrise
+ArgoCD
+Fern
 
 # File formats and protocols
 IPSW
@@ -44,3 +56,35 @@ OCI
 SAML
 SSO
 DMCA
+SLAs
+CSPs
+CPUs
+MDM
+UEM
+ABM
+VPN
+IPSW
+ADE
+VPP
+MDM
+SSO
+MFA
+PAT
+NFS
+k8s
+
+# macOS versions
+Sonoma
+Ventura
+Monterey
+Sequoia
+
+# Common technical words Vale flags incorrectly
+subcommands
+recoverability
+virtualized
+failover
+onboarding
+repo
+Runtimes
+failover
