@@ -100,8 +100,7 @@
                 "pages": [
                   "orka/orka-overview/orka-overview",
                   "orka/orka-overview/tools-integrations",
-                  "orka/orka-overview/compatibility-matrix",
-                  "orka/orka-overview/licensing-faq"
+                  "orka/orka-overview/compatibility-matrix"
                 ]
               },
               {
@@ -694,7 +693,7 @@
     },
     {
       "source": "/hc/en-us/articles/28328236117787-Licensing-FAQ",
-      "destination": "/orka/orka-overview/licensing-faq",
+      "destination": "/orka/orka-overview/orka-overview",
       "permanent": true
     },
     {
