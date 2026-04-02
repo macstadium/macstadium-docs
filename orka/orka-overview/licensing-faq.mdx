@@ -12,20 +12,39 @@ labels: ["faq", "orka", "license", "licenses"]
 suggested_new_path: "/orka/orka-overview/licensing-faq"
 ---
 
-When using Orka for DevOps use cases, two license tiers are offered: Basic and Advanced.
+Orka for DevOps is available in two license tiers: Basic and Advanced.
 
-### Basic License:
+## What's included in each tier?
 
-  * Orchestration among nodes with priority and grouping features.
-  * OCI-compatible images, ensuring broad compatibility and flexibility.
-  * K8S Native Interfaces, including kubectl and compatible tools, for a seamless Kubernetes experience.
-  * Integration with Jenkins, GitHub Actions, BuildKite, and TeamCity for CI/CD pipelines and Packer support for creating images.
+| Feature | Basic | Advanced |
+|---|---|---|
+| Node orchestration with priority and grouping | ✓ | ✓ |
+| OCI-compatible images | ✓ | ✓ |
+| Kubernetes-native interfaces (kubectl and compatible tools) | ✓ | ✓ |
+| CI/CD integrations (GitHub Actions, Jenkins, Buildkite, TeamCity) | ✓ | ✓ |
+| Packer support for image creation | ✓ | ✓ |
+| [Image caching](/orka/orka-resources/image-caching) | — | ✓ |
+| Network and VM isolation | — | ✓ |
+| Linux workload support | — | ✓ |
 
+## Which tier do I need?
 
+**Basic** covers the typical CI/CD use case: deploy macOS VMs on demand, run builds, save images. If your team is running iOS/macOS build pipelines with GitHub Actions, Jenkins, Buildkite, or TeamCity, Basic is sufficient.
 
-### Advanced License:
+**Advanced** is worth it if you need any of the following:
 
-  * Everything in Basic+
-  * Image Caching to optimize performance.
-  * Network and VM Isolation for enhanced security.
-  * Support for Linux Workloads, broadening the scope of applications.
+- **Image caching** — pre-downloads images to nodes before deployment, eliminating pull delays during CI runs. Meaningful for high-throughput pipelines where VM startup time matters.
+- **Network and VM isolation** — enforce hard network boundaries between namespaces. Relevant for multi-tenant environments or compliance requirements.
+- **Linux workload support** — run Linux containers or workloads alongside your macOS VMs on the same Apple Silicon infrastructure.
+
+## How do I check which license I have?
+
+Contact your MacStadium account team or email [support@macstadium.com](mailto:support@macstadium.com). They can confirm your current tier and what's enabled on your cluster.
+
+## Can I upgrade from Basic to Advanced?
+
+Yes. Email [support@macstadium.com](mailto:support@macstadium.com) to discuss upgrading your license.
+
+## Does the license apply per node or per cluster?
+
+The license applies at the cluster level — all nodes in your Orka cluster operate under the same tier.
