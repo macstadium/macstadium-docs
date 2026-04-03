@@ -40,153 +40,44 @@ All tests performed on macOS 13.4.1, unless otherwise specified.
 
 This machine is used as the baseline when referencing multipliers. In other words, a machine with a multiplier of 1.4 is 40% more performant than the baseline machine for the specified test. Multipliers are in parentheses after the result.
 
-Name | Type | CPU | GPU | RAM | SSD | Xcode Benchmark | Geekbench CPU | Geekbench GPU | Cinebench  
----|---|---|---|---|---|---|---|---|---  
-G5L | Mac mini | 8C M1 | 8C | 16GB | 2TB | 123.885  
-(1.00x) | 8818  
-(1.00x) | 33843  
-(1.00x) | 7869  
-(1.00x)  
+| Name | Type | CPU | GPU | RAM | SSD | Xcode Benchmark | Geekbench CPU | Geekbench GPU | Cinebench |
+|---|---|---|---|---|---|---|---|---|---|
+| G5L | Mac mini | 8C M1 | 8C | 16GB | 2TB | 123.885 (1.00x) | 8818 (1.00x) | 33843 (1.00x) | 7869 (1.00x) |  
   
 ## Current Standard Models
 
 This table includes Standard models currently available as Bare Metal from MacStadium.
 
-Name | Mac  
-Model | CPU | GPU | RAM | SSD | Xcode  
-Benchmark | Geekbench CPU | Geekbench GPU | Cinebench  
----|---|---|---|---|---|---|---|---|---  
-S2.L | Mac Studio | 24C  
-M2 Ultra | 60C | 128GB | 2TB | 98.043s  
-(1.94x) | 21734  
-(2.12x) | 215160  
-(4.45x) | 1975.14  
-(3.20x)  
-S2.M | Mac  
-Studio | 24C M2 Ultra | 60C | 64GB | 2TB | 96.82s  
-(1.97x) | 21777  
-(2.13x) | 218001  
-(4.51x) | 1981.3  
-(3.30x)  
-M4.XL | Mac  
-mini | 14C  
-M4  
-Pro | 20C | 64GB | 2TB |  97.05s  
-(1.96x) | 22582 (2.57x) |  113953 (2.36x) |  1639.38 (2.73x)  
-M4.L | Mac  
-mini | 12C  
-M4  
-Pro | 16C | 48GB | 1TB |  107.28s  
-(2.05x) |  20769  
-(2.36x) | 100559 (2.85x) | 1478.15 (2.85x)  
-M4.M | Mac  
-mini | 10C   
-M4 | 10C | 24GB | 512GB |  139.14s (1.58x) |  15123 (1.72x) |  58437 (1.65x) |  982.56 (1.89x)  
-M4.S | Mac  
-mini | 10C  
-M4 | 10C | 16GB | 256GB |  138.95s (1.58x) | 15153 (1.72x) |  58309 (1.65x) |  983.99 (1.90x)  
-S1.M | Mac Studio | 10C  
-M1 Max | 32C | 64GB | 2TB | 146.91  
-(1.30x) | 13049  
-(1.27x) | 123103  
-(2.55x) | 858.57  
-(1.43x)  
-M2.XL | Mac mini | 12C M2 Pro | 19C | 32GB | 2TB | 128.11s  
-(1.49x) | 14951  
-(1.75x) | 86500  
-(1.79x) | 1047.68  
-(1.75x)  
-M2.L | Mac mini | 10C M2 Pro | 16C | 16GB | 1TB | 147.16s  
-(1.29x) | 13076  
-(1.28x) | 78215  
-(1.62x) | 817.66  
-(1.36x)  
-M2.M | Mac mini | 8C M2 | 10C | 16GB | 1TB | 190.33s  
-(1.15x) | 10244  
-(1.0x) | 48348  
-(1.0x) | 600.07  
-(1.0x)  
-M2.S | Mac mini | 8C M2 | 10C | 8GB | 256GB | 108.477s (1.14x) | 10205 (1.0x) | 48229 (1.0x) | 605.38  
-(1.0x)  
+| Name | Mac Model | CPU | GPU | RAM | SSD | Xcode Benchmark | Geekbench CPU | Geekbench GPU | Cinebench |
+|---|---|---|---|---|---|---|---|---|---|
+| S2.L | Mac Studio | 24C M2 Ultra | 60C | 128GB | 2TB | 98.043s (1.94x) | 21734 (2.12x) | 215160 (4.45x) | 1975.14 (3.20x) |
+| S2.M | Mac Studio | 24C M2 Ultra | 60C | 64GB | 2TB | 96.82s (1.97x) | 21777 (2.13x) | 218001 (4.51x) | 1981.3 (3.30x) |
+| M4.XL | Mac mini | 14C M4 Pro | 20C | 64GB | 2TB | 97.05s (1.96x) | 22582 (2.57x) | 113953 (2.36x) | 1639.38 (2.73x) |
+| M4.L | Mac mini | 12C M4 Pro | 16C | 48GB | 1TB | 107.28s (2.05x) | 20769 (2.36x) | 100559 (2.85x) | 1478.15 (2.85x) |
+| M4.M | Mac mini | 10C M4 | 10C | 24GB | 512GB | 139.14s (1.58x) | 15123 (1.72x) | 58437 (1.65x) | 982.56 (1.89x) |
+| M4.S | Mac mini | 10C M4 | 10C | 16GB | 256GB | 138.95s (1.58x) | 15153 (1.72x) | 58309 (1.65x) | 983.99 (1.90x) |
+| S1.M | Mac Studio | 10C M1 Max | 32C | 64GB | 2TB | 146.91 (1.30x) | 13049 (1.27x) | 123103 (2.55x) | 858.57 (1.43x) |
+| M2.XL | Mac mini | 12C M2 Pro | 19C | 32GB | 2TB | 128.11s (1.49x) | 14951 (1.75x) | 86500 (1.79x) | 1047.68 (1.75x) |
+| M2.L | Mac mini | 10C M2 Pro | 16C | 16GB | 1TB | 147.16s (1.29x) | 13076 (1.28x) | 78215 (1.62x) | 817.66 (1.36x) |
+| M2.M | Mac mini | 8C M2 | 10C | 16GB | 1TB | 190.33s (1.15x) | 10244 (1.0x) | 48348 (1.0x) | 600.07 (1.0x) |
+| M2.S | Mac mini | 8C M2 | 10C | 8GB | 256GB | 108.477s (1.14x) | 10205 (1.0x) | 48229 (1.0x) | 605.38 (1.0x) |  
   
 ## Full Results
 
 This table includes the full range of benchmarked hardware, including several machines not currently available for reference. Current and former MacStadium standard bare metal machines will have their name listed.
 
-Name | Type | CPU | GPU | RAM | SSD | Xcode  
-Benchmark | Geekbench CPU | Geekbench GPU | Cinebench  
----|---|---|---|---|---|---|---|---|---  
-S2.M | Mac Studio | 24C  
-M2 Ultra | 60C | 64GB | 2TB | 53.599s  
-(2.31x) | 20963  
-(2.38x) | 206071  
-(6.09x) | 28945  
-(3.68x)  
-S1.L | Mac Studio | 20C  
-M1 Ultra | 64C | 128GB | 4TB | 65.558s  
-(1.89x) | 18060  
-(2.05x) | 174505  
-(5.16x) | 224214  
-(3.08x)  
-N/A | Mac Studio | 12C  
-M2 Max | 30C | 32GB | 512G | 74.003s  
-(1.67x) | 14872  
-(1.69x) | 127390  
-(3.76x) | 14885  
-(1.89x)  
-M2.XL | Mac mini | 12C M2 Pro | 19C | 32GB | 2TB | 74.659s  
-(1.64x) | 14686  
-(1.67x) | 81837  
-(2.42x) | 14812  
-(1.88x)  
-S1.M | Mac Studio | 10C  
-M1 Max | 32C | 64GB | 2TB | 89.340  
-(1.39x) | 12947  
-(1.47x) | 119490  
-(3.53x) | 12457  
-(1.58x)  
-M2.L | Mac mini | 10C M2 Pro | 16C | 16GB | 1TB | 84.904s  
-(1.46x) | 12405  
-(1.41x) | 73622  
-(2.18x) | 11858  
-(1.51x)  
-M2.M | Mac mini | 8C M2 | 10C | 16GB | 1TB | 106.259s  
-(1.17x) | 10130  
-(1.15x) | 45902  
-(1.36x) | 8776  
-(1.12x)  
-M2.S | Mac mini | 8C M2 | 10C | 8GB | 256GB | 108.477s (1.14x) | 10192 (1.16x) | 45891 (1.36x) | 8780  
-(1.12x)  
-M1.M | Mac mini | 8C M1 | 8C | 16GB | 1TB | 123.885s  
-(1.00x) | 8818  
-(1.00x) | 33843  
-(1.00x) | 7869  
-(1.00x)  
-G4B | Mac mini  
-(2018) | 6C  
-i7 3.2 |  | 32G | 512GB | 188.779s  
-(0.66x) | 6754  
-(0.77x) | 6631  
-(0.20x) | 7645  
-(0.97x)  
-G2 | Mac Pro (2013) (12.6.7) | 12C  
-Xeon | Dual D500 | 64GB | 1TB | 193.603s  
-(0.73x) | 5311  
-(0.60x) | 24788  
-(0.73x) | 8507  
-(1.08x)  
-G2 | Mac Pro  
-(2013)  
-(12.6.7) | 6C  
-Xeon | Dual D500 | 32GB | 1TB | 264.804s  
-(0.47x) | 3862  
-(0.44x) | 24887  
-(0.74x) | 3862  
-(0.49x)  
-G4A | Mac mini  
-(2018) | 4C  
-i3 3.6 |  | 16GB | 512GB | 369.022s  
-(0.36x) | 3912  
-(0.44x) | 5806  
-(0.17x) | 3606  
-(0.46x)
+| Name | Type | CPU | GPU | RAM | SSD | Xcode Benchmark | Geekbench CPU | Geekbench GPU | Cinebench |
+|---|---|---|---|---|---|---|---|---|---|
+| S2.M | Mac Studio | 24C M2 Ultra | 60C | 64GB | 2TB | 53.599s (2.31x) | 20963 (2.38x) | 206071 (6.09x) | 28945 (3.68x) |
+| S1.L | Mac Studio | 20C M1 Ultra | 64C | 128GB | 4TB | 65.558s (1.89x) | 18060 (2.05x) | 174505 (5.16x) | 224214 (3.08x) |
+| N/A | Mac Studio | 12C M2 Max | 30C | 32GB | 512G | 74.003s (1.67x) | 14872 (1.69x) | 127390 (3.76x) | 14885 (1.89x) |
+| M2.XL | Mac mini | 12C M2 Pro | 19C | 32GB | 2TB | 74.659s (1.64x) | 14686 (1.67x) | 81837 (2.42x) | 14812 (1.88x) |
+| S1.M | Mac Studio | 10C M1 Max | 32C | 64GB | 2TB | 89.340 (1.39x) | 12947 (1.47x) | 119490 (3.53x) | 12457 (1.58x) |
+| M2.L | Mac mini | 10C M2 Pro | 16C | 16GB | 1TB | 84.904s (1.46x) | 12405 (1.41x) | 73622 (2.18x) | 11858 (1.51x) |
+| M2.M | Mac mini | 8C M2 | 10C | 16GB | 1TB | 106.259s (1.17x) | 10130 (1.15x) | 45902 (1.36x) | 8776 (1.12x) |
+| M2.S | Mac mini | 8C M2 | 10C | 8GB | 256GB | 108.477s (1.14x) | 10192 (1.16x) | 45891 (1.36x) | 8780 (1.12x) |
+| M1.M | Mac mini | 8C M1 | 8C | 16GB | 1TB | 123.885s (1.00x) | 8818 (1.00x) | 33843 (1.00x) | 7869 (1.00x) |
+| G4B | Mac mini (2018) | 6C i7 3.2 |  | 32G | 512GB | 188.779s (0.66x) | 6754 (0.77x) | 6631 (0.20x) | 7645 (0.97x) |
+| G2 | Mac Pro (2013) (12.6.7) | 12C Xeon | Dual D500 | 64GB | 1TB | 193.603s (0.73x) | 5311 (0.60x) | 24788 (0.73x) | 8507 (1.08x) |
+| G2 | Mac Pro (2013) (12.6.7) | 6C Xeon | Dual D500 | 32GB | 1TB | 264.804s (0.47x) | 3862 (0.44x) | 24887 (0.74x) | 3862 (0.49x) |
+| G4A | Mac mini (2018) | 4C i3 3.6 |  | 16GB | 512GB | 369.022s (0.36x) | 3912 (0.44x) | 5806 (0.17x) | 3606 (0.46x) |
