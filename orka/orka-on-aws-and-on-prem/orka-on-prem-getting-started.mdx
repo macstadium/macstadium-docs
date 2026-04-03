@@ -27,7 +27,7 @@ Key elements in the architecture include:
   * A private network configuration for Orka.
   * A dedicated Kubernetes 1.33 cluster, which runs Orka Cluster Services for orchestration and automation.
   * Mac Nodes to be used for compute, usually on-prem.
-  * An OCI Registry such as Artifactory, GitHub Container Registry, Docker Registry, AWS ECR, or others..
+  * An OCI Registry such as Artifactory, GitHub Container Registry, Docker Registry, AWS ECR, or others.
   * A load balancer for Orka Users to interact with the Orka Services on Kubernetes via CLI, API, or CI tools.
 
 
@@ -44,11 +44,11 @@ You might experience issues if your Orka VMs need to access services that are in
 
 Orka requires a dedicated Kubernetes 1.33 cluster to run.
 
-  * The reason we Orka requires a dedicated cluster is that it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
+  * The reason Orka requires a dedicated cluster is that it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
 
 
 
-We recommend following the [official guidelines](https://kubernetes.io/docs/setup/) for setting up a Kubernetes cluster. The official recommended tool for setting up Kubernets clusters is [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/).
+We recommend following the [official guidelines](https://kubernetes.io/docs/setup/) for setting up a Kubernetes cluster. The official recommended tool for setting up Kubernetes clusters is [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/).
 
 If you are familiar with Ansible, you could also use [Kubespray](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started) to set up your cluster.
 

@@ -143,7 +143,7 @@ Field | Type | Description
 ---|---|---  
 `spec` > `checksum` | `string` | (amd64-only) The automatically calculated MD5 checksum of the image file represented by the Image. Orka populates Checksum only after you explicitly request the checksum.  
 `spec` > `destination` | `string` | A new name for the Image resulting from the Image save operation. Leave empty for commit operations.  
-`spec` > `owner` | `string` | The user who initially created the image file represented y the Image.  
+`spec` > `owner` | `string` | The user who initially created the image file represented by the Image.  
 `spec` > `size` |  `string` or `integer` | The size of the image file in formatted bytes.  
 `spec` > `source` | `string` | The name of an `Image`, `RemoteImage` or `VirtualMachineInstance` to use as a source for a specific Image operation. Must match the `SourceType`.  
 `spec` > `sourceNamespace` | `string` | The namespace of the source VM (for commit and save). Uses `orka-default` if not specified.  

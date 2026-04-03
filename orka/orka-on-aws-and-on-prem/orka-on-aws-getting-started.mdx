@@ -81,7 +81,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
     * Orka Operator: TCP 8080 (metrics), TCP 8081 (health check), TCP 443 (webhook), Linux worker nodes should be accessible from within the cluster on any port. Does not require Internet access.
     * Orka OIDC Provider: TCP 443. Requires connectivity to the authentication provider.
   * EC2 Mac Nodes
-    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be opene to all networks that need access to the VMs: TCP 5900-5912 (Screenshare), TCP 5999-6011 (VNC), and TCP 8822-8834 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
+    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be opened to all networks that need access to the VMs: TCP 5900-5912 (Screenshare), TCP 5999-6011 (VNC), and TCP 8822-8834 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
 
 
 
@@ -103,7 +103,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
   1. Orka must be deployed in a dedicated EKS cluster for running v1.33.
      1. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive.
      2. To set up the cluster, follow the AWS guidelines for [EKS Auto Mode](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-automode.html) or the [EKS QuickStart](https://docs.aws.amazon.com/eks/latest/userguide/quickstart.html).
-  2. **Recommendations** :
+  2. **Recommendations**:
      1. Choose the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
@@ -180,7 +180,7 @@ Click `Next → Create`.
 
 
 
-Please capture your `EKS cluster name`and `EKS cluster VPC region`for use in bootstrap script needed for Configuring EC2 Macs.
+Please capture your `EKS cluster name` and `EKS cluster VPC region` for use in bootstrap script needed for Configuring EC2 Macs.
 
 ### OIDC Provider Setup
 
@@ -396,5 +396,5 @@ Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x v
 
 macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the Apple Virtualization documentation \<https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines>. Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
 
-  1. After setting up your EC2 Mac, you will need to setup a login keychain on the host OS before running the Sequoia OS Orka VM image.
+  1. After setting up your EC2 Mac, you will need to set up a login keychain on the host OS before running the Sequoia OS Orka VM image.
   2. MacStadium will supply a Sequoia OCI image that is upgraded from a Sonoma image rather than created from a Sequoia IPSW on Sequoia host. This will run without the Apple ID functionality in guest.

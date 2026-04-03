@@ -572,7 +572,7 @@ Likely causes and solutions:
 Registry authentication failed | Curl returns 401 error | Verify push credentials; check permissions  
 Registry out of storage | Push fails with storage error | Expand registry storage; clean old images  
 Registry quota exceeded | Error mentions quota | Increase quota or clean up images  
-Insufficient host disk space | Can't create/prepare image locally for push | ree space on host; delete unused VMs using `delete.yml` or `vm.yml`  
+Insufficient host disk space | Can't create/prepare image locally for push | Free space on host; delete unused VMs using `delete.yml` or `vm.yml`  
 Source VM not stopped | Image creation requires stopped VM | Stop source VM before running `create_image.yml` playbook  
 Insecure registry without flag | TLS/cert error | Add `-e "insecure_push=true"` if appropriate  
 Network timeout during push | Push times out | Check network; try again during off-hours  
@@ -933,7 +933,7 @@ Quick diagnostic:
 ```
  1. Does SSO login work if the user enters their credentials manually?
 ```
-  4. Check the user's SSO/company omain login
+  4. Check the user's SSO/company domain login
 
 ```
  1. Are they logged in with the correct SSO/company domain account?

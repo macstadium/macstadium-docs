@@ -84,7 +84,7 @@ ansible-galaxy install -r requirements.yml
 ```
 ## OSX-CI Role Requirements
 
-The [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) requires a path to a public public ssh key on the target machine. The role adds the key to the `authorized_keys` file of the created user to enable remote login via ssh with a private key.
+The [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) requires a path to a public ssh key on the target machine. The role adds the key to the `authorized_keys` file of the created user to enable remote login via ssh with a private key.
 
 **NOTE** : To use the target machine as a Jenkins agent you will need a key pair generated using the `RSA` algorithm.
 
@@ -141,7 +141,7 @@ A vault password is required and is later used to decrypt the file. Once the ope
 
 ## Running the Ansible Playbook
 
-To execute the Ansible playbook you can use the following command by replacing the `{placehoders}` with the correct values:
+To execute the Ansible playbook you can use the following command by replacing the `{placeholders}` with the correct values:
     
     
 ```
@@ -149,4 +149,4 @@ ansible-playbook site.yml -i inventory -e ansible_user={AdminUser} -e xcode_xip_
 ```
 You will be prompted for the vault password that you used to encrypt the [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) file in the previous step.
 
-Once the executing is completed, you will have a fully-setup machine that you can use for OSX/iOS builds and for a Jenkins agent.
+Once the execution is completed, you will have a fully-setup machine that you can use for OSX/iOS builds and for a Jenkins agent.
