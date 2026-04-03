@@ -100,42 +100,11 @@ no object-group network ONPREM-NET
 ```
 ### Table 1: Placeholders
 
-Placeholder | Description | Example  
----|---|---  
-      
-    
-```
-{ azure_virtual_network_gateway_ip } 
-```
-|   
-The public IP assigned to the virtual network gateway in Azure.  | 
-    
-    
-```
-192.168.0.0  
-  
-  
-
-{ macstadium_network_name } 
-```
-|   
-The name of the private network in MacStadium that needs to be accessed by Azure. You can find the information about your private network in Appendix A of the IP Plan.  | 
-    
-    
-```
-Private-1  
-  
-  
-
-{ macstadium_outside_interface } 
-```
-|    
-The name of the outside interface of your Cisco ASA/ASAv device. You can find the information about your outside interface in Appendix A of the IP Plan. | 
-    
-    
-```
-Outside  
-```
+| Placeholder | Description | Example |
+|---|---|---|
+| `{ azure_virtual_network_gateway_ip }` | The public IP assigned to the virtual network gateway in Azure. | `192.168.0.0` |
+| `{ macstadium_network_name }` | The name of the private network in MacStadium that needs to be accessed by Azure. You can find the information about your private network in Appendix A of the IP Plan. | `Private-1` |
+| `{ macstadium_outside_interface }` | The name of the outside interface of your Cisco ASA/ASAv device. You can find the information about your outside interface in Appendix A of the IP Plan. | `Outside` |
 ## Additional Troubleshooting Resources by Microsoft
 
 For more detailed troubleshooting instructions, see [Azure Documentation: Troubleshoot VPN Gateway](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-troubleshoot).
