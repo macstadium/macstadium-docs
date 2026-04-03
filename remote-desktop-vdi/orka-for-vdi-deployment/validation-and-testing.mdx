@@ -252,7 +252,7 @@ Verify the Rendezvous connectivity from within a running VDA session by opening 
 
   2. Reopen Citrix Workspace and reconnect to the same desktop
 
-  3. Verify work is preserved (previouslt opened documents are still open)
+  3. Verify work is preserved (previously opened documents are still open)
 
 
 
@@ -365,7 +365,7 @@ These operations form the foundation of desktop pool management with Orka for VD
 ```
      ansible-playbook -i inventory deploy.yml -e "vm_group=lifecycle-test" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
-After the VM has been deployed, you will want to confirm the VM has recieved an IP address from DHCP, it is accessible via SSH, the VDA service has started automatically and has been registered with Citrix Cloud, the desktop appears in Citrix Workspace, and users can successfully launch a session. You may also wish to record the amount of time it takes to complete this workflow from the time launch commands are executed to desktop availability.  
+After the VM has been deployed, you will want to confirm the VM has received an IP address from DHCP, it is accessible via SSH, the VDA service has started automatically and has been registered with Citrix Cloud, the desktop appears in Citrix Workspace, and users can successfully launch a session. You may also wish to record the amount of time it takes to complete this workflow from the time launch commands are executed to desktop availability.  
 
 
   2. VM power operations  
