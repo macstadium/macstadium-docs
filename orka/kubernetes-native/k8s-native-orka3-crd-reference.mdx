@@ -39,8 +39,6 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 `spec` > `tagRequired` | `boolean` | Boolean setting if the `Tag` is required. When `true`, `VirtualMachineInstances` will be deployed only on nodes matching the specified `Tag`.  
 `spec` > `vncConsole` | `boolean` | Boolean setting if the VNC console is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`. When enabled, `GPUPassthrough` must be disabled.  
   
-### 
-
 ### Examples
 
 Create simple VM config
@@ -102,8 +100,6 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 `status` > `sshPort` | `integer` | The SSH port assigned to the `VirtualMachineInstance`.  
 `status` > `vncPort` | `integer` | The VNC port assigned to the `VirtualMachineInstance`.  
   
-### 
-
 ### Examples
 
 **Deploy basic VM**
@@ -152,8 +148,6 @@ Field | Type | Description
 `status` > `lastUpdatedTimestamp` | `string` | The timestamp for the last `Image` update (in the ISO 8601 format).  
 `status` > `state` | `string` | The current state of the image. One of `Ready`, `Updating`, `Failed`.  
   
-### 
-
 ### Examples
 
 **Existing Apple silicon-based image**

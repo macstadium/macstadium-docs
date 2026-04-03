@@ -16,7 +16,7 @@ When you deploy a VM, Orka assigns default metadata to the VM. You can also add 
 
 With VM metadata, you have more ways to identify and manage running VMs in addition to the data visible with `list` and `status` operations. You might find this helpful for your CI/CD workflows.
 
-Metadata is stored in the format `{"key": "my key", "value": "my value"}`. Every VM stores its metadata on a metadata server. You can query this metadata server to [retrieve the metadata](doc:retrieving-vm-metadata) only from within the VM. 
+Metadata is stored in the format `{"key": "my key", "value": "my value"}`. Every VM stores its metadata on a metadata server. You can query this metadata server to [retrieve the metadata](#retrieve-vm-metadata) only from within the VM. 
 
 > **📘 IMPORTANT**
 > 
@@ -60,8 +60,8 @@ Default metadata key | Description
 > 
 > Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
 
-  1. Connect to your cluster via VPN. For more information, see [VPN Connection](doc:vpn-connect)
-  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. See [VNC, SSH and Screen Sharing for Orka VMs](doc:orka-vms-ssh-vnc-screen-sharing). 
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection).
+  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. See the [Orka CLI quick start](/orka/quick-start-guides/orka3-cli-quick-start) for more details. 
   3. Send a POST request to `http://<orka-api-url>/api/v1/namespaces/{namespace}/vms` with the `vm_metadata` option in the body of the request. For example: 
 
 
@@ -86,8 +86,8 @@ To retrieve your VM metadata, you need to query the metadata server. This server
 
 The server returns the metadata in a JSON format.
 
-  1. Connect to your cluster via VPN. For more information, see [VPN Connection](doc:vpn-connect)
-  2. Connect to the VM via [VNC, SSH, or Screen Sharing](doc:orka-vms-ssh-vnc-screen-sharing).
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection).
+  2. Connect to the VM via VNC, SSH, or Screen Sharing.
   3. From within the VM, query the metadata server. This retrieves all the available metadata for the VM.
 
 
