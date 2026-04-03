@@ -12,11 +12,11 @@ labels: []
 suggested_new_path: "/iaas/x86-vms-private-cloud-vms/creating-a-new-vm-with-a-recipe"
 ---
 
-Users can create a new VM using a predefined recipe. Recipes are VM image templates that allow the automated creation of a new preconfigured VM with the selected operating system, applications, and configuration information. Recipes are quick and convenient, and may be preloaded with various software configurations.
+You can create a new VM using a predefined recipe. Recipes are VM image templates that allow the automated creation of a new preconfigured VM with the selected operating system, applications, and configuration information. Recipes are quick and convenient, and may be preloaded with various software configurations.
 
 To enable configuration, recipes include questions about each instance, such as the desired network configuration, username and password, in addition to standard VM parameters such as drive size or amount of RAM.
 
-MacStadium recommends using a recipe when deploying a new VM, especially for users new to this process. Recipes ensure that VMs are configured optimally for operation within Private Cloud, and are much faster to install and deploy when compared to manual VM creation.
+MacStadium recommends using a recipe when deploying a new VM, especially if you are new to this process. Recipes ensure that VMs are configured optimally for operation within Private Cloud, and are much faster to install and deploy when compared to manual VM creation.
 
 1\. Select **Machines Dashboard → Virtual Machines.**
 
@@ -32,9 +32,9 @@ _New VM_
 
 _EXAMPLE - > Existing Recipe, for Ubuntu Server (recommended)_
 
-MacStadium recommends using a preexisting recipe if a recipe exists for the OS required. Recipes always install the latest version of the selected OS in an optimal configuration with minimal post-installation configuration required. If there is not an OS recipe that the user needs, then select New VM and use the template to create a new recipe for that OS.
+MacStadium recommends using a preexisting recipe if a recipe exists for the OS required. Recipes always install the latest version of the selected OS in an optimal configuration with minimal post-installation configuration required. If there is not an OS recipe that you need, select New VM and use the template to create a new recipe for that OS.
 
-4\. In the example, the user selected the recipe for**Ubuntu Server 24.04** ; click**Next.**
+4\. In the example, select the recipe for **Ubuntu Server 24.04** and click **Next.**
 
 5\. The _Virtual Machine Setting_ tab opens. 
 
@@ -61,7 +61,7 @@ MacStadium recommends using a preexisting recipe if a recipe exists for the OS r
 
 _VM Recipe Instance_
 
-  7. In the Network box, users must select **Static** from the dropdown box. Users must also select the correct **Network** from the dropdown list in order to ensure connectivity to existing MacStadium infrastructure. Otherwise, Private Cloud will provision a new isolated network for the VM. 
+  7. In the Network box, select **Static** from the dropdown box. You must also select the correct **Network** from the dropdown list to ensure connectivity to existing MacStadium infrastructure. Otherwise, Private Cloud will provision a new isolated network for the VM. 
 
 
 
@@ -85,7 +85,7 @@ Do not use DHCP as the IP Address Type when connecting VMs to existing networks.
 
 
 
-The default IP Address is Auto, however, this option does not work. **Users must select an IP Address that is not currently being used by their machine, in the subnet of the network they are connected to.** Please consult the MacStadium _IP Plan_.  the private subnet, the client can have on reserver, addresses near the end of the subnet. A subnet of 10.254.232.0/24, for example, can reserve address range, 10.254.232.200 through 10.254.232.250 for VMs. 
+The default IP Address is Auto, however, this option does not work. **You must select an IP Address that is not currently in use, within the subnet of the network you are connected to.** Please consult the MacStadium _IP Plan_.  the private subnet, the client can have on reserver, addresses near the end of the subnet. A subnet of 10.254.232.0/24, for example, can reserve address range, 10.254.232.200 through 10.254.232.250 for VMs. 
 
 This only works for customers who will not use the entire subnet for bare metal hosts. In the Drives box, select the _OS Drive Size_ and _OS Drive Tier_. The _OS Drive Tier_ specifies the tier of storage to deploy to, currently, only Tier 2 is available. 
 

@@ -47,9 +47,11 @@ You can create regular namespaces where you can deploy and run Orka VMs, or you 
     
 ```
 orka3 namespace create <NAMESPACE_NAME>  
-  
-OR, if you want to create a sandboxed namespace,  
-  
+```
+
+Or, if you want to create a sandboxed namespace:
+
+```
 orka3 namespace create <NAMESPACE_NAME> --enable-custom-pods
 ```
 #### **Orka API**
@@ -64,10 +66,12 @@ curl -X 'POST' \
 -d '{  
 "enableCustomPods": false,  
 "name": "<NAMESPACE_NAME>"  
-}'  
-  
-OR, if you want to create a sandboxed namespace,  
-  
+}'
+```
+
+Or, if you want to create a sandboxed namespace:
+
+```
 curl -X 'POST' \  
 'http://<ORKA_API_IP>/api/v1/namespaces' \  
 -H 'accept: application/json' \  

@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.5 Release Notes"
-description: "Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions."
+description: "Orka 3.5 release notes: shared attached disk configuration, bridge networking, CLI namespace resolution, and macOS Tahoe and Sequoia compatibility."
 zendesk_id: 41327066930459
 zendesk_url: "/orka/orka-upgrades-and-release-notes/orka-35-release-notes"
 section: "Orka Upgrades and Release Notes"
@@ -68,10 +68,7 @@ Replace `<disk-identifier>` with the identifier from the previous step (e.g., `d
 
 > **Important:** These steps only need to be performed once per host, for the first VM deployed on that host. Every VM subsequently deployed on the same host will have the shared attached disk auto-mounted on boot at `/Volumes/shared`.
 
-#### 
-
-####    
-For AWS deployments (two-step process):
+#### For AWS deployments (two-step process):
 
 To enable shared attached disk support for your Orka instance:
 
