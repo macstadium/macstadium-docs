@@ -85,8 +85,8 @@ orka3 user get-token
 > You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 > 
 >   * For clusters deployed before Orka 2.1, it's the `.100` address for your `Private-1` network (usually, `10.221.188.100`), prefixed with `http`. For example: `http://10.221.188.100`.
->   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
->   * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
+>   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`), prefixed with `http`. For example: `http://10.221.188.20`.
+>   * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 > 
 
 > 
@@ -141,7 +141,7 @@ If this is your first time using Orka, you will get a blank screen.
   * **Base image:** Set to `sonoma-90gb-orka3-arm`. (Note that the settings in the dialog change based on the selected image type.)
   * **CPU** : Set to 3. This is the number of CPUs for the VM (Virtual Machine).
   * **vCPU** : Set to 3. Unless the CPU is 3, it must be half of or the exact number of CPUs. This denotes if hyperthreading is enabled. For example, if the vCPU equals CPU, hyperthreading is enabled.
-  * **Memory (G)** : Leave blank.This is the default setting.  
+  * **Memory (G)** : Leave blank. This is the default setting.  
 When left blank, Orka automatically assigns the memory for your VMs.  
 When you provide a value for Memory, this overrides Orka and allocates the specified value to the VM (Virtual Machine).
 

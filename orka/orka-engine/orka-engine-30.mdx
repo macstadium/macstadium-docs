@@ -49,7 +49,7 @@ Orka Engine provides macOS virtualization via Command Line Interface (CLI) on in
 
 * Copy VMs on local file system
 ```
-  * Delete VMs from local file systemCreate and deploy Orka OCI compliant Virtual Machine images.
+  * Delete VMs from local file system. Create and deploy Orka OCI compliant Virtual Machine images.
 
   * Deploy headless VMs (no display console)
 
@@ -116,7 +116,7 @@ After Orka Engine is installed, open a terminal window. The command `orka-engine
 
 ## Using orka-engine --help
 
-The `orka-engine --help` command lists the three subcommands, `vm`to manage VMs, `image` to manage images, and `host` to see information about the host.
+The `orka-engine --help` command lists the three subcommands, `vm` to manage VMs, `image` to manage images, and `host` to see information about the host.
 
 `orka-engine vm --help` provides a list of operations that can be taken on VMs, such as `run`, `list`, `save`, and `start`
 
@@ -183,7 +183,7 @@ Orka engine can list the name and resource consumption of VMs are currently runn
 
 To configure the VM with different macOS settings, install dependencies or tools, or configure a bug reproduction environment. Save the current state of a running VM as an image, as long as the VM name is available (see `orka-engine vm list` command for the VM name).
 
-For example,`orka-engine vm save latest-ipsw sonoma146-vanilla` saves the VM called `latest-ipsw` as an image with the name **sooma146-vanilla**
+For example,`orka-engine vm save latest-ipsw sonoma146-vanilla` saves the VM called `latest-ipsw` as an image with the name **sonoma146-vanilla**
 
 ![Terminal confirmation: The image 'sonoma146-vanilla' for VM 'latest-ipsw' has been successfully saved](/images/attachments/39594591426971.png)
 
@@ -253,7 +253,7 @@ When the images pull is complete, it is available in `orka-engine image list` an
 
 ## Pushing local Images to Registry
 
-If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then it can image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
+If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then the image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
 
 The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/ "http://ghcr.io") and the repo credentials are username=**dev1** and password=**repo**. 
 

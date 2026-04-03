@@ -38,7 +38,7 @@ The cluster knows which nodes have necessary images cached, greatly reducing ima
 
 ## Key Concepts
 
-  * Image Caching allows preemptive copying of a Orka VM image on any cluster node member, to avoid delays caused by network bandwidth when images are pulled from the cluster NFS mount or from a public registry cloud service.
+  * Image Caching allows preemptive copying of an Orka VM image on any cluster node member, to avoid delays caused by network bandwidth when images are pulled from the cluster NFS mount or from a public registry cloud service.
   * An image is the bits on disk representing a VM that can be used for saving state and sharing modifications.
   * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](https://ghcr.io/macstadium/orka-images/) with user credentials user/pwd: **admin/admin** , have Homebrew package manager installed, orka-vm-tools installed, and have screen sharing enabled and SSH access enabled.
   * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service).
@@ -59,7 +59,7 @@ After the cluster nodes are upgraded to version 3.2, users can access the new Im
   4. Run `orka3 imagecache list` to view images currently stored on Orka Cluster nodes
   5. View the Orka Cluster node names by typing `orka3 nodes list`
   6. Add a new image to a cluster node `orka3 imagecache add`
-  7. Check the status of a image caching operation `orka3 imagecache info`
+  7. Check the status of an image caching operation `orka3 imagecache info`
   8. Rapidly deploy a new VM using a recently cached Orka image on a specific node `orka3 vm deploy --image <image_name> --node <node_name>`
 
 

@@ -156,7 +156,7 @@ After that, you can deploy custom pods. For any custom pods you want to run, add
 ```
 ### Orka 3.0.0 no longer requires VM configurations
 
-You can now deploy a VM without creating or specifying a VM configuration. Deploying a VM as now simple as running:
+You can now deploy a VM without creating or specifying a VM configuration. Deploying a VM is now as simple as running:
     
     
 ```
@@ -196,7 +196,7 @@ If you need help moving away from the Orka 2.x CLI, contact the support team thr
 
 ### User logs
 
-Logging 1.0 and Logging 2.0are now **removed**. The Orka team is gathering information about this feature and might consider implementing an updated version or an alternative solution.
+Logging 1.0 and Logging 2.0 are now **removed**. The Orka team is gathering information about this feature and might consider implementing an updated version or an alternative solution.
 
 ### Shared VM storage for Apple silicon-based Monterey VMs
 
@@ -271,7 +271,7 @@ Orka 3.0.0. introduces the following improvements:
   * You might experience performance issues when running Xcode 15 on your Orka VMs.  
 **Workaround:** Try updating your OS to macOS 14 Sonoma.
   * You cannot disable System Integrity Protection on the base Sonoma image.  
-**Workaround:** MacStadiun has published a new base Sonoma image with System Integrity Protection (SIP) disabled \<https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
+**Workaround:** MacStadium has published a new base Sonoma image with System Integrity Protection (SIP) disabled \<https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled>.
   * You cannot enable Kernel extensions. This is an Apple limitation.  
 **Workaround:** None.
   * You might be unable to update existing Intel-based VMs to macOS Ventura or later. This limitation relates to the Orka image design and the Apple virtualization framework.  

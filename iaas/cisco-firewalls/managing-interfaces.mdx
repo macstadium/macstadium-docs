@@ -28,7 +28,7 @@ The ASDM data sheet can be [found here](https://www.cisco.com/c/en/us/products/s
 
 ## DMZs
 
-A DMZ is a server reachable by outside IP addresses, but which can also communicate with inside IP addresses, too. It provides a method of communication between inside and outside IP addresses. Customers ultimately define their own DMZs. This can be also be configured via ASDM.
+A DMZ is a server reachable by outside IP addresses, but which can also communicate with inside IP addresses, too. It provides a method of communication between inside and outside IP addresses. Customers ultimately define their own DMZs. This can also be configured via ASDM.
 
   * [Cisco ASA DMZ Configuration Example](https://www.speaknetworks.com/cisco-asa-dmz-configuration-example/)
   * [Configure a Public Server with Cisco ASDM](https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-next-generation-firewalls/113425-asdm-pub-server-00.html)
@@ -40,13 +40,13 @@ A DMZ is a server reachable by outside IP addresses, but which can also communic
 
 Firewalls can log how they handle various types of traffic. For forensic purposes, information like source and destination IP addresses, port numbers, and protocols can be invaluable. However, the downside of logging is that the size of log files can quickly become unwieldy. Because of this, MacStadium has logging turned off by default. However, it is easy to change and configure this setting to capture traffic details.
 
-To turn _logging _on, you will first need to identify a repository for the log information. MacStadium recommends designating a separate repository for those log files, because it can grow quickly. This can be set in ASDM via **Monitoring > Logging**. Users can also submit a firewall change request via the MacStadium portal to choose a new repository.
+To turn _logging_ on, you will first need to identity a repository for the log information. MacStadium recommends designating a separate repository for those log files, because it can grow quickly. This can be set in ASDM via **Monitoring > Logging**. Users can also submit a firewall change request via the MacStadium portal to choose a new repository.
 
-Users running CI as a service, should port those logs to a separate server. Otherwise, speed, storage, and performance may become impacted. MacStadium also recommends that leaving logging disabled, especially for internal-only customers.
+Users running CI as a service, should port those logs to a separate server. Otherwise, speed, storage, and performance may become impacted. MacStadium also recommends leaving logging disabled, especially for internal-only customers.
 
 For more information, see [Cisco Logging Best Practices](https://tools.cisco.com/security/center/resources/firewall_best_practices#43).‍
 
-### ‍### Command Line Interface
+### Command Line Interface
 
 For expert users, the Command Line Interface (CLI) can provide an elegant and convenient option for configuring your firewall.
 

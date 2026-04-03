@@ -33,7 +33,7 @@ As an administrator, you will be responsible for managing the three interconnect
 
 **Orka Engine (virtualization layer):**
 
-  * Hosts MacOS VMs on Apple Silicon hardware
+  * Hosts macOS VMs on Apple Silicon hardware
 
   * Manages VM lifecycle (create, start, stop, delete)
 
@@ -80,11 +80,11 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * VM group: A logical collection of VMs managed together (e.g. `citrix-vda-finance`, `citrix-vda-engineering`)
 
-  * Golden image: Template VM with MacOS, Citrix VDA, and applications pre-installed
+  * Golden image: Template VM with macOS, Citrix VDA, and applications pre-installed
 
   * Max VMs per host: Typically two, due to Apple licensing restrictions
 
-  * Bridged networking: VMs recieve IPs directly from your network (no NAT needed)
+  * Bridged networking: VMs receive IPs directly from your network (no NAT needed)
 
 
 
@@ -95,7 +95,7 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * Delivery group: Links machine catalog to users and defines access policies
 
-  * VDA (Virtual delivery agent): Software on MacOS VM that registers with Citrix Cloud
+  * VDA (Virtual delivery agent): Software on macOS VM that registers with Citrix Cloud
 
   * Enrollment token: Time-limited credential for VDA registration
 
@@ -441,7 +441,7 @@ Having this information documented and updated regularly helps with capacity pla
 
 ### Provisioning a new desktop
 
-You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following perquisites have been met before proceeding:
+You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following prerequisites have been met before proceeding:
 
   * The user account exists in your identity provider (Azure AD, Okta, etc.)
 
@@ -456,7 +456,7 @@ You will need to refer to this workflow when a user requests access to a macOS v
 
   1. Select the appropriate golden image. Determine this based on the user’s department/role/access needs:  
   
-`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all avaliable images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
+`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all available images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
   
 If the golden image isn’t cached, run:  
 `ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"`  
@@ -529,7 +529,7 @@ No action is needed if the user has already been assigned to a Delivery Group. T
 \- Desktop should appear: “Mac OS Finance Desktop” (or configured display name)  
 \- User clicks desktop → session launches successfully   
   
-The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisoning workflow has completed, the user will now have access to their macOS virtual desktop.
+The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisioning workflow has completed, the user will now have access to their macOS virtual desktop.
 
 
 
@@ -559,7 +559,7 @@ You will need to create new golden images when a new application is required for
 
   * Configuration scripts are prepared in the `/scripts` directory
 
-  * A base MacOS image is available
+  * A base macOS image is available
 
   * Registry credentials are in Ansible Vault
 
@@ -581,7 +581,7 @@ The `create_image.yml` playbook automates the following:
 
 
 
-To prepare the configuration steps, you will need to nagivate to the `/scripts` directory in your project:  
+To prepare the configuration steps, you will need to navigate to the `/scripts` directory in your project:  
   
 `cd ~/ansible-citrix-orka/scripts `  
 `ls -la`  
@@ -781,7 +781,7 @@ To view existing Delivery Groups: Navigate to Citrix Cloud Console → Web Studi
 
 #### Create a new Delivery Group
 
-In a scenario where a team may need new MacOS desktops within your Orka for VDI instance, you can run an Ansible deployment playbook similar to the following example:  
+In a scenario where a team may need new macOS desktops within your Orka for VDI instance, you can run an Ansible deployment playbook similar to the following example:  
   
 `ansible-playbook -i dev/inventory deploy.yml \`  
 `-e "vm_group=citrix-vda-marketing \`  
@@ -851,7 +851,7 @@ Remove user:
 
 Typically, you cannot change an existing Delivery Group’s assignment type. Instead, you can do the following:
 
-  1. Create new a Delivery Group with the desired assignment type
+  1. Create a new Delivery Group with the desired assignment type
 
   2. Migrate your users to the new group
 
@@ -1108,7 +1108,7 @@ To recreate VMs in a batch, refer to the following example:
 
 To recreate an estimated 10 VMs, this playbook will take 30-60 minutes to run. User impact will vary depending on if VMs are pooled or dedicated. If a VM is pooled, user impact should be minimal if recreation is done during off-hours. If a VM is assigned to a dedicated user, that user will lose their local data unless it is backed up upon VM recreation. It is considered a best practice to schedule VM reconfiguration during specific maintenance windows, and to notify users in advance.
 
-When considering the VM deprovisioning and cleanup process, you will want to remove desktop access when a users leaves your organization, or a VM is no longer needed.
+When considering the VM deprovisioning and cleanup process, you will want to remove desktop access when a user leaves your organization, or a VM is no longer needed.
 
 To remove users from a Citrix Delivery Group:
 
@@ -1168,7 +1168,7 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 ```
  1. Target: >95% success rate.
 
- 2. If Users Activity is <95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occure, VMs impacted)
+ 2. If Users Activity is <95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
 ```
   3. Host capacity. This can be checked by running: `ansible-playbook -i dev/inventory list.yml`and verifying:
 
@@ -1324,7 +1324,7 @@ If this problem persists, review Guide C: Troubleshooting Quick Reference
 
 **Resolution:**
 
-  1. Verify the the VM is powered on:
+  1. Verify the VM is powered on:
 
 
 
@@ -2116,7 +2116,7 @@ Before any production change:
 
 When contacting MacStadium support, please provide the following information:
 
-  * You Account ID
+  * Your Account ID
 
   * Affected host IPs or VM names
 
@@ -2135,7 +2135,7 @@ When contacting MacStadium support, please provide the following information:
 
   * Access via Citrix Cloud Console → Support
 
-  * Include: You Customer ID, Machine Catalog name, applicable error messages
+  * Include: Your Customer ID, Machine Catalog name, applicable error messages
 
 
 

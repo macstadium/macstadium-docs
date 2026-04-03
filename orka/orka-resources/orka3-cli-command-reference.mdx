@@ -836,7 +836,7 @@ Your namespace name must meet the following requirements:
 Begins with the 'orka-' prefix  
 Does not exceed 63 characters (including the prefix)  
 Consists of lowercase alphanumeric characters or dashes (-)  
-Еnds with an alphanumeric character  
+Ends with an alphanumeric character  
 * Must be unique to the cluster
 
 If '--enable-custom-pods' is set, creates a new namespace dedicated to running custom K8s resources (formerly, sandboxing). You will not be able to deploy Orka VMs in that namespace.
@@ -859,7 +859,7 @@ orka3 namespace create NAMESPACE_NAME [flags]
 # Create a new namespace named 'orka-test'  
 orka3 namespace create orka-test  
   
-# Create a new namespace named 'orka-cp' which allows running custom pods (previosly sandboxing)  
+# Create a new namespace named 'orka-cp' which allows running custom pods (previously sandboxing)  
 orka3 namespace create orka-cp --enable-custom-pods
 ```
 #### **Options**
@@ -1366,8 +1366,6 @@ List or pull images from the remote repository (also referred to as remote image
 
 Images are used to spin up VMs. MacStadium manages a remote repository of vanilla macOS images. To use a remote image to spin up a VM, you need to have it pulled locally on the Orka cluster.
 
-Images are used to spin up VMs. MacStadium manages a remote repository of vanilla macOS images. To use a remote image to spin up a VM, you need to have it pulled locally on the Orka cluster.
-
 An 'amd64' architecture indicates an Intel-based image. (Previously denoted by an '.img' extension. Extensions are no longer required as part of an image name.)  
 An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted by an '.orkasi' extension. Extensions are no longer required as part of an image name.)
 
@@ -1399,8 +1397,6 @@ List images in the remote repository
 ### Synopsis
 
 List the available images in the remote repository or look for specific images in the remote repository. Images in the remote repository are also referred to as remote images.
-
-Images are used to spin up VMs. MacStadium manages a remote repository of vanilla macOS images. To use a remote image to spin up a VM, you need to have it pulled locally on the Orka cluster.
 
 Images are used to spin up VMs. MacStadium manages a remote repository of vanilla macOS images. To use a remote image to spin up a VM, you need to have it pulled locally on the Orka cluster.
 
@@ -1786,7 +1782,7 @@ orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@com
 
 ### Synopsis
 
-Manage the service accounts, including any authetication tokens for them, for your CI/CD integrations. All operations in this group require administrative privileges.
+Manage the service accounts, including any authentication tokens for them, for your CI/CD integrations. All operations in this group require administrative privileges.
 
 Service accounts are intended for use by CI/CD integrations. To use your cluster with one of the available Orka integrations, you need to create a service account, obtain an authentication token for it, and configure the token in your preferred integration.
 
@@ -2202,7 +2198,7 @@ Create a VM configuration (template for deploying virtual machines) with the spe
 
 Orka creates the VM configuration in the 'orka-default' namespace. It will be available to all users and service accounts with access to 'orka-default'.
 
-The name of the Vm configuration must meet the following requirements:  
+The name of the VM configuration must meet the following requirements:  
 Does not exceed 50 characters  
 Consists of lowercase alphanumeric characters or dashes (-)  
 Starts with an alphabetic character and ends with an alphanumeric character  
@@ -2246,7 +2242,7 @@ orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --tag jenkins-b
 # Create a template for a VM that will use a custom scheduler for deployment (most-allocated)  
 orka3 vmc create medium-ventura-vm --image 90gbventurassh.orkasi --scheduler most-allocated  
   
-# (Intel-only) Create a template for a VM with GPU passhtrough (GPU passthrough must be enabled on the environment)  
+# (Intel-only) Create a template for a VM with GPU passthrough (GPU passthrough must be enabled on the environment)  
 orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disable-vnc  
   
 # Create a template for a VM with disabled VNC (make sure that SSH or Apple Screen Sharing are already enabled on the image)  
@@ -2509,7 +2505,7 @@ The minimum required configuration consists of an image and a number of CPU core
 Setting a VMNAME is optional:  
 When VMNAME is not provided, Orka generates a unique name consisting of 'vm-' and a unique suffix.  
 When VM_NAME is provided, Orka attempts to create the VM using the provided name. If the name is not unique, the VM will not be deployed.  
-* When both VM_NAME and '--generate-name' are provided, Orka generates a uniqe name based on the VM_NAME and a unique suffix.
+* When both VM_NAME and '--generate-name' are provided, Orka generates a unique name based on the VM_NAME and a unique suffix.
 
 When provided, the VMNAME must meet the following requirements:  
 Does not exceed 63 characters (including the '-suffix' generated with '--generate-name', if set)  
@@ -2596,7 +2592,7 @@ orka3 vm deploy -i emptydisk.img --iso ventura.iso
 # (Intel-only) Deploy a VM with a custom valid serial number  
 orka3 vm deploy -i 90gbventurassh.img --system-serial A00BC123D4  
   
-# (Intel-only) Deploy a VM with GPU passhtrough (GPU passthrough must be enabled on the environment)  
+# (Intel-only) Deploy a VM with GPU passthrough (GPU passthrough must be enabled on the environment)  
 orka3 vm deploy -i 90gbventurassh.img --gpu=true --disable-vnc  
   
 # (Intel-only) Deploy a VM, running macOS Monterey or earlier, with disabled network performance boost (Ventura VMs must have network boost enabled)  

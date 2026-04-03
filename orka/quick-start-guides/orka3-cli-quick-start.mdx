@@ -22,7 +22,7 @@ If you want to skip the detailed explanations, just run through these steps on y
   4. `orka3 node list`
   5. `orka3 vm list` (you should see 0 results)
   6. `orka3 remote-image list` (this will return available base images in MacStadium's internal remote repository)
-  7. `orka3 remote-image pull <IMAGE_NAME>`(this will copy the image to your cluster's repository)
+  7. `orka3 remote-image pull <IMAGE_NAME>` (this will copy the image to your cluster's repository)
   8. `orka3 image list` (this will return the list of locally stored images)
   9. `orka3 vm deploy --image <IMAGE_NAME>`
      1. Alternatively, you can deploy from OCI repositories: `orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest`
@@ -84,8 +84,8 @@ This operation is a one-time effort. With it, you set the Orka service endpoint 
 
 You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 
-  * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`). prefixed with `http`. For example: `http://10.221.188.20`.
-  * You can also use `https://<orka-domain>` and `https://<custom-domain>`(if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
+  * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`), prefixed with `http`. For example: `http://10.221.188.20`.
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 
 
 
@@ -113,7 +113,7 @@ Orka lets you log in with your MacStadium Customer Portal credentials. Your acce
 ```bash
 orka3 login
 ```
-Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional`orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
+Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
 
 ## 4. Some CLI basics
 
