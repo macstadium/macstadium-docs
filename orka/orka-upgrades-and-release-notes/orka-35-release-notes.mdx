@@ -72,7 +72,7 @@ Replace `<disk-identifier>` with the identifier from the previous step (e.g., `d
 
 To enable shared attached disk support for your Orka instance:
 
-  1. Set up a [CodeBuild project](/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster- "/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster-") (if one is not already configured) and set: `vm_shared_disk_enabled: true`
+  1. Set up a [CodeBuild project](/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started#6-setup-a-codebuild-project-to-run-orka-installation-into-the-eks-cluster-) (if one is not already configured) and set: `vm_shared_disk_enabled: true`
 
   2. Configure each EC2 Mac Instance. Set the `VM_SHARED_DISK_SIZE` environment variable to the desired size as part of the user data script during instance launch:
 
