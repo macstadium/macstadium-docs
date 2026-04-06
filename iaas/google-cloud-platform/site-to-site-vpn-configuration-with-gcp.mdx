@@ -66,14 +66,14 @@ To create a new VPN Gateway, complete the following steps:
 
   8. Provide or generate an IKE pre-shared key.
 
-  * <Note>Keep a record of the pre-shared key. It is needed later.</Note>
+  * Keep a record of the pre-shared key. It is needed later.
   9. For Routing options, select Policy-based.
 
   10. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the [IP Plan](/macstadium/macstadium-overview/ip-plan). By default, this is the Private-1 network. For more information about CIDR notations, see Understanding IP Addresses, Subnets, and CIDR Notation for Networking. You can also use a CIDR calculator such as this CIDR/Netmask Lookup Tool.
 
   11. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your MacStadium private cloud.
 
-  * <Note>For more information, see Google Cloud Documentation: Networks and subnets.</Note>
+  * For more information, see Google Cloud Documentation: Networks and subnets.
   12. (Optional) Provide one or more IP ranges within your GCP local network that needs to access MacStadium.
 
   13. Click Done.
@@ -241,7 +241,7 @@ Manually replace the placeholders in the configuration template with the values 
        * This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Outside. Information about the public network is located in Appendix B of the IP Plan.
      * `{ shared_key0 }` and `{ shared_key1 }`
        * This is the IPSec pre-shared key used when creating the VPN connection in GCP.
-       * <Note>This key must be saved separately. Obtain it from the VPN configuration downloaded from GCP.</Note>
+       * This key must be saved separately. Obtain it from the VPN configuration downloaded from GCP.
      * `{ gcp_bgp_ip_address0 }` and `{ gcp_bgp_ip_address1 }`
        * The Cloud router BGP IP address of the BGP sessions in GCP.
        * In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.

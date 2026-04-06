@@ -85,7 +85,7 @@ To establish a stable and persistent connection, between the entire private clou
   3. Set up the Cisco ASA/ASAv device of the MacStadium cloud. 
      * You might need to configure one or more of the following rules: 
        * A NAT exemption rule for traffic between the two clouds. It might need to allow traffic from the private cloud to the private network and the outside interface of the MacStadium cloud. By default, these are respectively the Private-1 and Outside networks listed in Appendix A of the IP Plan. 
-         * <Note>NAT exemption allows the ability to exclude traffic from being translated with NAT. One scenario where this is typically done is for a site-to-site VPN tunnel.</Note>
+         * **Note:** NAT exemption allows the ability to exclude traffic from being translated with NAT. One scenario where this is typically done is for a site-to-site VPN tunnel.
        * Access-list rules permitting traffic from the private cloud to the public endpoint of your MacStadium cloud. By default, this is the FW1-Outside network listed in Appendix B of the IP Plan.
        * A crypto map rule that maps traffic between the two clouds. Usually, this is mapped to the outside interface of the MacStadium cloud. By default, this is the Outside network listed in Appendix A of the IP Plan.
        * IPSec and IKE policies.
@@ -188,7 +188,7 @@ Route traffic to the internal, private network. By default, this is the Private-
        * Select static routing and provide in Static IP Prefixes the CIDR notation for the private network listed in Appendix A of the IP Plan (by default, the Private-1 network). To convert the subnet mask to a CIDR notation, use a CIDR calculator. Example: 10.221.254.0/24
      * Dynamic (requires BGP) and dynamically exchanges routes between AWS and MacStadium environments.
        * Select dynamic routing to keep the default values and proceed to the next step.
-       * <Note>For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).</Note>
+       * For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).
   8. Do not edit the Tunnel Options section.
   9. Click Create VPN Connection.  
 ![089ae6a-image.png](/images/attachments/28280561577499.png)
