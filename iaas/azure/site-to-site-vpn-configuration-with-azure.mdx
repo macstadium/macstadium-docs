@@ -31,7 +31,9 @@ Currently, for VPN connectivity between MacStadium and Azure there are two optio
 
 In both VPN modes, static or dynamic routing with BGP is supported between MacStadium and Azure. In this document, BGP routing is used.
 
-**NOTE** : For more information about general Azure VPN design, see [Azure Documentation](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-highlyavailable).
+<Note>
+For more information about general Azure VPN design, see [Azure Documentation](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-highlyavailable).
+</Note>
 
 ## Creating a Site-to-Site VPN
 
@@ -66,7 +68,7 @@ In Azure, the virtual network gateway represents the Azure side of the Site-to-S
   6. For Gateway type, confirm VPN is selected
   7. For VPN type, confirm Route-based is selected
   8. Select your SKU 
-     * **NOTE** : For more information about the available SKUs, see Azure Documentation: [Gateway SKUs](https://learn.microsoft.com/en-gb/azure/vpn-gateway/vpn-gateway-about-vpngateways).
+     * <Note>For more information about the available SKUs, see Azure Documentation: [Gateway SKUs](https://learn.microsoft.com/en-gb/azure/vpn-gateway/vpn-gateway-about-vpngateways).</Note>
 
   9. Select the Virtual network to be used to send and receive traffic through the VPN.
   10. For Public IP address, select an existing unused IP address or create a new one and provide a name for it.
@@ -109,7 +111,7 @@ In Azure, the virtual network gateway represents the MacStadium side of the Site
   6. Set the option Configure BGP settings to Yes.
 
   7. Enter the private ASN number to use, for instance 65516. 
-     * **NOTE** : Notice that ASNs 8075, 8076, 12076 (public), 65515, 65517, 65518, 65519, 65520 (private) are reserved by Azure and cannot be used.
+     * <Note>Notice that ASNs 8075, 8076, 12076 (public), 65515, 65517, 65518, 65519, 65520 (private) are reserved by Azure and cannot be used.</Note>
 
   8. In BGP peer IP address enter the APIPA IP address used in the Azure side, for example 169.254.21.2.
   9. Click Review + create and then Create.
@@ -132,7 +134,7 @@ After the virtual network gateway and a local network gateway are in place, crea
   6. Select the correct Region and click Next : Settings.
   7. Select the Virtual network gateway and Local network gateway that were previously created.
   8. For Shared key (PSK), provide an IPSec pre-shared key. 
-     * **NOTE** : Keep a record of the pre-shared key. It will be used later.
+     * <Note>Keep a record of the pre-shared key. It will be used later.</Note>
 
   9. For IKE Protocol, confirm IKEv2 is selected.
   10. Select Enable BGP.
@@ -154,7 +156,7 @@ After the virtual network gateway and a local network gateway are in place, crea
 ![5086e73-image.png](/images/attachments/28300162047643.png)
 
 
-  * **NOTE** : The status of the newly created connection is Unknown.
+  * <Note>The status of the newly created connection is Unknown.</Note>
 
 
 
@@ -162,59 +164,57 @@ After the virtual network gateway and a local network gateway are in place, crea
 
 Based on the requirements and current setup, it might be necessary to enable inbound traffic from MacStadium to Azure.
 
-**NOTE** : For more information, see Azure Documentation: [Filter inbound Internet traffic with Azure Firewall DNAT using the Azure portal](https://learn.microsoft.com/en-us/azure/firewall/tutorial-firewall-dnat) and [Network security groups](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview).
+<Note>
+For more information, see Azure Documentation: [Filter inbound Internet traffic with Azure Firewall DNAT using the Azure portal](https://learn.microsoft.com/en-us/azure/firewall/tutorial-firewall-dnat) and [Network security groups](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview).
+</Note>
 
-**NOTE** : To proceed with the MacStadium side of the configuration, see Azure [VPN Config for Cisco ASA/ASAv](/iaas/azure/azure-vpn-config-for-cisco-asaasav).
+<Note>
+To proceed with the MacStadium side of the configuration, see Azure [VPN Config for Cisco ASA/ASAv](/iaas/azure/azure-vpn-config-for-cisco-asaasav).
+</Note>
 
 After creating the Site-to Site VPN connection, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud. Make sure to downloaded the VPN configuration template from Azure.
 
 ## Configuration Template
 
-**WARNING** : Without extensive experience with Azure and ASA/ASAv configurations, it is recommended to use a configuration template. Otherwise, the Site-to-Site VPN might not perform as expected.
+<Warning>
+Without extensive experience with Azure and ASA/ASAv configurations, it is recommended to use a configuration template. Otherwise, the Site-to-Site VPN might not perform as expected.
+</Warning>
 
   1. In the VPN configuration script downloaded from Azure, the configuration starts after the section below:  
 ![b7754df-image.png](/images/attachments/28300178321819.png)
   2. Find the section where the BGP configuration starts.
-  3. Add the MacStadium private network and mask.  
+  3. Add the MacStadium private network and mask.
 
-         
 ```
-     router bgp 65516   
-     bgp log-neighbor-changes   
-     bgp graceful-restart   
-     bgp router-id 169.254.21.1   
-     address-family ipv4 unicast  
-       
-     neighbor 10.0.1.254 remote-as 65515 neighbor 10.0.1.254 ebgp-multihop 255 neighbor 10.0.1.254 activate  
-       
-     ! NOTE: THE LOCAL NETWORKS TO BE ADDED STATICALLY TO THIS BGP ROUTER NEED TO GO HERE BELOW:  
-       
-     ! NOTE: You can add more local on-premises network ranges statically here as well, using the "network" command just like above.  
-       
-     !etc...  
-       
-     ! network 10.221.188.0 mask 255.255.254.0  
-       
+     router bgp 65516
+     bgp log-neighbor-changes
+     bgp graceful-restart
+     bgp router-id 169.254.21.1
+     address-family ipv4 unicast
+
+     neighbor 10.0.1.254 remote-as 65515 neighbor 10.0.1.254 ebgp-multihop 255 neighbor 10.0.1.254 activate
+
+     ! NOTE: THE LOCAL NETWORKS TO BE ADDED STATICALLY TO THIS BGP ROUTER NEED TO GO HERE BELOW:
+
+     ! NOTE: You can add more local on-premises network ranges statically here as well, using the "network" command just like above.
+
+     !etc...
+
+     ! network 10.221.188.0 mask 255.255.254.0
+
      no auto-summary no synchronization exit-address-family
-
- * **NOTE** : Find the MacStadium Private Network by checking that section in Appendix A of the IP Plan.
- * **NOTE** : Make sure the name of the interface being used for the VPN connection is Outside as this is the name of the interface in the script downloaded from Azure. If there is a different interface name for the VPN, then make sure to replace all sections where the Outside interface is referenced in the script by the actual interface name being used.
- * **WARNING** : Ignore the section, STATIC ROUTING SETUP FOR AZURE, and do not configure any static routes, as BGP will be used instead.
 ```
+     * <Note>Find the MacStadium Private Network by checking that section in Appendix A of the IP Plan.</Note>
+     * <Note>Make sure the name of the interface being used for the VPN connection is Outside as this is the name of the interface in the script downloaded from Azure. If there is a different interface name for the VPN, then make sure to replace all sections where the Outside interface is referenced in the script by the actual interface name being used.</Note>
+     * <Warning>Ignore the section, STATIC ROUTING SETUP FOR AZURE, and do not configure any static routes, as BGP will be used instead.</Warning>
   4. Access the firewall through SSH using the credentials available in the IP Plan.
   5. Paste the ASA configuration script and confirm all commands were accepted.
-  6. Use the following commands to confirm if the VPN has been successfully established:  
+  6. Use the following commands to confirm if the VPN has been successfully established:
 
-         
 ```
      show vpn-sessiondb l2l show crypto ipsec sa
-
- * **NOTE** : For more information, see: [Cisco Secure Firewall ASA Series Command Reference, S Commands](https://www.cisco.com/c/en/us/td/docs/security/asa/asa-cli-reference/S/asa-command-ref-S/show-cr-to-show-cz-commands.html).
 ```
-  7. Save the configuration with the ASA CLI command: write memory.  
-
-```
- * Access to the Azure environment from the MacStadium host is now possible (and vice-versa).
-
- * **NOTE** : To feed the complete configuration into your Cisco ASA/ASAv, see [Site-to-Site VPN Config](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).
-```
+     * <Note>For more information, see: [Cisco Secure Firewall ASA Series Command Reference, S Commands](https://www.cisco.com/c/en/us/td/docs/security/asa/asa-cli-reference/S/asa-command-ref-S/show-cr-to-show-cz-commands.html).</Note>
+  7. Save the configuration with the ASA CLI command: write memory.
+     * Access to the Azure environment from the MacStadium host is now possible (and vice-versa).
+     * <Note>To feed the complete configuration into your Cisco ASA/ASAv, see [Site-to-Site VPN Config](/iaas/connecting-to-other-clouds/site-to-site-vpn-config).</Note>

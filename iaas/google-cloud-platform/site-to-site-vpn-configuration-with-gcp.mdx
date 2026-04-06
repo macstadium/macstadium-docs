@@ -34,9 +34,9 @@ To create a site-to-site VPN from your GCP private cloud to your MacStadium priv
   2. Create the VPN connection  
 ![ff8d27b-image.png](/images/attachments/28301513766683.png)  
 
-```
- * **NOTE** : Classic and HA VPN connections in GCP require a Cloud VPN Tunnel and a Cloud VPN Gateway. Both elements can be at once or you can add a new Cloud VPN Tunnel to an existing Cloud VPN Gateway.
-```
+<Note>
+Classic and HA VPN connections in GCP require a Cloud VPN Tunnel and a Cloud VPN Gateway. Both elements can be at once or you can add a new Cloud VPN Tunnel to an existing Cloud VPN Gateway.
+</Note>
 ## Create VPN Gateway and Tunnel
 
 To create a new VPN Gateway, complete the following steps:
@@ -66,18 +66,14 @@ To create a new VPN Gateway, complete the following steps:
 
   8. Provide or generate an IKE pre-shared key.
 
-```
- * **NOTE** : Keep a record of the pre-shared key. It is needed later.
-```
+  * <Note>Keep a record of the pre-shared key. It is needed later.</Note>
   9. For Routing options, select Policy-based.
 
   10. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the [IP Plan](/macstadium/macstadium-overview/ip-plan). By default, this is the Private-1 network. For more information about CIDR notations, see Understanding IP Addresses, Subnets, and CIDR Notation for Networking. You can also use a CIDR calculator such as this CIDR/Netmask Lookup Tool.
 
   11. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your MacStadium private cloud.
 
-```
- * **NOTE** : For more information, see Google Cloud Documentation: Networks and subnets.
-```
+  * <Note>For more information, see Google Cloud Documentation: Networks and subnets.</Note>
   12. (Optional) Provide one or more IP ranges within your GCP local network that needs to access MacStadium.
 
   13. Click Done.
@@ -176,9 +172,11 @@ Use the configuration template provided below and fill in the missing informatio
 
 ## Configuration Template Classic VPN
 
-**WARNING** : Do not attempt GCP and ASA/ASAv configuration without proper experience, or unexpected consequences may happen to the VPN.
+<Warning>
+Do not attempt GCP and ASA/ASAv configuration without proper experience, or unexpected consequences may happen to the VPN.
+</Warning>
 
-This is a template configuration that can be used to complete the setup of the GCP-MacStadium Site-To-SiteClassic VPN connection.
+This is a template configuration that can be used to complete the setup of the GCP-MacStadium Site-To-Site Classic VPN connection.
 
 ` ! #1: Placeholders !  
 ! \{ gcp_network_address } - The address of the GCP local network that needs to have access to MacStadium.  
@@ -189,7 +187,11 @@ exit crypto ikev2 enable \{ macstadium_outside_interface } crypto ipsec security
 
 ## Configuration Template HA VPN
 
-**WARNING** : Do not attempt GCP and ASA/ASAv configuration without proper experience, or unexpected consequences may happen to the VPN.This is a template configuration that you can use to complete the setup of your GCP-MacStadium Site-To-Site HA VPN connection.
+<Warning>
+Do not attempt GCP and ASA/ASAv configuration without proper experience, or unexpected consequences may happen to the VPN.
+</Warning>
+
+This is a template configuration that you can use to complete the setup of your GCP-MacStadium Site-To-Site HA VPN connection.
 
 ` ! #1: Placeholders ! ! \{ gcp_network_address } - The address of the GCP local network that needs to have access to MacStadium. ! \{ gcp_network_mask } - The subnet mask of the GCP local network that needs to have access to MacStadium. ! \{ gcp_network_mask_cidr } - The subnet mask of the GCP local network that needs to have access to MacStadium in CIDR notation. Ex: 255.255.255.0 in CIDR notation is /24. ! \{ gcp_vpn_ip0 } - The public IP address of the first VPN Gateway interface in GCP. ! \{ gcp_vpn_ip1 } - The public IP address of the second VPN Gateway interface in GCP. ! \{ macstadium_public_ip } - The IP address of the public network of your MacStadium private cloud. By default, this is FW1-Outside. ! \{ macstadium_network_name } - The name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1.  
 ! \{ macstadium_network_address } - The IP address of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. ! \{ macstadium_network_mask } - The subnet mask of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. ! \{ macstadium _network_mask_cidr } - The subnet mask in CIDR notation of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Ex: 255.255.254.0 in CIDR notation is /23 ! \{ macstadium_outside_interface } - The name of the outside interface of your Cisco ASA/ASAv device. By default, this is Outside. ! \{ shared_key0 } - The IPSec pre-shared key used when creating the first VPN connection in GCP. ! \{ shared_key1 } - The IPSec pre-shared key used when creating the second VPN connection in GCP. ! \{ gcp_bgp_ip_address0 } - The Cloud router BGP IP address of the first BGP session in GCP. ! \{ gcp_bgp_ip_address1 } - The Cloud router BGP IP address of the second BGP session in GCP. ! \{ macstadium_bgp_ip_address0 } - The BGP peer IP address of the first BGP session in GCP. ! \{ macstadium_bgp_ip_address1 } – The BGP peer IP address of the second BGP session in GCP. ! \{ macstadium_bgp_asn } – The BGP peer router ASN of the BGP sessions configuration in GCP. ! \{ gcp_bgp_asn } – The BGP router ASN on the Cloud Router configuration in GCP. ! ! #1: IKE & IPSec configuration ! ! The name "gcp" must be unique for the Cisco ASA/ASAv device. ! configure terminal crypto ipsec ikev2 ipsec-proposal gcp protocol esp encryption aes-gcm-256 protocol esp integrity sha-512 !  
@@ -209,27 +211,19 @@ Manually replace the placeholders in the configuration template with the values 
   2. In the GCP search bar, type VPN and select VPN Hybrid Connectivity.  
 ![1cabbfb-image.png](/images/attachments/28302601437467.png)  
 
-```
- * { gcp_network_address }, { gcp_network_mask_cidr } and { gcp_network_mask_cidr }
-
- * This is the IP address of the GCP local network that needs to have access to MacStadium.
-```
+  * `{ gcp_network_address }`, `{ gcp_network_mask_cidr }` and `{ gcp_network_mask_cidr }`
+  * This is the IP address of the GCP local network that needs to have access to MacStadium.
   3. Select Cloud VPN Gateways.
   4. Locate the gateway used by the GCP-MacStadium tunnel and note the value for Region.  
 ![0ec2771-image.png](/images/attachments/28302601443483.png)
   5. Click the value listed under VPC network.  
 
-```
- * The GCP console redirects you to the list of subnets for the selected network.
-```
+  * The GCP console redirects you to the list of subnets for the selected network.
   6. In the list of subnets, locate the one matching the region selected earlier.
   7. Obtain the values from the Internal IP ranges field. Example:  
 
-```
- * ` Region: us-east1 Internal IP range: 10.142.0.0/20 { gcp_network_address }: 10.142.0.0 { gcp_network_mask }: 255.255.240.0 { gcp_network_mask_cidr }: /20 `
-
- * This is the public IP addresses of the Cloud VPN gateway interfaces in GCP.
-```
+  * `Region: us-east1 Internal IP range: 10.142.0.0/20 { gcp_network_address }: 10.142.0.0 { gcp_network_mask }: 255.255.240.0 { gcp_network_mask_cidr }: /20`
+  * This is the public IP addresses of the Cloud VPN gateway interfaces in GCP.
   8. In the VPN Hybrid Connectivity service page, select Cloud VPN Gateways.
   9. Locate the gateway used by the GCP-MacStadium tunnel and use the values listed under IP address.  
 ![002bb6e-image.png](/images/attachments/28302550950555.png)
@@ -247,7 +241,7 @@ Manually replace the placeholders in the configuration template with the values 
        * This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Outside. Information about the public network is located in Appendix B of the IP Plan.
      * `{ shared_key0 }` and `{ shared_key1 }`
        * This is the IPSec pre-shared key used when creating the VPN connection in GCP.
-       * **NOTE** : This key must be saved separately. Obtain it from the VPN configuration downloaded from GCP.
+       * <Note>This key must be saved separately. Obtain it from the VPN configuration downloaded from GCP.</Note>
      * `{ gcp_bgp_ip_address0 }` and `{ gcp_bgp_ip_address1 }`
        * The Cloud router BGP IP address of the BGP sessions in GCP.
        * In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.

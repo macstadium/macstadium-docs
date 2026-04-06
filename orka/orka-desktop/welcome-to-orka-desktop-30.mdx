@@ -14,13 +14,13 @@ suggested_new_path: "/orka/orka-desktop/welcome-to-orka-desktop-30"
 
 # Orka Desktop by MacStadium
 
-**Orka Desktop** is a free, no obligation, virtualization tool, which is designed to be deployed on individual macOS workstations. These workstations might be a local Macbook, a hosted Mac mini or Studio by MacStadium, AWS, or even an individual On-Prem solution. Once deployed, **Orka Desktop** lets you create a seamless workflow for running the same image on any device. An image can be built and tested locally, then uploaded to the cloud. This is much easier than needing bespoke technologies, and individual processes to test, share, and configure virtualized images.
+**Orka Desktop** is a free, no obligation, virtualization tool, which is designed to be deployed on individual macOS workstations. These workstations might be a local Macbook, a hosted Mac mini or Studio by MacStadium, AWS, or even an individual On-Prem solution. Once deployed, **Orka Desktop** allows users to create a seamless workflow for running the same image on any device. An image can be built and tested locally, then uploaded to the cloud. This is much easier than needing bespoke technologies, and individual processes to test, share, and configure virtualized images.
 
-**Orka Desktop** integrates with other cloud based, licensed MacStadium products, like **Orka**. For example, an image built and tested with **Orka Desktop** can be uploaded to a Container Repository that is shared with an Orka cloud instance, using this integrated tool. The ability to publish local images to the Orka cloud means you can develop locally and deploy globally - offering flexibility, scalability, and an on-ramp to use MacStadium products more effectively.
+**Orka Desktop** integrates with other cloud based, licensed MacStadium products, like **Orka**. For example, an image built and tested with **Orka Desktop** can be uploaded to a Container Repository that is shared with an Orka cloud instance, using this integrated tool. The ability to publish local images to the Orka cloud means users can develop locally and deploy globally - offering flexibility, scalability, and an on-ramp to use MacStadium products more effectively.
 
 > 🗒️ **NOTE**
 > 
-> You can publish any image to a container registry, for example, GitHub Packages or DockerHub and then pull it into the **Orka Cluster**.
+> Users can publish any image to a container registry, for example, GitHub Packages or DockerHub and then pull it into the **Orka Cluster**.
 
 <Note>
   Orka Desktop is available from the following locations:
@@ -55,22 +55,22 @@ Registries should also support the Push, Content Discovery, and Content Manageme
 
 The Open Container Initiative (OCI) is an open governance structure for the express purpose of creating open industry standards around container formats and runtimes.
 
-You can deploy a VM using a compatible image from a private or public registry, as well as store images in a user registry.
+Users can deploy a VM using a compatible image from a private or public registry, as well as store those images in a user registry.
 
 # Installation and Set Up in 3 Easy Steps
 
-**Orka Desktop** has a clear and intuitive GUI, which makes it an easy transition to using Orka in the cloud. It provides information about your system, available images, and VMs.
+**Orka Desktop** has a clear and intuitive GUI, which makes it easy transition to using Orka in the cloud. It provides information about your system, available images, and VMs.
 
-1\. Download Orka Desktop. Move to your Applications folder. Run Orka Desktop.
+1. Download Orka Desktop. Move to your Applications folder. Run Orka Desktop.
 
-2\. Create a New Virtual Machine (VM). There are two options for creating a new VM:
+2. Create a New Virtual Machine (VM). There are two options for creating a new VM:
 
   * **Clean Install** , where the image is created from an existing IPSW file.
   * **Pull Image** , where the image is pulled from an Image Repository (based on an existing OCI image that is available via a Container Registry).
 
 
 
-3\. Use the VM.
+3. Use the VM.
 
 > 🗒️ **NOTES**
 > 
@@ -79,10 +79,10 @@ You can deploy a VM using a compatible image from a private or public registry, 
 > 
 
 
-## Downloading Orka desktop
+## Downloading Orka Desktop
 
   * MacStadium website: https://www.macstadium.com/
-  * MacStadium GitHub repo: https://github.com/macstadium/orka-desktop/releases
+  * MacStadium GitHib repo: https://github.com/macstadium/orka-desktop/releases
   * Brew package manager: brew install orka-desktop
 
 ![06c54b4-image.png](/images/attachments/28396594761627.png)  
@@ -129,7 +129,7 @@ __Download Latest (to get the latest files from Apple)
 
 _Confirmation Box_
 
-  8. Use the Display Resolution dropdown to set the resolution of the screen when running Console into the image.
+  8. Use the Display Resolution drop own to set the resolution of the screen when running Console into the image.
   9. Use the Image Data Location to select the location of the saved files.![203a10d-image.png](/images/attachments/28396594778779.png)  
 _Image Data Location_
   10. Click Install and the progress bar displays the install progress.
@@ -152,7 +152,7 @@ _**NOTES**
      * The VM is now in a pending installation state.
   5. Complete all fields with the required information.
   6. Use the stepped sliders to manually adjust the number of CPUs, and the amount of Memory and Storage that you want to allocate to the VM.
-  7. Use the Display Resolution dropdown to set the resolution of the screen when running Console into the image.  
+  7. Use the Display Resolution drop own to set the resolution of the screen when running Console into the image.  
 ![7483782-image \(1\).png](/images/attachments/28396594784923.png)
   8. Click **Pull**.
 
@@ -162,7 +162,7 @@ _**NOTES**
 
 Configuration Warnings
 
-When adding CPU Count and Memory Size, the Orka Desktop application displays a warning message if the recommended sizes are exceeded.
+When adding CPU Count and Memory Size, the Orka Desktop application displays a warning message if the recommended sized are exceeded.
 
 ![c58de83-image.png](/images/attachments/28396625976603.png)  
 
@@ -217,7 +217,7 @@ Resumes a VM that was paused.
 
 ## Push to OCI Registry
 
-You can push the image to an OCI registry so another user can download and use it. This is helpful for sharing an image across a team; for example, an IT Admin can create and configure an image and push it to a shared location, then team members can access that image and begin using it. Developers may also push an image to a shared registry for testing purposes.
+Users can push the image to an OCI registry. Push allows users to push an image, so another user can download and use that image. This is helpful for sharing an image across a team; for example, an IT Admin can create and configure an image and push it to a shared location, then team members can access that image and begin using it. Developers may also push an image to a shared registry for testing purposes.
 
   1. Select an existing VM.
   2. Click **Push to OCI Registry**.![3f4a5dc-image.png](/images/attachments/28396594814875.png)
@@ -244,7 +244,7 @@ Right click on an existing VM to display a dropdown menu.
 _Right Click on VM_
 
   * **Duplicate** = Duplicate can be used for upgrade testing. Use Duplicate to create a copy of the existing VM, then test the upgrade to a new VM.
-  * **Push to OCI Registry** = Push an image to an OCI registry.
+  * **Push to OCI Registry** = Users can push to an OCI registry.
   * **Delete** = Delete is used to delete the VM from Orka Desktop.
 
 
@@ -287,9 +287,9 @@ Download the appropriate files from [developer.apple.com](https://developer.appl
 
 ![727939e-image.png](/images/attachments/28396594837787.png)
 
-## Personal access token (PAT) with GitHub
+## Personal Access Token (PAT) with GitHub
 
-A Personal Access Token (PAT) is used to push or pull from a container repository hosted by GitHub (ghcr.io). First, you must create a PAT and use those credentials. (Note: Other container repositories may only use a username and password for credentials. Consult the instructions for the container repository you are using.) To use ghcr.io with Orka Desktop, consult the [GitHub documentation](https://docs.github.com/en).
+Personal Access Token (PAT) is used to Push or Pull from a Container Repo hosted by GitHub (ghcr.io). First, users must create a PAT and use those credentials. (NOTE: Other Container Repos may only use a username and password for credentials. Please consult the instructions on the Container Repository being used.) To use ghcr.io with Orka Desktop, please consult the [GitHub documentation](https://docs.github.com/en).
 
 ## Community and Support
 

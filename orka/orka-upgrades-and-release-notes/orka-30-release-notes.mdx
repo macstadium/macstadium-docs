@@ -156,7 +156,7 @@ After that, you can deploy custom pods. For any custom pods you want to run, add
 ```
 ### Orka 3.0.0 no longer requires VM configurations
 
-You can now deploy a VM without creating or specifying a VM configuration. Deploying a VM is now as simple as running:
+You can now deploy a VM without creating or specifying a VM configuration. Deploying a VM as now simple as running:
     
     
 ```
@@ -184,19 +184,19 @@ Images and ISOs now have an extra field - description. You can use it to provide
 
 ### Orka 2.x API
 
-Orka 2.x API and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
+Orka 2.x API and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x API, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
 ### Orka 2.x CLI
 
-Orka 2.x CLI and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
+Orka 2.x CLI and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x CLI, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
 ### User logs
 
-Logging 1.0 and Logging 2.0 are now **removed**. The Orka team is gathering information about this feature and might consider implementing an updated version or an alternative solution.
+Logging 1.0 and Logging 2.0are now **removed**. The Orka team is gathering information about this feature and might consider implementing an updated version or an alternative solution.
 
 ### Shared VM storage for Apple silicon-based Monterey VMs
 
@@ -271,7 +271,7 @@ Orka 3.0.0. introduces the following improvements:
   * You might experience performance issues when running Xcode 15 on your Orka VMs.  
 **Workaround:** Try updating your OS to macOS 14 Sonoma.
   * You cannot disable System Integrity Protection on the base Sonoma image.  
-**Workaround:** MacStadium has published a new base Sonoma image with System Integrity Protection (SIP) disabled [SIP-disabled images on GitHub](https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled).
+**Workaround:** MacStadium has published a new base Sonoma image with System Integrity Protection (SIP) disabled [here](https://github.com/macstadium/orka-images/tree/main?tab=readme-ov-file#sip-disabled).
   * You cannot enable Kernel extensions. This is an Apple limitation.  
 **Workaround:** None.
   * You might be unable to update existing Intel-based VMs to macOS Ventura or later. This limitation relates to the Orka image design and the Apple virtualization framework.  
@@ -343,4 +343,4 @@ xattr -d com.apple.quarantine '/Applications/Xcode.app'
   1. Submit a ticket through the [MacStadium portal](https://portal.macstadium.com/).
   2. Schedule a time for the maintenance window that works for you through the link provided in the ticket.  
 The suggested time(s) must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
-  3. Follow [this migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you have any CLI-based or API-based custom automation, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping) to decide how to migrate it.
+  3. Follow [this migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you have any CLI-based or API-based custom automation, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) to decide how to migrate it.

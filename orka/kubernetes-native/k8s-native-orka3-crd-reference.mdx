@@ -38,7 +38,7 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 `spec` > `tag` | `string` | When specified, `VirtualMachineInstances` created from the `VirtualMachineConfig` will be scheduled for deployment on `OrkaNodes` labeled with the same `Tag`.  
 `spec` > `tagRequired` | `boolean` | Boolean setting if the `Tag` is required. When `true`, `VirtualMachineInstances` will be deployed only on nodes matching the specified `Tag`.  
 `spec` > `vncConsole` | `boolean` | Boolean setting if the VNC console is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`. When enabled, `GPUPassthrough` must be disabled.  
-  
+
 ### Examples
 
 Create simple VM config
@@ -98,8 +98,8 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 `status` > `portWarnings` | `string` | Any port warnings that have occurred during the deployment.  
 `status` > `screenSharePort` | `integer` | The Screen Sharing port assigned to the `VirtualMachineInstance`.  
 `status` > `sshPort` | `integer` | The SSH port assigned to the `VirtualMachineInstance`.  
-`status` > `vncPort` | `integer` | The VNC port assigned to the `VirtualMachineInstance`.  
-  
+`status` > `vncPort` | `integer` | The VNC port assigned to the `VirtualMachineInstance`.
+
 ### Examples
 
 **Deploy basic VM**
@@ -139,15 +139,15 @@ Field | Type | Description
 ---|---|---  
 `spec` > `checksum` | `string` | (amd64-only) The automatically calculated MD5 checksum of the image file represented by the Image. Orka populates Checksum only after you explicitly request the checksum.  
 `spec` > `destination` | `string` | A new name for the Image resulting from the Image save operation. Leave empty for commit operations.  
-`spec` > `owner` | `string` | The user who initially created the image file represented by the Image.  
+`spec` > `owner` | `string` | The user who initially created the image file represented y the Image.  
 `spec` > `size` |  `string` or `integer` | The size of the image file in formatted bytes.  
 `spec` > `source` | `string` | The name of an `Image`, `RemoteImage` or `VirtualMachineInstance` to use as a source for a specific Image operation. Must match the `SourceType`.  
 `spec` > `sourceNamespace` | `string` | The namespace of the source VM (for commit and save). Uses `orka-default` if not specified.  
 `spec` > `sourceType` | `string` | Modifier used for Image operations. One of `generated` (for generate), `local` (for copy), `remote` (for pull), `vm` (for commit and save).  
 `status` > `errorMessage` | `string` | The error message from the last failed operation with this `Image`.  
 `status` > `lastUpdatedTimestamp` | `string` | The timestamp for the last `Image` update (in the ISO 8601 format).  
-`status` > `state` | `string` | The current state of the image. One of `Ready`, `Updating`, `Failed`.  
-  
+`status` > `state` | `string` | The current state of the image. One of `Ready`, `Updating`, `Failed`.
+
 ### Examples
 
 **Existing Apple silicon-based image**

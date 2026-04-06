@@ -51,7 +51,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 
 
-3\. Test authentication workflow
+3. Test authentication workflow
 
   * Launch the Citrix Workspace application on the test client
 
@@ -115,14 +115,14 @@ Verify the Rendezvous connectivity from within a running VDA session by opening 
 ```
        curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected
 ```
-2\. Confirm firewall allows HDX ports (1494, 2598)
+2. Confirm firewall allows HDX ports (1494, 2598)
 
-3\. If you see a black screen, the VDA service may not be running, restart the VDA service from within the VM:
+3. If you see a black screen, the VDA service may not be running, restart the VDA service from within the VM:
            
 ```
        sudo launchctl kickstart -k system/com.citrix.vda
 ```
-4\. Slow to launch: Check VM resource allocation and host performance
+4. Slow to launch: Check VM resource allocation and host performance
 
 
 
@@ -399,8 +399,8 @@ You will want to confirm that the VM restarts cleanly and without corruption, th
   
 To recover a VM:   
   
-1\. Deploy a new VM from a versioned golden image stored in your registry   
-2\. VDA will automatically register with Citrix Cloud using the enrollment token   
+1. Deploy a new VM from a versioned golden image stored in your registry
+2. VDA will automatically register with Citrix Cloud using the enrollment token   
   
 Example: 
          

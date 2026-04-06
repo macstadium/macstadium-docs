@@ -18,7 +18,7 @@ Orka Engine provides macOS virtualization via Command Line Interface (CLI) on in
 
   * A host (or node) is a physical computer with a host macOS and an installation of Orka Engine.
   * An image is the bits on disk representing a VM that can be used for saving state and sharing.
-  * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](http://ghcr.io/macstadium/orka-images/) with user credentials user/pwd:
+  * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](http://ghcr.io/macstadium/orka-images/ "http://ghcr.io/macstadium/orka-images/") with user credentials user/pwd:
 
 
 
@@ -49,7 +49,7 @@ Orka Engine provides macOS virtualization via Command Line Interface (CLI) on in
 
 * Copy VMs on local file system
 ```
-  * Delete VMs from local file system. Create and deploy Orka OCI compliant Virtual Machine images.
+  * Delete VMs from local file systemCreate and deploy Orka OCI compliant Virtual Machine images.
 
   * Deploy headless VMs (no display console)
 
@@ -69,15 +69,15 @@ Orka Engine provides macOS virtualization via Command Line Interface (CLI) on in
 
 Orka Engine requires a valid license key to operate. To request a license key:
 
-1\. Contact your MacStadium account representative
+1. Contact your MacStadium account representative
 
-2\. Provide your organization name, deployment details, and use case
+2. Provide your organization name, deployment details, and use case
 
-3\. Your account representative will submit your information to our licensing team for provisioning
+3. Your account representative will submit your information to our licensing team for provisioning
 
-4\. Receive license key via email (Est. 24 hour turnaround time)
+4. Receive license key via email (Est. 24 hour turnaround time)
 
-5\. Activate: `orka-engine license set --key YOUR_KEY`
+5. Activate: `orka-engine license set --key YOUR_KEY`
 
 You can also download Orka Engine directly at: [https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)
 
@@ -103,7 +103,7 @@ The following commands will quickly introduce basic features of the Orka Engine 
   * Listing images available on disk with `orka-engine image list`
   * Stop a VM with **ctrl-c** in terminal window bound to running VM or by closing the Dock item
   * Run a base template VM image hosted from MacStadium using `orka-engine vm run`
-    * orka-engine vm run latest-sonoma --image `ghcr.io/macstadium/orka-images/sonoma:latest`
+    * orka-engine vm run latest-sonoma --image [http://ghcr.io/macstadium/orka-images/sonoma:latest](http://ghcr.io/macstadium/orka-images/sonoma:latest)
   * Pulling remote images locally using `orka-engine image pull`
   * Starting a VM in the stopped state with `orka-engine vm start`
   * Pushing a configured CI/CD customized VM to a OCI container registry `orka-engine image push`
@@ -116,7 +116,7 @@ After Orka Engine is installed, open a terminal window. The command `orka-engine
 
 ## Using orka-engine --help
 
-The `orka-engine --help` command lists the three subcommands, `vm` to manage VMs, `image` to manage images, and `host` to see information about the host.
+The `orka-engine --help` command lists the three subcommands, `vm`to manage VMs, `image` to manage images, and `host` to see information about the host.
 
 `orka-engine vm --help` provides a list of operations that can be taken on VMs, such as `run`, `list`, `save`, and `start`
 
@@ -183,7 +183,7 @@ Orka engine can list the name and resource consumption of VMs are currently runn
 
 To configure the VM with different macOS settings, install dependencies or tools, or configure a bug reproduction environment. Save the current state of a running VM as an image, as long as the VM name is available (see `orka-engine vm list` command for the VM name).
 
-For example,`orka-engine vm save latest-ipsw sonoma146-vanilla` saves the VM called `latest-ipsw` as an image with the name **sonoma146-vanilla**
+For example,`orka-engine vm save latest-ipsw sonoma146-vanilla` saves the VM called `latest-ipsw` as an image with the name **sooma146-vanilla**
 
 ![Terminal confirmation: The image 'sonoma146-vanilla' for VM 'latest-ipsw' has been successfully saved](/images/attachments/39594591426971.png)
 
@@ -214,7 +214,7 @@ Starting VM sonoma-latest with MAC address f6:59:c1:15:5e:cb
 
 
 
-## Reviewing current list of VMs (in VMs orka-engine)
+## Reviewing Current List of VMs (in VMs orka-engine)
 
 It is now possible to start a second terminal and run `orka-engine vm list`, and the following output appears, (which indicates that the previously running `latest-ipsw` VM has been stopped), and the recent `sonoma-latest` is now running. 
 
@@ -233,7 +233,7 @@ Once VMs are in a stopped state, they can either be:
 
 To retain these changes, make sure to use `orka-engine vm save`. 
 
-## Starting a VM from the stopped state
+## Starting a VM from the Stopped State
 
 If the VM `latest-ipsw` is stopped in the above example, then it can be started again with the following command: `orka-engine vm start`
 
@@ -241,9 +241,9 @@ If the VM `latest-ipsw` is stopped in the above example, then it can be started 
 
 If the VM `latest-ipsw` is stopped in the above example, then it can be deleted with the `orka-engine vm delete <vm--name>` command. 
 
-## Pulling remote images locally
+## Pulling Remote Images Locally
 
-In previous examples, `orka-engine vm run` was used to both _pull_ (or download) a remote image to the local device and to _run_ the VM. There are cases where you may just want to download an image, and `orka-engine image pull` supports this. 
+In previous examples, `orka-engine vm run` was used to both _pull_ (or download) a remote image to the local device and to _run_ the vm. There are cases where users may just want to download an image, and `orka-engine image pull` supports this. 
 
 `orka-engine image pull ghcr.io/macstadium/orka-images/ventura:no-sip`
 
@@ -253,9 +253,9 @@ When the images pull is complete, it is available in `orka-engine image list` an
 
 ## Pushing local Images to Registry
 
-If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then the image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
+If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then it can image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
 
-The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/) and the repo credentials are username=**dev1** and password=**repo**. 
+The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/ "http://ghcr.io") and the repo credentials are username=**dev1** and password=**repo**. 
 
 `orka-engine image push --username dev1 --password repo /Users/admin/.local/share/orka/data/sonoma-latest ghcr.io/images/sequoiaCI:latest `
 

@@ -16,11 +16,11 @@ When you deploy a VM, Orka assigns default metadata to the VM. You can also add 
 
 With VM metadata, you have more ways to identify and manage running VMs in addition to the data visible with `list` and `status` operations. You might find this helpful for your CI/CD workflows.
 
-Metadata is stored in the format `{"key": "my key", "value": "my value"}`. Every VM stores its metadata on a metadata server. You can query this metadata server to [retrieve the metadata](#retrieve-vm-metadata) only from within the VM. 
+Metadata is stored in the format `{"key": "my key", "value": "my value"}`. Every VM stores its metadata on a metadata server. You can query this metadata server to retrieve the metadata only from within the VM.
 
-> **📘 IMPORTANT**
-> 
-> To use VM metadata with Apple silicon-based VMs, you need to have [a compatible version of Orka VM Tools](/orka/orka-resources/vm-tools) installed on the VM.
+<Note>
+To use VM metadata with Apple silicon-based VMs, you need to have [a compatible version of Orka VM Tools](/orka/orka-resources/vm-tools) installed on the VM.
+</Note>
 
 ## Types of VM metadata
 
@@ -47,7 +47,7 @@ Default metadata key | Description
   * You cannot store the VM metadata for use from other VMs with the `vm save` and `vm commit` operations.
   * You cannot reset your VM metadata with the `vm revert` operation. This operation does not affect VM metadata.
   * The custom VM metadata applies only to the VM instance for which it was specified.
-  * The VM metadata is not protected by authentication or cryptographic methods. It is, however, accessible only from the VM.
+  * Тhe VM metadata is not protected by authentication or cryptographic methods. It is, however, accessible only from the VM.
   * The VM metadata is not affected by the `vm start/ stop/ suspend/ resume` operations.
   * The VM metadata server is not protected by authentication or cryptographic methods.
   * The VM metadata server cannot handle special characters in metadata retrieval requests (for example, space).
@@ -56,12 +56,12 @@ Default metadata key | Description
 
 ## Deploy a VM with custom metadata
 
-> **📘 IMPORTANT**
-> 
-> Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
+<Note>
+Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
+</Note>
 
-  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection).
-  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. See the [Orka CLI quick start](/orka/quick-start-guides/orka3-cli-quick-start) for more details. 
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection)
+  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. See the VNC, SSH and Screen Sharing for Orka VMs documentation.
   3. Send a POST request to `http://<orka-api-url>/api/v1/namespaces/{namespace}/vms` with the `vm_metadata` option in the body of the request. For example: 
 
 
@@ -78,15 +78,15 @@ curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{names
 ```
 ## Retrieve VM metadata
 
-> **📘 IMPORTANT**
-> 
-> Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
+<Note>
+Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
+</Note>
 
 To retrieve your VM metadata, you need to query the metadata server. This server is accessible only from within the VM, and is **not** protected by authentication or cryptographic methods. When you request information from the metadata server, your request and the subsequent metadata response never leaves the Orka macOS VM.
 
 The server returns the metadata in a JSON format.
 
-  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection).
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection)
   2. Connect to the VM via VNC, SSH, or Screen Sharing.
   3. From within the VM, query the metadata server. This retrieves all the available metadata for the VM.
 

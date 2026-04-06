@@ -27,7 +27,7 @@ Key elements in the architecture include:
   * A private network configuration for Orka.
   * A dedicated Kubernetes 1.33 cluster, which runs Orka Cluster Services for orchestration and automation.
   * Mac Nodes to be used for compute, usually on-prem.
-  * An OCI Registry such as Artifactory, GitHub Container Registry, Docker Registry, AWS ECR, or others.
+  * An OCI Registry such as Artifactory, GitHub Container Registry, Docker Registry, AWS ECR, or others..
   * A load balancer for Orka Users to interact with the Orka Services on Kubernetes via CLI, API, or CI tools.
 
 
@@ -44,11 +44,11 @@ You might experience issues if your Orka VMs need to access services that are in
 
 Orka requires a dedicated Kubernetes 1.33 cluster to run.
 
-  * The reason Orka requires a dedicated cluster is that it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
+  * The reason we Orka requires a dedicated cluster is that it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
 
 
 
-We recommend following the [official guidelines](https://kubernetes.io/docs/setup/) for setting up a Kubernetes cluster. The official recommended tool for setting up Kubernetes clusters is [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/).
+We recommend following the [official guidelines](https://kubernetes.io/docs/setup/) for setting up a Kubernetes cluster. The official recommended tool for setting up Kubernets clusters is [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/).
 
 If you are familiar with Ansible, you could also use [Kubespray](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started) to set up your cluster.
 
@@ -94,15 +94,15 @@ Alternatively, you could also add these manually as ApiServer arguments by editi
 
 Orka Engine requires a valid license key to operate. To request a license key:
 
-1\. Contact your MacStadium account representative
+1. Contact your MacStadium account representative
 
-2\. Provide your organization name, deployment details, and use case
+2. Provide your organization name, deployment details, and use case
 
-3\. Your account representative will submit your information to our licensing team for provisioning
+3. Your account representative will submit your information to our licensing team for provisioning
 
-4\. Receive license key via email (Est. 24 hour turnaround time)
+4. Receive license key via email (Est. 24 hour turnaround time)
 
-5\. Activate the license: ``orka-engine license set --key YOUR_KEY``
+5. Activate the license: ``orka-engine license set --key YOUR_KEY``
 
 Download Orka Engine directly at: [https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)
 
@@ -354,6 +354,6 @@ Orka VM Logs | Mac Node | Via promtail:
 Orka Engine Logs | Engine Node | `/opt/orka/logs/com.macstadium.orka-engine.server.managed.log` | Logs pertaining to Orka Engine  
 Pod Logs | k8s | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
   
-#### Key metrics
+#### Key Metrics
 
 A list of metrics covering the following is available: Orka API Server, Orka Operator Metrics.

@@ -18,11 +18,11 @@ SAML SSO is a paid offering.
 
 📘 Please contact the account team through the Customer Portal for more information.
 
-👍 Log into the Portal by going to [https://portal.macstadium.com/login](https://portal.macstadium.com/login).
+👍 Log into the Portal by going to [portal.macstadium.com](https://portal.macstadium.com/login).
 
 ⚠️ We do not currently support IdP-initiated logins. After SSO is configured with MacStadium, all users will use the below link to log into your account using an ID that will be provided to you by the MacStadium team.
 
-[https://portal.macstadium.com/sso](https://portal.macstadium.com/sso)
+[portal.macstadium.com/sso](https://portal.macstadium.com/sso)
 
 ## Overview
 
@@ -53,35 +53,35 @@ SAML SSO with Okta, allows customers to:
 
 ![14c1dce-3.png](/images/attachments/28263436403739.png)
 
-6\. Click **Next**.
+6. Click **Next**.
 
-7\. Enter app name (for example, **MacStadium-SAML**).  
+7. Enter app name (for example, **MacStadium-SAML**).
 ![b3f13f7-4.png](/images/attachments/28263420248603.png)
 
-8\. Configure the SAML application.
+8. Configure the SAML application.
 
-9\. Sign-on URL: `https://idp.macstadium.com/saml2/idpresponse`
+9. Sign-on URL: `https://idp.macstadium.com/saml2/idpresponse`
 
-10\. Use this for Recipient URL and Destination URL: ✔︎ (make sure it’s checked)
+10. Use this for Recipient URL and Destination URL: ✔︎ (make sure it’s checked)
 
-11\. Audience URI (SP Identity ID): `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
+11. Audience URI (SP Identity ID): `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
 
-12\. Click **Show Advanced Settings**.
+12. Click **Show Advanced Settings**.
 
-13\. Upload the public certificate `(macstadium-us-east-1_pusi8jHs1.pem)` from Step 1.
+13. Upload the public certificate `(macstadium-us-east-1_pusi8jHs1.pem)` from Step 1.
 
-14\. Single Logout.
+14. Single Logout.
 
-15\. Allow application to initiate Single Logout - ✔︎ (make sure it is checked)
+15. Allow application to initiate Single Logout - ✔︎ (make sure it is checked)
 
-16\. Single Logout URL: `https://idp.macstadium.com/saml2/logout`
+16. Single Logout URL: `https://idp.macstadium.com/saml2/logout`
 
-17\. SP Issuer: `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
+17. SP Issuer: `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
 
-18\. Attribute statements  
+18. Attribute statements
 ![728d080-5.png](/images/attachments/28263420252059.png)
 
-19\. Click **Finish** to complete the setup.
+19. Click **Finish** to complete the setup.
 
-20\. Provide the MacStadium support team the Metadata URL  
+20. Provide the MacStadium support team the Metadata URL
 ![812e3ba-7.png](/images/attachments/28263420254491.png)
