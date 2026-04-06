@@ -49,51 +49,43 @@ If you don't have a classic VPN gateway that you want to use, complete the follo
 
   3. Select Classic VPN and click Continue.
 
-```
- * The High-availability (HA) VPN is currently not supported as an option. For more information about the available options, see [Google Cloud Documentation: Choosing a VPN option](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn).
-```
+     * The High-availability (HA) VPN is currently not supported as an option. For more information about the available options, see [Google Cloud Documentation: Choosing a VPN option](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn).
+
   4. In the Google Compute Engine VPN gateway section, provide Name and Description.
 
   5. For Network, select the GCP network that needs to be able to access MacStadium.
 
   6. Select Region.
 
-```
- * For more information about this setting, see [Google Cloud Documentation: Regions and Zones](https://cloud.google.com/compute/docs/regions-zones).
-```
+     * For more information about this setting, see [Google Cloud Documentation: Regions and Zones](https://cloud.google.com/compute/docs/regions-zones).
+
   7. Select or create a reserved IP address for the connection.
 
-```
- * You will need this IP address when you configure the MacStadium side of the tunnel.
-```
+     * You will need this IP address when you configure the MacStadium side of the tunnel.
+
   8. In the Tunnels section, provide Name and Description.
 
   9. For Remote peer IP address, provide the IP address of the public network listed in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
 
-```
- * By default, this is the FW1-Outside network.
-```
+     * By default, this is the FW1-Outside network.
+
   10. For IKE version, verify that IKEv2 is selected.
 
   11. Provide or generate an IKE pre-shared key.
 
-```
- * **IMPORTANT** : Keep a record of the pre-shared key. You will need it later.
-```
+     * **IMPORTANT** : Keep a record of the pre-shared key. You will need it later.
+
   12. For Routing options, select Policy-based.
 
   13. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the IP Plan.
 
-```
- * By default, this is the Private-1 network.
+     * By default, this is the Private-1 network.
 
- * For more information about CIDR notations, see [Understanding IP Addresses, Subnets, and CIDR Notation for Networking](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation). You can also use a CIDR calculator such as this [CIDR/Netmask Lookup Tool](https://www.ultratools.com/tools/netMask).
-```
+     * For more information about CIDR notations, see [Understanding IP Addresses, Subnets, and CIDR Notation for Networking](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation). You can also use a CIDR calculator such as this [CIDR/Netmask Lookup Tool](https://www.ultratools.com/tools/netMask).
+
   14. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your MacStadium private cloud.
 
-```
- * For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
-```
+     * For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
   15. (Optional) Provide one or more IP ranges within your GCP local network that needs to access MacStadium.
 
   16. Click Done.
@@ -117,41 +109,35 @@ If you have an existing classic VPN gateway that you want to use for the connect
 
   1. Select Cloud VPN Tunnels and click Create VPN tunnel.  
 ![91f4109-click-create-vpn-tunnel.png](/images/attachments/28300863106971.png)
-  2. Select the VPN gateway that you want to use and click Continue.  
+  2. Select the VPN gateway that you want to use and click Continue.
 
-```
- * **IMPORTANT** : Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
-```
+     * **IMPORTANT** : Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
+
   3. Provide Name.
 
   4. (Optional) Provide Description.
 
   5. For Remote peer IP address, provide the IP address of the public network listed in Appendix B of the IP Plan.
 
-```
- * By default, this is the FW1-Outside network.
-```
+     * By default, this is the FW1-Outside network.
+
   6. For IKE version, verify that IKEv2 is selected.
 
   7. Provide or generate an IKE pre-shared key.
 
-```
- * **IMPORTANT** : Keep a record of the pre-shared key. You will need it later.
-```
+     * **IMPORTANT** : Keep a record of the pre-shared key. You will need it later.
+
   8. For Routing options, select Policy-based.
 
   9. For Remote network IP ranges, provide the IP range in CIDR notation of the private network listed in Appendix A of the IP Plan.
 
-```
- * By default, this is the Private-1 network.
+     * By default, this is the Private-1 network.
 
- * For more information about CIDR notations, see [Understanding IP Addresses, Subnets, and CIDR Notation for Networking](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation). You can also use a CIDR calculator such as this [CIDR/Netmask Lookup Tool](https://www.ultratools.com/tools/netMask).
-```
+     * For more information about CIDR notations, see [Understanding IP Addresses, Subnets, and CIDR Notation for Networking](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation). You can also use a CIDR calculator such as this [CIDR/Netmask Lookup Tool](https://www.ultratools.com/tools/netMask).
+
   10. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your MacStadium private cloud.
 
-```
- * For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
-```
+     * For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
   11. (Optional) Provide one or more IP ranges within your GCP local network that needs to access MacStadium.
 
   12. Click Create.

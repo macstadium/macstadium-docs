@@ -256,7 +256,6 @@
               {
                 "group": "Release Notes",
                 "pages": [
-                  "orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
                   "orka/orka-upgrades-and-release-notes/orka-35-release-notes",
                   "orka/orka-upgrades-and-release-notes/orka-34-release-notes",
                   "orka/orka-upgrades-and-release-notes/orka-33-release-notes",
@@ -538,7 +537,12 @@
     },
     {
       "source": "/hc/en-us/articles/41858099174555-Orka-Desktop-3-1-0-Release-Notes",
-      "destination": "/orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
+      "destination": "/orka/orka-desktop/orka-desktop-310-release-notes",
+      "permanent": true
+    },
+    {
+      "source": "/orka/orka-upgrades-and-release-notes/orka-desktop-310-release-notes",
+      "destination": "/orka/orka-desktop/orka-desktop-310-release-notes",
       "permanent": true
     },
     {

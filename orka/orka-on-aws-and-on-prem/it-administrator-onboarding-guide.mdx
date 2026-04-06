@@ -33,7 +33,7 @@ As an administrator, you will be responsible for managing the three interconnect
 
 **Orka Engine (virtualization layer):**
 
-  * Hosts macOS VMs on Apple Silicon hardware
+  * Hosts MacOS VMs on Apple Silicon hardware
 
   * Manages VM lifecycle (create, start, stop, delete)
 
@@ -80,11 +80,11 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * VM group: A logical collection of VMs managed together (e.g. `citrix-vda-finance`, `citrix-vda-engineering`)
 
-  * Golden image: Template VM with macOS, Citrix VDA, and applications pre-installed
+  * Golden image: Template VM with MacOS, Citrix VDA, and applications pre-installed
 
   * Max VMs per host: Typically two, due to Apple licensing restrictions
 
-  * Bridged networking: VMs receive IPs directly from your network (no NAT needed)
+  * Bridged networking: VMs recieve IPs directly from your network (no NAT needed)
 
 
 
@@ -95,7 +95,7 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * Delivery group: Links machine catalog to users and defines access policies
 
-  * VDA (Virtual delivery agent): Software on macOS VM that registers with Citrix Cloud
+  * VDA (Virtual delivery agent): Software on MacOS VM that registers with Citrix Cloud
 
   * Enrollment token: Time-limited credential for VDA registration
 
@@ -170,7 +170,7 @@ Verify Ansible access:
 
 Citrix Cloud Console is the web-based management control plane for Citrix DaaS.
 
-Access URL: [https://citrix.cloud.com](https://citrix.cloud.com/)  
+Access URL: [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com")  
 Login: Your Citrix Cloud administrator credentials
 
 #### Key sections:
@@ -275,38 +275,33 @@ An OCI registry is a container registry for storing your organization’s golden
 
 ## Citrix Cloud Console Navigation
 
-After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/):
+After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com"):
 
   1. Hamburger menu: Navigate between services
 
-```
- * Select "DaaS" or "Virtual Apps and Desktops" to access Web Studio
-```
+     * Select "DaaS" or "Virtual Apps and Desktops" to access Web Studio
+
   2. Web Studio:
 
-```
- * Machine Catalogs: View registered VMs, enrollment tokens
+     * Machine Catalogs: View registered VMs, enrollment tokens
 
- * Delivery Groups: User assignments, published desktops
+     * Delivery Groups: User assignments, published desktops
 
- * Policies: HDX settings, security policies
-```
+     * Policies: HDX settings, security policies
+
   3. Monitor tab:
 
-```
- * Real-time session data
+     * Real-time session data
 
- * Connection quality metrics
+     * Connection quality metrics
 
- * Historical trends
-```
+     * Historical trends
+
   4. Support menu:
 
-```
- * Documentation links
+     * Documentation links
 
- * Support case management
-```
+     * Support case management
 You may wish to run some quick checks to verify service health:
 
   * Machine Catalogs → Select your catalog → Verify VMs show "Registered"
@@ -364,41 +359,43 @@ Review Ansible configuration in `dev/group_vars/all/main.yml`:
 
   * `.vault_pass`: Sensitive credentials (passwords, etc.) are encrypted with Ansible Vault.
 
-```
-* View Vault contents with: `ansible-vault view dev/group_vars/all/vault.yml`
+     * View Vault contents with: `ansible-vault view dev/group_vars/all/vault.yml`
 
-* Note: Keep your `.vault_pass` secure, never commit it to Git. If this is ever lost, you'll need to recreate your Ansible vault file with new credentials.
-```
+     * Note: Keep your `.vault_pass` secure, never commit it to Git. If this is ever lost, you'll need to recreate your Ansible vault file with new credentials.
+
   * Ansible vault contains the following:
 
-```
-* `vault_citrix_enrollment_token`
+     * `vault_citrix_enrollment_token`
 
-* `vault_citrix_customer_id`
+     * `vault_citrix_customer_id`
 
-* `vault_registry_username` / `vault_registry_password`
-```
+     * `vault_registry_username` / `vault_registry_password`
 ##### Reviewing Mac Host inventory
 
   * List all Orka hosts: `ansible hosts -i dev/inventory --list-hosts`
 
   * Check Orka Engine version on all hosts: `ansible hosts -i dev/inventory -m shell -a "orka-engine --version"`
 
-  * Check capacity per host:  
-  
-`ansible-playbook -i dev/inventory list.yml ``  
-``` Example output: `  
-```` Host: 10.0.100.10 `  
-`VMs: citrix-vda-finance-abc123, citrix-vda-finance-def456 `  
-`Count: 2/2 (at capacity) `  
-  
-`Host: 10.0.100.11 `  
-`VMs: citrix-vda-eng-xyz789 `  
-`Count: 1/2 (available capacity) Host: `  
-  
-`10.0.100.12 `  
-`VMs: (none) `  
-`Count: 0/2 (available capacity)`
+  * Check capacity per host:
+
+```bash
+ansible-playbook -i dev/inventory list.yml
+```
+
+Example output:
+```
+Host: 10.0.100.10
+VMs: citrix-vda-finance-abc123, citrix-vda-finance-def456
+Count: 2/2 (at capacity)
+
+Host: 10.0.100.11
+VMs: citrix-vda-eng-xyz789
+Count: 1/2 (available capacity)
+
+Host: 10.0.100.12
+VMs: (none)
+Count: 0/2 (available capacity)
+```
 
   * Check available disk space: `ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"`
 
@@ -441,7 +438,7 @@ Having this information documented and updated regularly helps with capacity pla
 
 ### Provisioning a new desktop
 
-You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following prerequisites have been met before proceeding:
+You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following perquisites have been met before proceeding:
 
   * The user account exists in your identity provider (Azure AD, Okta, etc.)
 
@@ -456,7 +453,7 @@ You will need to refer to this workflow when a user requests access to a macOS v
 
   1. Select the appropriate golden image. Determine this based on the user’s department/role/access needs:  
   
-`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all available images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
+`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all avaliable images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
   
 If the golden image isn’t cached, run:  
 `ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"`  
@@ -529,7 +526,7 @@ No action is needed if the user has already been assigned to a Delivery Group. T
 \- Desktop should appear: “Mac OS Finance Desktop” (or configured display name)  
 \- User clicks desktop → session launches successfully   
   
-The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisioning workflow has completed, the user will now have access to their macOS virtual desktop.
+The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisoning workflow has completed, the user will now have access to their macOS virtual desktop.
 
 
 
@@ -559,7 +556,7 @@ You will need to create new golden images when a new application is required for
 
   * Configuration scripts are prepared in the `/scripts` directory
 
-  * A base macOS image is available
+  * A base MacOS image is available
 
   * Registry credentials are in Ansible Vault
 
@@ -581,7 +578,7 @@ The `create_image.yml` playbook automates the following:
 
 
 
-To prepare the configuration steps, you will need to navigate to the `/scripts` directory in your project:  
+To prepare the configuration steps, you will need to nagivate to the `/scripts` directory in your project:  
   
 `cd ~/ansible-citrix-orka/scripts `  
 `ls -la`  
@@ -624,7 +621,7 @@ Important notes:
 
 
 Next, you’ll want to run the `create_image` playbook:  
-`ansible-playbook -i dev/inventory create_image.yml \ -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest \ remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry_username={{ vault_registry_username }} \ registry_password={{ vault_registry_password }}"`
+`ansible-playbook -i dev/inventory create_image.yml \ -e "vm_image=`[](http://ghcr.io/macstadium/orka-images/sonoma:latest)[GitHub](http://ghcr.io/macstadium/orka-images/sonoma:latest)` \ remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry_username={{ vault_registry_username }} \ registry_password={{ vault_registry_password }}"`
 
 What happens when running this playbook:
 
@@ -781,7 +778,7 @@ To view existing Delivery Groups: Navigate to Citrix Cloud Console → Web Studi
 
 #### Create a new Delivery Group
 
-In a scenario where a team may need new macOS desktops within your Orka for VDI instance, you can run an Ansible deployment playbook similar to the following example:  
+In a scenario where a team may need new MacOS desktops within your Orka for VDI instance, you can run an Ansible deployment playbook similar to the following example:  
   
 `ansible-playbook -i dev/inventory deploy.yml \`  
 `-e "vm_group=citrix-vda-marketing \`  
@@ -851,7 +848,7 @@ Remove user:
 
 Typically, you cannot change an existing Delivery Group’s assignment type. Instead, you can do the following:
 
-  1. Create a new Delivery Group with the desired assignment type
+  1. Create new a Delivery Group with the desired assignment type
 
   2. Migrate your users to the new group
 
@@ -896,13 +893,11 @@ Require specific conditions for desktop access:
 
   3. Configure conditions:
 
-```
- * Device type: macOS, iOS, web only
+     * Device type: macOS, iOS, web only
 
- * Network location: Internal network only, or allow external network
+     * Network location: Internal network only, or allow external network
 
- * Device compliance: Require managed device (if using MDM)
-```
+     * Device compliance: Require managed device (if using MDM)
 Example policy: "The finance team can only access desktops from inside the corporate network or via a VPN"
 
 ### Multi-factor authentication (MFA):
@@ -930,11 +925,9 @@ These control user session behavior.
 
   3. Configure session settings:
 
-```
- * Session idle timeout: Disconnect after X hours idle (default: 24 hours)
+     * Session idle timeout: Disconnect after X hours idle (default: 24 hours)
 
- * Disconnected session timeout: Log off user(s) after X hours disconnected (default: never)
-```
+     * Disconnected session timeout: Log off user(s) after X hours disconnected (default: never)
 Recommended settings:
 
   * Pooled desktops: 8 hours idle, 30 minutes disconnected (aggressive cleanup)
@@ -1108,7 +1101,7 @@ To recreate VMs in a batch, refer to the following example:
 
 To recreate an estimated 10 VMs, this playbook will take 30-60 minutes to run. User impact will vary depending on if VMs are pooled or dedicated. If a VM is pooled, user impact should be minimal if recreation is done during off-hours. If a VM is assigned to a dedicated user, that user will lose their local data unless it is backed up upon VM recreation. It is considered a best practice to schedule VM reconfiguration during specific maintenance windows, and to notify users in advance.
 
-When considering the VM deprovisioning and cleanup process, you will want to remove desktop access when a user leaves your organization, or a VM is no longer needed.
+When considering the VM deprovisioning and cleanup process, you will want to remove desktop access when a users leaves your organization, or a VM is no longer needed.
 
 To remove users from a Citrix Delivery Group:
 
@@ -1156,106 +1149,95 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
   1. VM registration status. Check this by navigating to Citrix Cloud Console → Monitor → Machine Catalogs. You will want to look for:
 
-```
- 1. Unregistered Machines: Should be 0
+     1. Unregistered Machines: Should be 0
 
- 2. Power state “Off”: Investigate why VMs are powered off
+     2. Power state “Off”: Investigate why VMs are powered off
 
- 3. Faults: Any VM faults which require attention
-```
+     3. Faults: Any VM faults which require attention
+
   2. Session launch success rate. Check this by navigating to Citrix Cloud Console → Monitor → User Activity.
 
-```
- 1. Target: >95% success rate.
+     1. Target: >95% success rate.
 
- 2. If Users Activity is <95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
-```
+     2. If Users Activity is <95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
+
   3. Host capacity. This can be checked by running: `ansible-playbook -i dev/inventory list.yml`and verifying:
 
-```
- 1. Host capacity: Check and confirm there are no hosts at 2/2 VM capacity.
+     1. Host capacity: Check and confirm there are no hosts at 2/2 VM capacity.
 
- 2. Confirm disk space is >85%
+     2. Confirm disk space is >85%
 
- 3. If yes, plan for disk expansion or cleanup.
-```
+     3. If yes, plan for disk expansion or cleanup.
+
 ##### Check weekly:
 
   1. Performance trends. You can review these by navigating to Citrix Cloud Console → Monitor → Trends. Review the following:
 
-```
- 1. Average session launch time (target: <30 seconds)
+     1. Average session launch time (target: <30 seconds)
 
- 2. Session quality (should be "Good" or "Excellent")
+     2. Session quality (should be “Good” or “Excellent”)
 
- 3. Peak concurrent users (plan capacity for 20% growth)
-```
-  2. Host health can be verified by confirming available disk space using: `ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"`
+     3. Peak concurrent users (plan capacity for 20% growth)
 
-```
- 1. Check for any errors in the Orka logs: `ansible hosts -i dev/inventory -m shell \ -a "sudo grep -i error /var/log/orka-engine.log | tail -20"`
-```
+  2. Host health can be verified by confirming available disk space using: `ansible hosts -i dev/inventory -m shell -a “df -h /var/orka”`
+
+     1. Check for any errors in the Orka logs: `ansible hosts -i dev/inventory -m shell \ -a “sudo grep -i error /var/log/orka-engine.log | tail -20”`
+
   3. Image currency
 
-```
- 1. Are VMs running the latest golden image version?
+     1. Are VMs running the latest golden image version?
 
- 2. Are there any security patches pending?
+     2. Are there any security patches pending?
 
- 3. If yes, schedule any updates that are needed and communicate any downtime to Users.
-```
+     3. If yes, schedule any updates that are needed and communicate any downtime to Users.
+
 ##### Check monthly:
 
   1. Capacity planning
 
-```
- 1. Confirm your current VM count vs. your total VM capacity
+     1. Confirm your current VM count vs. your total VM capacity
 
- 2. Calculate anticipated user growth trends
+     2. Calculate anticipated user growth trends
 
- 3. Use these calculations to help determine your projected need for additional hosts
-```
+     3. Use these calculations to help determine your projected need for additional hosts
+
   2. User feedback
 
-```
- 1. Are there any session quality complaints? If so, what are they, and are there any trends to surface? Track these in an internal spreadsheet or other tool for additional sentiment analysis.
+     1. Are there any session quality complaints? If so, what are they, and are there any trends to surface? Track these in an internal spreadsheet or other tool for additional sentiment analysis.
 
- 2. Application performance issues
+     2. Application performance issues
 
- 3. Feature requests or service improvements
-```
+     3. Feature requests or service improvements
+
   3. Security review
 
-```
- 1. Verify if enrollment tokens been rotated in the last 90 days
+     1. Verify if enrollment tokens been rotated in the last 90 days
 
- 2. Confirm SSH keys are up-to-date
+     2. Confirm SSH keys are up-to-date
 
- 3. Review audit logs
-```
+     3. Review audit logs
+
   4. Alert thresholds
 
-```
- 1. Set up relevant monitoring alerts via email/Slack/Teams/etc.
+     1. Set up relevant monitoring alerts via email/Slack/Teams/etc.
 
- 2. Confirm which alerts require immediate response (Critical)
+     2. Confirm which alerts require immediate response (Critical)
 
-    1. VDA registration drops below 80% of expected targets
+        1. VDA registration drops below 80% of expected targets
 
-    2. All VMs in a Delivery Group are unavailable
+        2. All VMs in a Delivery Group are unavailable
 
-    3. Host disk space >90%
+        3. Host disk space >90%
 
- 3. Confirm which alerts require a response within 4 hours:
+     3. Confirm which alerts require a response within 4 hours:
 
-    1. >10% of sessions launched fail over 15 minutes
+        1. >10% of sessions launched fail over 15 minutes
 
-    2. Host CPU sustained usage >80% for 30 minutes
+        2. Host CPU sustained usage >80% for 30 minutes
 
-    3. Available disk space >75%
+        3. Available disk space >75%
 
- 4. If session launch time exceeds baseline by 50%, or a new “Unregistered” VM appears, review this information daily.
-```
+     4. If session launch time exceeds baseline by 50%, or a new “Unregistered” VM appears, review this information daily.
 ### Common issues and resolutions
 
 ##### VM deployed, but is not registered in Citrix:
@@ -1282,13 +1264,11 @@ Expected: Service running with PID
 
   2. Check enrollment token:
 
-```
- * Citrix Cloud → Machine Catalogs → Enrollment Token
+     * Citrix Cloud → Machine Catalogs → Enrollment Token
 
- * Verify that the token is not expired
+     * Verify that the token is not expired
 
- * If the token is expired: Generate new a enrollment token, update Ansible Vault, and redeploy the VM
-```
+     * If the token is expired: Generate new a enrollment token, update Ansible Vault, and redeploy the VM
   3. Check the Citrix VDA logs:
 
 
@@ -1324,7 +1304,7 @@ If this problem persists, review Guide C: Troubleshooting Quick Reference
 
 **Resolution:**
 
-  1. Verify the VM is powered on:
+  1. Verify the the VM is powered on:
 
 
 
@@ -1405,13 +1385,11 @@ Resolution:
 
   * Key files:
 
-```
-* `vda.log` \- Main VDA service log
+     * `vda.log` \- Main VDA service log
 
-* `registration.log` \- Registration events
+     * `registration.log` \- Registration events
 
-* `broker.log` \- Communication with Citrix Cloud
-```
+     * `broker.log` \- Communication with Citrix Cloud
   * View: `sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log`
 
 
@@ -1889,17 +1867,16 @@ Golden images:
 
   * Procedure:
 
-```
-1. Provision a replacement Mac
+     1. Provision a replacement Mac
 
-2. Install Orka Engine on the machine
+     2. Install Orka Engine on the machine
 
-3. Add the machine to your existing Ansible inventory
+     3. Add the machine to your existing Ansible inventory
 
-4. Pull golden images
+     4. Pull golden images
 
-5. Deploy VMs to new host from the golden image
-```
+     5. Deploy VMs to new host from the golden image
+
 #####  **Scenario 2: Complete site failure**
 
   * Impact: All VMs are unavailable
@@ -1908,17 +1885,15 @@ Golden images:
 
   * Procedure:
 
-```
-1. Provision Macs at an alternate site (or host these directly with MacStadium)
+     1. Provision Macs at an alternate site (or host these directly with MacStadium)
 
-2. Restore your last known good Ansible configuration from Git
+     2. Restore your last known good Ansible configuration from Git
 
-3. Pull images from your OCI registry
+     3. Pull images from your OCI registry
 
-4. Deploy new VMs
+     4. Deploy new VMs
 
-5. Verify VDA registration in Citrix
-```
+     5. Verify VDA registration in Citrix
 #####  **Disaster recovery (DR( testing:**
 
   * Annually: Conduct a full DR exercise
@@ -2070,27 +2045,27 @@ Before any production change:
 
   * Orka Documentation and Support: [support@macstadium.com](mailto:support@macstadium.com)
 
-  * Bare Metal Mac Options: [Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
+  * Bare Metal Mac Options: [](https://www.macstadium.com/bare-metal-mac)[Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
 
 
 
 
 #####  **Citrix**
 
-  * VDA for macOS Documentation: [Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
+  * VDA for macOS Documentation: [](https://docs.citrix.com/en-us/mac-vda)[Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
 
-  * System Requirements: [System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements)
+  * System Requirements: [](https://docs.citrix.com/en-us/mac-vda/system-requirements)[System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements)
 
-  * Citrix Cloud Console: [https://citrix.cloud.com](https://citrix.cloud.com/)
+  * Citrix Cloud Console: [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com")
 
-  * Citrix Support: [Citrix Support](https://support.citrix.com/)
+  * Citrix Support: [](https://support.citrix.com/)[Loading...](https://support.citrix.com/)
 
 
 
 
 #####  **Ansible:**
 
-  * Ansible Documentation: [Ansible Community | Ansible documentation](https://docs.ansible.com/)
+  * Ansible Documentation: [](https://docs.ansible.com/)[Ansible Community | Ansible documentation](https://docs.ansible.com/)
 
   * Ansible Vault Guide: [https://docs.ansible.com/ansible/latest/user_guide/vault.html](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
 
@@ -2103,7 +2078,7 @@ Before any production change:
 
   * Portal: [support@macstadium.com](mailto:support@macstadium.com)
 
-  * Email: [support@macstadium.com](mailto:support@macstadium.com)
+  * Email: [support@macstadium.com](mailto:support@macstadium.com "mailto:support@macstadium.com")
 
   * Phone: Available in support portal
 
@@ -2116,7 +2091,7 @@ Before any production change:
 
 When contacting MacStadium support, please provide the following information:
 
-  * Your Account ID
+  * You Account ID
 
   * Affected host IPs or VM names
 
@@ -2131,17 +2106,17 @@ When contacting MacStadium support, please provide the following information:
 
 #####  **Citrix Support:**
 
-  * Portal: [Citrix Support](https://support.citrix.com/)
+  * Portal: [](https://support.citrix.com/)[Loading...](https://support.citrix.com/)
 
   * Access via Citrix Cloud Console → Support
 
-  * Include: Your Customer ID, Machine Catalog name, applicable error messages
+  * Include: You Customer ID, Machine Catalog name, applicable error messages
 
 
 
 
 ####  **Citrix community forums:**
 
-  * Citrix Discussions: [https://discussions.citrix.com](https://discussions.citrix.com/)
+  * Citrix Discussions: [https://discussions.citrix.com](https://discussions.citrix.com/ "https://discussions.citrix.com")
 
-  * Citrix Community: [Citrix Community](https://community.citrix.com/)
+  * Citrix Community: [](https://community.citrix.com/)[Deploying Strong Network in Azure Kubernetes](https://community.citrix.com/)

@@ -114,9 +114,9 @@ You will need an environment with outbound internet access to connect to AWS and
 
   1. Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) in an environment that has outbound access to the internet to connect to AWS and download the installers. Ideally, the same environment will be used to connect to the Kubernetes API and have admin access to the Kubernetes Cluster. If not make sure to move the downloaded Ansible image to an environment that has the appropriate connectivity.
 
-```
- 1. Create or update the `~/.aws/config` file to contain the default and runner profile information that can be filled in with additional key and ARN info provided by the MacStadium Support team. The profile runner will be used to pull the Ansible image in the next step. More details about the AWS CLI profiles can be found in their [documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
+   1. Create or update the `~/.aws/config` file to contain the default and runner profile information that can be filled in with additional key and ARN info provided by the MacStadium Support team. The profile runner will be used to pull the Ansible image in the next step. More details about the AWS CLI profiles can be found in their [documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 
+```
 [profile runner-credentials]
 aws_access_key_id= # Provided by MacStadium
 aws_secret_access_key= # Provided by MacStadium
