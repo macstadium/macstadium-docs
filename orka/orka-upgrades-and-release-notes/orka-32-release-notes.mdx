@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.2 Release Notes"
-description: "Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions."
+description: "Orka 3.2 release notes: scheduled image caching, Apple ID authentication on Sequoia, Apple Silicon architecture detection, and bug fixes."
 zendesk_id: 39572301543323
 zendesk_url: "/orka/orka-upgrades-and-release-notes/orka-32-release-notes"
 section: "Orka Upgrades and Release Notes"
@@ -45,7 +45,7 @@ Apple ID login is now available to Orka customers running Sequoia host machines 
 
 #### Limitations:
 
-  * The Host OS must be running MacOS Sequoia or later
+  * The Host OS must be running macOS Sequoia or later
 
   * The Guest OS (VM) **must** be created using a Sequoia IPSW. Apple ID login **will not** work with VMs that were upgraded from previous versions of macOS like Sonoma.
 
@@ -56,7 +56,7 @@ Apple ID login is now available to Orka customers running Sequoia host machines 
 
 To set up an Apple ID compatible VM environment with Orka:
 
-  1. Download [Orka Desktop](/orka/orka-desktop/welcome-to-orka-desktop-30) to begin the VM creation process. Makes sure your Host OS is Sequoia or later.
+  1. Download [Orka Desktop](/orka/orka-desktop/welcome-to-orka-desktop-30) to begin the VM creation process. Make sure your Host OS is Sequoia or later.
 
   2. Build a new guest image using a [Sequoia IPSW file](https://github.com/macstadium/orka-images/pkgs/container/orka-images%2Fsequoia) with the requirements specified above.
 
@@ -77,7 +77,7 @@ Ensure that your host system meets the requirements above before creating your S
 
 The Orka Operator can in rare occurrences fail to update an Orka node status if a cache deletion operation does not fully complete. This can cause numerous unexpected errors including subsequent image cache failures. The Operator can now recover node status properly even after a cache deletion operation fails.
 
-### Fix: Issue where image import directory was removed by the cache clearing processs
+### Fix: Issue where image import directory was removed by the cache clearing process
 
 Previously, when importing an image, the destination directory was created prior to extracting the image to a temporary location. Users were experiencing an issue where the extraction process did not complete prior to a caching process starting. Upon seeing that space is needed, empty directories would then be pruned in the cache. This would then result in the destination directory being removed, and when trying to move files into place, the process would fail due to the destination directory no longer existing. This was fixed in Orka 3.2.1, and the destination directory is now created at the time when the extracted files are moved into place.
 
@@ -140,4 +140,4 @@ While upgrading Orka Cluster to release 3.2, MacStadium will also upgrade the cl
   1. Submit a ticket through the [MacStadium portal](https://idp.macstadium.com/login?scope=aws.cognito.signin.user.admin+email+openid+phone+profile&response_type=code&client_id=os594upi12pn9ab16hmtk0akp&redirect_uri=https%3A%2F%2Fportal.macstadium.com%2Foauth%2Fredirect&state=eyJsYXN0VmlzaXRlZFVybCI6Ii8ifQ).
   2. Schedule a time for the maintenance window that works using the link provided in the ticket.  
 The suggested time must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
-  3. Follow this [migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) to decide how to migrate it.
+  3. Follow this [migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you are upgraded from Orka 2.4.x, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-api-mapping) to decide how to migrate it.

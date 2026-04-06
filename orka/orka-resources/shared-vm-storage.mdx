@@ -59,7 +59,7 @@ Click the OK button to allow access. You will then be able to access files on th
 
 ![e84d4f8-Screen_Shot_2021-07-23_at_6.11.28_PM.png](/images/attachments/28340339123227.png)
 
-## Automount Shared Storage in Intel-based VMs
+## Automount shared storage in Intel-based VMs
 
 Instead of mounting the shared storage manually after every OS restart, you can create a /Library/LaunchDaemons/com.mount9p.plist to handle automounting the shared storage.
 
@@ -143,7 +143,7 @@ Confirm the above changes were made with the command dscl . read /Groups/ci. Reb
 
 Files must be given group write access to be modified by the user you have added to the 107 group. For example, sudo chmod g+w myfile.txt.
 
-### Cluster Storage Limits
+### Cluster storage limits
 
 If you are using the default primary storage export in your cluster for shared VM storage, keep in mind that this storage is also used to host your Orka VM images and other data. This should be acceptable for sharing a limited set of files between virtual machines but is not recommended for intensive IO. In the case that you require frequent use of multiple reads and writes to the shared storage volume, setting up dedicated secondary storage is highly recommended.
 

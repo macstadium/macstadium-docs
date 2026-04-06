@@ -20,7 +20,7 @@ Every Orka cluster is provisioned with some defaults that can be further changed
 
 Introduced with Orka 2.0, VM scheduling allows you to control the algorithm used when scheduling VMs between the nodes. If no changes are applied, the default scheduling algorithm is used where VMs are scheduled in such a way that keeps balance between free and used resources on each node. It can be changed to the value of most-allocated where VMs are scheduled in a way that tries to exhaust resources on one node before starting scheduling on another.
 
-VM scheduling algorithm can be controlled also on creating a VM configuration and on VM deployment.
+You can also control the VM scheduling algorithm when creating a VM configuration and when deploying a VM.
 
 [Read more about VM scheduling in the MacStadium blog.](https://www.macstadium.com/blog/vm-scheduling-in-orka-2.0)
 
@@ -36,7 +36,7 @@ GPU passthrough is available for Mac Intel nodes only. This configuration does n
 
 ## VM Internet Isolation
 
-Introduced with Orka 1.5.3, VM Internet isolation allows to control the access to the Internet from within the VMs. It is disabled by default. When enabled, the access to the Internet is not available from within a VM.
+Introduced with Orka 1.5.3, VM Internet isolation lets you control internet access from within VMs. It is disabled by default. When enabled, VMs cannot access the internet.
 
 The feature can be enabled during cluster provisioning or Orka upgrade.
 
@@ -44,7 +44,7 @@ The feature can be enabled during cluster provisioning or Orka upgrade.
 
 ## VM Network Isolation
 
-Introduced with Orka 1.5.1, VM network isolation allows to control the access from one VM to another and the access from a VM to the Orka API. It is disabled by default. When enabled, the access from one VM to another is disabled and the access to the Orka API is not available from within a VM.
+Introduced with Orka 1.5.1, VM network isolation lets you control access from one VM to another and from a VM to the Orka API. It is disabled by default. When enabled, VMs cannot communicate with each other and cannot access the Orka API.
 
 The feature can be enabled during cluster provisioning or Orka upgrade.
 
@@ -52,7 +52,7 @@ The feature can be enabled during cluster provisioning or Orka upgrade.
 
 ## Custom-Pods Namespace: Read-Only Access to the Containers File System
 
-Introduced with Orka 1.5.2, the features allows to control the access to the container's root file system from resources deployed in custom-pods namespaces. It is disabled by default which means there is a read/write access to the container's root file system. When enabled, the container's root file system is read-only for the resources in the namespace.
+Introduced with Orka 1.5.2, this feature lets you control access to the container's root file system from resources deployed in custom-pods namespaces. It is disabled by default, which means resources have read/write access to the container's root file system. When enabled, the container's root file system is read-only for resources in the namespace.
 
 Check Kubernetes [Security Contexts](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) and the readOnlyRootFilesystem field for more information.
 

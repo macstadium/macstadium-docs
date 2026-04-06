@@ -26,7 +26,7 @@ Conflicts with JAMF Connect or other Authentication methods. JAMF connect and ot
 
 ## 6405 Error
 
-Most 6405 errors can be resolved by rebooting the remote device. If you choose to SSH into the device to perform the reboot, check if Filevault is enabled using fdesetup status at the terminal command line, otherwise screenshare or VNC can me used to access your machine to reboot, again checking for Filevault. If Filevault is enabled reboot using the terminal and the command sudo fdesetup authrestart 0. More information can be found on this error on HP’s website here.
+Most 6405 errors can be resolved by rebooting the remote device. If you choose to SSH into the device to perform the reboot, check if Filevault is enabled using fdesetup status at the terminal command line, otherwise screenshare or VNC can be used to access your machine to reboot, again checking for Filevault. If Filevault is enabled reboot using the terminal and the command sudo fdesetup authrestart 0. More information can be found on this error on HP’s website here.
 
 ### Specific Causes:
 
@@ -68,7 +68,7 @@ Resolved by rebooting or waiting several minutes for the session to be torn down
 
 ## Poor Connectivity / Latency
 
-If the above 6405 error or the network connect lost error persists through reboots and the proper ports above are opened up, or if the client has graphical issues such as pixellation or low quality, there may be connectivity issues between the client and the agent. To check for connectivity issues you should run a trace route, a speed test, and a ping test.
+If the above 6405 error or the network connection lost error persists through reboots and the proper ports above are opened up, or if the client has graphical issues such as pixellation or low quality, there may be connectivity issues between the client and the agent. To check for connectivity issues you should run a trace route, a speed test, and a ping test.
 
 ### Traceroute
 
@@ -78,7 +78,7 @@ Firstly, traceroutes provide transparency into network infrastructure, revealing
 
 Secondly, traceroutes aid in diagnosing connectivity problems between devices on disparate networks. When a user experiences connection failures or slow response times, running a traceroute can reveal where the communication breakdown occurs. This information is crucial for troubleshooting, as it enables technicians to determine whether the issue lies within the user's local network, their Internet Service Provider (ISP), or the destination server.
 
-**How to run a tracerout**
+**How to run a traceroute**
 
 Windows - Connect to the MacStadium provided VPN if applicable and then open command prompt and run ‘tracert ipaddress’ where ipaddress is the IP address of the host machine. This may be a private address if the machine is behind a MacStadium provided firewall or a publicly facing IP address. If you are unable to perform a trace route to a machine behind the firewall, insert the public IP address of the firewall instead.
 
