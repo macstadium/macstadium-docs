@@ -1159,7 +1159,7 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
      1. Target: >95% success rate.
 
-     2. If Users Activity is <95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
+     2. If Users Activity is &lt;95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
 
   3. Host capacity. This can be checked by running: `ansible-playbook -i dev/inventory list.yml`and verifying:
 
@@ -1173,7 +1173,7 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
   1. Performance trends. You can review these by navigating to Citrix Cloud Console → Monitor → Trends. Review the following:
 
-     1. Average session launch time (target: <30 seconds)
+     1. Average session launch time (target: &lt;30 seconds)
 
      2. Session quality (should be “Good” or “Excellent”)
 
