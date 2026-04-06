@@ -85,7 +85,7 @@ This operation is a one-time effort. With it, you set the Orka service endpoint 
 You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 
   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`), prefixed with `http`. For example: `http://10.221.188.20`.
-  * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, [contact MacStadium support](https://portal.macstadium.com/login). To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 
 
 
@@ -241,8 +241,16 @@ The good news is that `ghcr.io/macstadium/orka-images/sonoma:latest` is already 
 
 
 
+If Orka VM Tools is not yet installed:
+
 ```bash
-brew install orka-vm-tools OR brew upgrade orka-vm-tools
+brew install orka-vm-tools
+```
+
+If Orka VM Tools is already installed and you need to update it:
+
+```bash
+brew upgrade orka-vm-tools
 ```
 This action ensures that your VM is running the latest version of the [Orka VM Tools](/orka/orka-resources/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables key features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
 
