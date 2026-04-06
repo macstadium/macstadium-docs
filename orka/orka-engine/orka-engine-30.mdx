@@ -214,7 +214,7 @@ Starting VM sonoma-latest with MAC address f6:59:c1:15:5e:cb
 
 
 
-## Reviewing Current List of VMs (in VMs orka-engine)
+## Reviewing current list of VMs (in VMs orka-engine)
 
 It is now possible to start a second terminal and run `orka-engine vm list`, and the following output appears, (which indicates that the previously running `latest-ipsw` VM has been stopped), and the recent `sonoma-latest` is now running. 
 
@@ -233,7 +233,7 @@ Once VMs are in a stopped state, they can either be:
 
 To retain these changes, make sure to use `orka-engine vm save`. 
 
-## Starting a VM from the Stopped State
+## Starting a VM from the stopped state
 
 If the VM `latest-ipsw` is stopped in the above example, then it can be started again with the following command: `orka-engine vm start`
 
@@ -241,9 +241,9 @@ If the VM `latest-ipsw` is stopped in the above example, then it can be started 
 
 If the VM `latest-ipsw` is stopped in the above example, then it can be deleted with the `orka-engine vm delete <vm--name>` command. 
 
-## Pulling Remote Images Locally
+## Pulling remote images locally
 
-In previous examples, `orka-engine vm run` was used to both _pull_ (or download) a remote image to the local device and to _run_ the vm. There are cases where users may just want to download an image, and `orka-engine image pull` supports this. 
+In previous examples, `orka-engine vm run` was used to both _pull_ (or download) a remote image to the local device and to _run_ the VM. There are cases where you may just want to download an image, and `orka-engine image pull` supports this. 
 
 `orka-engine image pull ghcr.io/macstadium/orka-images/ventura:no-sip`
 

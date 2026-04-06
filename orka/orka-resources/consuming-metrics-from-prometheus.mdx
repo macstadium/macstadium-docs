@@ -16,7 +16,7 @@ How to aggregate data from Prometheus node exporters and access the Prometheus w
 
 It is possible to collect Prometheus metrics directly from your Orka cluster, including host metrics for each node in the cluster as well as metrics for the Orka API server and operator.
 
-## Integrating Orka Metrics with an Existing Prometheus Instance
+## Integrating Orka metrics with an existing Prometheus instance
 
 If your organization is already using Prometheus and you wish to collect additional data from your Orka cluster, follow the instructions in this section.
 
@@ -76,7 +76,7 @@ static_configs:
 labels:  
 service: 'orka-operator'
 ```
-### Prometheus Node Exporters
+### Prometheus node exporters
 
 Every node in the Orka cluster runs a Prometheus Node Exporter on port 9100. This includes both Intel and ARM nodes. To ensure you are able to scrape the node exporter data, try cURLing the metrics endpoint from any node:
 
