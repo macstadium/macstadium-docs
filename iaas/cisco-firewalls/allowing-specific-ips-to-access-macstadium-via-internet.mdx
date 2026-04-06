@@ -40,11 +40,11 @@ Updating the Cisco Adaptive Security Appliance (ASA) can be done two different w
 
 **Via Command Line Interface (CLI)**
 
-Using a CLI allows the user to write script changes in a notepad, and have those changes reviewed by someone before running those scripts. This method is good for users writing scripts.
+Using a CLI allows you to write script changes in a notepad and have those changes reviewed by someone before running them. This method is good for writing scripts.
 
 **Via Cisco Adaptive Security Device Manager (ASDM)**
 
-Using a ASDM allows the user to make line by line changes, while using a graphical user interface (GUI).
+Using an ASDM allows you to make line-by-line changes, while using a graphical user interface (GUI).
 
 ## Configuring Static Network Address Translation (NAT)
 
@@ -69,7 +69,7 @@ ciscoasa#``
 
 ## NAT via Cisco Adaptive Security Device Manager (ASDM)
 
-  1. Connect to the ADSM using the MacStadium credentials from your IP Plan.
+  1. Connect to the ASDM using the MacStadium credentials from your IP Plan.
   2. Navigate to Configuration > Firewall > NAT Rules > +Add > Add NAT Rule.  
 ![1b26ce5-image.png](/images/attachments/28269995146651.png)
   3. Give the Object representing the internal MacStadium host a name (Example-Host-31).
@@ -115,7 +115,7 @@ ciscoasa#``
 
 **NOTE** : Instead of creating an object representing a single source IP Address, create a Network Object Group and then add a Network Object to that group. This is handy if there are liable to be more IP addresses to allow access in the future. For more information, see:
 
-\<https://www.cisco.com/c/en/us/td/docs/security/asa/asa96/configuration/firewall/asa-96-firewall-config/access-objects.html>
+[Cisco ASA 9.6 Access Objects Guide](https://www.cisco.com/c/en/us/td/docs/security/asa/asa96/configuration/firewall/asa-96-firewall-config/access-objects.html)
 
 ## NAT via Cisco Adaptive Security Device Manager (ASDM)
 

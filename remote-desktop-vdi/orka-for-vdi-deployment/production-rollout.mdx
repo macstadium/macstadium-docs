@@ -288,7 +288,7 @@ You will also want to clearly define an alerting strategy with your team. As an 
 ```
 You will want to discuss with your team how you wish to structure your alerting tools and dashboards. This includes email or Slack/Teams notifications, PagerDuty or similar services for critical outage alerts, custom scripts, AI agents, or Ansible playbooks that send notifications to system administrators on failures.
 
-Dashboard configuration is helpful for teams to visualize the current availablity and uptime of the service. This may consist of certain attributes such as the total number of deployed VMs vs. available machines, current active sessions, session launch success rates, host resource utilization, recent alerts or incidents, and capacity utilization. Tools such as Grafana, Datadog, or Citrix Director can be used to create visualizations and dashboards.
+Dashboard configuration is helpful for teams to visualize the current availability and uptime of the service. This may consist of certain attributes such as the total number of deployed VMs vs. available machines, current active sessions, session launch success rates, host resource utilization, recent alerts or incidents, and capacity utilization. Tools such as Grafana, Datadog, or Citrix Director can be used to create visualizations and dashboards.
 
 You may also consider centralizing logs for additional troubleshooting in some cases:
 
@@ -385,7 +385,7 @@ In the event of Orka host failure, take the following steps for system recovery:
 
 
 
-Recovery time: Est. between 2-4 hours in the case of MacStadium managed hardware with a spare host available; 5-10 minutes to deploy a image to an Orka host. Provisioning new MacStadium hardware not already available can take 2-3 days.
+Recovery time: Est. between 2-4 hours in the case of MacStadium managed hardware with a spare host available; 5-10 minutes to deploy an image to an Orka host. Provisioning new MacStadium hardware not already available can take 2-3 days.
 
 In the event of complete infrastructure loss, a disaster recovery playbook should walk through the following steps:
 

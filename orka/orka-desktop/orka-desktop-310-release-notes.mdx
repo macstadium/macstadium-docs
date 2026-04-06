@@ -1,6 +1,6 @@
 ---
-title: "Orka Desktop 3.1.0 Release Notes"
-description: "We are excited to announce the latest Orka Desktop 3.1.0 release, which includes the following new features and improvements: Support for MacOS 26 guest."
+title: "What's new in Orka Desktop 3.1.0"
+description: "Orka Desktop 3.1.0 adds macOS 26 Tahoe guest image support, updated OCI image format compatibility, local storage mounting, and shared clipboard."
 zendesk_id: 42141626434075
 zendesk_url: "/orka/orka-desktop/orka-desktop-310-release-notes"
 section: "Orka Desktop"
@@ -12,25 +12,25 @@ labels: []
 suggested_new_path: "/orka/orka-desktop/orka-desktop-310-release-notes"
 ---
 
-We are excited to announce the latest [Orka Desktop 3.1.0](https://github.com/macstadium/orka-desktop/releases/tag/3.1.0) release, which includes the following new features and improvements: Support for MacOS 26 guest images, updated OCI image format compatibility, local storage mounting accessible from within the Orka Desktop UI, and shared clipboard functionality.
+We are excited to announce the latest [Orka Desktop 3.1.0](https://github.com/macstadium/orka-desktop/releases/tag/3.1.0) release, which includes the following new features and improvements: Support for macOS 26 guest images, updated OCI image format compatibility, local storage mounting accessible from within the Orka Desktop UI, and shared clipboard functionality.
 
 ## New Features
 
-### MacOS 26 Tahoe guest image support:
+### macOS 26 Tahoe guest image support:
 
 #### Key capabilities:
 
-Orka Desktop 3.1.0 brings with it support for running MacOS 26 Tahoe guest VM images. This allows Orka Desktop users to start using Tahoe guest images for their VMs.
+Orka Desktop 3.1.0 brings with it support for running macOS 26 Tahoe guest VM images. This allows Orka Desktop users to start using Tahoe guest images for their VMs.
 
 #### Getting started:
 
-Users can get started with Tahoe by downloading the latest Tahoe image from [OrkaHub](https://orkahub.com/), or our [Tahoe package](https://github.com/orgs/macstadium/packages/container/package/orka-images%2Ftahoe) in the MacStadium orka-images repository on GitHub. Tahoe guest VMs can be run using the Orka CLI, or by using Orka Desktop.
+Get started with Tahoe by downloading the latest Tahoe image from [OrkaHub](https://orkahub.com/), or our [Tahoe package](https://github.com/orgs/macstadium/packages/container/package/orka-images%2Ftahoe) in the MacStadium orka-images repository on GitHub. You can run Tahoe guest VMs using the Orka CLI or Orka Desktop.
 
 #### Technical requirements:
 
-  * A Sequoia 15.5+ host is required in order to run a MacOS Tahoe 26 guest image.
+  * A Sequoia 15.5+ host is required in order to run a macOS Tahoe 26 guest image.
 
-  * Orka does not currently officially support running Tahoe on a host machine. We will support MacOS 26 hosts in the upcoming Orka 3.6.0 release.
+  * Orka does not currently officially support running Tahoe on a host machine. We will support macOS 26 hosts in the upcoming Orka 3.6.0 release.
 
 
 
@@ -53,20 +53,20 @@ Users can get started with Tahoe by downloading the latest Tahoe image from [Ork
 
 ### Known issues
 
-When running MacOS 15.6.1 and attempting to install a VM from the “latest” IPSW using Orka Desktop, the VZ API downloads the macOS 26 Tahoe IPSW. However, the installation fails with a popup message urging users to update the software.
+When running macOS 15.6.1 and attempting to install a VM from the “latest” IPSW using Orka Desktop, the VZ API downloads the macOS 26 Tahoe IPSW. However, the installation fails with a popup message urging users to update the software.
 
 ![failedVMinstallDesktop.png](/images/attachments/42141626425883.png)
 
 #### Workarounds:
 
-  * MacOS 15.6.1 users can resolve this issue using any of the following workarounds:
+  * macOS 15.6.1 users can resolve this issue using any of the following workarounds:
 
 ```
 * Install XCode 26 - This enables Tahoe VM installation with Orka Desktop
 
 * Download a specific IPSW - Manually select an IPSW instead of using “latest”
 
-* Upgrade your host machine - Update your host machine to MacOS Tahoe
+* Upgrade your host machine - Update your host machine to macOS Tahoe
 ```
 ### Bug fixes
 

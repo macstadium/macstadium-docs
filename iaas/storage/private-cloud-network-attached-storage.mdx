@@ -16,19 +16,19 @@ Network Attached Storage (NAS) devices are specialized servers that handle only 
 
 NAS is managed through the same interface as other virtual servers in the network, so it can move from one physical host to another. NAS functionality can be added by downloading and implementing an instance of the standard NAS VM Recipe.
 
-The NAS service is a dedicated virtual machine that presents itself as a service providing users the ability the create and manage file based storage without the need for using physical or virtual appliances. Each NAS service is complete with its own dashboard and is completely managed from the user interface.
+The NAS service is a dedicated virtual machine that presents itself as a service providing users the ability to create and manage file based storage without the need for using physical or virtual appliances. Each NAS service is complete with its own dashboard and is completely managed from the user interface.
 
 ## About NAS
 
-NAS allows users to take storage in Private Cloud and expose it to other machines, and then share that storage between machines. It is literally a virtual NAS, with redundancy. The reason NAS is beneficial to users, is that NAS storage can be exposed to other machines over the network.
+NAS lets you take storage in Private Cloud and expose it to other machines, then share that storage between machines. It is a virtual NAS with redundancy. NAS storage can be exposed to other machines over the network.
 
 NAS allows for virtual machines to share storage with assets inside or outside of the Private cloud, then use a file share to move files back and forth between machines.
 
-NAS is used to expand storage and to share files between Macs, and users can configure this for themselves.
+NAS is used to expand storage and to share files between Macs, and you can configure this yourself.
 
 ## Create the NAS Service
 
-The NAS service is a dedicated virtual machine that presents itself as a service providing users the ability the create and manage file based storage without the need for using physical or virtual appliances. Each NAS service includes its own dashboard and is fully managed from the user interface. Using the integrated NAS service takes advantage of the VergeIO snapshot engine and deduplication algorithm to get the most of usable storage space.
+The NAS service is a dedicated virtual machine that presents itself as a service providing users the ability to create and manage file based storage without the need for using physical or virtual appliances. Each NAS service includes its own dashboard and is fully managed from the user interface. Using the integrated NAS service takes advantage of the VergeIO snapshot engine and deduplication algorithm to get the most of usable storage space.
 
   1. From the Cloud Dashboard, select **NAS** from the left menu.
 
@@ -39,7 +39,7 @@ The NAS service is a dedicated virtual machine that presents itself as a service
 
 NAS
 
-  2. The**NAS Dashboard** opens.
+  2. The **NAS Dashboard** opens.
 
 
 
@@ -74,7 +74,7 @@ This recipe only deploys NAS appliances for Private Cloud.
 
 
 
-8 GB of RAM is required for antivirus to be enabled. If fewer that 8 GB of RAM are used, then a warning message appears. The message can be disabled, or the RAM can be set to 8 GB. The antivirus only protects the computers connected to the NAS, which is done by scanning the files on the volume. Some users may decide to keep the Antivirus and some users may decide to use less RAM. The system-defined-default  __**Cluster**__ is automatically selected.
+8 GB of RAM is required for antivirus to be enabled. If fewer than 8 GB of RAM are used, then a warning message appears. The message can be disabled, or the RAM can be set to 8 GB. The antivirus only protects the computers connected to the NAS, which is done by scanning the files on the volume. Some users may decide to keep the Antivirus and some users may decide to use less RAM. The system-defined-default  __**Cluster**__ is automatically selected.
 
   * Select the  __**Network**__ on which the NAS should run. Options include Internal and External networks.
 
@@ -104,7 +104,7 @@ Consult the IP Plan in your MacStadium Portal account to determine an IP Address
 
 
 
-![Screenshot 2024-11-02 at 1.03.05 PM.png](/images/attachments/43920792315163.png)Newly Create NAS Service
+![Screenshot 2024-11-02 at 1.03.05 PM.png](/images/attachments/43920792315163.png)Newly Created NAS Service
 
   5. To disable the **Antivirus** checkbox, deselect the checkmark and the **Antivirus Settings** box opens.
 
@@ -124,7 +124,7 @@ Antivirus Checkbox
 
 Antivirus Setting
 
-  7. Double-click the**Service** to bring up the Dashboard for the Service.
+  7. Double-click the **Service** to bring up the Dashboard for the Service.
 
   8. Select **Power On** to start the NAS.
 
@@ -219,7 +219,7 @@ New User
 
 ## Volumes
 
-A NAS service consist of one or more Volumes. Each Volume is a separate directory structure with its own settings for security, snapshots, storage tier, max size, antivirus, and sharing. Multiple volumes can be set up on the NAS, and the size of the volume determines the space available to deploy files on the NAS.
+A NAS service consists of one or more Volumes. Each Volume is a separate directory structure with its own settings for security, snapshots, storage tier, max size, antivirus, and sharing. Multiple volumes can be set up on the NAS, and the size of the volume determines the space available to deploy files on the NAS.
 
 Volume-level snapshots allow for customizing snapshot schedule and retention rules per individual NAS volume and provide the option for a quiesced snapshot. (Non-quiesced NAS volumes can be imported from Cloud snapshots to be used for restore.)
 
@@ -287,10 +287,10 @@ Spaces are not permitted.
 
 **Encryption Considerations**
 
-  * **Encryption selection is only available during creation creating** ; a volume cannot be changed from encrypted to unencrypted or vice-versa after creation.
+  * **Encryption selection is only available during creation** ; a volume cannot be changed from encrypted to unencrypted or vice-versa after creation.
   * **Minor to moderate performance implications** are involved with enabling volume encryption.
   * The **original encryption key** (defined when creating the volume) is needed for the lifetime of the volume; this encryption key must be **entered each time the volume is brought online** (for example, after disabling/enabling a volume or after its NAS service is rebooted).
-  * **Without the encryption key, it is possible to bring the volume back online.**
+  * **Without the encryption key, it is not possible to bring the volume back online.**
 
 
   4. Click **Submit.**
@@ -362,11 +362,11 @@ CIFS Shares
 
 
 
-Optional:**Users / Admin Groups** allow is to grant administrative privileges to the Share. This means that all file operations will be done as the super-user (root). Use this option carefully, as those in the list can do anything on the Share, regardless of individual file permissions.
+Optional: **Users / Admin Groups** allow is to grant administrative privileges to the Share. This means that all file operations will be done as the super-user (root). Use this option carefully, as those in the list can do anything on the Share, regardless of individual file permissions.
 
-  * Optional:**User / Force Group** options can be specified to define a user or group used for all file operations performed via this Share.
+  * Optional: **User / Force Group** options can be specified to define a user or group used for all file operations performed via this Share.
 
-  * Optional:**Configuration Options** (advanced samba share options) can be specified to handle special-case scenarios.
+  * Optional: **Configuration Options** (advanced samba share options) can be specified to handle special-case scenarios.
 
 
 
@@ -456,6 +456,4 @@ New
 
 ## Connecting to the Share
 
-Now that the NAS Service, Volume, Users, and Share are created, end users can map to the shared drive from their Mac mini or other devices on the network. 
-
-##
+Now that the NAS Service, Volume, Users, and Share are created, end users can map to the shared drive from their Mac mini or other devices on the network.
