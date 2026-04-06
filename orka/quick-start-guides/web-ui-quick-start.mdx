@@ -66,7 +66,9 @@ Orka lets you log in with your MacStadium Customer Portal credentials. Your acce
 ```bash
 orka3 login
 ```
-Orka will launch a new browser tab (or window) and let you log in via the SSO-enabled form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
+Orka will launch a new browser tab (or window) and let you log in via the SSO-enabled form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Personal tokens (SSO login) are valid for one hour. Afterward, you must log in again to obtain a new token.
+
+For CI/CD automation, use a service account token instead — service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
 
 You now need to get your Orka authentication token from your `~/.kube/config`:
 
