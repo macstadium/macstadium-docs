@@ -12,8 +12,6 @@ labels: []
 suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation"
 ---
 
-### 
-
 Ansible playbooks automate VM lifecycle operations for Citrix VDA deployment. These are automation scripts written in YAML that define a series of tasks to be executed on remote systems. They describe the desired state of your infrastructure and document the steps needed to achieve it.
 
 **How playbooks work:**
@@ -80,11 +78,11 @@ Create backup file(s) before deleting a VM
   
 Note: This implementation does not have a dedicated backup Ansible playbook. To preserve VM configurations:
 
-1\. Use `create_image.yml` to create versioned images
+1. Use `create_image.yml` to create versioned images
 
-2\. Store images in your OCI registry
+2. Store images in your OCI registry
 
-3\. To restore: Deploy new VMs from the backed-up image version
+3. To restore: Deploy new VMs from the backed-up image version
 
 **VM deletion playbook workflow:**
 
@@ -103,11 +101,11 @@ ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/o
 ```
 Before running:
 
-1\. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
+1. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
 
-2\. Scripts will be executed in alphabetical order
+2. Scripts will be executed in alphabetical order
 
-3\. Example scripts:
+3. Example scripts:
     
     
 ```

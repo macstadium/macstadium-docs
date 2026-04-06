@@ -12,8 +12,6 @@ labels: []
 suggested_new_path: "/remote-desktop-vdi/orka-for-vdi-deployment/image-management"
 ---
 
-### 
-
 Image management is critical for maintaining a scalable Orka for VDI environment. This section covers creating a golden image with the Citrix VDA pre-installed, automating image builds, distributing images across hosts, and implementing version control practices for long-term maintenance. Your Orka for VDI deployment may use a non-Citrix solution.
 
 #### Creating a golden image with Citrix VDA
@@ -30,11 +28,11 @@ ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/o
 ```
 Before running:
 
-1\. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
+1. Place your configuration scripts (VDA install, etc.) in the `/scripts` directory
 
-2\. Scripts will be executed in alphabetical order
+2. Scripts will be executed in alphabetical order
 
-3\. Example scripts:
+3. Example scripts:
     
     
 ```

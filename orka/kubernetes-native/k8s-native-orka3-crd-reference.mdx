@@ -38,8 +38,6 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 `spec` > `tag` | `string` | When specified, `VirtualMachineInstances` created from the `VirtualMachineConfig` will be scheduled for deployment on `OrkaNodes` labeled with the same `Tag`.  
 `spec` > `tagRequired` | `boolean` | Boolean setting if the `Tag` is required. When `true`, `VirtualMachineInstances` will be deployed only on nodes matching the specified `Tag`.  
 `spec` > `vncConsole` | `boolean` | Boolean setting if the VNC console is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`. When enabled, `GPUPassthrough` must be disabled.  
-  
-### 
 
 ### Examples
 
@@ -100,9 +98,7 @@ When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNo
 `status` > `portWarnings` | `string` | Any port warnings that have occurred during the deployment.  
 `status` > `screenSharePort` | `integer` | The Screen Sharing port assigned to the `VirtualMachineInstance`.  
 `status` > `sshPort` | `integer` | The SSH port assigned to the `VirtualMachineInstance`.  
-`status` > `vncPort` | `integer` | The VNC port assigned to the `VirtualMachineInstance`.  
-  
-### 
+`status` > `vncPort` | `integer` | The VNC port assigned to the `VirtualMachineInstance`.
 
 ### Examples
 
@@ -150,9 +146,7 @@ Field | Type | Description
 `spec` > `sourceType` | `string` | Modifier used for Image operations. One of `generated` (for generate), `local` (for copy), `remote` (for pull), `vm` (for commit and save).  
 `status` > `errorMessage` | `string` | The error message from the last failed operation with this `Image`.  
 `status` > `lastUpdatedTimestamp` | `string` | The timestamp for the last `Image` update (in the ISO 8601 format).  
-`status` > `state` | `string` | The current state of the image. One of `Ready`, `Updating`, `Failed`.  
-  
-### 
+`status` > `state` | `string` | The current state of the image. One of `Ready`, `Updating`, `Failed`.
 
 ### Examples
 

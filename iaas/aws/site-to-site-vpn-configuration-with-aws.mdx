@@ -46,9 +46,9 @@ The goal of this documentation is to update the Site-To-Site VPN configuration w
 
 
 
-**NOTE** : For more information about how to configure each aspect of your Cisco firewall, see Cisco Documentation: [Configuration Guides](https://www.cisco.com/c/en/us/support/security/asa-5500-series-next-generation-firewalls/products-installation-and-configuration-guides-list.html).
-
-### 
+<Note>
+For more information about how to configure each aspect of your Cisco firewall, see Cisco Documentation: [Configuration Guides](https://www.cisco.com/c/en/us/support/security/asa-5500-series-next-generation-firewalls/products-installation-and-configuration-guides-list.html).
+</Note>
 
 ### Helpful Links
 
@@ -62,9 +62,13 @@ Cisco Documentation: [Cisco ASA Series Syslog Messages](https://www.cisco.com/c/
 
 ## Networking Setup for Private Cloud
 
-**WARNING** : Because of the highly customizable nature of on-premises private clouds, this guide is not exact steps but rather general guidelines.
+<Warning>
+Because of the highly customizable nature of on-premises private clouds, this guide is not exact steps but rather general guidelines.
+</Warning>
 
-**NOTE** : A one-time or temporary access must be established from a single virtual or physical machine to the MacStadium cloud. It is recommended to use Cisco AnyConnect VPN. For more information, see [Connect to Your Cloud via VPN](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
+<Note>
+A one-time or temporary access must be established from a single virtual or physical machine to the MacStadium cloud. It is recommended to use Cisco AnyConnect VPN. For more information, see [Connect to Your Cloud via VPN](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
+</Note>
 
 To establish a stable and persistent connection, between the entire private cloud to the MacStadium cloud, then establish an **IPsec Site-To-Site VPN** between the two clouds.
 
@@ -81,7 +85,7 @@ To establish a stable and persistent connection, between the entire private clou
   3. Set up the Cisco ASA/ASAv device of the MacStadium cloud. 
      * You might need to configure one or more of the following rules: 
        * A NAT exemption rule for traffic between the two clouds. It might need to allow traffic from the private cloud to the private network and the outside interface of the MacStadium cloud. By default, these are respectively the Private-1 and Outside networks listed in Appendix A of the IP Plan. 
-         * **NOTE** : NAT exemption allows the ability to exclude traffic from being translated with NAT. One scenario where this is typically done is for a site-to-site VPN tunnel.
+         * <Note>NAT exemption allows the ability to exclude traffic from being translated with NAT. One scenario where this is typically done is for a site-to-site VPN tunnel.</Note>
        * Access-list rules permitting traffic from the private cloud to the public endpoint of your MacStadium cloud. By default, this is the FW1-Outside network listed in Appendix B of the IP Plan.
        * A crypto map rule that maps traffic between the two clouds. Usually, this is mapped to the outside interface of the MacStadium cloud. By default, this is the Outside network listed in Appendix A of the IP Plan.
        * IPSec and IKE policies.
@@ -90,7 +94,9 @@ To establish a stable and persistent connection, between the entire private clou
 
 
 
-**NOTE** : These settings must be are based on the Cisco ASA/ASAv software and model (.). For more information about how to configure each aspect of your Cisco firewall, see [Cisco Documentation: Configuration Guides](https://www.cisco.com/c/en/us/support/security/asa-5500-series-next-generation-firewalls/products-installation-and-configuration-guides-list.html).
+<Note>
+These settings must be are based on the Cisco ASA/ASAv software and model (.). For more information about how to configure each aspect of your Cisco firewall, see [Cisco Documentation: Configuration Guides](https://www.cisco.com/c/en/us/support/security/asa-5500-series-next-generation-firewalls/products-installation-and-configuration-guides-list.html).
+</Note>
 
 ## Networking Setup AWS
 
@@ -120,7 +126,9 @@ This is done from an Amazon VPC to the MacStadium private cloud.
 
 In AWS, the customer gateway represents the MacStadium endpoint of the Site-To-Site VPN connection. When you configure the customer gateway, use the networking information of the public network. By default, this is the FW1-Outside network. The networking information for this network in your [IP plan](/macstadium/macstadium-overview/ip-plan).
 
-**NOTE** : For more information about the customer gateway, see Amazon VPC Documentation: Components of YourSite-To-Site VPN.
+<Note>
+For more information about the customer gateway, see Amazon VPC Documentation: Components of Your Site-To-Site VPN.
+</Note>
 
   1. In the VPC service sidebar, locate the Virtual Private Network (VPN) menu and select Customer gateways.  
 ![cc3b204-image.png](/images/attachments/28280561568795.png)
@@ -138,7 +146,9 @@ In AWS, the customer gateway represents the MacStadium endpoint of the Site-To-S
 
 In AWS, the virtual private gateway represents the Amazon endpoint of the Site-To-Site VPN connection.
 
-**NOTE** : For more information about the virtual private gateway, see [Amazon VPC Documentation: Components of Your Site-To-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN).
+<Note>
+For more information about the virtual private gateway, see [Amazon VPC Documentation: Components of Your Site-To-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN).
+</Note>
 
   1. In the VPC service sidebar, locate the Virtual Private Network (VPN) menu and select Virtual Private Gateways.
   2. Click Create Virtual Private Gateway.
@@ -163,7 +173,9 @@ If the customer gateway and a virtual private gateway are in place, then configu
 
 During setup, choose the customer gateway and the virtual private gateway to use, and configure that routing.
 
-**NOTE** : Route traffic to the internal, private network. By default, this is the Private-1 network. The networking information for this network in Appendix B of the IP Plan.
+<Note>
+Route traffic to the internal, private network. By default, this is the Private-1 network. The networking information for this network in Appendix B of the IP Plan.
+</Note>
 
   1. In the VPC service sidebar, locate the Virtual Private Network menu and select Site-To-Site VPN Connections.
   2. Click Create VPN Connection.
@@ -172,17 +184,11 @@ During setup, choose the customer gateway and the virtual private gateway to use
   5. For Virtual Private Gateway, select the virtual private gateway that was created earlier.
   6. Select Existing customer gateway, and from the Customer Gateway ID dropdown menu, select the customer gateway that was created earlier.
   7. Select the Routing Options: 
-     * Static manually specifies the destination subnets of the VPN.  
-
-```
-   * Select static routing and provide in Static IP Prefixes the CIDR notation for the private network listed in Appendix A of the IP Plan (by default, the Private-1 network). To convert the subnet mask to a CIDR notation, use a CIDR calculator. Example: 10.221.254.0/24
-
- * Dynamic (requires BGP) and dynamically exchanges routes between AWS and MacStadium environments.  
-
-   * Select dynamic routing to keep the default values and proceed to the next step.
-
-   * **NOTE** : For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).
-```
+     * Static manually specifies the destination subnets of the VPN.
+       * Select static routing and provide in Static IP Prefixes the CIDR notation for the private network listed in Appendix A of the IP Plan (by default, the Private-1 network). To convert the subnet mask to a CIDR notation, use a CIDR calculator. Example: 10.221.254.0/24
+     * Dynamic (requires BGP) and dynamically exchanges routes between AWS and MacStadium environments.
+       * Select dynamic routing to keep the default values and proceed to the next step.
+       * <Note>For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).</Note>
   8. Do not edit the Tunnel Options section.
   9. Click Create VPN Connection.  
 ![089ae6a-image.png](/images/attachments/28280561577499.png)
@@ -193,11 +199,15 @@ During setup, choose the customer gateway and the virtual private gateway to use
 
 Based on the requirements and current setup, it might be necessary to enable inbound traffic from MacStadium to AWS.
 
-**NOTE** : For more information, see Amazon VPC Documentation: Security Groups for Your VPC and [Amazon VPC Documentation: Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html).
+<Note>
+For more information, see Amazon VPC Documentation: Security Groups for Your VPC and [Amazon VPC Documentation: Network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html).
+</Note>
 
 ## AWS VPN Configuration for Cisco ASA/ASAv
 
-**NOTE** : Proceed with the [AWS VPN configuration for Cisco.](/iaas/aws/aws-vpn-config-for-cisco-asaasav)
+<Note>
+Proceed with the [AWS VPN configuration for Cisco.](/iaas/aws/aws-vpn-config-for-cisco-asaasav)
+</Note>
 
 After creating theSite-To-Site VPN connection in Amazon, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud.
 

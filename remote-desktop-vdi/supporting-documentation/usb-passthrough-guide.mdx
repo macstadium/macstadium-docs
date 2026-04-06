@@ -12,8 +12,6 @@ labels: []
 suggested_new_path: "/remote-desktop-vdi/supporting-documentation/usb-passthrough-guide"
 ---
 
-## 
-
 Citrix Virtual Delivery Agent (VDA) for macOS supports [USB redirection](https://docs.citrix.com/en-us/mac-vda/configure/general-content-redirection/usb-redirection), allowing locally connected USB devices to be accessed within a remote macOS desktop session hosted on MacStadium infrastructure. This enables developers and power users to interact with USB devices (such as external drives, HID devices, and iPhones/iPads) as if they were physically attached to the remote Mac.
 
 ### Supported Devices and Scenarios
@@ -95,7 +93,7 @@ Client Platform Differences
 
 ### Testing Guide
 
-#### 1\. Prerequisites
+#### 1. Prerequisites
 
 Target system:
 
@@ -119,7 +117,7 @@ Physical USB devices:
 
 * Optional: iPhone/iPad (for developer redirection testing).
 ```
-#### 2\. Test Procedure
+#### 2. Test Procedure
 
   1. Enable Policy
 
@@ -173,7 +171,7 @@ Physical USB devices:
 ```
  2. Save and attach logs for escalation.
 ```
-#### 3\. Expected Results
+#### 3. Expected Results
 
 Windows Client: USB mass storage should appear and mount in Finder.  
 macOS Client: Device may show but not mount due to known issue.  

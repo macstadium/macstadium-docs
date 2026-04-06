@@ -251,9 +251,9 @@ You must attach a security group to allow traffic between the managed Kubernetes
   2. The AMI will additionally include a bootstrap script that should be run via user data. See the section below for more detailed information
   3. The IAM role must be linked to an instance profile and attached to the instance
   4. The security group allowing access to the EKS control plane must be attached to the instance
-  5. We recommend at least 500GB of storage for the host. The size depends on:  
-1\. The size of the images you are using  
-2\. The number of images you plan to have cached on the nodes
+  5. We recommend at least 500GB of storage for the host. The size depends on:
+1. The size of the images you are using
+2. The number of images you plan to have cached on the nodes
 
 
 
@@ -261,17 +261,17 @@ You must attach a security group to allow traffic between the managed Kubernetes
 
 Orka Engine requires a valid license key to operate. To request a license key:
 
-1\. Contact your MacStadium account representative 
+1. Contact your MacStadium account representative
 
-2\. Provide your organization name, deployment details, and use case 
+2. Provide your organization name, deployment details, and use case
 
-3\. Your account representative will submit your information to our licensing team for provisioning
+3. Your account representative will submit your information to our licensing team for provisioning
 
-4\. Receive license key via email (Est. 24 hour turnaround time)
+4. Receive license key via email (Est. 24 hour turnaround time)
 
-5\. Activate: ``orka-engine license set --key YOUR_KEY``
+5. Activate: ``orka-engine license set --key YOUR_KEY``
 
-You can also download Orka Engine directly at: \<https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg>
+You can also download Orka Engine directly at: [https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)
 
 ### Bootstrap Script
 
@@ -286,8 +286,6 @@ The AMI includes a bootstrap script that can be run via [user data](https://docs
     /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
 ```
 This will attach the node to the EKS cluster as a self-managed node.
-
-### 
 
 ## Using ECR for Image Storage and Management
 
@@ -324,7 +322,7 @@ aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --passwo
 
 > **Note**
 > 
-> The token is valid for 12 hours and will need to be refreshed regularly. See: \<https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token>
+> The token is valid for 12 hours and will need to be refreshed regularly. See: [https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token)
 > 
 > A future release will improve upon this with a credential helper.
 
@@ -394,7 +392,7 @@ Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x v
 
 ### How is macOS 15 Sequoia supported on AWS?
 
-macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the Apple Virtualization documentation \<https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines>. Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
+macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the [Apple Virtualization documentation](https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines). Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
 
   1. After setting up your EC2 Mac, you will need to setup a login keychain on the host OS before running the Sequoia OS Orka VM image.
   2. MacStadium will supply a Sequoia OCI image that is upgraded from a Sonoma image rather than created from a Sequoia IPSW on Sequoia host. This will run without the Apple ID functionality in guest.

@@ -12,7 +12,6 @@ labels: ["orka", "api", "cli", "reference", "command"]
 suggested_new_path: "/orka/orka-resources/orka3-cli-command-reference"
 ---
 
-[]("" """")
 
 ### orka3
 
@@ -49,7 +48,6 @@ orka3 [flags]
 
 
 
-[]("" """")
 
 ## orka3 completion
 
@@ -76,7 +74,6 @@ See each sub-command&#x27;s help for details on how to use the generated script.
 
 
 
-[]("" """")
 
 ## orka3 completion bash
 
@@ -122,7 +119,6 @@ orka3 completion bash
 -h, --help help for bash  
 --no-descriptions disable completion descriptions
 ```
-[]("" """")
 
 ## orka3 completion fish
 
@@ -157,7 +153,6 @@ orka3 completion fish [flags]
 -h, --help help for fish  
 --no-descriptions disable completion descriptions
 ```
-[]("" """")
 
 ## orka3 completion powershell
 
@@ -187,7 +182,6 @@ orka3 completion powershell [flags]
 -h, --help help for powershell  
 --no-descriptions disable completion descriptions
 ```
-[]("" """")
 
 ## orka3 completion zsh
 
@@ -236,7 +230,6 @@ orka3 completion zsh [flags]
 -h, --help help for zsh  
 --no-descriptions disable completion descriptions
 ```
-[]("" """")
 
 ## orka3 config
 
@@ -262,7 +255,6 @@ The first time you run the Orka CLI, you need to set your Orka service URL. Orka
 
 
 
-[]("" """")
 
 ## orka3 config set
 
@@ -307,7 +299,6 @@ orka3 config set --api-url https://company.com
 -a, --api-url string (Required) The Orka service URL against which to run all Orka CLI commands.  
 -h, --help help for set  -h, --help             help for set
 ```
-[]("" """")
 
 ## orka3 config view
 
@@ -334,7 +325,6 @@ orka3 config view
 ```
  -h, --help help for view
 ```
-[]("" """")
 
 ## orka3 image
 
@@ -371,7 +361,6 @@ orka3 image [flags]
 
 
 
-[]("" """")
 
 ## orka3 image copy
 
@@ -418,7 +407,6 @@ orka3 image copy 90gbventurassh.orkasi 90gbventurassh.orkasi --description 'user
 -d, --description string (Optional) If set, changes the description of the copy. Defaults to 'Copied from SOURCE_IMAGE_DESCRIPTION'.  
 -h, --help help for copy
 ```
-[]("" """")
 
 ## orka3 image delete
 
@@ -450,7 +438,6 @@ orka3 image delete 90gbventurassh.orkasi 90gbventurassh.img
 ```
 -h, --help help for delete
 ```
-[]("" """")
 
 ## orka3 image generate
 
@@ -491,7 +478,6 @@ orka3 image generate 120gbemptyimage 120G --description 'user@company.com create
 -d, --description string (Optional) If set, changes the description of the generated image. Defaults to a blank description.  
 -h, --help help for generate
 ```
-[]("" """")
 
 ## orka3 image list
 
@@ -549,7 +535,6 @@ orka3 image list 90gbventurassh.orkasi 90gbventurassh.img --output wide
 -h, --help help for list  
 -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
 ```
-[]("" """")
 
 ## orka3 image set-description
 
@@ -584,7 +569,6 @@ orka3 image set-description 90gbventurassh.orkasi 'user@company.com set this des
 ```
  -h, --help help for set-description
 ```
-[]("" """")
 
 ## orka3 iso
 
@@ -616,7 +600,6 @@ orka3 iso [flags]
 
 
 
-[]("" """")
 
 ## orka3 iso copy
 
@@ -659,7 +642,6 @@ orka3 iso copy ventura.iso ventura-copy.iso --description 'user@company.com copi
 -d, --description string (Optional) If set, changes the description of the copy. Defaults to 'SOURCE_ISO_DESCRIPTION'.  
 -h, --help help for copy
 ```
-[]("" """")
 
 ## orka3 iso delete
 
@@ -693,7 +675,6 @@ orka3 iso delete ventura.iso ventura-copy.iso
 ```
 -h, --help help for delete
 ```
-[]("" """")
 
 ## orka3 iso list
 
@@ -747,7 +728,6 @@ orka3 iso list monterey.iso ventura.iso --output wide
 -h, --help help for list  
 -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
 ```
-[]("" """")
 
 ## orka3 iso set-description
 
@@ -778,7 +758,6 @@ orka3 iso set-description ventura.iso 'user@company.com set this description'
 ```
 -h, --help help for set-description
 ```
-[]("" """")
 
 ## orka3 login
 
@@ -812,7 +791,6 @@ orka3 user login
 ```
 -h, --help help for login
 ```
-[]("" """")
 
 ## orka3 namespace
 
@@ -845,7 +823,6 @@ orka3 namespace [flags]
 
 
 
-[]("" """")
 
 ## orka3 namespace create
 
@@ -892,7 +869,6 @@ orka3 namespace create orka-cp --enable-custom-pods
 --enable-custom-pods If set, configures the namespace to enable the running of custom pods (formerly, sandboxing). You will not be able to run Orka VMs in that namespace.  
 -h, --help help for create
 ```
-[]("" """")
 
 ## orka3 namespace delete
 
@@ -927,7 +903,6 @@ orka3 namespace delete orka-test orka-production
 -h, --help help for delete  
 -t, --timeout duration (Optional) If set, indicates the length of time to wait before giving up on deleting each namespace. (default 1h0m0s)
 ```
-[]("" """")
 
 ## orka3 namespace list
 
@@ -961,7 +936,6 @@ orka3 namespace list orka-test orka-production
 -h, --help help for list  
 -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
 ```
-[]("" """")
 
 ## orka3 node
 
@@ -996,7 +970,6 @@ orka3 node [flags]
 
 
 
-[]("" """")
 
 ## orka3 node list
 
@@ -1061,7 +1034,6 @@ orka3 node list --output json
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 node namespace
 
@@ -1102,7 +1074,6 @@ orka3 node namespace mini-1 --namespace orka-production orka-default
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 node tag
 
@@ -1157,7 +1128,6 @@ orka3 node list mini-1 --output wide
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 node untag
 
@@ -1207,7 +1177,6 @@ orka3 node list mini-1 --output wide
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 registrycredential
 
@@ -1248,7 +1217,6 @@ orka3 registrycredential [flags]
 
 
 
-[]("" """")
 
 ## orka3 registrycredential add
 
@@ -1307,7 +1275,6 @@ orka3 regcred add --replace https://ghcr.io --username whoami --password ghp_***
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 registrycredential list
 
@@ -1349,7 +1316,6 @@ orka3 regcred list --output wide --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 registrycredential remove
 
@@ -1389,7 +1355,6 @@ orka3 regcred remove http://10.221.188.5:30080 --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 remote-image
 
@@ -1426,7 +1391,6 @@ orka3 remote-image [flags]
 
 
 
-[]("" """")
 
 ## orka3 remote-image list
 
@@ -1475,7 +1439,6 @@ orka3 remote-image list --output json
 -h, --help help for list  
 -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
 ```
-[]("" """")
 
 ## orka3 remote-image pull
 
@@ -1596,7 +1559,6 @@ orka3 remote-iso list --output json
 -h, --help help for list  
 -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
 ```
-[]("" """")
 
 ## orka3 remote-iso pull
 
@@ -1642,7 +1604,6 @@ orka3 remote-iso pull ventura.iso --description 'user@company.com pulled this IS
 -d, --description string (Optional) If set, changes the description of the new ISO. Defaults to 'Pulled from REMOTE_ISO'.  
 -h, --help help for pull
 ```
-[]("" """")
 
 ## orka3 rolebinding
 
@@ -1729,7 +1690,6 @@ orka3 rb add-subject --namespace orka-test --user user1@company.com,user2@compan
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 rolebinding list-subjects
 
@@ -1771,7 +1731,6 @@ orka3 rb list-subjects | grep 'ServiceAccount'
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 rolebinding remove-subject
 
@@ -1820,7 +1779,6 @@ orka3 rb remove-subject --namespace orka-test --user user1@company.com,user2@com
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 serviceaccount
 
@@ -1855,7 +1813,6 @@ orka3 serviceaccount [flags]
 
 
 
-[]("" """")
 
 ## orka3 serviceaccount create
 
@@ -1902,7 +1859,6 @@ orka3 sa create sa-jenkins-test --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 serviceaccount delete
 
@@ -1945,7 +1901,6 @@ orka3 sa delete sa-jenkins sa-jenkins-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")  -n, --namespace string   (Optional) If set, changes the namespace scope for the operation from &#x27;orka-default&#x27; to the specified namespace. (default &quot;orka-default&quot;)
 ```
-[]("" """")
 
 ## orka3 serviceaccount list
 
@@ -1990,7 +1945,6 @@ orka3 sa list sa-jenkins --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 serviceaccount token
 
@@ -2034,7 +1988,6 @@ orka3 sa token sa-jenkins --duration 1h
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 user
 
@@ -2060,7 +2013,6 @@ Manage your authentication with Orka.
 
 
 
-[]("" """")
 
 ## orka3 user get-token
 
@@ -2087,7 +2039,6 @@ orka3 user get-token
 ```
 -h, --help   help for get-token
 ```
-[]("" """")
 
 ## orka3 user login
 
@@ -2121,7 +2072,6 @@ orka3 user login
 ```
 -h, --help   help for login
 ```
-[]("" """")
 
 ## orka3 user logout
 
@@ -2148,7 +2098,6 @@ orka3 user logout
 ```
 -h, --help   help for logout
 ```
-[]("" """")
 
 ## orka3 user set-token
 
@@ -2181,7 +2130,6 @@ orka3 user set-token VALID_TOKEN
 ```
 -h, --help   help for set-token
 ```
-[]("" """")
 
 ## orka3 version
 
@@ -2208,7 +2156,6 @@ orka3 version
 ```
 -h, --help   help for version
 ```
-[]("" """")
 
 ## orka3 vm-config
 
@@ -2244,7 +2191,6 @@ orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
 ```
 -h, --help   help for vm-config
 ```
-[]("" """")
 
 ## orka3 vm-config create
 
@@ -2338,7 +2284,6 @@ orka3 vmc create medium-ventura-vm --image 90gbmontereyssh.img --disable-net-boo
 --tag-required                (Optional) When 'true', Orka attempts to deploy only on nodes with the specified tag.
                                When 'false', Orka first attempts to deploy on the nodes with the specified tag. If the deployment fails, Orka will then attempt to deploy on the remaining nodes in the environment.
 ```
-[]("" """")
 
 ## orka3 vm-config delete
 
@@ -2370,7 +2315,6 @@ orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
 ```
 -h, --help   help for delete
 ```
-[]("" """")
 
 ### orka3 vm-config list
 
@@ -2427,7 +2371,6 @@ orka3 vmc list --output json
 -h, --help help for list  
 -o, --output string (Optional) If set, changes the output format of the printed information. One of: table (default)|wide|json.
 ```
-[]("" """")
 
 ## orka3 vm
 
@@ -2467,7 +2410,6 @@ orka3 vm [flags]
 
 
 
-[]("" """")
 
 ## orka3 vm commit
 
@@ -2514,7 +2456,6 @@ orka3 vm commit small-ventura-vm --description 'This image was updated by user@c
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm delete
 
@@ -2554,7 +2495,6 @@ orka3 vm delete small-ventura-vm small-ventura-arm-vm --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm deploy
 
@@ -2719,7 +2659,6 @@ orka3 vm deploy --config small-ventura-config -c 6 --memory 16
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm get-push-status
 
@@ -2763,7 +2702,6 @@ orka3 vm get-push-status vm-push-qxjjf
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm list
 
@@ -2831,7 +2769,6 @@ orka3 vm list --output json
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm push
 
@@ -2880,7 +2817,6 @@ orka3 vm push vm-fxwj5 ghcr.io/myorg/orka-images/base:latest --namespace orka-te
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm resize
 
@@ -2933,7 +2869,6 @@ orka3 vm resize small-intel-vm 100 --user admin --password admin
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm resume
 
@@ -2973,7 +2908,6 @@ orka3 vm resume small-ventura-vm --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm revert
 
@@ -3011,7 +2945,6 @@ orka3 vm revert small-ventura-vm --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm save
 
@@ -3065,7 +2998,6 @@ orka3 vm save medium-ventura-vm 120gbmodifiedventura --description 'This image w
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-## []("" """")
 
 ## orka3 vm start
 
@@ -3105,7 +3037,6 @@ orka3 vm start small-ventura-vm --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm stop
 
@@ -3145,7 +3076,6 @@ orka3 vm stop small-ventura-vm --namespace orka-test
 ```
 -n, --namespace string (Optional) If set, changes the namespace scope for the operation from 'orka-default' to the specified namespace. (default "orka-default")
 ```
-[]("" """")
 
 ## orka3 vm suspend
 

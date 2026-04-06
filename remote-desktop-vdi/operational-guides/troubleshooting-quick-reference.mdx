@@ -738,7 +738,7 @@ Quick diagnostic:
 ```
  1. VNC to VM after user login: `du -sh /Users/<username>`
 ```
-4\. Monitor VM resources during login: Watch Activity Monitor during the login process
+4. Monitor VM resources during login: Watch Activity Monitor during the login process
 
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
@@ -960,14 +960,13 @@ Quick diagnostic:
 
   1. Try using a different browser
 
-```
- 1. Some browsers cache authentication differently
-```
-2\. Clear browser cookies and cache, then try logging in again
+     * Some browsers cache authentication differently
 
-3\. Verify your admin account is not locked, check with Citrix support or another admin
+2. Clear browser cookies and cache, then try logging in again
 
-4\. Check Citrix Cloud status: [https://status.cloud.com](https://status.cloud.com/ "https://status.cloud.com")
+3. Verify your admin account is not locked, check with Citrix support or another admin
+
+4. Check Citrix Cloud status: [https://status.cloud.com](https://status.cloud.com/)
 
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
@@ -999,21 +998,21 @@ Quick diagnostic:
 ```
  1. Verify host IP addresses are correct
 ```
-4\. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
+4. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
 
 Likely causes and solutions:
 
-**Cause** |  **How to verify** |  **Solution**  
----|---|---  
-Host powered off or unreachable | Ping test fails completely | Power on host via MacStadium portal; contact MacStadium support  
-Wrong IP address in inventory | IP doesn't match actual host address | Update `dev/inventory` file with correct host IP addresses  
-SSH service not running on host | Ping works but SSH connection refused/timeout | Restart SSH service on host; contact MacStadium support  
-Firewall blocking SSH from control node | SSH works from some locations but not control node | Check firewall rules; allow SSH (port 22) from Ansible control node IP  
-SSH key not in authorized_keys | SSH prompts for password instead of using key | Add Ansible control node's public SSH key to host's `~/.ssh/authorized_keys`  
-Wrong username configured | Using incorrect `ansible_user` value | Verify `ansible_user=admin` (or correct user) in inventory `[all:vars]`  
-Network routing issue | Can't reach host network from control node | Verify routing; check if VPN required; test from different network location  
-Host SSH configuration changed | SSH settings preventing key-based auth | Verify host SSH config allows public key authentication  
-  
+**Cause** |  **How to verify** |  **Solution**
+---|---|---
+Host powered off or unreachable | Ping test fails completely | Power on host via MacStadium portal; contact MacStadium support
+Wrong IP address in inventory | IP doesn't match actual host address | Update `dev/inventory` file with correct host IP addresses
+SSH service not running on host | Ping works but SSH connection refused/timeout | Restart SSH service on host; contact MacStadium support
+Firewall blocking SSH from control node | SSH works from some locations but not control node | Check firewall rules; allow SSH (port 22) from Ansible control node IP
+SSH key not in authorized_keys | SSH prompts for password instead of using key | Add Ansible control node's public SSH key to host's `~/.ssh/authorized_keys`
+Wrong username configured | Using incorrect `ansible_user` value | Verify `ansible_user=admin` (or correct user) in inventory `[all:vars]`
+Network routing issue | Can't reach host network from control node | Verify routing; check if VPN required; test from different network location
+Host SSH configuration changed | SSH settings preventing key-based auth | Verify host SSH config allows public key authentication
+
 Most common fix: SSH key is not in `authorized_keys` on host. Add the Ansible control node's public key to the host.
 
 ### Symptom: Playbook Fails with "Permission denied"
@@ -1031,7 +1030,7 @@ Quick diagnostic:
 ```
  1. Verify host IP addresses are correct
 ```
-4\. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
+4. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
 
 Likely causes and solutions:
 
@@ -1127,14 +1126,14 @@ Quick diagnostic:
 ```
  1. Verify `-e` flags are formatted correctly
 ```
-2\. Run with verbose output:   
-`ansible-playbook -i dev/inventory <playbook> \ `  
-`-e "var1=value1" \ `  
-`-e "var2=value2" \ `  
+2. Run with verbose output:
+`ansible-playbook -i dev/inventory <playbook> \ `
+`-e "var1=value1" \ `
+`-e "var2=value2" \ `
 `-vv`
 
-3\. Check playbook for variable names, and ensure they match exactly (variable names are case-sensitive)   
-4\. Check for hard-coded values in the playbook, these might override other variables
+3. Check playbook for variable names, and ensure they match exactly (variable names are case-sensitive)
+4. Check for hard-coded values in the playbook, these might override other variables
 
 Likely causes and solutions:
 

@@ -14,11 +14,12 @@ suggested_new_path: "/orka/networking-with-orka-at-macstadium/4-aws-verifying-th
 
 (Optional) How to verify that your AWS-Orka VPN tunnel works as expected: check security associations, tunnel status and traffic between Orka and AWS.
 
-> #### **You need:**
-> 
->   * Active VPN connection to your Orka cluster.
->   * Your Cisco ASAv connection information from the [IP Plan](/macstadium/macstadium-overview/ip-plan).
-> 
+<Note>
+**You need:**
+
+- Active VPN connection to your Orka cluster.
+- Your Cisco ASAv connection information from the [IP Plan](/macstadium/macstadium-overview/ip-plan).
+</Note>
 
 
 This part of the workflow is optional.
@@ -39,24 +40,24 @@ This part of the workflow is optional.
     
 ```
 show crypto isakmp sa
-
+```
 
 If the site-to-site VPN connection is configured properly, you should see information about an active IKEv1. For example:
 
-
+```
 Result of the command: "show crypto isakmp sa"
 
 
-IKEv1 SAs:  
-  
-Active SA: 1  
-Rekey SA: 0 (A tunnel will report 1 Active and 1 Rekey SA during rekey)  
-Total IKE SA: 1  
-  
-1 IKE Peer: ...  
-Type : L2L Role : initiator   
-Rekey : no State : MM_ACTIVE  
-  
+IKEv1 SAs:
+
+Active SA: 1
+Rekey SA: 0 (A tunnel will report 1 Active and 1 Rekey SA during rekey)
+Total IKE SA: 1
+
+1 IKE Peer: ...
+Type : L2L Role : initiator
+Rekey : no State : MM_ACTIVE
+
 There are no IKEv2 SAs
 ```
 ## Verify that there is an IPsec security association between peers
