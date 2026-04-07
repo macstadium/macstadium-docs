@@ -65,15 +65,13 @@ MacStadium is constantly working on expanding the list of Orka integrations with
   * [**TeamCity**](/orka/orka-devops-integrations/teamcity)
   * [**GitHub Actions**](/orka/orka-devops-integrations/github-actions)
   * [**Drone**](/orka/orka-devops-integrations/drone)
-  * **Tekton** — not supported in Orka 3.1 and above
+  * **Tekton** — not supported in Orka 3.1 and above. Use the Orka API or CLI directly in your pipelines instead.
 
 
 
 ## Orka VM Tools for ARM VMs
 
-> **IMPORTANT**
-> 
-> Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respectively available 3.0.x versions.
+<Warning>Always run matching versions across your Orka cluster, Orka CLI, Orka VM Tools, and any CI/CD integrations. A version mismatch can cause deployment failures, broken image caching, and unexpected behavior. For example, if your cluster runs 3.5.x, your CLI and VM Tools should also run 3.5.x.</Warning>
 
 > **TIP: Using Homebrew?**
 > 

@@ -12,3 +12,36 @@ labels: []
 suggested_new_path: "/iaas/networking/networking-overview"
 ---
 
+MacStadium IaaS environments run on a private network. All access — whether you're connecting from your local machine, a cloud provider, or a CI/CD system — goes through one of the networking options below.
+
+## VPN access
+
+The most common way to connect to your MacStadium environment. MacStadium provisions a Cisco ASA or ASAv firewall with VPN access included. You connect using a VPN client (Cisco AnyConnect or compatible) with credentials provided at onboarding.
+
+- [Firewall overview and hardware options](/iaas/cisco-firewalls/network-firewalls-overview)
+- [Network onboarding form](/iaas/cisco-firewalls/network-onboarding-form)
+- [Prepare VPN config for Cisco ASA/ASAv](/iaas/cisco-firewalls/prepare-the-vpn-configuration-for-input-into-cisco-asaasav)
+
+## Site-to-site VPN tunnels
+
+For persistent, automated connectivity between your MacStadium environment and a public cloud, use a site-to-site IPsec VPN tunnel. MacStadium supports tunnels to AWS, Azure, and Google Cloud Platform.
+
+- [Connect to AWS](/iaas/aws/site-to-site-vpn-configuration-with-aws)
+- [Connect to Azure](/iaas/azure/site-to-site-vpn-configuration-with-azure)
+- [Connect to GCP](/iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp)
+- [Connect to other clouds](/iaas/connecting-to-other-clouds/other-clouds)
+
+## IP plan
+
+Every MacStadium environment is assigned a private IP range. Your IP plan document (provided at onboarding) maps out your assigned addresses, gateway IPs, and subnet structure. Keep this on hand — you'll reference it when configuring VPN tunnels and firewall rules.
+
+- [Understanding your IP plan](/macstadium/macstadium-overview/ip-plan)
+
+## Firewall configuration
+
+MacStadium-provisioned Cisco firewalls are fully customer-configurable. You have root access to manage rules, users, and VPN settings directly.
+
+- [Log in to your firewall](/iaas/cisco-firewalls/logging-into-cisco-firewall)
+- [Configure the firewall](/iaas/cisco-firewalls/network-firewalls-configuration)
+- [Allow specific IPs from the internet](/iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet)
+- [Submit a firewall change request](/iaas/cisco-firewalls/firewall-change-request-form)

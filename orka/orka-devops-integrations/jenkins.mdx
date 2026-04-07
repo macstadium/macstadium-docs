@@ -20,9 +20,7 @@ The provisioning of permanent agents is useful when you need to have complete ma
 
 The provisioning of ephemeral agents is useful when you need to automatically create and delete agents based on the needs of your workflows.
 
-> **IMPORTANT**
-> 
-> Orka 3.1.x and above requires version[ v2.0.0+](https://github.com/jenkinsci/macstadium-orka-plugin/releases/tag/macstadium-orka-2.01) of the plugin.
+<Warning>Orka 3.1.x and above requires version [v2.0.0+](https://github.com/jenkinsci/macstadium-orka-plugin/releases/tag/macstadium-orka-2.01) of the plugin. If you are running Orka 2.x, use plugin version 1.35.</Warning>
 
 ## Install the plugin
 
@@ -32,15 +30,11 @@ If you need to manually build, package, and run the plugin yourself, visit the [
 
 ## Provision agents with the plugin
 
-> **IMPORTANT**
-> 
-> Make sure that your Jenkins master is connected to your Orka environment through VPN. You can use a [VPN client](/orka/networking-with-orka-at-macstadium/vpn-connection) to establish temporary connectivity, or you can create a [site-to-site VPN tunnel](/orka/networking-with-orka-at-macstadium/aws-orka-connections) to keep the connection alive at all times.
+<Warning>Your Jenkins master must be connected to your Orka environment through VPN before provisioning agents. Use a [VPN client](/orka/networking-with-orka-at-macstadium/vpn-connection) for temporary connectivity, or set up a [site-to-site VPN tunnel](/orka/networking-with-orka-at-macstadium/aws-orka-connections) for a persistent connection.</Warning>
 
 The [Orka by MacStadium plugin wiki](https://wiki.jenkins.io/display/JENKINS/Orka+by+MacStadium) provides the latest information about how to use the plugin.
 
-> **Apple ARM-based Nodes Support**
-> 
-> Make sure to increase Jenkins timeout to accommodate agents that are using Apple Silicon images and are deployed for the first time on an ARM-based node.
+<Note>If you are deploying Apple Silicon images for the first time on an ARM-based node, increase the Jenkins agent connection timeout to account for the longer initial boot time.</Note>
 
 ## How to Enable Logging for the Orka Plugin for Jenkins
 
@@ -87,7 +81,7 @@ This collects the most relevant logs while reducing overall volume.
 
 ## Plugin Requirements
 
-  * **Orka by MacStadium 3.0+** \-- The current plugin requires Orka 3.0 or later. If you are running Orka 2.x, use plugin version 1.35.
+  * **Orka by MacStadium 3.0+** \-- The current plugin requires Orka 3.0 or later.
   * A **VPN connection** to your Orka environment is required. Your Jenkins master must have network visibility to the Orka cluster.
 
 
