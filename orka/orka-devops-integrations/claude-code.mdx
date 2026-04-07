@@ -5,38 +5,29 @@ section: "DevOps Integrations"
 category: "Orka"
 ---
 
-The Orka3 CLI skill gives [Claude Code](https://claude.ai/code) deep knowledge of the Orka CLI, including commands, flags, CI/CD patterns, and common troubleshooting scenarios. Once installed, you can ask Claude questions about your Orka environment in plain English and get accurate, context-aware answers — no tab-switching, no docs hunting.
+The Orka3 CLI skill gives [Claude Code](https://claude.ai/code) deep knowledge of the Orka CLI and, when you're authenticated and connected to the VPN, the ability to run commands directly against your cluster. You can ask questions in plain English, have Claude generate and execute `orka3` commands on your behalf, or use it to build and test automation workflows — all from your terminal.
 
-<Note>The skill gives Claude knowledge of Orka. It does not give Claude direct access to your cluster. Commands Claude suggests are run by you, in your terminal.</Note>
+<Note>Direct cluster access requires an active VPN connection and an authenticated `orka3` session. Without those, Claude answers from documentation only and suggests commands for you to run yourself.</Note>
 
-## What you can ask
+## What you can do
 
-The skill covers the full surface of the Orka3 CLI — everything from day-to-day VM management to advanced admin workflows:
-
-**VM deployment and management**
-- "Deploy a VM from the sonoma-90gb-orka3-arm image with 8 CPUs"
+**Ask questions and get accurate answers**
+- "What images are available in my namespace?"
 - "What's the difference between `vm save` and `vm commit`?"
-- "How do I delete all VMs in a namespace at once?"
+- "How do I pre-cache an image across all ARM nodes?"
 
-**Images and caching**
-- "How do I push a VM image to a private OCI registry?"
-- "Pre-cache an image to all ARM nodes in my namespace"
-- "How do I check if an image push completed successfully?"
+**Have Claude run commands for you**
 
-**CI/CD setup**
-- "Set up a service account for GitHub Actions — token should never expire"
-- "What's the right way to pass Orka credentials in a GitLab pipeline?"
-- "Generate a `orka3 vm deploy` command I can use in a CircleCI job"
+With your permission, Claude can execute `orka3` commands directly — deploy VMs, check node status, manage images, create service accounts. You confirm before anything runs.
 
-**Namespaces, RBAC, and nodes**
-- "Add a user to the staging namespace"
-- "Tag a node so only ARM workloads get scheduled to it"
-- "What permissions does a Tech user have vs. an Admin?"
+**Build and test automation**
 
-**Troubleshooting**
-- "My VM deployed but I can't SSH in — what should I check?"
-- "I'm getting a token expired error in CI — how do I fix it?"
-- "Image pull is stuck at Pending — what's going on?"
+Claude can help you write CI/CD pipeline configuration, generate service account setup scripts, and test workflows end-to-end against a live cluster.
+
+**Troubleshoot live issues**
+- "My VM deployed but SSH isn't working — check what's running"
+- "Image pull is stuck at Pending — what's the status?"
+- "List all VMs in the staging namespace and show me which ones are idle"
 
 ## How it works
 
@@ -48,7 +39,7 @@ The skill loads as a system prompt when you open Claude Code. It gives Claude st
 - Async operation patterns (save, commit, push, imagecache)
 - Common error messages and how to resolve them
 
-Claude uses this knowledge to answer your questions, generate commands, and help you debug — all in the context of what you're actually trying to do.
+When the `orka3` CLI is available in your environment, Claude can also run commands directly and interpret the output in context.
 
 ## Getting started
 
