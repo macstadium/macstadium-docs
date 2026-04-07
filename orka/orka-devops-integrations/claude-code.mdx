@@ -1,0 +1,57 @@
+---
+title: "Claude Code"
+description: "Use Claude Code with the Orka3 CLI skill to get contextual AI assistance for managing your Orka cluster — deploy VMs, troubleshoot issues, and build CI/CD workflows without leaving your terminal."
+section: "DevOps Integrations"
+category: "Orka"
+---
+
+The Orka3 CLI skill gives [Claude Code](https://claude.ai/code) deep knowledge of the Orka CLI and, when you're authenticated and connected to the VPN, the ability to run commands directly against your cluster. You can ask questions in plain English, have Claude generate and execute `orka3` commands on your behalf, or use it to build and test automation workflows — all from your terminal.
+
+<Note>Direct cluster access requires an active VPN connection and an authenticated `orka3` session. Without those, Claude answers from documentation only and suggests commands for you to run yourself.</Note>
+
+## What you can do
+
+**Ask questions and get accurate answers**
+- "What images are available in my namespace?"
+- "What's the difference between `vm save` and `vm commit`?"
+- "How do I pre-cache an image across all ARM nodes?"
+
+**Have Claude run commands for you**
+
+With your permission, Claude can execute `orka3` commands directly — deploy VMs, check node status, manage images, create service accounts. You confirm before anything runs.
+
+**Build and test automation**
+
+Claude can help you write CI/CD pipeline configuration, generate service account setup scripts, and test workflows end-to-end against a live cluster.
+
+**Troubleshoot live issues**
+- "My VM deployed but SSH isn't working — check what's running"
+- "Image pull is stuck at Pending — what's the status?"
+- "List all VMs in the staging namespace and show me which ones are idle"
+
+## How it works
+
+The skill loads as a system prompt when you open Claude Code. It gives Claude structured knowledge about:
+
+- Every `orka3` command and its flags
+- CI/CD authentication patterns (service accounts, token scopes)
+- Intel vs. Apple Silicon feature differences
+- Async operation patterns (save, commit, push, imagecache)
+- Common error messages and how to resolve them
+
+When the `orka3` CLI is available in your environment, Claude can also run commands directly and interpret the output in context.
+
+## Getting started
+
+Installation instructions and the full skill source are in the GitHub repository:
+
+**[github.com/macstadium/orka3-cli-claude-skill](https://github.com/macstadium/orka3-cli-claude-skill)**
+
+You'll need Claude Code installed and a valid Anthropic API key. The skill installs in a single command.
+
+## Tips for getting the most out of it
+
+- **Give Claude context about your environment.** Mention whether you're on Intel or Apple Silicon nodes, and which Orka version you're running. Claude will tailor commands accordingly.
+- **For CI/CD questions, describe your pipeline.** Tell Claude which CI platform you're using and whether you're running inside a container — the auth approach is different.
+- **Ask follow-up questions.** If a suggested command doesn't match your setup, explain why and Claude will adjust.
+- **For long-running operations, ask how to check status.** Image saves, commits, and pushes are async. Claude knows the right status-check commands.
