@@ -30,10 +30,14 @@ Make sure to pull the updated sonoma-90gb-orka3-arm image from the remote in ord
 
 [Learn more about pulling an image](/orka/orka3-cli-reference/image-management)
 
-To access the latest features and updates, always run the Orka VM Tools version that matches your cluster and the other Orka tools and integrations you're using. For example: your cluster, Orka tools and integrations, and Orka VM Tools all run 3.x versions.
+<Warning>Always run the Orka VM Tools version that matches your cluster and other Orka tools and integrations. A version mismatch can cause disk resizing and shared storage failures. For example, if your cluster runs 3.x, your Orka VM Tools should also run 3.x.</Warning>
 
 Orka VM Tools run in the background. They are started automatically as a daemon when the operating system starts. You can control Orka VM Tools process using the following commands:
 
-Run sudo launchctl list com.orka.vm.tools to see if Orka VM Tools are running in your VM.
+To check if Orka VM Tools are running in your VM:
+
+```bash
+sudo launchctl list com.orka.vm.tools
+```
 
 ![b037a3d-Screenshot_2022-08-29_at_15.53.04.png](/images/attachments/28340435776027.png)
