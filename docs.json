@@ -478,6 +478,9 @@
   },
   "redirects": [
     { "source": "/docs", "destination": "/" },
+    { "source": "/getting-started/creating-your-first-node", "destination": "/orka/quick-start-guides/orka3-cli-quick-start" },
+    { "source": "/getting-started/creating-your-first-node/", "destination": "/orka/quick-start-guides/orka3-cli-quick-start" },
+    { "source": "/changelog", "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes" },
     { "source": "/docs/support", "destination": "https://support.macstadium.com" },
     { "source": "/docs/faqs", "destination": "https://support.macstadium.com" },
     { "source": "/docs/bare-metal-hosts", "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas" },
