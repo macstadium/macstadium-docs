@@ -15,19 +15,15 @@ suggested_new_path: "/macstadium/account-management-and-saml/enable-saml-sso-wit
 
 ## About
 
-SAML SSO is a paid offering.
+<Note>SAML SSO is a paid offering. Contact your account team through the [Customer Portal](https://portal.macstadium.com) for more information.</Note>
 
-📘 Please contact the account team through the Customer Portal for more information.
+<Warning>MacStadium does not support IdP-initiated logins. After SSO is configured, all users must log in at [portal.macstadium.com/sso](https://portal.macstadium.com/sso) using the ID provided by the MacStadium team.</Warning>
 
-👍 Log into the Portal by going to [portal.macstadium.com](https://portal.macstadium.com/login).
-
-⚠️ We do not currently support IdP-initiated logins. After SSO is configured with MacStadium, all users will use the below link to log into your account using an ID that will be provided to you by the MacStadium team.
-
-[portal.macstadium.com/sso](https://portal.macstadium.com/sso)
+<Tip>You can also log in directly at [portal.macstadium.com](https://portal.macstadium.com/login).</Tip>
 
 ## Overview
 
-SAML SSO with Azure AD , allowa customers to:
+SAML SSO with Azure AD allows customers to:
 
   * Enable users to be automatically signed in to MacStadium using their Azure Ad accounts.
   * Manage accounts in one central location – Azure AD.
@@ -52,16 +48,13 @@ SAML SSO with Azure AD , allowa customers to:
 ![529d208-6.png](/images/attachments/28263129266459.png)
   7. Click **Edit** on the _Basic SAML settings._  
 ![6385eeb-7.png](/images/attachments/28263129267739.png)
-  8. Configure SAML (Steps 11 to 15)
-
-```
- * Identifier (Entity ID): `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
- * Reply URL (Assertion Consumer Service URL): `https://idp.macstadium.com/saml2/idpresponse`
- * Logout URL (Optional): `https://idp.macstadium.com/saml2/logout`
- * **Save**  
-```
+  8. Configure the SAML settings:
+     * **Identifier (Entity ID):** `urn:amazon:cognito:sp:us-east-1_pusi8jHs1`
+     * **Reply URL (Assertion Consumer Service URL):** `https://idp.macstadium.com/saml2/idpresponse`
+     * **Logout URL (Optional):** `https://idp.macstadium.com/saml2/logout`
+     * Click **Save**
 ![37d0f10-8.png](/images/attachments/28263129269275.png)
-  9. **IMPORTANT** : Next, edit the Attributes & Claims for your SAML app. You will need the email field to be mapped to user.mail.  
+  9. Edit **Attributes & Claims** for your SAML app. <Warning>The email field must be mapped to `user.mail` or login will fail.</Warning>  
 ![Email Claim.png](/images/attachments/37939325807643.png)  
 
 

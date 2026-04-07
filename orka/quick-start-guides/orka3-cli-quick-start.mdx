@@ -85,7 +85,7 @@ This operation is a one-time effort. With it, you set the Orka service endpoint 
 You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 
   * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`), prefixed with `http`. For example: `http://10.221.188.20`.
-  * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, contact MacStadium. To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
+  * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/external-custom-domains) for your Orka cluster, [contact MacStadium support](https://portal.macstadium.com/login). To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 
 
 
@@ -113,7 +113,9 @@ Orka lets you log in with your MacStadium Customer Portal credentials. Your acce
 ```bash
 orka3 login
 ```
-Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Note that your token has a validity duration of one hour. Afterward, you must obtain and pass a new token in your CLI or API calls.
+Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Personal tokens (SSO login) are valid for one hour. Afterward, you must log in again to obtain a new token.
+
+For CI/CD automation, use a service account token instead — service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
 
 ## 4. Some CLI basics
 
@@ -241,8 +243,16 @@ The good news is that `ghcr.io/macstadium/orka-images/sonoma:latest` is already 
 
 
 
+If Orka VM Tools is not yet installed:
+
 ```bash
-brew install orka-vm-tools OR brew upgrade orka-vm-tools
+brew install orka-vm-tools
+```
+
+If Orka VM Tools is already installed and you need to update it:
+
+```bash
+brew upgrade orka-vm-tools
 ```
 This action ensures that your VM is running the latest version of the [Orka VM Tools](/orka/orka-resources/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables key features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
 

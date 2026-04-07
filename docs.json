@@ -471,6 +471,11 @@
       }
     ]
   },
+  "seo": {
+    "metatags": {
+      "google-site-verification": "OeKTGa7HvmEnL1jtMDksZEYQg1LGTk97_JlFSE5nxF4"
+    }
+  },
   "redirects": [
     { "source": "/docs", "destination": "/" },
     { "source": "/docs/support", "destination": "https://support.macstadium.com" },
