@@ -380,7 +380,7 @@
                 ]
               },
               {
-                "group": "Private Cloud VMs",
+                "group": "x86 VMs (Private Cloud VMs)",
                 "pages": [
                   "iaas/x86-vms-private-cloud-vms/private-cloud-x86-vms",
                   "iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation",
