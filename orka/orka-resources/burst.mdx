@@ -47,11 +47,7 @@ After MacStadium support configures your burst nodes, you can turn them on via t
 
 ## **Disable Orka Burst**
 
-**❗️ Important Note**
-
-> Orka Burst has no knowledge of currently executing workloads, and as a result, any currently running jobs will fail and need to be rescheduled by the calling applications. You may need to clean up failed workloads if the nodes are executing when Orka Burst is being disabled.
-
-Orka Burst has no knowledge of currently executing workloads, and as a result, any currently running jobs will fail and need to be rescheduled by the preferred scheduler controller. You may need to clean up failed workloads if the scheduled workloads are executing on disabled burst nodes, as Orka Burst is being disabled.
+<Warning>Orka Burst has no knowledge of currently executing workloads, and as a result, any currently running jobs will fail and need to be rescheduled by the preferred scheduler controller. You may need to clean up failed workloads if the scheduled workloads are executing on disabled burst nodes, as Orka Burst is being disabled.</Warning>
 
 When Burst is disabled, the nodes are powered down and removed from the cluster.
 

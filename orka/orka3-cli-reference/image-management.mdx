@@ -55,9 +55,6 @@ orka3 image list 90gbventurassh.img
 # Check if the specified images exist locally
 orka3 image list 90gbventurassh.img 90gbventurassh.orkasi
 
-# Search for all local Intel-based images
-orka3 image list | grep 'amd64'
-
 # List images and print output as JSON
 orka3 image list --output json
 
@@ -141,7 +138,7 @@ orka3 image generate 120gbemptyimage 120G --description 'user@company.com create
 
 Set a custom description for the specified image. This can be helpful to identify the owner of the image, where it originated from, or how it is used across workflows.
 
-**🚧 CAUTION:** This operation overrides the existing description and cannot be undone.
+<Warning>This operation overrides the existing description and cannot be undone.</Warning>
 
 **Syntax:**
     
@@ -166,7 +163,7 @@ orka3 image set-description 90gbventurassh.orkasi 'user@company.com set this des
 
 Delete the specified locally stored images.
 
-**🚧 CAUTION:** This operation cannot be undone. VMs or VM configurations that use this image are affected and might stop working as expected.
+<Warning>This operation cannot be undone. VMs or VM configurations that use this image are affected and might stop working as expected.</Warning>
 
 **Syntax:**
     
@@ -314,7 +311,7 @@ orka3 imagecache list --output json
 ```
 ## Remote Images (Deprecated)
 
-**🚧 DEPRECATED:** This functionality will be removed in future releases. MacStadium recommends using OCI registries for image storage and management. The `orka3 imagecache` command should be used as a replacement to load images into the cluster.
+<Warning>This functionality will be removed in future releases. MacStadium recommends using OCI registries for image storage and management. The `orka3 imagecache` command should be used as a replacement to load images into the cluster.</Warning>
 
 **orka3 remote-image list**
 
@@ -336,8 +333,8 @@ orka3 remote-image list
 # Check if a specific image exists remotely
 orka3 remote-image list 90gbventurassh.img
 
-# Search for all remote Intel-based images
-orka3 remote-image list | grep 'amd64'
+# Check if multiple specific images exist remotely
+orka3 remote-image list 90gbventurassh.img 90gbventurassh.orkasi
 ```
 **orka3 remote-image pull**
 

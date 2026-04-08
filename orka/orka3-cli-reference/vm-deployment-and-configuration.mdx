@@ -107,9 +107,6 @@ orka3 vmc list
 # List extended information
 orka3 vmc list --output wide
 
-# Find all VM configurations belonging to a specific owner
-orka3 vmc list --output wide | grep 'user@company.com'
-
 # Show basic information about a specific VM configuration
 orka3 vmc list small-ventura-vm
 
@@ -325,9 +322,6 @@ orka3 vm list
 
 # List all VMs (extended table)
 orka3 vm list --output wide
-
-# List all VMs deployed on a specific node
-orka3 vm list --output wide | grep 'mini-arm-14'
 
 # List all VMs in a specific namespace
 orka3 vm list --namespace orka-test
