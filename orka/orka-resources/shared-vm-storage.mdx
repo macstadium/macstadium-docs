@@ -36,15 +36,15 @@ Orka offers two different ways to utilize shared VM storage:
 
 In ARM-based VMs the shared storage will be automatically mounted and available to use. Same storage is shared between ARM-based and Intel-based VMs.
 
-**IMPORTANT**
-
+<Note>
 To use the shared VM storage with VMs deployed on ARM nodes, make sure to pull the new sonoma-90gb-orka3-arm image from the remote. It contains Orka VM Tools which are required for the shared VM storage to be automounted in the VM.
 
 [Learn more about pulling an image](/orka/orka3-cli-reference/image-management)
+</Note>
 
-**IMPORTANT**
-
+<Warning>
 Orka VM Tools 2.2.0 introduce a breaking change to the Shared VM Storage feature when used with Orka versions 2.1.0 and 2.1.1. As a workaround, make sure to use XXXX-2.1.orkasi images (i.e. 90GBMontereySSH-2.1.orkasi) or upgrade your cluster to Orka 2.2.0.
+</Warning>
 
 ## Shared Storage in Intel-based VMs
     
@@ -140,9 +140,9 @@ sudo dscl . create /Groups/ci GroupMembership machine-user
 ```
 Confirm the above changes were made with the command dscl . read /Groups/ci. Reboot the virtual machine and save or commit the VM image to persist these changes.
 
-**IMPORTANT**
-
-Files must be given group write access to be modified by the user you have added to the 107 group. For example, sudo chmod g+w myfile.txt.
+<Note>
+Files must be given group write access to be modified by the user you have added to the 107 group. For example, `sudo chmod g+w myfile.txt`.
+</Note>
 
 ### Cluster storage limits
 

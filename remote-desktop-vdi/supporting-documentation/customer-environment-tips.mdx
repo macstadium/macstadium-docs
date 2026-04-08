@@ -12,7 +12,7 @@ labels: []
 suggested_new_path: "/remote-desktop-vdi/supporting-documentation/customer-environment-tips"
 ---
 
-This guide outlines best practices and common pitfalls to avoid when deploying and managing Citrix VDI on MacStadium infrastructure. Following these recommendations will help ensure a secure, stable, and high-performance user experience.![Shape](/images/attachments/40640608063003.png)
+This guide outlines best practices and common pitfalls to avoid when deploying and managing Citrix VDI on MacStadium infrastructure. Following these recommendations will help ensure a secure, stable, and high-performance user experience.
 
 ## Security & Encryption:
 
@@ -29,9 +29,6 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
   * Rely solely on the Secure Enclave for recovery. Remote unlock may not be feasible without hands-on access.
   * Allow unmanaged users to enable FileVault without central IT approval.
 
-
-
-![Shape](/images/attachments/40640608063003.png)
 
 ## Networking & Connectivity:
 
@@ -53,15 +50,12 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
     * Video editing / high-performance: ~15–25 Mbps per user
 
 
-
-![Shape](/images/attachments/40640608063003.png)
-
 ## User experience tuning
 
 ### DO
 
   * Disable **desktop animations and transparency effects** on macOS to improve responsiveness over HDX.
-  * Configure Citrix Workspace client per Citrix guidelines ([Citrix Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.citrix.com.mcas.ms%2Fen-us%2Fcitrix-workspace-app-for-mac%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)).
+  * Configure Citrix Workspace client per Citrix guidelines ([Citrix Docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)).
   * Disable lock screen timers to prevent session loss if a user is disconnected.
   * Optimize power settings by disabling Wi-Fi power saving and ensuring stable NIC performance.
 
@@ -72,9 +66,6 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
   * Leave defaults enabled that cause session interruptions (screen savers, hot corners, or lock timers).
   * Forget to test client tuning across different OS versions and hardware configurations.
 
-
-
-![Shape](/images/attachments/40640608063003.png)
 
 ## Management & Policy:
 
@@ -90,7 +81,7 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
 ### DON’T
 
   * Allow end users to bypass MDM profiles or disable supervision.
-  * Apply policies that conflict with Citrix session stability (e.g., auto-sleep or aggressive idle timeouts).![Shape](/images/attachments/40640608064795.png)
+  * Apply policies that conflict with Citrix session stability (e.g., auto-sleep or aggressive idle timeouts).
 
 
 
@@ -107,7 +98,7 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
 ### DON’T
 
   * Rely solely on user-initiated restarts or shutdowns—disable those options at the MDM level.
-  * Forget to back up user data; Citrix and MacStadium sessions are not substitutes for enterprise backup solutions.![Shape](/images/attachments/40640608063003.png)
+  * Forget to back up user data; Citrix and MacStadium sessions are not substitutes for enterprise backup solutions.
 
 
 
@@ -116,7 +107,7 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
 ### DO
 
   * Use **Apple Business Manager (ABM)** \+ MDM for zero-touch enrollment of macOS instances.
-  * Automate provisioning of new Citrix VDA-enabled macOS workloads through Orka or bare-metal orchestration (see [MacStadium Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.macstadium.com.mcas.ms%2Fdocs%2Fhome%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)).
+  * Automate provisioning of new Citrix VDA-enabled macOS workloads through Orka or bare-metal orchestration (see [MacStadium Docs](https://docs.macstadium.com)).
 
 
 
@@ -129,6 +120,6 @@ This guide outlines best practices and common pitfalls to avoid when deploying a
 
 ## Quick Reference:
 
-  * **Apple Security Guide:** [Apple Platform Security](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fhelp.apple.com.mcas.ms%2Fpdf%2Fsecurity%2Fen_US%2Fapple-platform-security-guide.pdf%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)
-  * **Citrix Workspace App for Mac:** [Citrix Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.citrix.com.mcas.ms%2Fen-us%2Fcitrix-workspace-app-for-mac%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)
-  * **MacStadium Documentation:** [MacStadium Docs](https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fdocs.macstadium.com.mcas.ms%2Fdocs%2Fhome%3FMcasTsid%3D15600&McasCSRF=22958fce23581990045a9fb6d465d7cdd4d12370056d2a73c484d62f8dc84b79)
+  * **Apple Security Guide:** [Apple Platform Security](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf)
+  * **Citrix Workspace App for Mac:** [Citrix Docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)
+  * **MacStadium Documentation:** [MacStadium Docs](https://docs.macstadium.com)
