@@ -67,12 +67,7 @@ Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://
 
 
 
-**IMPORTANT**
-
-All sample API calls from this point use generic placeholder values.  
-**Change the Orka API URL (` http://10.221.188.100`, `http://10.221.188.20`, your Orka domain, or your external custom domain), the token, the license key, and any other placeholders as needed to reflect your environment.**
-
-All sample responses are piped through a JSON formatting service. Your responses may look different.
+<Warning>All sample API calls from this point use generic placeholder values. Replace the Orka API URL, token, and any other placeholders with values from your environment. Sample responses are piped through a JSON formatter — yours may look different.</Warning>
 
 ## Get a token from the Orka3 CLI
 
@@ -240,7 +235,7 @@ Orka creates a simple VM with the specified image and 3 CPU, and assigns a rando
 
 Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
 
-So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest Sonoma image from GitHub packages.
+You can also deploy directly from MacStadium's public OCI registry.
 
 **cURL**
 
@@ -251,7 +246,7 @@ curl -X 'POST' \
 -H 'Authorization: Bearer <TOKEN>' \
 -H 'Content-Type: application/json' \
 -d '{
-"image": "ghcr.io/macstadium/orka-images/sonoma:latest"
+"image": "ghcr.io/macstadium/orka-images/sequoia:latest"
 }'
 ```
 **Response**

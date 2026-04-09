@@ -4,39 +4,31 @@ description: "Orka access control overview: SSO login, RBAC roles, namespaces, a
 zendesk_id: 28328584628379
 ---
 
-Starting with Orka 3.0, Orka relies on Single Sign-On (SSO) and the Kubernetes concept of role-based access control (RBAC) for user management.
+Starting with Orka 3.0, Orka uses Single Sign-On (SSO) and Kubernetes role-based access control (RBAC) for user management. Users log in with their MacStadium Customer Portal credentials. What they can do depends on the role assigned to their account.
 
-Users log in to their cluster with their MacStadium Customer Portal credentials. Based on the role bindings configured for the respective user, they can access one or more namespaces.
+## How roles work
 
-## Terminology
+There are two places where roles exist — the Customer Portal and the Orka cluster — and they map to each other.
 
-| Domain | Term | Definition |
-|---|---|---|
-| Customer Portal | Account | The account managing one or more Orka clusters in the MacStadium Customer Portal. Every account has a unique ID. One account might have multiple account users in various roles. If one account manages multiple clusters, all account users are shared between them. |
-| Customer Portal | Account user | A user belonging to the managing account in the Customer Portal. An account user can assume only one account role at a time. If one account manages multiple clusters, all users are shared. Any account user can log in to the Orka cluster; only Admin and Tech users can work with it. |
-| Customer Portal | Account role | An account user can assume one of: Admin, Billing, or Tech. Admin users are also cluster administrators. Tech users are developers with non-administrative access. Billing users can only log in and cannot perform any cluster actions. |
-| Orka cluster | Cluster user | A Customer Portal account user logged in to the Orka cluster. Based on their account role, they belong to the Administrator or Technical role. |
-| Orka cluster | Service account | A special type of Orka cluster account intended for use with CI/CD integrations. Not related to a Customer Portal account and cannot be shared across clusters. |
-| Orka cluster | Namespace | A [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) isolates resources and dedicates them to a specific user, group of users, or service accounts. Users and service accounts must be added as subjects to the respective role binding to access the namespace. Role bindings are created automatically, but administrators add subjects manually. |
-| Orka cluster | Role | A Kubernetes [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole) role for your Orka cluster. The two default roles — Administrator and Technical — correspond to the Admin and Tech account roles. When an administrator creates a new namespace, Orka automatically creates a predefined role for it. |
-| Orka cluster | Role bindings and subjects | Indicates which cluster users have access to which namespaces. By default, all Administrator and Tech users can access the orka-default namespace. All Administrators can access all custom orka- namespaces. Tech users access a custom namespace when added as a subject to the respective role binding. |  
-  
-  
+**Customer Portal roles:**
+
+- **Admin** — full control of the Portal account and the Orka cluster. Can invite users, manage billing, and administer cluster resources.
+- **Tech** — developer access. Can deploy and manage VMs, images, and VM configs. Cannot manage users or namespaces.
+- **Billing** — read-only Portal access. Cannot perform any cluster actions.
+
+**Orka cluster roles:**
+
+- Admin Portal users → **Administrator** cluster role
+- Tech Portal users → **Technical** cluster role
+- **Service accounts** — cluster-only accounts for CI/CD integrations. Not tied to a Portal account.
+
 ## Role-based access matrix
-
-The Admin account role maps to the Administrator group role in the Orka cluster.
-
-The Tech account role maps to the Technical group role in the Orka cluster.
-
-The Billing account role does not map to any role in the Orka cluster.
-
-Cluster service accounts don't map to any account roles.
 
 Within the Customer Portal, the Admin, Tech, and Billing roles have the following capabilities:
 
 ![23ce174-Screenshot_2023-09-15_at_13.41.41.png](/images/attachments/28328584624923.png)
 
-Within the Orka cluster, the Admin, Tech, and Billing roles have the following capabilities:
+Within the Orka cluster:
 
 | Operation | Admin | Tech | Billing | Admin SA (Orka Small Teams-only) | Regular SA |
 |---|---|---|---|---|---|
@@ -63,42 +55,43 @@ Within the Orka cluster, the Admin, Tech, and Billing roles have the following c
 | Manage images | ✅ | ✅ | ❌ | ✅ | ✅ |
 | List and pull remote images | ✅ | ✅ | ❌ | ✅ | ✅ |
 | Manage ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
-| List and pull remote ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |  
-  
-## Workflow Overview
+| List and pull remote ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
 
-The following workflow outlines how to add users to the cluster.
+## Common admin workflows
 
-  1. In the MacStadium Customer Portal, an account administrator invites the account users who need to be able to access the Orka cluster and sets their roles.
-  2. The invited account users accept the invite and update their temporary credentials in the MacStadium Customer Portal.
-  3. The account users log in to the Orka cluster with their Customer Portal credentials.
+### Adding a user to the cluster
 
+1. In the MacStadium Customer Portal, an account Admin invites the user and sets their role (Admin or Tech).
+2. The user accepts the invite and sets their credentials.
+3. The user logs in to the Orka cluster with their Portal credentials.
 
+### Adding a service account for CI/CD
 
-The following workflow outlines how to add service accounts to the cluster.
+1. A cluster administrator creates the service account in the target namespace.
+2. If the service account needs access to additional namespaces, the administrator configures the appropriate role bindings.
 
-  1. In the Orka cluster, an administrator creates the service account to target a specific namespace.
-  2. If needed, the cluster administrator provides additional namespace access to the service account.
+### Isolating resources with namespaces
 
+Administrators can create namespaces to dedicate resources to specific teams or workflows.
 
+1. Create the namespace.
+2. Assign nodes to the namespace. (Nodes cannot be shared across namespaces.)
+3. Add users or service accounts as subjects to the namespace's role binding.
 
-Next, administrators can choose to isolate and dedicate resources to specific users and service accounts. This way, administrators can structure their clusters around teams and/or workflows.
+### Modifying or revoking access
 
-  1. The cluster administrator creates a namespace.
-  2. The cluster administrator assigns nodes to the namespace. (Nodes cannot be shared across namespaces and clusters.)
-  3. The cluster administrator adds subjects to the respective role binding for the namespace. Any service accounts need to already exist. Any users need to already be part of the Customer Portal account.
+- To change a user's role or disable them: edit or disable their account in the MacStadium Customer Portal.
+- To revoke a service account's access: delete the service account in the Orka cluster.
+- To add or remove namespace access: update the relevant role bindings in the cluster.
 
+## Key terms
 
-
-If needed, an administrator can change the details or role of a user, or revoke the access of a user or a service account to the cluster.
-
-  * In the MacStadium Customer Portal, an account administrator edits or disables users.
-  * In the Orka cluster, a cluster administrator deletes service accounts.
-
-
-
-If needed, an administrator can move unused resources (nodes) across namespaces.
-
-If needed, an administrator can revoke the access to a namespace or provide additional namespace access to existing users and service accounts.
-
-  * In the Orka cluster, an administrator adds or removes subjects to the respective role bindings.
+| Term | Where | Definition |
+|------|--------|------------|
+| Account | Customer Portal | The top-level entity managing one or more Orka clusters. All account users are shared across clusters on the same account. |
+| Account user | Customer Portal | A person belonging to the account. Can assume one role: Admin, Tech, or Billing. |
+| Cluster user | Orka cluster | A Portal account user who has logged in to the cluster. Maps to Administrator or Technical based on their Portal role. |
+| Service account | Orka cluster | A cluster-only account for CI/CD integrations. Not linked to a Portal account; tokens are valid for 1 year by default. |
+| Namespace | Orka cluster | Isolates resources (VMs, images, nodes) from other namespaces. Users and service accounts need explicit role binding access to each namespace. |
+| Role | Orka cluster | A Kubernetes RBAC role — Administrator or Technical. Created automatically when a namespace is created. |
+| Role binding | Orka cluster | Links cluster users or service accounts to a namespace. Admins manage role binding subjects manually. |
