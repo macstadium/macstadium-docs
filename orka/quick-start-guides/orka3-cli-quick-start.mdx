@@ -288,21 +288,26 @@ This operation will retain the new admin password and the latest OS updates. You
 Return to the command line on your local machine and run:
 
 
+**Commit** (modifies the original base image):
+
 ```bash
 orka3 vm commit <VM_NAME>
+```
 
-OR
+**Save** (creates a new base image):
 
+```bash
 orka3 vm save <VM_NAME> <NEW_IMAGE_NAME>
+```
 
-OR
+**Push** (sends the image to an OCI-compatible registry):
 
+```bash
 orka3 regcred <SERVER> --username <USER> --password <PASSWORD> [--allow-insecure]
 orka3 vm push <VM_NAME> <IMAGE[:TAG]>
 ```
-You can get the `<VM_NAME>` from the `orka3 vm list` output you ran earlier.
 
-Registry credentials are required to push an image. For more information, run `orka3 regcred --help`.
+You can get the `<VM_NAME>` from the `orka3 vm list` output you ran earlier. Registry credentials are required to push an image — run `orka3 regcred --help` for more information.
 
   2. See how the changes are preserved for yourself. Deploy a new VM instance:
 
