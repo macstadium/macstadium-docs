@@ -81,10 +81,14 @@ Service accounts are intended for use with CI/CD integrations. They don't requir
 
 
 ```bash
+# Create the service account
 orka3 sa create <SERVICE_ACCOUNT_NAME>
+
+# Generate a token — copy this and store it as a secret in your CI/CD system
 orka3 sa token <SERVICE_ACCOUNT_NAME>
 ```
-Grab the token from the response and use it to authenticate the CI/CD integration with the Orka cluster.
+
+Grab the token from the output of `orka3 sa token` and store it as a secret in your CI/CD system. Use it to authenticate the integration with your Orka cluster.
 
 These commands create a service account in the `orka-default` namespace and obtain a valid token for it. If you need your CI/CD integration to be able to work in additional namespaces, you need to create the service account in the respective namespace or [configure the respective role bindings](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).
 

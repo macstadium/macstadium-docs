@@ -13,11 +13,8 @@ If you want to skip the detailed explanations, just run through these steps on y
   3. `orka3 login`
   4. `orka3 node list`
   5. `orka3 vm list` (you should see 0 results)
-  6. `orka3 remote-image list` (this will return available base images in MacStadium's internal remote repository)
-  7. `orka3 remote-image pull <IMAGE_NAME>` (this will copy the image to your cluster's repository)
-  8. `orka3 image list` (this will return the list of locally stored images)
-  9. `orka3 vm deploy --image <IMAGE_NAME>`
-     1. Alternatively, you can deploy from OCI repositories: `orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest`
+  6. `orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest`
+  7. `orka3 image list` (this will return the list of locally stored images)
   10. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
   11. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
   12. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
@@ -161,15 +158,15 @@ This command lists all VM instances in the `orka-default` namespace. If nothing 
 
 Run `orka3 vm list --output wide`.
 
-  3. List the available base images that you can use to deploy a VM:
+  3. List any images already stored locally in your cluster:
 
 
 
 
 ```bash
-orka3 remote-image list
+orka3 image list
 ```
-This command shows all of the standard base images in MacStadium's remote repository. You will likely see a `sonoma-90gb-orka3-arm` item. It is a fully installed and configured Apple Silicon-based macOS Sonoma image with a 90GB disk size. It also has an admin user configured, SSH and Apple Screen Sharing access enabled, and Orka VM Tools installed.
+MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually — you can deploy directly from the registry in the next step.
 
 **Glossary: Image**
 
@@ -191,11 +188,11 @@ Orka creates a simple VM with the specified image and 3CPU and assigns a randoml
 
 Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
 
-So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest Sonoma image from GitHub packages.
+So, instead of using a locally stored image, you can deploy directly from MacStadium's public OCI registry.
 
 
 ```bash
-orka3 vm deploy --image ghcr.io/macstadium/orka-images/sonoma:latest
+orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest
 ```
   7. Check your nodes and your VMs.
 
@@ -226,7 +223,7 @@ When you have a lot of VMs, the output of `orka3 vm list` might become too crowd
 
 One more thing to remember is that Screen Sharing must already be enabled on the macOS. This is usually not the case (especially on clean OS installs or after an ISO install), and you will need to enable the setting yourself.
 
-The good news is that `ghcr.io/macstadium/orka-images/sonoma:latest` is already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
+The good news is that `ghcr.io/macstadium/orka-images/sequoia:latest` is already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
 
   3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password again - when Apple connects to the VM.
   4. On the VM, launch **System Preferences** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
@@ -274,13 +271,13 @@ To create changes that stick and appear on future deployments, you can commit yo
 > 
 > This operation restarts the VM.
 > 
-> Run `orka vm save --help` for more information.
+> Run `orka3 vm save --help` for more information.
 
 > #### **Glossary: Push changes**
 > 
 > `Push` your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image. For more information, run `orka3 regcred --help`.
 > 
-> Run `orka vm push --help` for more information.
+> Run `orka3 vm push --help` for more information.
 
   1. Commit the changes, save a new image, or push to a private OCI-compatible registry.
 
