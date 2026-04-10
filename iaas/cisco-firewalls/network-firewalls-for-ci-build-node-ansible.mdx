@@ -24,7 +24,9 @@ Ansible is a configuration management tool that is used to automate the setup of
 
 MacStadium provides an [Ansible playbook](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html) that takes care of the installation and setup of the tools need for a CI Build Node. The playbook is open-source and can be found [here](https://github.com/macstadium/ansible-playbook-osx-ci-setup).
 
-**Note** : The playbook works for OSX High Sierra and Mojave. It is capable of installing Xcode 8 and above. If you are using an older OSX version or require an older Xcode version, refer to our manual installation guide.
+<Note>
+The playbook works for OSX High Sierra and Mojave. It is capable of installing Xcode 8 and above. If you are using an older OSX version or require an older Xcode version, refer to our manual installation guide.
+</Note>
 
 The playbook is intended to be executed on the machine to set up as a CI Build Node. To execute the playbook remotely, to configure another [Ansible inventory](https://docs.ansible.com/ansible/2.4/intro_inventory.html).
 
@@ -62,8 +64,8 @@ git clone https://github.com/macstadium/ansible-playbook-osx-ci-setup.git
 ```
 This playbook consists of two roles:
 
-  * [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) \- Installs all common tooling and creates a user capable of running build jobs
-  * [Xcode](https://github.com/macstadium/ansible-role-xcode) \- Installs and configures Xcode
+  * [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) - Installs all common tooling and creates a user capable of running build jobs
+  * [Xcode](https://github.com/macstadium/ansible-role-xcode) - Installs and configures Xcode
 
 
 
@@ -78,7 +80,9 @@ ansible-galaxy install -r requirements.yml
 
 The [OSX-CI](https://github.com/macstadium/ansible-role-osx-ci) requires a path to a public ssh key on the target machine. The role adds the key to the `authorized_keys` file of the created user to enable remote login via ssh with a private key.
 
-**NOTE** : To use the target machine as a Jenkins agent you will need a key pair generated using the `RSA` algorithm.
+<Note>
+To use the target machine as a Jenkins agent you will need a key pair generated using the `RSA` algorithm.
+</Note>
 
 If you do not have a ssh key pair you can create one by executing on the target machine:
     
@@ -86,7 +90,9 @@ If you do not have a ssh key pair you can create one by executing on the target 
 ```
 ssh-keygen -m PEM -t rsa -C "build machine key" -f "buildMachine_rsa"
 ```
-**NOTE** : For increased security, it is recommended to associate a passphrase to the private key.
+<Note>
+For increased security, it is recommended to associate a passphrase to the private key.
+</Note>
 
 The command creates two files:
 
@@ -123,7 +129,7 @@ It is highly recommended not to pass the passwords in plain text.
 
 To encrypt use [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/playbooks_vault.html).
 
-Add the variable to [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) and execute the following command:
+Add the variable to `group_vars/all.yml` and execute the following command:
     
     
 ```
@@ -139,6 +145,6 @@ To execute the Ansible playbook you can use the following command by replacing t
 ```
 ansible-playbook site.yml -i inventory -e ansible_user={AdminUser} -e xcode_xip_location={XcodeLocation} -e xcode_major_version={XcodeMajorVersion} -e ci_user_public_key_location={PublicSshKeyLocation} --ask-vault-pass
 ```
-You will be prompted for the vault password that you used to encrypt the [group_vars/all.yml](https://docs.macstadium.com/docs/group_vars/all.yml) file in the previous step.
+You will be prompted for the vault password that you used to encrypt the `group_vars/all.yml` file in the previous step.
 
 Once the execution is completed, you will have a fully-setup machine that you can use for OSX/iOS builds and for a Jenkins agent.

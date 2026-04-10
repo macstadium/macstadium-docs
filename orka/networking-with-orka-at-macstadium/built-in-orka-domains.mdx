@@ -73,21 +73,17 @@ For example: 10.221.188.241.
 
 Due to Node.js limitations, the Orka CLI cannot work with Orka domains. You need to use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.100) with the Orka CLI, or switch to another Orka tool.
 
-### TIP
-
+<Tip>
 You can use your Orka API endpoint (http://10.221.188.20 or http://10.221.188.100) and your Orka domain (https://company.orka.app) interchangeably in your workflows.
+</Tip>
 
   1. If you don't know what your Orka domain is, contact the MacStadium team.
 
   2. Configure your Orka tools to target the Orka domain. Note that you need to use https with your Orka domain.
 
-```
- * For the Orka API, change your API requests to target https://<orka-domain>.
-
- * For the Orka Web UI, open https://<orka-domain> in your browser.
-
- * For CI/CD integrations, switch to https://<orka-domain> in the respective plugin configuration.
-```
+     * For the Orka API, change your API requests to target `https://<orka-domain>`.
+     * For the Orka Web UI, open `https://<orka-domain>` in your browser.
+     * For CI/CD integrations, switch to `https://<orka-domain>` in the respective plugin configuration.
 ## 3\. (Orka API-only) Download and trust the Orka domain certificate
 
 To be able to run API calls against your Orka domain, you need to download the certificate for the Orka domain locally and add it to your trusted certificates.

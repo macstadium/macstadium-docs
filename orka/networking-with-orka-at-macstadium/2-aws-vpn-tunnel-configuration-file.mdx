@@ -6,14 +6,16 @@ zendesk_id: 28401474359835
 
 Download the VPN configuration file from Amazon and fill it in with your Orka network configuration.
 
-> #### **You need:**
-> 
->   * The name `Outside` from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The IP address for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The subnet mask for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The IPv4 address of your Amazon VPC.
->   * The subnet mask for your Amazon VPC converted from its CIDR notation (i.e. `255.255.0.0` instead of `/16`).
-> 
+<Note>
+**You need:**
+
+  * The name `Outside` from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+  * The IP address for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+  * The subnet mask for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+  * The IPv4 address of your Amazon VPC.
+  * The subnet mask for your Amazon VPC converted from its CIDR notation (i.e. `255.255.0.0` instead of `/16`).
+</Note>
+
 
 
 After you [have created your VPN tunnel in Amazon](/orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel), you need to configure your Cisco firewall to recognize the connection and let traffic into your Orka cluster.
@@ -47,9 +49,9 @@ Amazon provides a semi-prefilled configuration file with very detailed instructi
 
 ## Step 2: Fill in the configuration file
 
-> #### **CAUTION**
-> 
-> Unless you have extensive experience with AWS and ASAv configurations, follow the instructions in the configuration file to the letter. Otherwise, your site-to-site VPN might not work as expected.
+<Warning>
+Unless you have extensive experience with AWS and ASAv configurations, follow the instructions in the configuration file to the letter. Otherwise, your site-to-site VPN might not work as expected.
+</Warning>
 
   1. Open the configuration file in a text editor.
   2. Replace all placeholders with their respective values.
@@ -69,7 +71,7 @@ Placeholder | Value | Description | More information
   
   3. Uncomment the following lines. To uncomment, remove `! `at the start of the line. 
      * `access-list amzn-filter extended permit ip ...`
-     * `object`\- and `nat`-related configuration at the end of the config file.
+     * `object`- and `nat`-related configuration at the end of the config file.
   4. Keep the following line. This ensures the SLA monitor works as expected.
 
 

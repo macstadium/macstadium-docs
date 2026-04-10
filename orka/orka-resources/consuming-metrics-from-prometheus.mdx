@@ -14,7 +14,7 @@ If your organization is already using Prometheus and you wish to collect additio
 
 ### Orka Server and Operator Metrics
 
-#### **A Note About the Orka Server**
+#### A Note About the Orka Server
 
 Starting with Orka 3.0, the API server is no longer primarily responsible for managing Orka VMs. Instead, the operator is primarily responsible for managing the lifecycle of Orka VMs and other resources. Clients such as the orka3 CLI speak directly to the Kubernetes API instead of the Orka API.
 
@@ -35,9 +35,9 @@ curl -I 10.221.188.20:8080/metrics
 ```
 You should receive a response of 200 OK if all is well.
 
-#### **TIP**
-
-To view descriptions and additional information on the available Orka server metrics, try curl 10.221.188.20/metrics. For Orka operator metrics, try curl 10.221.188.20:8080/metrics
+<Tip>
+To view descriptions and additional information on the available Orka server metrics, try `curl 10.221.188.20/metrics`. For Orka operator metrics, try `curl 10.221.188.20:8080/metrics`.
+</Tip>
 
 In order to scrape the Orka server and operator metrics, add jobs to your Prometheus configuration:
 
@@ -80,9 +80,9 @@ curl -I http://10.221.188.31:9100/metrics
 ```
 If the node exporter is running and reachable from outside the cluster, you should receive a response of 200 OK.
 
-#### **Outside Access**
-
-If your Prometheus instance is hosted outside of the cluster, make sure that TCP traffic is permitted to port 9100 for all hosts on the Orka private network! For more information, see the section on IP plans.
+<Note>
+**Outside access:** If your Prometheus instance is hosted outside of the cluster, make sure that TCP traffic is permitted to port 9100 for all hosts on the Orka private network. For more information, see the section on IP plans.
+</Note>
 
 In order to scrape the node exporter data, add a job to your Prometheus configuration. For example:
 
@@ -106,6 +106,6 @@ group: 'x86'
 labels:  
 group: 'arm'
 ```
-#### **TIP**
-
+<Tip>
 As an alternative to the static config, you can use [file-based service discovery](https://prometheus.io/docs/guides/file-sd/) to scrape the targets.
+</Tip>

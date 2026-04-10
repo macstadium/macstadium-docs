@@ -84,7 +84,7 @@ The following commands will quickly introduce basic features of the Orka Engine 
   * Listing images available on disk with `orka-engine image list`
   * Stop a VM with **ctrl-c** in terminal window bound to running VM or by closing the Dock item
   * Run a base template VM image hosted from MacStadium using `orka-engine vm run`
-    * orka-engine vm run latest-sonoma --image [http://ghcr.io/macstadium/orka-images/sonoma:latest](http://ghcr.io/macstadium/orka-images/sonoma:latest)
+    * `orka-engine vm run latest-sonoma --image ghcr.io/macstadium/orka-images/sonoma:latest`
   * Pulling remote images locally using `orka-engine image pull`
   * Starting a VM in the stopped state with `orka-engine vm start`
   * Pushing a configured CI/CD customized VM to a OCI container registry `orka-engine image push`
@@ -145,7 +145,9 @@ The ``--disable-graphical-console`` flag:
 
 
 
-**Note:** Without the graphical console, you must use SSH or other non-GUI methods to interact with the VM.
+<Note>
+Without the graphical console, you must use SSH or other non-GUI methods to interact with the VM.
+</Note>
     
     
 ```
@@ -154,9 +156,9 @@ orka-engine vm run sonoma-base \
   --disable-graphical-console \
   sonoma-fix
 ```
-Listing Current Running VMs
+## Listing Current Running VMs
 
-Orka engine can list the name and resource consumption of VMs are currently running or stopped on a local host.
+Orka engine can list the name and resource consumption of VMs that are currently running or stopped on a local host.
 
 ![Terminal output of orka-engine vm list showing a VM named latest-ipsw with 2 CPUs, 4096M memory, in running state](/images/attachments/39594527745947.png)
 
@@ -168,7 +170,7 @@ For example,`orka-engine vm save latest-ipsw sonoma146-vanilla` saves the VM cal
 
 ![Terminal confirmation: The image 'sonoma146-vanilla' for VM 'latest-ipsw' has been successfully saved](/images/attachments/39594591426971.png)
 
-Listing Images Available on Disk
+## Listing Images Available on Disk
 
 Orka Engine lists the images that are available on the local host. These images are used for starting a new VM immediately.
 
@@ -199,7 +201,12 @@ Starting VM sonoma-latest with MAC address f6:59:c1:15:5e:cb
 
 It is now possible to start a second terminal and run `orka-engine vm list`, and the following output appears, (which indicates that the previously running `latest-ipsw` VM has been stopped), and the recent `sonoma-latest` is now running. 
 
-`NAME CPU MEMORY STATE latest-ipsw 2 8192M running sonoma146-vanilla 2 4096M stopped sonoma-latest 2 4096M stopped`
+```
+NAME              CPU  MEMORY  STATE
+latest-ipsw       2    8192M   running
+sonoma146-vanilla 2    4096M   stopped
+sonoma-latest     2    4096M   stopped
+```
 
 Once VMs are in a stopped state, they can either be:
 
@@ -220,7 +227,7 @@ If the VM `latest-ipsw` is stopped in the above example, then it can be started 
 
 ## Deleting a VM
 
-If the VM `latest-ipsw` is stopped in the above example, then it can be deleted with the `orka-engine vm delete <vm--name>` command. 
+If the VM `latest-ipsw` is stopped in the above example, then it can be deleted with the `orka-engine vm delete <vm-name>` command. 
 
 ## Pulling Remote Images Locally
 
