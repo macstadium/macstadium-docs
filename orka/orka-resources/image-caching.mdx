@@ -35,7 +35,7 @@ The cluster knows which nodes have necessary images cached, greatly reducing ima
   * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](https://ghcr.io/macstadium/orka-images/) with user credentials user/pwd: **admin/admin** , have Homebrew package manager installed, orka-vm-tools installed, and have screen sharing enabled and SSH access enabled.
   * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service).
   * A VM is a virtual runtime on top of the macOS host. The VM runs a guest OS image and macOS supports up to 2 running VMs per cluster node.
-  * Sequoia refers to macOS 15.0 the latest public GA release available from Apple’s servers.
+  * Sequoia refers to macOS 15 (the latest Sequoia release available from Apple’s servers). macOS 26 Tahoe is also available as a guest OS starting in Orka 3.5.
 
 
 
@@ -81,3 +81,7 @@ General information and guidance on Scheduled Caching
     * The Orka scheduler may experience increased latency on any node running active caching operations.
   * **Can I delete images from a cluster node cache?**
     * Orka’s Kubernetes control plane automatically manages node caches. There is no manual “remove” command. To update an image, cache a new copy under the same name or with an updated OCI tag.
+
+<Note>
+  **Orka 3.5.1 fix:** `orka3 ic add` previously failed silently when caching images to nodes in custom namespaces. This is resolved in Orka 3.5.1. If you cache images to non-default namespaces, upgrade to 3.5.1 or later and re-cache any previously failed images.
+</Note>

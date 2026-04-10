@@ -8,6 +8,10 @@ How to aggregate data from Prometheus node exporters and access the Prometheus w
 
 It is possible to collect Prometheus metrics directly from your Orka cluster, including host metrics for each node in the cluster as well as metrics for the Orka API server and operator.
 
+<Note>
+  Prometheus metrics support has been available since Orka 3.0. Starting with Orka 3.5, clusters using Harbor OCI storage also have Prometheus metrics available for the Harbor registry. Contact support to confirm your Harbor Prometheus endpoint if you're on Orka 3.5 or later.
+</Note>
+
 ## Integrating Orka metrics with an existing Prometheus instance
 
 If your organization is already using Prometheus and you wish to collect additional data from your Orka cluster, follow the instructions in this section.

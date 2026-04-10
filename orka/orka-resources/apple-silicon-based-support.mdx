@@ -26,6 +26,42 @@ To keep deployment times fast, you might want to make sure you deploy a VM on al
 
 Below is a full list of features included in the Apple silicon-based support:
 
+Orka 3.5.2:
+
+  * Per-instance shared attached disk sizing (AWS via user data; on-prem via Ansible)
+  * CLI auto-reads default namespace from kubeconfig context (`ORKA_DEFAULT_NAMESPACE` override available)
+  * macOS 26 Tahoe compatibility fixes (image deletion, copying, tagging)
+
+Orka 3.5.0:
+
+  * macOS 26 Tahoe guest support (requires Sequoia 15.5 host)
+  * Harbor OCI storage is now the default for new deployments
+  * Bridged networking support (on-prem only)
+  * Shared VM storage disabled by default for new deployments
+
+Orka 3.4:
+
+  * Display resolution CLI flags: `--display-width`, `--display-height`, `--display-dpi` on `orka3 vm deploy` and `orka3 vm create`
+  * IPSW VMs default to 1920×1080×96 resolution
+
+Orka 3.3:
+
+  * `orka3 version` and `orka3 node list -o wide` now show component versions
+  * Burst capacity support (elastic on-demand nodes)
+  * Harbor OCI registry support added (became default in 3.5)
+  * UDID generation control (3.3.2): consistent or dynamic UDIDs configurable per cluster
+
+Orka 3.2:
+
+  * macOS 15 Sequoia support
+  * Scheduled image caching
+  * Apple ID authentication (Apple Silicon hosts running Sequoia only; VM must be created from a Sequoia IPSW)
+
+Orka 3.1:
+
+  * Public IP support in CLI and all integrations
+  * `orka3 image list -o wide` shows disk size and storage size
+
 Orka 3.0:
 
   * Enable custom pods (formerly, sandboxing)

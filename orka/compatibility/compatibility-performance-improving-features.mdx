@@ -15,16 +15,28 @@ Network boost* | ✅ | ✅*
   
 * GPU passthrough, I/O boost, and Network boost are always enabled for Apple silicon-based nodes and VMs. You cannot manually disable or override these settings on the VM config or VM level.
 
+## (Apple silicon-only) Compatibility based on macOS version
+
+macOS version | Notes
+---|---
+macOS 12 (Monterey) | Supported
+macOS 13 (Ventura) | Supported
+macOS 14 (Sonoma) | Supported
+macOS 15 (Sequoia) | Supported (since Orka 3.2)
+macOS 26 (Tahoe) | Supported as guest OS (since Orka 3.5; requires Sequoia 15.5 host)
+
+GPU passthrough, I/O boost, and Network boost are always enabled for Apple silicon VMs. These settings cannot be disabled or overridden at the VM config or VM level.
+
 ## (Intel-only) Compatibility based on macOS version
 
-macOS version | I/O boost | Network boost | GPU passthrough  
----|---|---|---  
-macOS 10.14 (Mojave) | ✅* | ❌** | ✅***  
-macOS 10.15 (Catalina) | ✅ | ❌** | ✅***  
-macOS 11 (Big Sur) | ✅ | ✅ | ✅***  
-macOS 12 (Monterey) | ✅ | ✅ | ✅***  
-macOS 13 (Ventura) | ✅ | ✅ | ✅***  
-macOS 14 (Sonoma) | ✅ | ✅ | ✅***  
+macOS version | I/O boost | Network boost | GPU passthrough
+---|---|---|---
+macOS 10.14 (Mojave) | ✅* | ❌** | ✅***
+macOS 10.15 (Catalina) | ✅ | ❌** | ✅***
+macOS 11 (Big Sur) | ✅ | ✅ | ✅***
+macOS 12 (Monterey) | ✅ | ✅ | ✅***
+macOS 13 (Ventura) | ✅ | ✅ | ✅***
+macOS 14 (Sonoma) | ✅ | ✅ | ✅***
   
 * I/O boost is supported on macOS 10.14.5 and later.
 

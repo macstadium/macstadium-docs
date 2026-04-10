@@ -42,6 +42,60 @@ The feature can be enabled during cluster provisioning or Orka upgrade.
 
 [See how to request an Orka upgrade.](/orka/orka-upgrades-and-release-notes/orka-upgrades)
 
+## Burst Capacity
+
+Introduced in Orka 3.3, Orka Burst gives you dedicated, on-demand access to elastic cluster capacity. Burst nodes are provisioned temporarily and returned when the workload completes, letting you handle spikes without permanently expanding your cluster footprint.
+
+To add burst nodes to your account, contact MacStadium through the [Account Portal](https://portal.macstadium.com/).
+
+## UDID Generation Control
+
+Introduced in Orka 3.3.2, clusters can be configured for either consistent or dynamic UDID generation:
+
+- **Consistent UDIDs** (default): each VM deployed from the same image gets the same machine identifier. Useful for code signing workflows that expect a stable machine ID.
+- **Dynamic UDIDs**: each deployment gets a unique identifier. Useful for VDI, MDM enrollment, and remote desktop use cases where each VM represents a distinct machine.
+
+[Contact support](https://docs.macstadium.com/docs/support) to change this setting for your cluster.
+
+## Component Version Visibility
+
+Introduced in Orka 3.3, you can check which version of each Orka component is running:
+
+```
+orka3 version
+orka3 node list -o wide
+```
+
+## Display Resolution per VM
+
+Introduced in Orka 3.4, you can set custom display resolution when deploying or configuring a VM:
+
+```
+orka3 vm deploy --image <image> --display-width 2560 --display-height 1600 --display-dpi 320
+```
+
+Available flags: `--display-width`, `--display-height`, `--display-dpi`. These flags work with both `orka3 vm deploy` and `orka3 vm create`. VMs created from IPSW files default to 1920×1080×96 if no display flags are specified.
+
+Constraints: width 320–3840 px, height 480–2160 px, DPI 60–240 px (320 px optional max).
+
+## Harbor OCI Storage
+
+Introduced in Orka 3.3.2 and made the default in Orka 3.5, Harbor OCI storage is MacStadium's managed image registry. New Orka deployments use Harbor by default. Existing NFS-based deployments retain their current configuration.
+
+Capabilities include OCI-compliant image storage, role-based access control, activity auditing, and Prometheus metrics support.
+
+See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli) for setup details.
+
+## Bridged Networking
+
+Introduced in Orka 3.5 for on-prem deployments. Bridged networking lets Orka VMs connect directly to a physical network as native devices, receiving IP addresses from your existing DHCP server. This enables direct communication with other network devices without NAT.
+
+<Note>
+  Customers must configure their own DHCP server. Static IP assignment through Orka is not currently supported. Bridged networking is available for on-prem deployments only.
+</Note>
+
+See [Bridge Networking with Orka](/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350) for configuration steps.
+
 ## Custom-Pods Namespace: Read-Only Access to the Containers File System
 
 Introduced with Orka 1.5.2, this feature lets you control access to the container's root file system from resources deployed in custom-pods namespaces. It is disabled by default, which means resources have read/write access to the container's root file system. When enabled, the container's root file system is read-only for resources in the namespace.

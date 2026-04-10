@@ -1,5 +1,5 @@
 ---
-title: "Orka Engine 3.0"
+title: "Orka Engine"
 description: "Standalone macOS VM management for Apple Silicon hosts via CLI. Deploy and manage VMs using OCI-compatible images, without a full Kubernetes control plane."
 zendesk_id: 32098523283611
 ---
@@ -246,6 +246,17 @@ If the previously run sonoma-latest image has been modified and saved with the n
 The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/ "http://ghcr.io") and the repo credentials are username=**dev1** and password=**repo**. 
 
 `orka-engine image push --username dev1 --password repo /Users/admin/.local/share/orka/data/sonoma-latest ghcr.io/images/sequoiaCI:latest `
+
+## Recent Improvements
+
+### Orka Engine 3.5.2
+
+  * macOS 26 Tahoe compatibility fixes for image deletion, copying, and tagging
+  * Display resolution now applies correctly for Sequoia guests with custom resolution settings (requires updating Orka VM Tools on existing images)
+
+### Orka Engine 3.5.1
+
+  * Fixed sporadic NAT networking failures on M4 Pro nodes — Orka now detects and self-heals NAT connectivity issues automatically
 
 ## Known Issues
 
