@@ -36,13 +36,13 @@ You might experience issues if your Orka VMs need to access services that are in
 
 Orka requires a dedicated Kubernetes 1.33 cluster to run.
 
-  * The reason we Orka requires a dedicated cluster is that it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
+  * Orka requires a dedicated cluster because it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
 
 
 
 We recommend following the [official guidelines](https://kubernetes.io/docs/setup/) for setting up a Kubernetes cluster. The official recommended tool for setting up Kubernets clusters is [kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/).
 
-If you are familiar with Ansible, you could also use [Kubespray](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started) to set up your cluster.
+If you are familiar with Ansible, you could also use [Kubespray](https://kubespray.io/) to set up your cluster.
 
 If you do not have experience with Kubernetes, MacStadium can host and manage the Kubernetes cluster for you in our Data Centers, or you can use an AWS EKS service to run your Orka Cluster Services.
 
@@ -158,7 +158,7 @@ where `<profile_name>` is the name of the profile you defined.
 ```
 docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
 ```
-where` <kube_config_location>` is the location of the kube config file on the host. Typically `~/.kube/config`. And `cluster.yml` is the file created in the previous step.
+where `<kube_config_location>` is the location of the kube config file on the host. Typically `~/.kube/config`. And `cluster.yml` is the file created in the previous step.
 
   6. Make sure you are in the `/ansible` directory
   7. You can now run the Ansible playbook:
