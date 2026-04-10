@@ -16,7 +16,9 @@ Minimum requirements:
 
 
 
-**NOTE:** it is a good practice to have a bot user whose only responsibility is to build your OSX/iOS projects. This means such a user with the correct permissions should be created, so the user can build OSX/iOS projects.
+<Note>
+It is a good practice to have a bot user whose only responsibility is to build your OSX/iOS projects. This means such a user with the correct permissions should be created, so the user can build OSX/iOS projects.
+</Note>
 
 Do this via VNC or via the Web Console, or to enable Remote Login in the macOS settings, set SSH in.
 
@@ -72,12 +74,14 @@ To install the latest LTS run:
     
     
 ```
-brew install [node@10](mailto:node@10)  
+brew install node@10
 brew link node@10 --force
 ```
 This installs Node.js 10 LTS and links it to `/usr/local/bin` so it is available in `PATH`.
 
-**NOTE** : Consider using [nvm](https://github.com/creationix/nvm) to manage different Node.js versions. To install nvm run:
+<Note>
+Consider using [nvm](https://github.com/creationix/nvm) to manage different Node.js versions. To install nvm run:
+</Note>
     
     
 ```
@@ -208,7 +212,7 @@ To copy the private key to a secure machine that uses `scp`. This command execut
     
     
 ```
-scp /path-to-buildMachine_rsa/ [username@host:/path-to-location-on-secure-machine](mailto:username@host:/path-to-location-on-secure-machine)
+scp /path-to-buildMachine_rsa/ username@host:/path-to-location-on-secure-machine
 ```
 To create a `authorized_keys` file. It lists all keys that can be used to log remotely with a given user:
     

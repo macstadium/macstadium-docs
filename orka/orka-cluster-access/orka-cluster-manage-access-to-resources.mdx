@@ -164,10 +164,8 @@ curl -X 'POST' \
 -H 'accept: application/json' \  
 -H 'Authorization: <TOKEN>' \  
 -H 'Content-Type: application/json' \  
--d '{  
-"namespace": "<TARGET_NAMESPACE>"  
-}'  
-  
+-d '{
+"namespace": "<TARGET_NAMESPACE>"
 }'
 ```
 There must be no running VMs on the node.
@@ -176,12 +174,12 @@ There must be no running VMs on the node.
 
 If needed, you can revoke the access of a user or a service account to a namespace. You need to remove the respective subjects from the respective role binding.
 
-  1. To add one or more users, run the following command:
+  1. To remove one or more users, run the following command:
 
 #### **Orka CLI**
-         
+
 ```
-     orka3 rb remove-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]  
+     orka3 rb remove-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]
        
      OR  
        
@@ -201,15 +199,16 @@ If needed, you can revoke the access of a user or a service account to a namespa
      ]  
      }'
 ```
-  2. To add one or more service accounts, run the following command:  
+  2. To remove one or more service accounts, run the following command:
+
 **Orka CLI**
-         
+
 ```
-     orka3 rb add-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]  
-       
-     OR  
-       
-     orka3 rb add-subject --serviceaccount <SA_NAMESPACE_2>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
+     orka3 rb remove-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]
+
+     OR
+
+     orka3 rb remove-subject --serviceaccount <SA_NAMESPACE_2>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
 ```
 #### **Orka API**
          

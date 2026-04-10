@@ -20,9 +20,9 @@ You can also control the VM scheduling algorithm when creating a VM configuratio
 
 Introduced with Orka 1.5.0 for MacPro hosts and with Orka 1.7.0 for Mac Mini hosts, GPU Passthrough allows you to use the GPU available on a node from within a VM deployed on that node. It is disabled by default and can be enabled in the cluster either at the time of cluster provisioning or during an API update.
 
-#### **Intel Only**
-
-GPU passthrough is available for Mac Intel nodes only. This configuration does not apply to Apple silicon nodes.
+<Note>
+**Intel only:** GPU passthrough is available for Mac Intel nodes only. This configuration does not apply to Apple silicon nodes.
+</Note>
 
 [Read more about GPU Passthrough, how to enable it and how to use it.](/orka/orka-configuration/performance-gpu-passthrough)
 
