@@ -28,8 +28,8 @@
   "integrations": {
     "telemetry": {
       "enabled": true
-  "ga4": "G-LW571X03HJ"
-    }
+    },
+    "ga4": "G-LW571X03HJ"
   },
   "navigation": {
     "versions": [
