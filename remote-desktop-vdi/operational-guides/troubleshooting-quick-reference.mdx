@@ -46,7 +46,21 @@ What you see: `deploy.yml` playbook fails with error messages
 
 Quick diagnostic:
 
-`ansible-playbook -i dev/inventory deploy.yml \ -e "vm_group=test" \ -e "desired_vms=1" \ -e "vm_image=<image-name>" \ -vvv ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=<image-name>" \ -v ansible hosts -i dev/inventory -m shell -a "df -h /var/orka" ansible hosts -i dev/inventory -m shell -a "orka-engine --version"`
+```bash
+ansible-playbook -i dev/inventory deploy.yml \
+  -e "vm_group=test" \
+  -e "desired_vms=1" \
+  -e "vm_image=<image-name>" \
+  -vvv
+
+ansible-playbook -i dev/inventory pull_image.yml \
+  -e "remote_image_name=<image-name>" \
+  -v
+
+ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"
+
+ansible hosts -i dev/inventory -m shell -a "orka-engine --version"
+```
 
 Likely causes and solutions:
 
@@ -68,7 +82,18 @@ What you see: Deployment succeeds but VMs show "Stopped" or error status
 
 Quick diagnostic:
 
-`ansible-playbook -i dev/inventory list.yml | grep <vm-name> ansible-playbook -i dev/inventory vm.yml \ -e "vm_name=<vm-name>" \ -e "desired_state=running" \ -v ssh admin@<host-ip> sudo log show --predicate 'process == "orka-engine"' --last 30m | grep -i error ssh admin@<host-ip> orka-engine vm list <vm-name> --format json`
+```bash
+ansible-playbook -i dev/inventory list.yml | grep <vm-name>
+
+ansible-playbook -i dev/inventory vm.yml \
+  -e "vm_name=<vm-name>" \
+  -e "desired_state=running" \
+  -v
+
+ssh admin@<host-ip> sudo log show --predicate 'process == "orka-engine"' --last 30m | grep -i error
+
+ssh admin@<host-ip> orka-engine vm list <vm-name> --format json
+```
 
 #### Likely causes and solutions:
 
@@ -88,7 +113,11 @@ What you see:**** Requested 10 VMs but only 7 deployed, or deployment stopped pa
 
 Quick diagnostic:
 
-`ansible-playbook -i dev/inventory list.yml -e "vm_group=<group>" | grep <group> | wc -l ansible hosts -i dev/inventory -m shell -a "top -l 1 | head -20"`
+```bash
+ansible-playbook -i dev/inventory list.yml -e "vm_group=<group>" | grep <group> | wc -l
+
+ansible hosts -i dev/inventory -m shell -a "top -l 1 | head -20"
+```
 
 **Likely causes and solutions:**
 
@@ -107,7 +136,18 @@ Partial playbook failure | Playbook shows some failed tasks | Review errors in v
 
 **Quick diagnostic:**
 
-`ansible-playbook -i dev/inventory vm.yml \ -e "vm_name=<vm-name>" \ -e "desired_state=absent" \ -vvv ansible-playbook -i dev/inventory list.yml | grep <vm-name> ssh admin@<host-ip> orka-engine vm stop <vm-name> --force orka-engine vm delete <vm-name> ssh admin@<host-ip> ps aux | grep <vm-name>`
+```bash
+ansible-playbook -i dev/inventory vm.yml \
+  -e "vm_name=<vm-name>" \
+  -e "desired_state=absent" \
+  -vvv
+
+ansible-playbook -i dev/inventory list.yml | grep <vm-name>
+
+ssh admin@<host-ip> orka-engine vm stop <vm-name> --force
+ssh admin@<host-ip> orka-engine vm delete <vm-name>
+ssh admin@<host-ip> ps aux | grep <vm-name>
+```
 
 **Likely causes and solutions:**
 
@@ -129,7 +169,20 @@ What you see: VMs show as "Unregistered" in Citrix Cloud Console → Monitor →
 
 Quick diagnostic:
 
-`ansible-playbook -i dev/inventory list.yml | grep <vm-name> ssh admin@<host-ip> open vnc://<vm-ip>:5900 // Navigate to: System Preferences → Citrix VDA // Should show: "Registered" with Cloud Connector details // Test network connectivity from the VM // From the VM Terminal: ping <cloud-connector-ip> curl https://api.cloud.com // Check VDA service logs // On the VM: Console.app → Search for "Citrix"`
+```bash
+ansible-playbook -i dev/inventory list.yml | grep <vm-name>
+
+# Connect via VNC to inspect VDA status:
+# Navigate to: System Preferences → Citrix VDA
+# Should show: "Registered" with Cloud Connector details
+
+# Test network connectivity from the VM (run from VM Terminal):
+ping <cloud-connector-ip>
+curl https://api.cloud.com
+
+# Check VDA service logs:
+# On the VM: Console.app → Search for "Citrix"
+```
 
 **Likely causes and solutions:**
 

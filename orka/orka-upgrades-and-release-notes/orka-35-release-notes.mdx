@@ -158,11 +158,8 @@ kubectl config set-context orka --namespace=orka-default
 
   * Reduced noise and fixed behavior in non-default namespaces
 
-```
-* Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
-
-* The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
-```
+  - Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
+  - The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
 ## Bug fixes
 
   * macOS Tahoe 26.0 compatibility fixes for image deletion, copying, and tagging

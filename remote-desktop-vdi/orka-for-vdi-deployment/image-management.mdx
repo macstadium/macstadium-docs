@@ -74,29 +74,18 @@ Note: `pull_image.yml` automatically caches the image on all hosts in the invent
 
   8. Define your image retention policy by addressing the following questions:
 
-```
- 1. How long will you keep old image versions?
+     1. How long will you keep old image versions?
+     2. Which images will you always want to retain for rollback purposes?
+     3. When will you delete older image versions to free space if needed?
+     4. Will you store major image versions indefinitely? (Strongly recommended for auditing/compliance.)
+     5. When will you delete images tagged as dev/staging?
 
- 2. Which images will you always want to retain for rollback purposes?
+  9. Test before promoting images to production.
 
- 3. When will you delete older image versions to free space if needed?
+  10. Communicate image updates:
 
- 4. Will you store major image versions indefinitely? (This is strongly recommended for auditing/compliance)
-
- 5. When will you delete images tagged as dev/staging?
-```
-  9. Test before promoting images to production
-
-  10. Communicate image updates
-
-```
- 1. Notify all impacted stakeholders about updates to VM images
-
- 2. Announce new versions as needed in team channels
-
- 3. Document breaking changes
-
- 4. Schedule production deployments to take place during maintenance windows
-
- 5. Before updating an image, provide stakeholders with a rollback plan
-```
+      1. Notify all impacted stakeholders about updates to VM images.
+      2. Announce new versions as needed in team channels.
+      3. Document breaking changes.
+      4. Schedule production deployments to take place during maintenance windows.
+      5. Before updating an image, provide stakeholders with a rollback plan.

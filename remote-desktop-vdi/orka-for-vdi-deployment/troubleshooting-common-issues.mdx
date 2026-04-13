@@ -62,7 +62,7 @@ zendesk_id: 44333132574107
 
 
 
-#####  **Issue:** Session fails to launch or times out
+### Issue: Session fails to launch or times out
 
 **Symptoms:**
 
@@ -98,13 +98,12 @@ zendesk_id: 44333132574107
 ```
   * Verify HDX ports are open
 
-```
-* Client → VM: TCP 1494, TCP 2598, UDP 1494, UDP 2598
+  * Client → VM: TCP 1494, TCP 2598, UDP 1494, UDP 2598
+  * Test with:
 
-* Test with 
-      
-      nc -zv <vm-ip> 1494
-```
+    ```
+    nc -zv <vm-ip> 1494
+    ```
   * Check client side for issues
 
 ```
@@ -131,7 +130,7 @@ zendesk_id: 44333132574107
 
 
 
-#####  **Issue:** Poor session performance or lag
+### Issue: Poor session performance or lag
 
 **Symptoms:**
 
@@ -162,15 +161,15 @@ zendesk_id: 44333132574107
 
 * Compare allocation to baseline requirements to ensure minimums are met
 ```
-  * Check network latency with 
-        
-```
+  * Check network latency with:
+
+    ```
     ping <vm-ip>
+    ```
 
-* Test bandwidth availability
+  * Test bandwidth availability
 
-* Check for packet loss
-```
+  * Check for packet loss
   * Review HDX policies
 
 ```
@@ -204,7 +203,7 @@ zendesk_id: 44333132574107
 
 
 
-#####  **Issue:** Clipboard or file transfer not working
+### Issue: Clipboard or file transfer not working
 
 **Symptoms:**
 
@@ -260,7 +259,7 @@ zendesk_id: 44333132574107
 
 
 
-#####  **Issue:** VM fails to deploy or gets stuck during deployment
+### Issue: VM fails to deploy or gets stuck during deployment
 
 **Symptoms:**
 
@@ -352,7 +351,7 @@ ansible-playbook -i inventory stop_orka_vm.yml \
 
 
 
-#####  **Issue:** Image operations fail
+### Issue: Image operations fail
 
 **Symptoms:**
 

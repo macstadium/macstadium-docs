@@ -14,9 +14,13 @@ This document describes how to create local user accounts on the Cisco ASA, usin
 
 The details in this document are based on a Cisco ASA virtual firewall that runs ASA code version 9.14(3)18 and ASDM version 7.18.(1)152, and was created from these devices in a specific lab environment.
 
-**NOTE** : The device used in this document started with a cleared (default) configuration.
+<Note>
+  The device used in this document started with a cleared (default) configuration.
+</Note>
 
-**WARNING** : For a live network, consider the potential impact before executing any commands.
+<Warning>
+  For a live network, consider the potential impact before executing any commands.
+</Warning>
 
 MacStadium configured a shared user account for customers to use for accessing the firewall. It was also used for authentication for the environment behind the firewall, and used a Remote Access VPN (RAVPN) client. This user account was configured with the highest access level.
 
@@ -47,14 +51,14 @@ Using an ASDM allows you to make line-by-line changes, while using a graphical u
   5. Create the new user account by typing the command in the following format: `username username password password privilege priv_level`
      * **NOTES:**
 
-```
-   * The username username keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
-   * The password password keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
-   * The privilege priv_level keyword sets the privilege level for the created user account. The priv_level is a numeric value ranging from 0 to 15.
-   * By default, a user account has a privilege level of 2.
-   * A level of 15 grants the user account the highest level of access.
-   * An example of the CLI command is `ciscoasa(config)# username exampleuser1 password examplepassword privilege 1`
-```
+<Note>
+  - The `username` keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
+  - The `password` keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
+  - The `privilege priv_level` keyword sets the privilege level for the created user account. The `priv_level` is a numeric value ranging from 0 to 15.
+  - By default, a user account has a privilege level of 2.
+  - A level of 15 grants the user account the highest level of access.
+  - Example: `ciscoasa(config)# username exampleuser1 password examplepassword privilege 1`
+</Note>
   6. Save the configuration with the command `write memory`
   7. Type the exit or end command to return to privileged mode of the ASA.
 
@@ -143,37 +147,49 @@ To remove a user account, use `no version` with the username that is being remov
 
 ## Connect to the Cisco ASA using SSH
 
-  1. Configure aaa to use local database for ssh and console  
+  1. Configure aaa to use local database for ssh and console:
 
 ```
- * `ciscoasa# aaa authentication ssh console LOCAL`
- * **NOTE** : aaa = authentication (permitting access), authorization (specify commands when granted access), accounting (keeps track of utilization reports of users after logged in and generate accounting reports for billing)  
+ciscoasa# aaa authentication ssh console LOCAL
 ```
-LOCAL = local database
-  2. Create admin username with privilege 15 (username, P@ssw0rd)  
+
+<Note>
+  `aaa` = authentication (permitting access), authorization (specify commands when granted access), accounting (keeps track of utilization reports of users after logged in and generates accounting reports for billing). `LOCAL` = local database.
+</Note>
+
+  2. Create admin username with privilege 15:
 
 ```
- * `ciscoasa# username username password P@ssw0rd priv 15`
- * **NOTE** : priv 15 = top privilege level (full superuser, can give different command access to different privilege levels)
+ciscoasa# username username password P@ssw0rd priv 15
 ```
-  3. Turn on password for enable.  
+
+<Note>
+  `priv 15` = top privilege level (full superuser, can give different command access to different privilege levels).
+</Note>
+
+  3. Turn on password for enable:
 
 ```
- * `ciscoasa# aaa authentication enable console LOCAL`
- * This forces a password for the enable prompt.
+ciscoasa# aaa authentication enable console LOCAL
 ```
-  4. Turn on serial console authentication.  
+
+This forces a password for the enable prompt.
+
+  4. Turn on serial console authentication:
 
 ```
- * `ciscoasa# aaa authentication serial console LOCAL`
- * This turns on user/pass for serial access.
+ciscoasa# aaa authentication serial console LOCAL
 ```
-  5. Save changes  
+
+This turns on user/pass for serial access.
+
+  5. Save changes:
 
 ```
- * `ciscoasa# write mem`
+ciscoasa# write mem
 ```
-  6. Log out console and verify access.  
+
+  6. Log out console and verify access.
 
 
 `ciscoasa(config)# end`
@@ -186,37 +202,34 @@ LOCAL = local database
 
 `Password: ********`
 
-  7. Generate ssh key pair.  
+  7. Generate ssh key pair:
 
 ```
- * `ciscoasa# crypto key generate rsa modulus 4096`
-
- * The name for the keys will be:
-
-   * Keypair generation process begin. Please wait…
-
-   * ciscoasa(config)#
-
- * SSH is an encrypted protocol, uses RSA to generate public and private key
-
- * 4096 = block size
-
- * rsa = encryption algorithm
+ciscoasa# crypto key generate rsa modulus 4096
 ```
-  8. Allow access to the inside interface.  
+
+<Note>
+  SSH is an encrypted protocol that uses RSA to generate public and private keys. `4096` = block size, `rsa` = encryption algorithm. The prompt will show `Keypair generation process begin. Please wait…` followed by `ciscoasa(config)#`.
+</Note>
+
+  8. Allow access to the inside interface:
 
 ```
- * `ciscoasa# ssh 0.0.0.0 0.0.0.0 inside`
- * This enables ssh access to the inside interface from any IPv4
+ciscoasa# ssh 0.0.0.0 0.0.0.0 inside
 ```
-  9. Force ssh version 2.  
+
+This enables SSH access to the inside interface from any IPv4 address.
+
+  9. Force ssh version 2:
 
 ```
- * `ciscoasa# ssh version 2`
+ciscoasa# ssh version 2
 ```
-  10. Add timeout of 15 min to ssh.  
+
+  10. Add a 15-minute timeout to ssh:
 
 ```
- * `ciscoasa# ssh timeout 15`
+ciscoasa# ssh timeout 15
 ```
+
   11. Verify login with ssh through 192.168.1.1 in putty.

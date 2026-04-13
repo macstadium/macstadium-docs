@@ -1,21 +1,21 @@
 ---
 title: "Burst"
-description: "Orka Burst provides users with dedicated, on-demand access to elastic cluster capacity when needed. It's designed to grow your cluster size during heavy."
+description: "Orka Burst provides dedicated, on-demand access to elastic cluster capacity when needed. It's designed to grow your cluster size during heavy workloads."
 zendesk_id: 39255044972571
 ---
 
 # Overview
 
-Orka Burst provides users with dedicated, on-demand access to elastic cluster capacity when needed. It’s designed to grow your cluster size during heavy workloads, without the commitment of annual contracts. When required, you can enable burst capacity directly from your MacStadium Admin Portal.
+Orka Burst provides dedicated, on-demand access to elastic cluster capacity when needed. It’s designed to grow your cluster size during heavy workloads, without the commitment of annual contracts. When required, you can enable burst capacity directly from your MacStadium Admin Portal.
 
 Orka Burst requires a one-time setup maintenance window to provision and configure the burst nodes. Once configured (you’ll see which nodes are burst-enabled in your IP Plan), additional burst nodes are available within 15 minutes and billed only for the time used.
 
 # Key Concepts
 
   * A burst node is an on-demand, contractually provisioned node you can add to your cluster during high-workload periods.
-  * Only users with administrator roles can start and stop burst nodes via the MacStadium Admin Portal.
+  * Only administrators can start and stop burst nodes via the MacStadium Admin Portal.
   * Burst nodes are powered on/off manually by an admin user in the portal.
-  * Clients cannot manage burst nodes directly within the Kubernetes cluster; node management commands are restricted for security.
+  * You cannot manage burst nodes directly within the Kubernetes cluster; node management commands are restricted for security.
   * Orka tags (similar to Kubernetes labels) can be used for monitoring burst nodes via Prometheus (`kube-node-labels` metric) or other tools.
 
 
@@ -53,7 +53,7 @@ When Burst is disabled, the nodes are powered down and removed from the cluster.
 
 Plan to disable burst during a period of low cluster utilization, and coordinate with your engineering team to drain or move any active workloads first.
 
-If your burst nodes are in the same Namespace as your normal Orka nodes, we recommend moving them to a separate Namespace before disabling Orka Burst. Moving a dedicated namespace allows the node to be sandboxed, so you can sequester it and ensure that no additional workloads will be scheduled on it. The client is responsible for monitoring the usage of your burst nodes and moving nodes when a workload is not being run against them. Once your cluster has passed its highest peak of utilization, work with your engineering team to identify a period of low resource utilization to start moving burst machines to a separate namespace that aren’t running builds.
+If your burst nodes are in the same namespace as your normal Orka nodes, move them to a separate namespace before disabling Orka Burst. This sandboxes the node and ensures no additional workloads are scheduled on it. You are responsible for monitoring burst node usage and moving nodes when no workloads are running on them. Once your cluster has passed its peak utilization, work with your engineering team to move idle burst machines to a separate namespace.
 
 ## **Removing Failing Workloads**
 

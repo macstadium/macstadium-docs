@@ -91,9 +91,9 @@ A recent upstream change to the ARC project caused previously used variables tha
 
 Orka Cluster version 3.2 introduces a new feature, Scheduled Caching, and also provides support for Sequoia 15.0 VM images.
 
-> 🗒️**NOTE**
-> 
-> Sequoia support is dependent on requesting that some or all nodes are upgraded to Sequoia 15.0 in the upgrade request service ticket.
+<Note>
+  Sequoia support is dependent on requesting that some or all nodes are upgraded to Sequoia 15.0 in the upgrade request service ticket.
+</Note>
 
 ## Scheduled Caching
 
@@ -101,9 +101,9 @@ Scheduled caching enables users to configure their Orka clusters to proactively 
 
 The scheduled caching feature requires planning for target nodes and optimal maintenance window periods. There is a noticeable impact on VMs running during image cache downloads (particularly on I/O operations). It is best to avoid caching while scheduling running builds unless the image size is smaller < 16GB.
 
-> 🗒️**NOTE**
-> 
-> The cache downloads directly from OCI repositories are currently slower than normal image download times by approximately 2-3x. For the beta release it is better to cache from NFS stores. If necessary, pull repo images down to NFS stores and then begin cache downloads to cluster nodes. Caching an image to more than five nodes simultaneously also adds delay to cache download completion time.
+<Note>
+  The cache downloads directly from OCI repositories are currently slower than normal image download times by approximately 2-3x. For the beta release it is better to cache from NFS stores. If necessary, pull repo images down to NFS stores and then begin cache downloads to cluster nodes. Caching an image to more than five nodes simultaneously also adds delay to cache download completion time.
+</Note>
 
 ## Sequoia Support
 
@@ -115,18 +115,15 @@ While upgrading Orka Cluster to release 3.2, MacStadium will also upgrade the cl
 
 ## Upgrading
 
-> **WARNING**
-> 
->   * A scheduled maintenance window is required.
->   * This release requires a maintenance window of up to 3 hours depending on the size of the cluster.
-> 
+<Warning>
+  - A scheduled maintenance window is required.
+  - This release requires a maintenance window of up to 3 hours depending on the size of the cluster.
+</Warning>
 
-
-> **🗒️NOTES**
-> 
->   * Orka 3.2.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](/orka/orka-upgrades-and-release-notes/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
->   * For customers who have not yet upgraded to Orka Cluster 3.0.0 please read the [migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) before submitting a ticket.
-> 
+<Note>
+  - Orka 3.2.0 is a new Orka release upgrade. For more information, see [Orka Upgrades](/orka/orka-upgrades-and-release-notes/orka-upgrades#virtualization-and-orchestration-layer-upgrades-kubernetes-docker-or-linux).
+  - For customers who have not yet upgraded to Orka Cluster 3.0.0 please read the [migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) before submitting a ticket.
+</Note>
 
 
   1. Submit a ticket through the [MacStadium portal](https://idp.macstadium.com/login?scope=aws.cognito.signin.user.admin+email+openid+phone+profile&response_type=code&client_id=os594upi12pn9ab16hmtk0akp&redirect_uri=https%3A%2F%2Fportal.macstadium.com%2Foauth%2Fredirect&state=eyJsYXN0VmlzaXRlZFVybCI6Ii8ifQ).

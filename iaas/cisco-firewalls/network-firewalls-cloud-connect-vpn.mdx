@@ -4,11 +4,12 @@ description: "Connect to your MacStadium Orka cluster via Cisco ASAv VPN with Op
 zendesk_id: 28244765690395
 ---
 
-> **📘 Requirements:**
-> 
->   * The server address from **Step 1: VPN** in the [IP Plan](https://docs.macstadium.com/docs/ip-plan).
->   * The username and password from **Step 1: VPN** in the [IP Plan](https://docs.macstadium.com/docs/ip-plan).
-> 
+<Tip>
+  **Requirements:**
+
+  - The server address from **Step 1: VPN** in the [IP Plan](https://docs.macstadium.com/docs/ip-plan).
+  - The username and password from **Step 1: VPN** in the [IP Plan](https://docs.macstadium.com/docs/ip-plan).
+</Tip>
 
 
 ## About
@@ -22,7 +23,9 @@ The Orka cluster sits behind its dedicated Cisco ASAv firewall, which must be co
 
 
 
-📘 MacStadium has pre-configured the firewall and has enabled VPN access. Simply run a VPN client and provide the server address and credentials for the connection.
+<Tip>
+  MacStadium has pre-configured the firewall and has enabled VPN access. Simply run a VPN client and provide the server address and credentials for the connection.
+</Tip>
 
 ****
 
@@ -62,11 +65,12 @@ The DNS server address is the `.251` address for the `Private-1` network from th
 **Linux**
 
   1. Use a text editor to open `/etc/resolv.conf`.
-  2. Locate the nameserver section and add the Orka DNS address: 
-         
-```
+  2. Locate the nameserver section and add the Orka DNS address:
+
+     ```
      nameserver <ORKA-DNS-ADDRESS>
-```
+     ```
+
   3. Make sure that this is the first nameserver entry in the list.
 
 
@@ -88,13 +92,13 @@ The DNS server address is the `.251` address for the `Private-1` network from th
 
 ### Use OpenConnect
 
-  1. From the command line, run the following command. Replace \<SERVER ADDRESS> with the server address from Step 1: VPN in the IP Plan. 
-         
-```
-     sudo openconnect <SERVER ADDRESS> --protocol=anyconnect  
-     // OR if running on Windows  
+  1. From the command line, run the following command. Replace \<SERVER ADDRESS> with the server address from Step 1: VPN in the IP Plan.
+
+     ```
+     sudo openconnect <SERVER ADDRESS> --protocol=anyconnect
+     // OR if running on Windows
      openconnect <SERVER ADDRESS> --protocol=anyconnect
-```
+     ```
   2. Follow the prompts. 
      * On the immediate Password prompt, provide the sudo password (the password for the current computer user) and press Enter.
      * On the Enter 'yes' to accept, 'no' to abort; anything else to view: prompt, type yes and press Enter.
@@ -107,9 +111,11 @@ When the connection is established, a similar output (show below) appears:
 
 ![openconnect-1.png](/images/attachments/openconnect-1.png)
 
-> 👍 **Want to terminate the VPN connection?**
-> 
-> At any time press `Ctrl+C` on the command line.
+<Tip>
+  **Want to terminate the VPN connection?**
+
+  At any time press `Ctrl+C` on the command line.
+</Tip>
 
 ## Cisco AnyConnect Secure Mobility Client
 
@@ -159,13 +165,11 @@ With Cisco AnyConnect already connected to your cluster:
 ![ciscologin.png](/images/attachments/ciscologin.png)  
   
 
-  3. If prompted that an untrusted server was blocked, perform the following steps:  
+  3. If prompted that an untrusted server was blocked, perform the following steps:
 
-```
- * Click Change Setting... and deselect Block connections to untrusted servers.
- * Close the Preferences - VPN window.
- * Click Connect again.  
-```
+     - Click Change Setting... and deselect Block connections to untrusted servers.
+     - Close the Preferences - VPN window.
+     - Click Connect again.
 ![blockconnections.png](/images/attachments/blockconnections.png)  
   
 
