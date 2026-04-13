@@ -24,7 +24,9 @@ In this document, the source IP address is the public IP that needs to be whitel
 
 This document demonstrates how to allow TCP port 443 (HTTPS) in the Cisco Adaptive Security Appliance (ASA) firewall from an external IP address to the subnet 10.221.188.0/23 configured in the Private-1 interface as an example.
 
-**NOTE** : The example source IP address **76.76.21.241** is used in this document.
+<Note>
+  The example source IP address **76.76.21.241** is used in this document.
+</Note>
 
 ## Install Options
 
@@ -53,11 +55,18 @@ ciscoasa#``
      * The privileged mode appears, as indicated by the # prompt.
   4. Enter the configuration mode and create an object and static NAT rule for that host:
 
+```
+ciscoasa#configure terminal
+ciscoasa(config)#object network Example-Host-31
+ciscoasa(config-network-object)#host 10.221.188.31
+ciscoasa(config-network-object)#nat (Private-1,Outside) static 207.254.16.239
+ciscoasa(config-network-object)#end
+ciscoasa#write memory
+```
 
-
-` ciscoasa#configure terminal ciscoasa(config)#object network Example-Host-31 ciscoasa(config-network-object)#host 10.221.188.31 ciscoasa(config-network-object)#nat (Private-1,Outside) static 207.254.16.239 ciscoasa(config-network-object)#end ciscoasa#write memory `
-
-**NOTE:** Replace the example MacStadium NAT IP address (207.254.16.239) by an available Public IP listed in the MacStadium IP Plan.
+<Note>
+  Replace the example MacStadium NAT IP address (207.254.16.239) with an available Public IP listed in the MacStadium IP Plan.
+</Note>
 
 ## NAT via Cisco Adaptive Security Device Manager (ASDM)
 
@@ -82,30 +91,66 @@ ciscoasa#``
 
 ### ACL via Command Line Interface (CLI)
 
-**NOTE** : For external access to MacStadium hosts, a static NAT must be previously configured.1.
+<Note>
+  For external access to MacStadium hosts, a static NAT must be previously configured.
+</Note>
 
-**NOTE** : This guide assumes that the `Private-1-IPs` object has been configured in the firewall.
+<Note>
+  This guide assumes that the `Private-1-IPs` object has been configured in the firewall.
+</Note>
 
   1. Confirm that `Private-1-IPs` was configured by running the following CLI command:  
 `ciscoasa#show running-config object id Private-1-IPs`
-  2. If `Private-1-IPs` has not been configured, then use the following commands to create it:  
-` ciscoasa#configure terminal ciscoasa(config)#object network Private-1-IPs ciscoasa(config-network-object)#subnet 10.221.188.0 255.255.254.0`
+  2. If `Private-1-IPs` has not been configured, then use the following commands to create it:
+
+```
+ciscoasa#configure terminal
+ciscoasa(config)#object network Private-1-IPs
+ciscoasa(config-network-object)#subnet 10.221.188.0 255.255.254.0
+```
   3. Connect to the firewall via SSH and from the command line enter the MacStadium credentials that are available in your [IP Plan](/macstadium/macstadium-overview/ip-plan)
   4. Confirm the privileged mode is enabled (indicated by the # prompt).
   5. Enter the configuration mode and create an Object representing the source IP address.
-  6. Replace EXAMPLE with a name to use to identify the object and the source Public IP address (**76.76.21.241**) with the source IP address to whitelist on the firewall.  
-`ciscoasa#configure terminal ciscoasa(config)#object network EXAMPLE ciscoasa(config-network-object)#host 76.76.21.241`
-  7. Create an Access Control List to allow traffic through the Cisco ASA firewall. From the configuration mode enter the following access-list command:  
-`ciscoasa(config)#access-list Outside_access_in line 1 extended permit tcp object EXAMPLE object Private-1-IPs eq https`
-     * **NOTE** : To allow access to a single internal host instead of the entire Private-1 network, reference the object you created for that specific host. Example: `ciscoasa(config)#access-list Outside_access_in line 1 extended permit tcp object EXAMPLE object Example-Host-31 eq https`
-  8. Apply the new access-list to the Outside interface: `ciscoasa(config)#access-group Outside_access_in in interface Outside`
-     * **NOTE** : The command above only needs to be entered the first time the ACL is configured.
-  9. Exit and save the configuration:  
-`ciscoasa(config)#end ciscoasa(config)#write memory`
+  6. Replace EXAMPLE with a name to use to identify the object and the source Public IP address (**76.76.21.241**) with the source IP address to whitelist on the firewall.
+
+```
+ciscoasa#configure terminal
+ciscoasa(config)#object network EXAMPLE
+ciscoasa(config-network-object)#host 76.76.21.241
+```
+
+  7. Create an Access Control List to allow traffic through the Cisco ASA firewall. From the configuration mode enter the following access-list command:
+
+```
+ciscoasa(config)#access-list Outside_access_in line 1 extended permit tcp object EXAMPLE object Private-1-IPs eq https
+```
+
+<Note>
+  To allow access to a single internal host instead of the entire Private-1 network, reference the object you created for that specific host. Example: `ciscoasa(config)#access-list Outside_access_in line 1 extended permit tcp object EXAMPLE object Example-Host-31 eq https`
+</Note>
+
+  8. Apply the new access-list to the Outside interface:
+
+```
+ciscoasa(config)#access-group Outside_access_in in interface Outside
+```
+
+<Note>
+  The command above only needs to be entered the first time the ACL is configured.
+</Note>
+
+  9. Exit and save the configuration:
+
+```
+ciscoasa(config)#end
+ciscoasa(config)#write memory
+```
 
 
 
-**NOTE** : Instead of creating an object representing a single source IP Address, create a Network Object Group and then add a Network Object to that group. This is handy if there are liable to be more IP addresses to allow access in the future. For more information, see:
+<Note>
+  Instead of creating an object representing a single source IP address, you can create a Network Object Group and add Network Objects to it. This is useful if you expect to allow more IP addresses in the future. For more information, see:
+</Note>
 
 [Cisco ASA 9.6 Access Objects Guide](https://www.cisco.com/c/en/us/td/docs/security/asa/asa96/configuration/firewall/asa-96-firewall-config/access-objects.html)
 
@@ -131,14 +176,11 @@ For external access to your MacStadium hosts, a static NAT must be previously co
   14. Click OK.  
 ![4ab3a50-image.png](/images/attachments/28269995156635.png)  
 
-```
- * **NOTE** : To allow access to a single internal host instead of the entire Private-1 network, reference the object created for that specific host in the Destination field.14
-```
-  15. Make sure the new rule is at the TOP.  
+<Note>
+  To allow access to a single internal host instead of the entire Private-1 network, reference the object created for that specific host in the Destination field.
+</Note>
 
-```
- * To move the new rule to the top, select the new rule and click the upper arrow highlighted.  
-```
+  15. Make sure the new rule is at the TOP. To move the new rule to the top, select the new rule and click the upper arrow highlighted.
 ![2f3cf6b-image.png](/images/attachments/28269981359131.png)
 
   16. Click Apply

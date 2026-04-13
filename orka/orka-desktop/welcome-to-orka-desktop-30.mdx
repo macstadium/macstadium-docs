@@ -10,9 +10,9 @@ zendesk_id: 28396626048667
 
 **Orka Desktop** integrates with other cloud-based, licensed MacStadium products, like **Orka**. For example, you can upload an image built and tested with **Orka Desktop** to a container repository shared with an Orka cloud instance. Publishing local images to the Orka cloud means you can develop locally and deploy globally, offering flexibility, scalability, and an on-ramp to use MacStadium products more effectively.
 
-> 🗒️ **NOTE**
-> 
-> You can publish any image to a container registry, for example, GitHub Packages or DockerHub, and then pull it into the **Orka Cluster**.
+<Note>
+  You can publish any image to a container registry, for example, GitHub Packages or DockerHub, and then pull it into the **Orka Cluster**.
+</Note>
 
 <Note>
   Orka Desktop is available from the following locations:
@@ -22,21 +22,24 @@ zendesk_id: 28396626048667
   - Homebrew: `brew install orka-desktop`
 </Note>
 
-> 📘 **Orka Desktop Requirements**
-> 
-> Apple M1 with 8GB RAM, and 50GB disk space
-> 
-> macOS X 14.0+ (Sonoma)
-> 
-> macOS X 13.0+ (Ventura)
+<Note>
+  **Orka Desktop Requirements**
 
-> 📘 **Registry Requirements**
-> 
->   1. Pull - You can pull from the registry
->   2. Push - You can push to the registry
->   3. Content Discovery - You can list or otherwise query the content stored in the registry
->   4. Content Management - You can control the full life cycle of the content stored in the registry
-> 
+  Apple M1 with 8GB RAM, and 50GB disk space
+
+  macOS X 14.0+ (Sonoma)
+
+  macOS X 13.0+ (Ventura)
+</Note>
+
+<Note>
+  **Registry Requirements**
+
+  1. Pull - You can pull from the registry
+  2. Push - You can push to the registry
+  3. Content Discovery - You can list or otherwise query the content stored in the registry
+  4. Content Management - You can control the full life cycle of the content stored in the registry
+</Note>
 
 
 All registries conforming to this specification must support all APIs in the Pull category.
@@ -64,11 +67,10 @@ You can deploy a VM using a compatible image from a private or public registry, 
 
 3. Use the VM.
 
-> 🗒️ **NOTES**
-> 
->   * IPSW (Apple Software/Firmware) is a file format used in macOS firmware for devices equipped with Apple silicon.
->   * There is also the option to pull the latest IPSW directly from Apple’s servers, which is detailed in the Other IPSW Options section.
-> 
+<Note>
+  - IPSW (Apple Software/Firmware) is a file format used in macOS firmware for devices equipped with Apple silicon.
+  - There is also the option to pull the latest IPSW directly from Apple’s servers, which is detailed in the Other IPSW Options section.
+</Note>
 
 
 ## Downloading Orka Desktop
@@ -97,19 +99,18 @@ _Confirmation Box_
 ![a37f0ea-image.png](/images/attachments/28396594767899.png)  
 
 
-🗒️ **NOTES**
-
-```
- * In this example, the new VM is called New Name Here, and at the same time, that name appears on the left-hand side of the screen, under the list of available Virtual Machines.
- * The VM is now in a pending installation state.
-```
+<Note>
+  - In this example, the new VM is called New Name Here, and at the same time, that name appears on the left-hand side of the screen, under the list of available Virtual Machines.
+  - The VM is now in a pending installation state.
+</Note>
   5. If you want to select an existing IPSW file, select **Other** from the dropdown menu.  
 ![af3c9aa-image \(1\).png](/images/attachments/28396594771611.png)  
 
 
 _Other (to select from an existing IPSW file)_  
-🗒️ **NOTE  
-** Selecting the **Other** dropdown opens a folder where you can pick the existing IPSW file to install.
+<Note>
+  Selecting the **Other** dropdown opens a folder where you can pick the existing IPSW file to install.
+</Note>
 
   6. If you do not have a local IPSW file to use for the new VM, select Download Latest to get the latest files from Apple.  
 ![fa81c57-image.png](/images/attachments/28396625948571.png)  
@@ -128,9 +129,9 @@ _Image Data Location_
 
 
 
-> 🗒️ **NOTE**
-> 
-> When the install completes, there is a new VM available on the Orka Desktop, which can be used to Start, Pause, Resume, Stop, or Console into.
+<Note>
+  When the install completes, there is a new VM available on the Orka Desktop, which can be used to Start, Pause, Resume, Stop, or Console into.
+</Note>
 
 ## Creating a New Virtual Machine (Pull from OCI Image)
 
@@ -180,13 +181,12 @@ _VM Starting_
 
 **NOTE** : Starting a VM for the first time may take several minutes.
 
-> 🗒️ **NOTES**
-> 
->   * This VM might be configured to run a different version of macOS from your host, so you can test the same software in two different environments. Note that you can only use OSs in VMs that are more recent than the OS running on the host.
->   * You can install Xcode and use the VM as a build machine for iOS apps.
->   * IT admins can test Mobile Device Management (MDM) profiles using VMs without maintaining several Mac mini machines. You can perform MDM profile testing on a VM created by Orka Desktop.
->   * Apple has limited the ability to sign into iCloud with an Apple ID within a VM.
-> 
+<Note>
+  - This VM might be configured to run a different version of macOS from your host, so you can test the same software in two different environments. Note that you can only use OSs in VMs that are more recent than the OS running on the host.
+  - You can install Xcode and use the VM as a build machine for iOS apps.
+  - IT admins can test Mobile Device Management (MDM) profiles using VMs without maintaining several Mac mini machines. You can perform MDM profile testing on a VM created by Orka Desktop.
+  - Apple has limited the ability to sign into iCloud with an Apple ID within a VM.
+</Note>
 
 
 ## Stop a VM
@@ -266,11 +266,10 @@ Use to set log file location, VM directory, and other information.
 
 ![f0d07cb-image.png](/images/attachments/28396594835099.png)
 
-> 👍 **Tips**
-> 
->   * Orka Desktop automatically starts a Console (screen share) session with the VM when Start is selected.
->   * Managing and debugging issues with the VMs is made simple with a comprehensive list of actions available, including the ability to view and traverse log files and other artifacts.
-> 
+<Tip>
+  - Orka Desktop automatically starts a Console (screen share) session with the VM when Start is selected.
+  - Managing and debugging issues with the VMs is made simple with a comprehensive list of actions available, including the ability to view and traverse log files and other artifacts.
+</Tip>
 
 
 ## Other IPSW Options

@@ -67,18 +67,18 @@ A persistent volume claim (PVC) lets you tap into your persistent volume and con
   1. Create the PVC manifest. For more information, see [Kubernetes Documentation: PersistentVolumeClaims](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims). For example:  
 **pvc.yml**
          
-```
-     # pvc.yaml  
-     kind: PersistentVolumeClaim  
-     apiVersion: v1  
-     metadata:  
-     name: mypvc  
-     spec:  
-     accessModes:  
-     - ReadWriteOnce  
-     resources:  
-     requests:  
-     storage: 20Gi
+```yaml
+# pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mypvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
 ```
 The values for metadata:name and metadata:namespace must match the values for claimRef:name and claimRef:namespace declared in the manifest of the persistent volume. Double-check with the MacStadium team for these values.
 
@@ -109,27 +109,27 @@ Now that you have created a PVC and bound it to the PV, you can deploy a pod tha
   1. Create the pod manifest. The pod needs to reference both the PV and the PVC. For example:  
 mypod.yaml 
          
-```
-     apiVersion: v1  
-     kind: Pod  
-     metadata:  
-     name: mypod  
-     spec:  
-     volumes:  
-     - name: my-pv  
-     persistentVolumeClaim:  
-     claimName: mypvc  
-     containers:  
-     - name: mypod  
-     image: ubuntu  
-     command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]  
-     volumeMounts:  
-     - mountPath: "/usr/share/mypod"  
-     name: my-pv  
-     restartPolicy: Never  
-     tolerations:  
-     - key: orka.macstadium.com/namespace-reserved  
-     value: <NAMESPACE>
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  volumes:
+    - name: my-pv
+      persistentVolumeClaim:
+        claimName: mypvc
+  containers:
+    - name: mypod
+      image: ubuntu
+      command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]
+      volumeMounts:
+        - mountPath: "/usr/share/mypod"
+          name: my-pv
+  restartPolicy: Never
+  tolerations:
+    - key: orka.macstadium.com/namespace-reserved
+      value: <NAMESPACE>
 ```
 This example deploys a Linux VM. Pay attention to the command line and the tolerations section. Without the command line, the state of your Linux VM will become Stopped. Without the tolerations section, you won't be able to create the pod.
 

@@ -39,18 +39,18 @@ The new AMI is compatible with Orka 3.5 and all EC2 Apple Silicon Mac instance t
 
 By default:
 
-```
-  * The NVMe disk is used for Orka storage of VM and image data on M4 instances only
+- The NVMe disk is used for Orka storage of VM and image data on M4 instances only
+- Autologin is enabled for the `ec2-user`, and is required when running a Sequoia guest OS or newer
 
-  * Autologin is enabled for the `ec2-user`, and is required when running a Sequoia guest OS or newer
+<Note>
+  The `ENABLE_NVME_DISK` and `ENABLE_AUTOLOGIN` variables are **not** required. These are set to `true` by default, and either variable may be disabled if needed:
+</Note>
 
-  * **Note:** The `ENABLE_NVME_DISK` and `ENABLE_AUTOLOGIN` variables are **not** required. These are set to `true` by default, and either variable may be disabled if needed:  
-
-        
-        #!/bin/bash
-        export ENABLE_NVME_DISK=false # disable NVMe disk, use EBS storage instead
-        export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
-        /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
+```bash
+#!/bin/bash
+export ENABLE_NVME_DISK=false # disable NVMe disk, use EBS storage instead
+export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
+/usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
 ```
   * Networking
     * Apple Silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350), enabling the ability to get an IP on a subnet in your VPC.
