@@ -13,8 +13,14 @@
   },
   "topbar": {
     "links": [
-      {"name": "Support", "url": "https://support.macstadium.com"},
-      {"name": "Portal", "url": "https://portal.macstadium.com"}
+      {
+        "name": "Support",
+        "url": "https://support.macstadium.com"
+      },
+      {
+        "name": "Portal",
+        "url": "https://portal.macstadium.com"
+      }
     ]
   },
   "github": {
@@ -29,7 +35,9 @@
     "telemetry": {
       "enabled": true
     },
-    "ga4": { "measurementId": "G-LW571X03HJ" }
+    "ga4": {
+      "measurementId": "G-LW571X03HJ"
+    }
   },
   "navigation": {
     "versions": [
@@ -464,17 +472,50 @@
     }
   },
   "redirects": [
-    { "source": "/docs", "destination": "/" },
-    { "source": "/getting-started/creating-your-first-node", "destination": "/orka/quick-start-guides/orka3-cli-quick-start" },
-    { "source": "/getting-started/creating-your-first-node/", "destination": "/orka/quick-start-guides/orka3-cli-quick-start" },
-    { "source": "/changelog", "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes" },
-    { "source": "/docs/support", "destination": "https://support.macstadium.com" },
-    { "source": "/docs/faqs", "destination": "https://support.macstadium.com" },
-    { "source": "/docs/bare-metal-hosts", "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas" },
-    { "source": "/docs/cloud-automation", "destination": "/orka/orka-overview/orka-overview" },
-    { "source": "/docs/homebrew", "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew" },
-    { "source": "/docs/ansible", "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide" },
-    { "source": "/docs/:path*", "destination": "/" },
+    {
+      "source": "/docs",
+      "destination": "/"
+    },
+    {
+      "source": "/getting-started/creating-your-first-node",
+      "destination": "/orka/quick-start-guides/orka3-cli-quick-start"
+    },
+    {
+      "source": "/getting-started/creating-your-first-node/",
+      "destination": "/orka/quick-start-guides/orka3-cli-quick-start"
+    },
+    {
+      "source": "/changelog",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes"
+    },
+    {
+      "source": "/docs/support",
+      "destination": "https://support.macstadium.com"
+    },
+    {
+      "source": "/docs/faqs",
+      "destination": "https://support.macstadium.com"
+    },
+    {
+      "source": "/docs/bare-metal-hosts",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/cloud-automation",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/homebrew",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew"
+    },
+    {
+      "source": "/docs/ansible",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide"
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/"
+    },
     {
       "source": "/hc/en-us/articles/47496358655259-Network-Onboarding-Form",
       "destination": "/iaas/cisco-firewalls/network-onboarding-form",
