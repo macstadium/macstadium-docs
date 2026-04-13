@@ -32,9 +32,9 @@ A DMZ is a server reachable by outside IP addresses, but which can also communic
 
 Firewalls can log how they handle various types of traffic. For forensic purposes, information like source and destination IP addresses, port numbers, and protocols can be invaluable. However, the downside of logging is that the size of log files can quickly become unwieldy. Because of this, MacStadium has logging turned off by default. However, it is easy to change and configure this setting to capture traffic details.
 
-To turn _logging_ on, you will first need to identity a repository for the log information. MacStadium recommends designating a separate repository for those log files, because it can grow quickly. This can be set in ASDM via **Monitoring > Logging**. Users can also submit a firewall change request via the MacStadium portal to choose a new repository.
+To turn _logging_ on, you first need to identify a repository for the log information. MacStadium recommends designating a separate repository for those log files, because it can grow quickly. You can set this in ASDM via **Monitoring > Logging**. You can also submit a firewall change request via the MacStadium Portal to select a new repository.
 
-Users running CI as a service, should port those logs to a separate server. Otherwise, speed, storage, and performance may become impacted. MacStadium also recommends leaving logging disabled, especially for internal-only customers.
+If you run CI as a service, port those logs to a separate server. Otherwise, speed, storage, and performance may be impacted. MacStadium also recommends leaving logging disabled, especially for internal-only configurations.
 
 For more information, see [Cisco Logging Best Practices](https://tools.cisco.com/security/center/resources/firewall_best_practices#43).‍
 
