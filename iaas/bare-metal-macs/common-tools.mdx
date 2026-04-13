@@ -23,22 +23,22 @@ Download the latest version of Xcodes from the following link:
 Once downloaded, drag Xcodes.app to the Applications folder to install the app.
 
 Alternatively, if Homebrew is installed, then run the following command in Terminal:
-    
-    
-```
+
+```text
 brew install --cask xcodes
 ```
+
 ## Usage
 
 Once Xcodes is installed, launch the app from the Applications folder. Xcodes displays all of the available releases of Xcode. In order to download and install a release, authentication with an Apple ID is required. To do this, click on the Account icon in the upper right corner of the app:
 
-![506d6fb-Screenshot_2024-03-08_at_1.58.23_PM.png](/images/attachments/28200215712667.png)
+![506d6fb-Screenshot\_2024-03-08\_at\_1.58.23\_PM.png](/images/attachments/28200215712667.png)
 
 ### Recommended: Enable experimental unxip
 
-The decompression (unxip) process for Xcode is typically quite lengthy. To help accommodate this, Xcodes has an experimental decompression method that speeds things up. In our testing, this has been shown to be both stable and effective. To enable this, navigate to Xcodes>Settings>Experiments in the menu bar, and then check "When unxipping, use experiment":
+The decompression (unxip) process for Xcode is typically quite lengthy. To help accommodate this, Xcodes has an experimental decompression method that speeds things up. In our testing, this has been shown to be both stable and effective. To enable this, navigate to Xcodes\>Settings\>Experiments in the menu bar, and then check "When unxipping, use experiment":
 
-![58bc189-Screenshot_2024-03-08_at_2.03.38_PM.png](/images/attachments/28200206302235.png)
+![58bc189-Screenshot\_2024-03-08\_at\_2.03.38\_PM.png](/images/attachments/28200206302235.png)
 
 Once authenticated, Xcode and individual platform SDKs may be downloaded and installed by clicking the Install button next to the desired release. During installation, Xcodes may prompt for elevated access; if so, then enter a username/password to allow this.
 
@@ -65,11 +65,11 @@ Homebrew is a package manager that makes installing packages from the Mac termin
 ### Prerequisites:
 
 Homebrew relies upon Xcode Command Line Tools, so Xcode must be installed. To install it via the Command Line Tools by entering the following command into Terminal:
-    
-    
-```
+
+```text
 xcode-select --install
 ```
+
 Once this command is run, a system prompt appears offering to install the Xcode Command Line Tools. Click Install and wait for the installation to finish before proceeding.
 
 The Mac Terminal App is located in the Utilities Folder under the Applications Folder, and allows for access to the system shell, which is zsh by default.
@@ -79,39 +79,36 @@ The Mac Terminal App is located in the Utilities Folder under the Applications F
 Once prerequisites are installed, installing Homebrew can be done with a single line of code in the Terminal.
 
 1. Open your Terminal App.
-
 2. Copy and paste the following command, and then press ENTER.
-    
-    
-```
+
+```text
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-3. Hit the RETURN key when prompted.
 
+3. Hit the RETURN key when prompted.
 4. Follow the installation process on screen.
 
 Update Homebrew when necessary, by using the following command in the Terminal App:
-    
-    
-```
+
+```text
 brew update
 ```
+
 Enable auto completion by entering the command:
-    
-    
-```
+
+```text
 brew install bash-completion
 ```
+
 ### Uninstalling Homebrew:
 
 1. Open the Terminal App.
-
 2. Copy and paste the following command and then press ENTER:
-    
-    
-```
+
+```text
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
 ```
+
 # Ansible
 
 [Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
@@ -144,15 +141,7 @@ Playbooks are mappings of Ansible Roles and the various host machines they are m
 
 [Installation Guide](https://www.packer.io/intro/getting-started/install.html)
 
-[Packer Docs](https://www.packer.io/docs/index.html)  
+[Packer Docs](https://www.packer.io/docs/index.html)\
 Packer is a powerful, open-source tool that stores a live image of a virtual machine, which can be cloned in seconds, rather than minutes or hours. It utilizes JSON to define the VM template, and because it is command-line-driven, it can easily be integrated into the build pipeline.
 
 Packer is not a direct substitute for provisioning solutions. In fact, it is built to interface easily with Chef, Puppet, and Ansible for the provisioning of the base VM image.
-
-## VM Templates
-
-## OSX VM Templates for Packer and VeeWee
-
-Virtual machine templates for your building pleasure.
-
-[VM Templates](https://github.com/timsutton/osx-vm-templates)
