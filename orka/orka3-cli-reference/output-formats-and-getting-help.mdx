@@ -6,11 +6,11 @@ zendesk_id: 42515256825499
 
 ## Using Built-in Help
 
-**Global Help**
+### Global Help
 
 Every command in the Orka CLI has built-in help documentation that you can access using the `--help` or `-h` flag.
-    
-    
+
+
 ```
 # Get help for the main command
 orka3 --help
@@ -24,7 +24,7 @@ orka3 vm deploy --help
 # Get help for configuration commands
 orka3 config --help
 ```
-**Command Structure**
+### Command Structure
 
 The help output for each command typically includes:
 
@@ -36,17 +36,17 @@ The help output for each command typically includes:
 
 
 
-**Finding Commands**
+### Finding Commands
 
 Start with the main help to browse available command groups:
-    
-    
+
+
 ```
 orka3 --help
 ```
 Then drill down into specific command groups:
-    
-    
+
+
 ```
 # View all VM-related commands
 orka3 vm --help
@@ -61,17 +61,17 @@ orka3 node --help
 
 Many Orka CLI commands support multiple output formats to suit different use cases.
 
-**Available Output Formats**
+### Available Output Formats
 
 Format | Flag | Description | Best For
 ---|---|---|---
 **Table** | `--output table` (default) | Human-readable table with essential information | Terminal viewing, quick status checks
 **Wide** | `--output wide` | Extended table with additional columns and details | Detailed troubleshooting, viewing all properties
-**JSON** | `--output json` | Machine-readable JSON format | Scripting, automation, parsing with jq  
-  
-**Using Output Formats**
-    
-    
+**JSON** | `--output json` | Machine-readable JSON format | Scripting, automation, parsing with jq
+
+### Using Output Formats
+
+
 ```
 # Default table output
 orka3 vm list
@@ -85,7 +85,7 @@ orka3 vm list --output json
 # Short form
 orka3 vm list -o json
 ```
-**Commands Supporting Output Formats**
+### Commands Supporting Output Formats
 
 The following command groups support the `--output` flag:
 
@@ -103,11 +103,11 @@ The following command groups support the `--output` flag:
 
 
 
-**Working with JSON Output**
+### Working with JSON Output
 
 JSON output is particularly useful for automation and scripting. You can use tools like `jq` to parse and filter the results:
-    
-    
+
+
 ```
 # Get all VM names
 orka3 vm list -o json | jq -r '.items[].name'
@@ -123,9 +123,9 @@ orka3 node list -o json | jq -r '.items[].ip'
 ```
 ## Common help patterns
 
-**Discovering Available Commands**
-    
-    
+### Discovering Available Commands
+
+
 ```
 # List all main command groups
 orka3 --help
@@ -136,9 +136,9 @@ orka3 vm --help
 # List all image commands
 orka3 image --help
 ```
-**Understanding Flags**
-    
-    
+### Understanding Flags
+
+
 ```
 # See all flags for a command
 orka3 vm deploy --help
@@ -149,11 +149,11 @@ orka3 vm list --help | grep namespace
 # See output format options
 orka3 node list --help | grep output
 ```
-**Finding Examples**
+### Finding Examples
 
 Most command help includes an "Examples" section with common use cases:
-    
-    
+
+
 ```
 # View examples for VM deployment
 orka3 vm deploy --help
@@ -166,30 +166,30 @@ orka3 namespace create --help
 ```
 ## Quick Tips
 
-**Command Aliases**
+### Command Aliases
 
 Many commands have short aliases for faster typing:
 
-Full Command | Alias  
----|---  
-`orka3 vm-config` | `orka3 vmc`  
-`orka3 serviceaccount` | `orka3 sa`  
-`orka3 rolebinding` | `orka3 rb`  
-`orka3 registrycredential` | `orka3 regcred`  
-`orka3 imagecache` | `orka3 ic`  
-  
-**Flag Shortcuts**
+Full Command | Alias
+---|---
+`orka3 vm-config` | `orka3 vmc`
+`orka3 serviceaccount` | `orka3 sa`
+`orka3 rolebinding` | `orka3 rb`
+`orka3 registrycredential` | `orka3 regcred`
+`orka3 imagecache` | `orka3 ic`
 
-Full Flag | Short Flag  
----|---  
-`--help` | `-h`  
-`--output` | `-o`  
-`--namespace` | `-n`  
-`--image` | `-i`  
-`--cpu` | `-c`  
-`--memory` | `-m`  
-  
-**Checking Async Operations**
+### Flag Shortcuts
+
+Full Flag | Short Flag
+---|---
+`--help` | `-h`
+`--output` | `-o`
+`--namespace` | `-n`
+`--image` | `-i`
+`--cpu` | `-c`
+`--memory` | `-m`
+
+### Checking Async Operations
 
 Some operations are asynchronous. Here's how to check their status:
 

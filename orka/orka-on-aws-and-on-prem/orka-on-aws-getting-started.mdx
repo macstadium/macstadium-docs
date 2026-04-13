@@ -73,7 +73,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
     * Orka Operator: TCP 8080 (metrics), TCP 8081 (health check), TCP 443 (webhook), Linux worker nodes should be accessible from within the cluster on any port. Does not require Internet access.
     * Orka OIDC Provider: TCP 443. Requires connectivity to the authentication provider.
   * EC2 Mac Nodes
-    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be opene to all networks that need access to the VMs: TCP 5900-5912 (Screenshare), TCP 5999-6011 (VNC), and TCP 8822-8834 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
+    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be open to all networks that need access to the VMs: TCP 5900-5912 (Screenshare), TCP 5999-6011 (VNC), and TCP 8822-8834 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
 
 
 
@@ -144,11 +144,11 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
      - aws eks update-kubeconfig --name {cluster_name} --region {region}
      - ansible-playbook /ansible/site.yml -e "k8s_api_address={k8s_api_address}" -e "kube_oidc_client_id={kube_oidc_client_id}"
 ```
-Where:  
-\{cluster_name} - the name of your EKS cluster  
-\{region} - the region where the cluster is deployed  
-\{k8s_api_address} - the K8s API address of your cluster  
-\{kube_oidc_client_id} - the OIDC client ID provided by MacStadium
+Where:
+`{cluster_name}` - the name of your EKS cluster
+`{region}` - the region where the cluster is deployed
+`{k8s_api_address}` - the K8s API address of your cluster
+`{kube_oidc_client_id}` - the OIDC client ID provided by MacStadium
 
   6. Save the configuration.
   7. Next, Configure CodeBuild to access the Ansible image provided by MacStadium and to manage the EKS cluster:
@@ -308,15 +308,13 @@ You can then configure the credentials for the Orka cluster using the token:
 ```
 aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --password-stdin https://<aws-account-number>.dkr.ecr.<region>.amazonaws.com
 ```
-> **Note**
-> 
-> The token is scoped for image push / pull operations based on the IAM policies configured for the calling entity - i.e. whichever user or role calls the `aws ecr get-login-password` command
+<Note>
+  The token is scoped for image push/pull operations based on the IAM policies configured for the calling entity — whichever user or role calls the `aws ecr get-login-password` command.
+</Note>
 
-> **Note**
-> 
-> The token is valid for 12 hours and will need to be refreshed regularly. See: [https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token)
-> 
-> A future release will improve upon this with a credential helper.
+<Note>
+  The token is valid for 12 hours and will need to be refreshed regularly. See [AWS ECR registry authentication](https://docs.aws.amazon.com/AmazonECR/latest/userguide/registry_auth.html#registry-auth-token). A future release will improve upon this with a credential helper.
+</Note>
 
 ### IAM Policies for ECR
 
@@ -346,7 +344,7 @@ To deprovision a Mac Node you need to:
 
   1. Delete the Mac instance
   2. (Optional) Release the Mac dedicated host if you no longer need it
-  3. Delete the Kubernetes node by running kubectl delete node \<node_name> where \<node_name> is the name of the node you want to deprovision
+  3. Delete the Kubernetes node by running `kubectl delete node <node_name>` where `<node_name>` is the name of the node you want to deprovision
 
 
 
