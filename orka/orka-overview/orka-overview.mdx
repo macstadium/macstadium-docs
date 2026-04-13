@@ -6,7 +6,7 @@ zendesk_id: 29904434271387
 
 ## About
 
-Orka is an enterprise platform that provides virtualization and orchestration for various macOS-based workloads. It is designed to scale to hundreds of nodes, supporting performant spin-up and tear-down of virtualized macOS images to support your custom workloads. It is designed to be installed in MacStadium, in AWS, using other managed k8s offerings, or fully On-prem.
+Orka is an enterprise platform that provides virtualization and orchestration for macOS-based workloads. It scales to hundreds of nodes, supporting fast spin-up and tear-down of virtualized macOS images. You can install Orka in MacStadium, in AWS, using other managed Kubernetes offerings, or fully on-premises.
 
 Orka is optimized to provide virtualization natively for Apple Silicon and provides some level of support for Intel-based Mac computers and OS versions.
 
@@ -37,7 +37,7 @@ An Orka deployment typically consists of:
 
   * A fleet of MacStadium Bare Metal Mac hosts running virtualization interfaces to macOS compute resources. The fleet must be network-connected via mesh networks, VPNs, tunnels, or other mechanisms.
   * An OCI registry to serve as the image repository to store and distribute the images to the fleet, where they are used as VMs.
-  * A control plane that facilitates the orchestration activities, including provisioning and de-provisioning of VMs across hosts running virtualization interfaces to macOS compute resources. The control plane can run in a Kubernetes or Ansible environment. 
+  * A control plane that facilitates orchestration, including provisioning and de-provisioning of VMs across hosts. The control plane can run in a Kubernetes or Ansible environment. 
     * For DevOps use cases and ephemeral environments, a Kubernetes (k8s) control plane is recommended. An API Server exposes the k8s control plane to those who manage the workloads on the cluster.
     * For VDI use cases and long-lived VM environments, an Ansible-based control plane is recommended. A set of Ansible scripts are provided to those who manage the workloads on the cluster.
 
@@ -50,8 +50,8 @@ This document will focus on using k8s as the control plane for Orka. For details
 ## Key Concepts
 
   * The [Orka CLI](/orka/orka-overview/tools-integrations) (`orka3`) is the primary interface to working with Orka when the control plane is a k8s environment. It is perfect for both manual use and automation.
-  * To build an automated CI/CD system, look into the available [Orka integrations](/orka/orka-overview/tools-integrations) \- from Jenkins to GitHub Actions. The Orka team continuously adds to the list of supported solutions.
-  * The [Orka Web UI](/orka/quick-start-guides/web-ui-quick-start) provides a quick and user-friendly way to manage an Orka. Currently, the Web UI offers limited functionality compared to the Orka3 CLI and the Orka3 API.
+  * To build an automated CI/CD system, look into the available [Orka integrations](/orka/orka-overview/tools-integrations) - from Jenkins to GitHub Actions. The Orka team continuously adds to the list of supported solutions.
+  * The [Orka Web UI](/orka/quick-start-guides/web-ui-quick-start) provides a quick way to manage Orka. Currently, the Web UI offers limited functionality compared to the Orka3 CLI and the Orka3 API.
 
 
 
@@ -63,7 +63,7 @@ This document will focus on using k8s as the control plane for Orka. For details
 
   * **API Server** : Provides access to the cluster from the CLI, API or CI integrations. The API Server must be accessible to the CLI, API or CI Integrations controlling the Orka instance.
   * **Bare Metal Macs** : MacStadium has a variety of standard Mac models that run the virtualization software to manage and use the macOS compute resources
-  * **Control Plane** : Facilitates the orchestration activities, which includes provisioning and de-provisioning of VMs across the fleet of hosts that are running virtualization interfaces to macOS compute resources. This runs natively inside of Kubernetes for optimal performance and scale. (This is abstracted away from users, so they never need to interface with k8s unless they want to.)
+  * **Control Plane** : Facilitates the orchestration activities, which includes provisioning and de-provisioning of VMs across the fleet of hosts that are running virtualization interfaces to macOS compute resources. This runs natively inside of Kubernetes for optimal performance and scale. (This is abstracted away from you, so you never need to interface with Kubernetes unless you want to.)
   * **Host (or Node)** : A physical computer with a host macOS and an installation of Orka Virtualization software
   * **Image (or OCI Image)** : Bits on disk that represent VM storage. Images can be deployed as a VM in an Orka and provide the OS, file system, and built-in storage used by the VM.
     * **OCI** refers to the standard format that the image is packaged with. Images are stored in any OCI-compliant registry. Starting with Orka 3.2, MacStadium has begun storing OCI-compliant images for various versions of the macOS in our public GitHub registry viewable at GitHub - macstadium/orka-images: Public images for Apple silicon-based Orka virtual machines
@@ -126,7 +126,7 @@ If deploying within AWS or On-Prem, make sure to connect to the network such tha
   * Use the `.20` address for the `Private-1` network (usually `10.221.188.20`). prefixed with http. For example: [http://10.221.188.20](http://10.221.188.20/).
 
 
-  2. Connect to the [Cluster via a VPN](/orka/networking-with-orka-at-macstadium/vpn-connection) or other mesh network to ensure access to your API Server. Ensure the network connection is up-and-running from your calling application (that is, a local laptop with `orka3` client, or CI system that execute builds) when working with Orka.
+  2. Connect to the [Cluster via a VPN](/orka/networking-with-orka-at-macstadium/vpn-connection) or other mesh network to ensure access to your API Server. Verify the network connection is active from your calling application (for example, a local laptop with the `orka3` client, or a CI system that executes builds).
 
 
   * MacStadium currently provides VPN based access. Use a VPN client to connect to the cluster using the firewall IP and credentials obtained from the IP Plan.
@@ -209,7 +209,7 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
 ## 6. Manage Image Caches
 
-Manage images stored on Orka nodes. By adding images to a node before deployment of a VM using that base image, DevOps and engineering staff can manage and control the delay caused by remote or even local cluster storage image pulls, providing consistent deployment times.
+Manage images stored on Orka nodes. By adding images to a node before deploying a VM, you can reduce the delay caused by remote or local image pulls, providing consistent deployment times.
 
 ## Next steps - Integrate with CI tooling
 

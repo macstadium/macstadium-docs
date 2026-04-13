@@ -20,9 +20,9 @@ VMs deployed on Apple silicon-based nodes use Apple Silicon images. A VM is depl
 
 When a VM is deployed on an Apple silicon-based node and this is the first time the image is used on the node, the deployment takes longer - about 4 minutes. Further deployments of VMs using the same image on the same node happen almost immediately and take about 5 seconds.
 
-#### **TIP**
-
+<Tip>
 To keep deployment times fast, you might want to make sure you deploy a VM on all nodes every time you create a new image. Keep in mind though, that images are cached on the nodes. If you try to deploy a VM from an image that is not cached and there is not enough space on the node, the oldest cached image(s) will be deleted to free space for the new one.
+</Tip>
 
 Below is a full list of features included in the Apple silicon-based support:
 
@@ -75,13 +75,13 @@ Orka 2.0:
 
 #### **GPU Passthrough and IO Boost**
 
-With VMs based on Apple Silicon images, GPU Passthrough comes out of the box. Therefore, the corresponding option --gpuis not applicable to them and will be ignored.
+With VMs based on Apple Silicon images, GPU Passthrough comes out of the box. Therefore, the corresponding option `--gpu` is not applicable to them and will be ignored.
 
 ## Limitations
 
-**IMPORTANT**
-
+<Warning>
 You can deploy up to 2 VMs per Apple silicon-based node.
+</Warning>
 
   1. The Apple silicon-based Support includes all the features needed to run your CI/CD workflows on Apple silicon-based nodes. Below is a full list of the ones that are still not there and will be considered in future versions of Orka:
 

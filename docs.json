@@ -28,7 +28,8 @@
   "integrations": {
     "telemetry": {
       "enabled": true
-    }
+    },
+    "ga4": { "measurementId": "G-LW571X03HJ" }
   },
   "navigation": {
     "versions": [

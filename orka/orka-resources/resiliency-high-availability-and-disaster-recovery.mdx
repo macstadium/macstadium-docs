@@ -14,9 +14,9 @@ Orka provides orchestration and virtualization for virtualized runtime environme
 
 This document outlines the built-in Resiliency, High Availability (HA), and Disaster Recovery (DR) capabilities of Orka Cluster components when hosted on MacStadium. The document also outlines additional solutions, which can be implemented with added complexity and cost to achieve more advanced setups.
 
-> 🗒️**NOTE**
->
-> It is important to note that HA/DR setups can vary significantly in complexity and cost, based on individual needs.
+<Note>
+It is important to note that HA/DR setups can vary significantly in complexity and cost, based on individual needs.
+</Note>
 
 Orka Cluster provides substantial resiliency as part of its core offering, which is achieved by balancing effectiveness, sound expectations, and shared responsibilities between MacStadium and our customers.
 
@@ -62,14 +62,14 @@ Images are the saved state of a VM on disk that can be used to run VMs.
 **Resiliency/HA Capabilities**
 
   * When hosted by MacStadium, Orka Cluster stores images in a Pure storage array, known for its high level of resiliency. RAID capabilities provide protection against drive failures.
-  * Customers who prefer more control or have existing storage solutions, Orka Cluster now supports image storage on any OCI-compliant repository. High Availability (HA) solutions can be implemented using the capabilities provided by the repository.
+  * If you prefer more control or have existing storage solutions, Orka Cluster supports image storage on any OCI-compliant repository. You can implement High Availability (HA) solutions using the capabilities provided by the repository.
 
 
 
 **DR Capabilities**
 
   * The Pure storage arrays can take backups at scheduled intervals and store data in adjacent storage for an additional price.
-  * Customers running an OCI-compliant repository, DR solutions can be implemented using the capabilities provided by the repository.
+  * If you run an OCI-compliant repository, you can implement DR solutions using the capabilities provided by the repository.
 
 
 
@@ -103,7 +103,7 @@ To achieve a resilient solution across multiple data centers, MacStadium works w
 
 ### Cluster deployment across data centers
 
-In a redundant data center configuration, workloads can be balanced between the data centers using a load balancer or traffic router that sits above both clusters. Customers can distribute and route workloads to the most suitable site based on resource availability or performance considerations.
+In a redundant data center configuration, you can balance workloads between data centers using a load balancer or traffic router that sits above both clusters. You can distribute and route workloads to the most suitable site based on resource availability or performance considerations.
 
 This solution supports use cases like high availability, blue/green deployments, and rolling upgrades. It also enables testing of new deployments without risking production environments and allows for a controlled fallback if any issues are encountered.
 
@@ -113,9 +113,9 @@ In the event of a failure at one data center, the load balancer is reconfigured 
 
 Effective High Availability / Disaster Recovery is a shared responsibility between MacStadium and our customers.
 
-> 🗒️**NOTE**
->
-> Understanding these responsibilities is crucial for maintaining a robust HA/DR posture.
+<Note>
+Understanding these responsibilities is crucial for maintaining a robust HA/DR posture.
+</Note>
 
 ### MacStadium Responsibilities
 
@@ -127,5 +127,5 @@ Effective High Availability / Disaster Recovery is a shared responsibility betwe
 
 ### Customer Responsibilities
 
-  * Customers choosing to store images in OCI-compliant repositories, implementing and managing DR plans for these images falls under the customer responsibility.
-  * Customers should maintain up-to-date documentation of their Orka Cluster configurations to facilitate faster confirmation during recovery situations.
+  * If you store images in OCI-compliant repositories, implementing and managing DR plans for these images is your responsibility.
+  * Maintain up-to-date documentation of your Orka Cluster configurations to facilitate faster recovery.
