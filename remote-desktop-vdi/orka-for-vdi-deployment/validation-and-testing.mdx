@@ -97,16 +97,13 @@ This test validates the complete user journey from authentication to desktop usa
 **Expected result:** Desktop launches successfully within 15-30 seconds, macOS login screen or desktop appears  
 **Common issues:**
 
-```
- * Connection timeout
-```
-Check network connectivity from client to Citrix Cloud
+- **Connection timeout:** Check network connectivity from client to Citrix Cloud.
 
-Verify the Rendezvous connectivity from within a running VDA session by opening Terminal and running:
-           
-```
-       curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected
-```
+  Verify Rendezvous connectivity from within a running VDA session by opening Terminal and running:
+
+  ```bash
+  curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected
+  ```
 2. Confirm firewall allows HDX ports (1494, 2598)
 
 3. If you see a black screen, the VDA service may not be running, restart the VDA service from within the VM:
@@ -419,18 +416,13 @@ Some metrics to consider measuring are:
 
   1. VM deployment time
 
-```
- 1. How long does it take from playbook execution to the time a VDA is registered?
+     - How long does it take from playbook execution to the time a VDA is registered?
+     - To establish a baseline, record the average, minimum, and maximum time across 10+ deployments and set an acceptable target (e.g. <5 minutes for cached images).
 
-    1. To establish a baseline, you may wish to record the average, minimum, and maximum time this takes across 10+ deployments and establish an acceptable target (e.g. &lt;5 minutes for cached images)
-```
   2. Session launch time
 
-```
- 1. How long does it take after clicking a desktop in Citrix Workspace to having a usable desktop?
-
-    1. To establish a baseline, you may want to test from multiple client locations such as office, remote, or mobile. An example target baseline metric may be &lt;15 seconds for Rendezvous, and &lt;10 seconds for a direct connection.
-```
+     - How long does it take after clicking a desktop in Citrix Workspace to having a usable desktop?
+     - To establish a baseline, test from multiple client locations such as office, remote, or mobile. An example target: <15 seconds for Rendezvous, <10 seconds for a direct connection.
   3. HDX session quality
 
 ```
