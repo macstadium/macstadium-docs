@@ -49,8 +49,6 @@ Using an ASDM allows you to make line-by-line changes, while using a graphical u
   3. Use the credential documented in the IP Plan to authenticate; when prompted, enter a username and password.
   4. Enter global configuration mode by typing the command `configure terminal`
   5. Create the new user account by typing the command in the following format: `username username password password privilege priv_level`
-     * **NOTES:**
-
 <Note>
   - The `username` keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
   - The `password` keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
@@ -119,7 +117,7 @@ To remove a user account, use `no version` with the username that is being remov
 ![a2714fa-image.png](/images/attachments/28269093218075.png)
   5. Click Add to create a new user account.
   6. In the Add User Account window, confirm that Identity is selected at the left of the window and then enter the username and password for the new user account. 
-     * **NOTE** : Specify a Access Restriction by selecting an option in the section below.  
+     * Specify a Access Restriction by selecting an option in the section below.  
 ![8dded1a-image.png](/images/attachments/28269093219099.png)
 
   7. Click OK to save the new user account
@@ -128,7 +126,9 @@ To remove a user account, use `no version` with the username that is being remov
 
 
 
-**NOTE:** Test the new account by logging out of the ASDM and then logging back in with the new credentials.
+<Note>
+  Test the new account by logging out of the ASDM and then logging back in with the new credentials.
+</Note>
 
 #### **Removing an Account from the Local Database**
 
@@ -139,7 +139,9 @@ To remove a user account, use `no version` with the username that is being remov
 
 
 
-**NOTE:** For information on Advanced Options for user account creations and management, see the following guides:
+<Note>
+  For information on Advanced Options for user account creations and management, see the following guides:
+</Note>
 
 [Cisco ASDM 7.18 AAA Local User Guide](https://www.cisco.com/c/en/us/td/docs/security/asa/asa918/asdm718/general/asdm-718-general-config/aaa-local.html)
 

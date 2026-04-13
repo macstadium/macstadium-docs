@@ -14,10 +14,10 @@ To establish a stable and persistent connection between an Azure and the MacStad
 
 Currently, for VPN connectivity between MacStadium and Azure there are two options:
 
-**NOTES** :
-
-  * Active/Active Disabled. Every Azure VPN gateway consists of two instances in an Active/Standby configuration. According to Azure, for any planned maintenance or unplanned disruption that may happen to the Active instance, the Standby instance would take over (failover) automatically and resume the Site-To-Site VPN connections.
-  * Active/Active Enabled. In this mode, each Azure gateway instance has a unique public IP address and both instances establish an IPsec Site-To-Site VPN to your MacStadium firewall. For this VPN mode, you should also enable the TCP State Bypass feature in your ASA firewall which requires an access-list, class-map, policy-map, and a service-policy. This is a requirement for Site-To-Site VPNs with Virtual Tunnel Interfaces only and is configured to allow asynchronous routing between separate VPN tunnels.
+<Note>
+  - Active/Active Disabled. Every Azure VPN gateway consists of two instances in an Active/Standby configuration. According to Azure, for any planned maintenance or unplanned disruption that may happen to the Active instance, the Standby instance would take over (failover) automatically and resume the Site-To-Site VPN connections.
+  - Active/Active Enabled. In this mode, each Azure gateway instance has a unique public IP address and both instances establish an IPsec Site-To-Site VPN to your MacStadium firewall. For this VPN mode, you should also enable the TCP State Bypass feature in your ASA firewall which requires an access-list, class-map, policy-map, and a service-policy. This is a requirement for Site-To-Site VPNs with Virtual Tunnel Interfaces only and is configured to allow asynchronous routing between separate VPN tunnels.
+</Note>
 
 
 
@@ -47,7 +47,9 @@ This is the general process for creating a Site-to-Site, from the Azure private 
 
 ## Create a Virtual Network Gateway
 
-**NOTE** : The instructions below assume that there is a configured Azure Virtual Network.
+<Note>
+  The instructions below assume that there is a configured Azure Virtual Network.
+</Note>
 
 In Azure, the virtual network gateway represents the Azure side of the Site-to-Site VPN tunnel.
 

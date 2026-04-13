@@ -8,11 +8,11 @@ zendesk_id: 28280561588507
 
 The goal of this documentation is to update the Site-To-Site VPN configuration with AWS and add specific configuration details for the Cisco Adaptive Security Appliance (ASA) feature TCP State-bypass, which is required in HA VPN scenarios (HA-VPN is a regional per VPC VPN solution. HA-VPN gateways have two interfaces, each with their own public IP address).
 
-**NOTES** :
-
-  * A one-time or temporary access to the MacStadium cloud from a single virtual or physical machine is required.
-  * Cisco AnyConnect VPN is recommended.
-  * For more information, see [Connecting to Your Cloud (via VPN)](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn)
+<Note>
+  - A one-time or temporary access to the MacStadium cloud from a single virtual or physical machine is required.
+  - Cisco AnyConnect VPN is recommended.
+  - For more information, see [Connecting to Your Cloud (via VPN)](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn)
+</Note>
 
 
 
@@ -77,7 +77,7 @@ To establish a stable and persistent connection, between the entire private clou
   3. Set up the Cisco ASA/ASAv device of the MacStadium cloud. 
      * You might need to configure one or more of the following rules: 
        * A NAT exemption rule for traffic between the two clouds. It might need to allow traffic from the private cloud to the private network and the outside interface of the MacStadium cloud. By default, these are respectively the Private-1 and Outside networks listed in Appendix A of the IP Plan. 
-         * **Note:** NAT exemption allows the ability to exclude traffic from being translated with NAT. One scenario where this is typically done is for a site-to-site VPN tunnel.
+         * NAT exemption allows the ability to exclude traffic from being translated with NAT. One scenario where this is typically done is for a site-to-site VPN tunnel.
        * Access-list rules permitting traffic from the private cloud to the public endpoint of your MacStadium cloud. By default, this is the FW1-Outside network listed in Appendix B of the IP Plan.
        * A crypto map rule that maps traffic between the two clouds. Usually, this is mapped to the outside interface of the MacStadium cloud. By default, this is the Outside network listed in Appendix A of the IP Plan.
        * IPSec and IKE policies.
@@ -222,8 +222,11 @@ Amazon has prefilled configurations ready for download, from a variety of vendor
   6. Platform, select ASA 5500 Series.
   7. Software: 
      * For a policy-based VPN, select ASA 9.x
-     * For a route-based VPN, select ASA 9.7 + VTI 
-       * **NOTE** : If ASA 9.7 + VTI was selected, choose ikev2 as the IKE version and click Download.
+     * For a route-based VPN, select ASA 9.7 + VTI
+
+<Note>
+  If ASA 9.7 + VTI was selected, choose ikev2 as the IKE version and click Download.
+</Note>
 
 
 
@@ -231,11 +234,15 @@ Amazon has prefilled configurations ready for download, from a variety of vendor
 
 ## Configuration Blanks
 
-**WARNING** : Do not attempt AWS and ASA/ASAv configuration without proper experience, or unexpected consequences may happen.
+<Warning>
+  Do not attempt AWS and ASA/ASAv configuration without proper experience, or unexpected consequences may happen.
+</Warning>
 
 Manually replace the placeholders in the configuration file that were downloaded from Amazon (with the values for the MacStadium configuration). Policy-based VPN - ASA 9.x
 
-**NOTE** : Make sure that the name of all configuration elements in this script are unique, not currently in use in your environment.
+<Note>
+  Make sure that the name of all configuration elements in this script are unique, not currently in use in your environment.
+</Note>
 
 ## Configuration Parameters
 
@@ -288,7 +295,10 @@ By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadiu
      * To uncomment, remove ! at the start of the line.
      * Keep the following line to ensure the SLA monitor works as expected. 
        * `object network obj-SrcNet subnet 0.0.0.0 0.0.0.0`
-       * **WARNING** : Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the `<sla_monitor_address>` value.
+
+<Warning>
+  Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the `&lt;sla_monitor_address>` value.
+</Warning>
   6. On the following line, change 0.0.0.0 0.0.0.0 to a combination of the IP address and the subnet mask for your Amazon VPC. 
      * These values are in the AWS Management Console. Navigate to the VPC dashboard and select the VPC, and check the Description at the bottom of the screen.
      * Convert the subnet mask bit notation to the correct subnet mask (for example, the /16 notation converts to a 255.255.0.0 subnet mask).
@@ -351,14 +361,14 @@ screen. | 172.31.0.0
 
   2. Open the configuration file.
 
-  3. Replace the placeholders with their respective values. Currently, only the placeholder `<outside_interface>` is available in the AWS script. Use Table 1: Configuration parameters for reference.
+  3. Replace the placeholders with their respective values. Currently, only the placeholder \<outside_interface> is available in the AWS script. Use Table 1: Configuration parameters for reference.
 
   4. Change the name of the tunnel interfaces. Example:
 
 ```
  * interface tunnel 100 nameif aws-vpn-1 interface tunnel 200 nameif aws-vpn-2
 ```
-  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network `<local_subnet>` mask `<local_subnet_mask>`
+  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network \<local_subnet> mask \<local_subnet_mask>
 
   6. Replace the placeholders with their respective values.
 
@@ -384,8 +394,8 @@ TCP State Bypass | cm-state-bypass
 ```
 | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation:  
 TCP State Bypass | pm-state-bypass  
-     * Define the Access list with the source and destination networks: access-list `<acl-state-bypass>` extended permit ip 
-       * `<local_subnet>` `<local_subnet_mask>` `<vpc_subnet>` `<vpc_subnet_mask>`
+     * Define the Access list with the source and destination networks: access-list \<acl-state-bypass> extended permit ip 
+       * \<local_subnet> \<local_subnet_mask> \<vpc_subnet> \<vpc_subnet_mask>
 
 ```
  * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection: 
@@ -448,8 +458,11 @@ Cisco firewalls are designed to work with the [Cisco AnyConnect Secure Mobility 
   1. Download a VPN client. The recommend VPN client for MacStadium Private Clouds is Cisco AnyConnect.
   2. Open MacStadium Portal > Account Menu > Files.
   3. Open the file and locate the VPN Server section.
-  4. From the browser, visit `https://<YOUR_VPN_SERVER_ADDRESS_HERE>`. 
-     * **NOTE** : Firefox is required to get past the self-signed certificate blocker.
+  4. From the browser, visit `https://<YOUR_VPN_SERVER_ADDRESS_HERE>`.
+
+<Note>
+  Firefox is required to get past the self-signed certificate blocker.
+</Note>
   5. When prompted, provide the VPN credentials from the IP Plan.
   6. After log in, download a licensed version of AnyConnect directly from the firewall.
 
