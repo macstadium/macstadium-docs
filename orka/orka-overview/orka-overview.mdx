@@ -102,7 +102,7 @@ Once installed and configured, the following steps and commands quickly introduc
   * Manage users via the Portal
 
 
-  2. Run `orka3 login `and `orka3 user get-token` to sign into the cluster control plane
+  2. Run `orka3 login` and `orka3 user get-token` to sign into the cluster control plane
   3. Learn the 3 main objects to work with: nodes, images, and vms
   4. Deploy and Connect to a New VM
   5. Modify, Save, and Stop the VM
@@ -143,7 +143,7 @@ If deploying within AWS or On-Prem, make sure to connect to the network such tha
   1. Visit the links below to download and install the orka3 CLI binary for the local environment.
 
 
-  * [Orka Cluster 3.2 Release Notes](/orka/orka-upgrades-and-release-notes/orka-32-release-notes)
+  * [Orka CLI — latest release](/orka/orka-upgrades-and-release-notes/orka-35-release-notes)
 
 
   2. Configure the local `orka3` environment with the appropriate ORKA_API_URL so the CLI knows where to connect. This step is a one-time effort.
@@ -175,6 +175,10 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
   3. _Optional_ \- Use the Orka3 API, provide the `Authorization: Bearer <TOKEN>` header in the API calls or authorize the Swagger UI at `<ORKA_API_URL>/api/v1/swagger`.
   4. _Optional_ \- For CI/CD integrations, authenticate with a dedicated service account.
+
+<Warning>
+  Tokens obtained via `orka3 login` and `orka3 user get-token` expire after 1 hour. Do not use them for CI/CD automation. Instead, use service accounts: `orka3 serviceaccount token <name>`. See [Service Accounts](/orka/orka-cluster-access/orka-cluster-manage-service-accounts) for setup instructions.
+</Warning>
 
 
 
@@ -211,6 +215,16 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
 Manage images stored on Orka nodes. By adding images to a node before deploying a VM, you can reduce the delay caused by remote or local image pulls, providing consistent deployment times.
 
+## Recent Feature Highlights
+
+Key capabilities added since Orka 3.0:
+
+- **Public IP support** (3.1): Configure the CLI with a public API IP for use outside the private network.
+- **Scheduled image caching** (3.2): Pre-cache VM images on nodes before CI jobs run to eliminate pull delays.
+- **Display resolution flags** (3.4): Set `--display-width`, `--display-height`, and `--display-dpi` at VM deploy or config time. IPSW VMs default to 1920×1080×96.
+- **Harbor as default OCI storage** (3.5): New Orka deployments use Harbor OCI storage by default. Existing NFS-based deployments are not affected.
+- **Bridged networking** (3.5, on-prem only): VMs can connect directly to a physical network via DHCP.
+
 ## Next steps - Integrate with CI tooling
 
-See [Orka Cluster 3.2 Integrations](/orka/orka-overview/tools-integrations)
+See [Orka Tools & Integrations](/orka/orka-overview/tools-integrations)

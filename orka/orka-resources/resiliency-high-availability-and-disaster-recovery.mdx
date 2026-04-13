@@ -73,11 +73,16 @@ Images are the saved state of a VM on disk that can be used to run VMs.
 
 
 
-### Future Enhancements
+### Harbor OCI Storage
 
-  * MacStadium is in the process of enabling a secondary storage solution called  _Private Cloud_ storage solution. This solution provides the following capabilities that customers can leverage for resiliency, HA, and DR.
-    * Snapshot capabilities: Allowing point-in-time copies of images for more customer-controlled backup and recovery.
-    * DR storage on another node at additional cost; implementing cross-node replication for even greater resilience.
+Starting with Orka 3.5, Harbor OCI storage is the default managed storage solution for new Orka deployments. Harbor is a MacStadium-managed, OCI-compliant image registry that provides:
+
+  * Secure image storage with role-based access control
+  * Activity auditing and compliance tracking
+  * Prometheus metrics support
+  * Automatic resource scaling based on available Orka nodes
+
+Existing deployments using Pure NFS storage retain their current configuration. Customers running Harbor can implement DR solutions using the capabilities of their OCI registry. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli) for details.
 
 
 

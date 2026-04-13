@@ -6,10 +6,18 @@ zendesk_id: 28340384486683
 
 | Platform | Status | Notes |
 |---|---|---|
-| Apple Silicon — macOS Monterey | Deprecated as of Orka 2.4.0 | Intel Monterey VMs are not affected |
+| Apple Silicon — macOS Monterey | Removed as of Orka 3.0 | Intel Monterey VMs are not affected |
 | Intel — macOS Monterey | Supported | — |
 | Apple Silicon — macOS Ventura and later | Supported as of [Orka 3.0](/orka/orka-upgrades-and-release-notes/orka-30-release-notes) | Requires Orka VM Tools |
 | Intel — macOS Ventura and later | Supported | — |
+
+<Note>
+  **Orka 3.5 default change:** Shared VM storage is disabled by default for new Orka deployments. Existing deployments retain the previous setting (enabled). To enable shared storage on a new deployment, open a support ticket.
+</Note>
+
+<Note>
+  **Orka 3.5.2:** Per-instance shared attached disk sizing is now supported. On AWS, set `VM_SHARED_DISK_SIZE` in each instance's user data script. On-prem, set `osx_node_orka_vm_shared_disk_size` via Ansible. See the [Orka 3.5.2 release notes](/orka/orka-upgrades-and-release-notes/orka-35-release-notes) for full setup steps.
+</Note>
 
 ## Overview
 
