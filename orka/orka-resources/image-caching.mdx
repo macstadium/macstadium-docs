@@ -10,7 +10,7 @@ zendesk_id: 30115530131355
 
 # About
 
-Orka 3.2 introduces Image Caching. This feature lets you download Orka images ahead of time to any node in the Orka cluster if you have admin privileges. This means you get a faster and more reliable VM deployment experience, as it helps reduce delays caused by network bandwidth issues. Without Image Caching, you would likely encounter delays during VM deployment, as automated CI jobs pull new images from the local cluster datastore (NFS mount) or a remote registry (cloud OCI registry service) during CI runtime.
+Orka 3.2 introduces Image Caching. This feature lets you download Orka images ahead of time to any node in the Orka cluster if you have admin privileges. Pre-caching images provides faster and more reliable VM deployments by reducing delays caused by network bandwidth issues. Without Image Caching, automated CI jobs pull new images from the local cluster datastore (NFS mount) or a remote registry during CI runtime, which can cause delays.
 
 # System Requirements
 
@@ -24,7 +24,7 @@ Scheduled Caching is available for:
 
 # Overview
 
-The first time a VM is run on a node, the image needs to be cached locally on that node. Previously, there was no user control to bypass this step prior to running automated CI pipeline jobs. Since initial image pull speed is impacted by many variables (image size, network bandwidth, node resource utilization), a build operation using a new VM image deployment can take several minutes to complete and even provide an inconsistent deployment time. The Orka Scheduled Caching feature allows admin users to bypass these typical causes of delay by pre-caching new images on Orka Cluster nodes before CI automation starts.
+The first time a VM is run on a node, the image needs to be cached locally on that node. Previously, you could not bypass this step before running automated CI pipeline jobs. Since initial image pull speed depends on image size, network bandwidth, and node resource utilization, a build using a new VM image can take several minutes and produce inconsistent deployment times. Scheduled Caching lets you bypass these delays by pre-caching new images on Orka cluster nodes before CI automation starts.
 
 The cluster knows which nodes have necessary images cached, greatly reducing image loading and scheduled downtime. If a node cache lacks a needed image, you can pick nodes for cache operations and stipulate that VMs deploy on those nodes using those images. In other words, Scheduled Caching is an asynchronous operation.
 
