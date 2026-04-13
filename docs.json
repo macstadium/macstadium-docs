@@ -13,8 +13,14 @@
   },
   "topbar": {
     "links": [
-      {"name": "Support", "url": "https://support.macstadium.com"},
-      {"name": "Portal", "url": "https://portal.macstadium.com"}
+      {
+        "name": "Support",
+        "url": "https://support.macstadium.com"
+      },
+      {
+        "name": "Portal",
+        "url": "https://portal.macstadium.com"
+      }
     ]
   },
   "github": {
@@ -29,7 +35,9 @@
     "telemetry": {
       "enabled": true
     },
-    "ga4": { "measurementId": "G-LW571X03HJ" }
+    "ga4": {
+      "measurementId": "G-LW571X03HJ"
+    }
   },
   "navigation": {
     "versions": [
@@ -129,18 +137,28 @@
                   "orka/networking-with-orka-at-macstadium/vpn-connection",
                   "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
                   "orka/networking-with-orka-at-macstadium/external-custom-domains",
-                  "orka/networking-with-orka-at-macstadium/aws-orka-connections",
-                  "orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel",
-                  "orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file",
-                  "orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel",
-                  "orka/networking-with-orka-at-macstadium/4-aws-verifying-the-vpn-tunnel",
-                  "orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting",
-                  "orka/networking-with-orka-at-macstadium/gcp-orka-connections",
-                  "orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel",
-                  "orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file",
-                  "orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel",
-                  "orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel",
-                  "orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
+                  {
+                    "group": "AWS",
+                    "pages": [
+                      "orka/networking-with-orka-at-macstadium/aws-orka-connections",
+                      "orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel",
+                      "orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file",
+                      "orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel",
+                      "orka/networking-with-orka-at-macstadium/4-aws-verifying-the-vpn-tunnel",
+                      "orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting"
+                    ]
+                  },
+                  {
+                    "group": "GCP",
+                    "pages": [
+                      "orka/networking-with-orka-at-macstadium/gcp-orka-connections",
+                      "orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel",
+                      "orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file",
+                      "orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel",
+                      "orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel",
+                      "orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
+                    ]
+                  }
                 ]
               },
               {
@@ -392,41 +410,41 @@
                 ]
               },
               {
-                "group": "AWS",
-                "pages": [
-                  "iaas/aws/aws-troubleshooting",
-                  "iaas/aws/aws-networking-setup",
-                  "iaas/aws/site-to-site-vpn-configuration-with-aws",
-                  "iaas/aws/aws-vpn-config-for-cisco-asaasav",
-                  "iaas/aws/verify-aws"
-                ]
-              },
-              {
-                "group": "Azure",
-                "pages": [
-                  "iaas/azure/azure-networking-setup",
-                  "iaas/azure/azure-troubleshooting",
-                  "iaas/azure/site-to-site-vpn-configuration-with-azure",
-                  "iaas/azure/azure-vpn-config-for-cisco-asaasav",
-                  "iaas/azure/verify-azure"
-                ]
-              },
-              {
-                "group": "Google Cloud Platform",
-                "pages": [
-                  "iaas/google-cloud-platform/google-cloud-networking-setup",
-                  "iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp",
-                  "iaas/google-cloud-platform/gcp-troubleshooting",
-                  "iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav",
-                  "iaas/google-cloud-platform/verify-gcp"
-                ]
-              },
-              {
                 "group": "Connecting to Other Clouds",
                 "pages": [
                   "iaas/connecting-to-other-clouds/other-clouds",
                   "iaas/connecting-to-other-clouds/private-cloud-networking-setup",
-                  "iaas/connecting-to-other-clouds/site-to-site-vpn-config"
+                  "iaas/connecting-to-other-clouds/site-to-site-vpn-config",
+                  {
+                    "group": "AWS",
+                    "pages": [
+                      "iaas/aws/aws-troubleshooting",
+                      "iaas/aws/aws-networking-setup",
+                      "iaas/aws/site-to-site-vpn-configuration-with-aws",
+                      "iaas/aws/aws-vpn-config-for-cisco-asaasav",
+                      "iaas/aws/verify-aws"
+                    ]
+                  },
+                  {
+                    "group": "Azure",
+                    "pages": [
+                      "iaas/azure/azure-networking-setup",
+                      "iaas/azure/azure-troubleshooting",
+                      "iaas/azure/site-to-site-vpn-configuration-with-azure",
+                      "iaas/azure/azure-vpn-config-for-cisco-asaasav",
+                      "iaas/azure/verify-azure"
+                    ]
+                  },
+                  {
+                    "group": "Google Cloud Platform",
+                    "pages": [
+                      "iaas/google-cloud-platform/google-cloud-networking-setup",
+                      "iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp",
+                      "iaas/google-cloud-platform/gcp-troubleshooting",
+                      "iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav",
+                      "iaas/google-cloud-platform/verify-gcp"
+                    ]
+                  }
                 ]
               },
               {
@@ -478,17 +496,50 @@
     }
   },
   "redirects": [
-    { "source": "/docs", "destination": "/" },
-    { "source": "/getting-started/creating-your-first-node", "destination": "/orka/quick-start-guides/orka3-cli-quick-start" },
-    { "source": "/getting-started/creating-your-first-node/", "destination": "/orka/quick-start-guides/orka3-cli-quick-start" },
-    { "source": "/changelog", "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes" },
-    { "source": "/docs/support", "destination": "https://support.macstadium.com" },
-    { "source": "/docs/faqs", "destination": "https://support.macstadium.com" },
-    { "source": "/docs/bare-metal-hosts", "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas" },
-    { "source": "/docs/cloud-automation", "destination": "/orka/orka-overview/orka-overview" },
-    { "source": "/docs/homebrew", "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew" },
-    { "source": "/docs/ansible", "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide" },
-    { "source": "/docs/:path*", "destination": "/" },
+    {
+      "source": "/docs",
+      "destination": "/"
+    },
+    {
+      "source": "/getting-started/creating-your-first-node",
+      "destination": "/orka/quick-start-guides/orka3-cli-quick-start"
+    },
+    {
+      "source": "/getting-started/creating-your-first-node/",
+      "destination": "/orka/quick-start-guides/orka3-cli-quick-start"
+    },
+    {
+      "source": "/changelog",
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes"
+    },
+    {
+      "source": "/docs/support",
+      "destination": "https://support.macstadium.com"
+    },
+    {
+      "source": "/docs/faqs",
+      "destination": "https://support.macstadium.com"
+    },
+    {
+      "source": "/docs/bare-metal-hosts",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/cloud-automation",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/homebrew",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew"
+    },
+    {
+      "source": "/docs/ansible",
+      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide"
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/"
+    },
     {
       "source": "/hc/en-us/articles/47496358655259-Network-Onboarding-Form",
       "destination": "/iaas/cisco-firewalls/network-onboarding-form",
