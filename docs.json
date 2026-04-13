@@ -456,7 +456,6 @@
       },
       {
         "version": "Orka 2.x (Legacy)",
-        "tag": "Legacy",
         "groups": [
           {
             "group": "Orka 2.x Migration Guides",
