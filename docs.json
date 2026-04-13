@@ -340,10 +340,8 @@
                   "iaas/bare-metal-macs/bare-metal-hosts",
                   "iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks",
                   "iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time",
-                  "iaas/bare-metal-macs/vnc-clients",
                   "iaas/bare-metal-macs/common-tools",
-                  "iaas/bare-metal-macs/2018-mac-mini-deactivation-process",
-                  "iaas/bare-metal-macs/mac-mini-comparison-chart"
+                  "iaas/bare-metal-macs/2018-mac-mini-deactivation-process"
                 ]
               },
               {
@@ -435,18 +433,7 @@
                   "iaas/iaas-faqs/troubleshooting-connectivity-issues",
                   "iaas/iaas-faqs/macstadium-api",
                   "iaas/iaas-faqs/reboot-your-mac",
-                  "iaas/iaas-faqs/what-do-i-do-if-i-accidentally-turned-off-vnc-on-my-hosted-mac",
-                  "iaas/iaas-faqs/whats-the-ola-on-rebooting-a-dedicated-mac-host",
-                  "iaas/iaas-faqs/what-are-macstadiums-proprietary-mac-pro-upgrades",
-                  "iaas/iaas-faqs/how-do-i-order-multiple-servers-at-one-time",
-                  "iaas/iaas-faqs/does-macstadium-offer-a-hosted-imac-pro",
-                  "iaas/iaas-faqs/why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources",
-                  "iaas/iaas-faqs/what-is-instant-provisioning-and-how-long-does-it-take",
-                  "iaas/iaas-faqs/is-there-macos-software-to-replace-the-popular-web-hosting-software-offered-by-l",
-                  "iaas/iaas-faqs/do-i-need-a-vnc-server-installed-on-my-mac",
                   "iaas/iaas-faqs/do-i-have-root-and-admin-access-to-subscription-based-mac-servers",
-                  "iaas/iaas-faqs/can-a-hosted-mac-server-offer-a-virtual-desktop-at-4k-resolution",
-                  "iaas/iaas-faqs/can-i-use-a-remote-mac-for-ios-development",
                   "iaas/iaas-faqs/can-i-change-the-os-on-my-server-from-macos-to-linux"
                 ]
               }
