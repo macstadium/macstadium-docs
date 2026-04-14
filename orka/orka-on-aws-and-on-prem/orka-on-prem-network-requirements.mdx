@@ -1,6 +1,6 @@
 ---
 title: "On-Prem Network Requirements"
-description: "Physical host network requirements for Orka on-prem deployments, including the Calico pod network CIDR constraint and how to configure an alternate CIDR if your network overlaps."
+description: "Physical host network requirements for Orka on-prem deployments, including the Calico pod network CIDR constraint."
 ---
 
 Orka on-prem deployments use [Calico](https://docs.tigera.io/calico/latest/about/) for pod networking. During cluster bootstrap, `kubeadm` assigns Calico a pod network CIDR — the address space Kubernetes uses internally for pod-to-pod communication. If your physical host network overlaps with that CIDR, pods on the affected hosts will lose network connectivity.
@@ -31,7 +31,7 @@ Any subnet of `192.168.0.0/16` assigned to your physical Mac hosts will conflict
 When a conflict exists, Calico routes pod traffic to physical addresses and vice versa, causing intermittent or complete networking failures for VMs and Orka services.
 
 <Warning>
-  If your physical host network overlaps with `192.168.0.0/16`, contact MacStadium before attempting cluster bootstrap. Reconfiguring the CIDR after the cluster is live requires a full cluster rebuild.
+  If your physical host network overlaps with `192.168.0.0/16`, contact MacStadium before attempting cluster bootstrap. Resolving a CIDR conflict after the cluster is live requires a full cluster rebuild.
 </Warning>
 
 ## Recommended approach
@@ -41,33 +41,10 @@ Design your physical Mac host network outside `192.168.0.0/16`. The [RFC 1918](h
 - `10.0.0.0/8`
 - `172.16.0.0/12`
 
-If your organization is already using `192.168.0.0/16` for other infrastructure and you need the Orka hosts on a subnet within it, see the section below.
-
-## Configuring an alternate pod network CIDR
-
-If your physical host network requires a subnet within `192.168.0.0/16`, you can configure Calico to use a different pod network CIDR by setting the following Ansible variable before running the cluster bootstrap playbook:
-
-```yaml
-calico_pod_network_cidr: "CIDR_BLOCK"
-```
-
-Choose a CIDR that does not overlap with your physical network, your VPN, or any other reachable network in your environment. A `/16` block gives Calico enough address space for large deployments.
-
-**Example:**
-
-```yaml
-calico_pod_network_cidr: "172.20.0.0/16"
-```
-
-Set this variable in your `cluster.yml` file alongside your other Ansible variables before running the bootstrap playbook. Once the cluster is live, this value cannot be changed without rebuilding the cluster.
-
-<Note>
-  Contact your MacStadium account team if you are unsure which CIDR to use. MacStadium can verify there are no conflicts with your IP Plan before you bootstrap.
-</Note>
+If your organization's existing infrastructure requires hosts on a subnet within `192.168.0.0/16`, contact your MacStadium account team before proceeding. MacStadium can verify there are no conflicts with your IP Plan and advise on the right path forward.
 
 ## Checklist before bootstrapping
 
 - [ ] Confirm your physical Mac host network does not fall within `192.168.0.0/16`
-- [ ] If it does, set `calico_pod_network_cidr` in `cluster.yml` to a non-conflicting block
-- [ ] Verify the chosen CIDR doesn't overlap with your VPN, corporate network, or other connected subnets
-- [ ] Share your intended CIDR with your MacStadium account team for confirmation
+- [ ] If it does, contact MacStadium before bootstrapping
+- [ ] Verify your host network doesn't overlap with your VPN or other connected subnets
