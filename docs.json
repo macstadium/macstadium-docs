@@ -28,7 +28,8 @@
     "repo": "macstadium-docs"
   },
   "feedback": {
-    "suggestEdit": true
+    "suggestEdit": true,
+    "raiseIssue": false
   },
   "integrations": {
     "telemetry": {
