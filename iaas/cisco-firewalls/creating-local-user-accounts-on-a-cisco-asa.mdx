@@ -66,7 +66,13 @@ To confirm the creation of the user account, enter the command show `running-con
 
 This command displays all the user accounts configured on the ASA.
 
-`ciscoasa# show running-config username username exampleuser1 password ***** pbkdf2 privilege 1 username clientuser1 password ***** pbkdf2 privilege 15 username admin password ***** pbkdf2 privilege 15 ciscoasa#`
+```
+ciscoasa# show running-config username
+username exampleuser1 password ***** pbkdf2 privilege 1
+username clientuser1 password ***** pbkdf2 privilege 15
+username admin password ***** pbkdf2 privilege 15
+ciscoasa#
+```
 
 When a password is defined in the username command, the ASA creates an MD5 hash of it when it is saved for security purposes. When verifying configuration with the show running-config command, the username command does not show the actual password; it shows the encrypted password followed by the encrypted keyword.
 
@@ -81,11 +87,21 @@ When a password is defined in the username command, the ASA creates an MD5 hash 
 
 If the authentication is successful, then proceed to test the level of access for the user account either at the ASA or at the RAVPN client.
 
-`ciscoasa # disable ciscoasa > login Username: exampleuser1 Password: *************** ciscoasa > enablePassword: ********* Password: ***************`
+```
+ciscoasa # disable
+ciscoasa > login
+Username: exampleuser1
+Password: ***************
+ciscoasa > enable
+Password: *********
+Password: ***************
+```
 
 **Unsuccessful Authentication**
 
-`[ exampleuser1 ]` You do NOT have Admin Rights to the console !
+```
+[ exampleuser1 ] You do NOT have Admin Rights to the console !
+```
 
 **Password**
 
@@ -102,7 +118,18 @@ To remove a user account, use `no version` with the username that is being remov
 
 
 
-`ciscoasa# configure terminal ciscoasa(config)# no username exampleuser1 ciscoasa(config)# end ciscoasa# write memory Building configuration... Cryptochecksum: b327981a 7a0e4ca2 ba149024 d05c9ab5 24790 bytes copied in 0.60 secs [OK] ciscoasa# show run ciscoasa# show running-config username username admin password ***** pbkdf2 privilege 15 username clientuser1 password ***** pbkdf2 privilege 15`
+```
+ciscoasa# configure terminal
+ciscoasa(config)# no username exampleuser1
+ciscoasa(config)# end
+ciscoasa# write memory
+Building configuration...
+Cryptochecksum: b327981a 7a0e4ca2 ba149024 d05c9ab5
+24790 bytes copied in 0.60 secs [OK]
+ciscoasa# show running-config username
+username admin password ***** pbkdf2 privilege 15
+username clientuser1 password ***** pbkdf2 privilege 15
+```
 
 ## Via Cisco Adaptive Security Device Manager (ASDM)
 

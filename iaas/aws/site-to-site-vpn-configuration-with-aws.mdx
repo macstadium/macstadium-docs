@@ -246,46 +246,13 @@ Manually replace the placeholders in the configuration file that were downloaded
 
 ## Configuration Parameters
 
-Placeholder Example | Description | More Information | Example  
----|---|---|---  
-      
-    
-```
-<vpc_subnet>
-```
-| The IPv4 address of the Amazon VPC (without the subnet mask bit notation). | This value can be found by logging in to the AWS  
-Management Console and navigating to the VPC  
-dashboard. Select the VPC and checking the Description at the bottom of the screen. | 172.31.0.0  
-      
-    
-```
-<vpc_subnet_mask>
-```
-| The subnet mask for the Amazon VPC. | This value can be found by logging in to the AWS  
-Management Console, and navigating to the VPC dashboard. Select the VPC, and check the Details at the bottom of the screen. Then convert the subnet mask bit notation to the  
-correct subnet mask  
-(For example, the /16 notation converts to a 255.255.0.0  
-subnet mask). | 255.255.0.0  
-      
-    
-```
-<amzn_vpn_map>
-```
-| A unique name for the crypto map. If there is already a crypto maps configured, then change the mapping number. | [Cisco Documentation: Configuring Crypto Maps](https://www.cisco.com/c/en/us/td/docs/security/vpn_modules/6342/vpn_cg/6342site3.html#wp1036915) | amzn_vpn_map  
-      
-    
-```
-<sla_monitor_address>
-```
-| An IP address in the Amazon VPC that can serve as an SLA monitor keeping the Site-To-Site tunnel alive. | Set this an available host in the  
-AWS VPC. The host must reply to ICMP echo requests | 172.31.0.5  
-      
-    
-```
-<local_subnet>
-```
-| The IP address for the internal private network of the MacStadium cloud as provided in Appendix A of your IP Plan.  
-By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 10.221.254.0  
+Placeholder Example | Description | More Information | Example
+---|---|---|---
+`<vpc_subnet>` | The IPv4 address of the Amazon VPC (without the subnet mask bit notation). | This value can be found by logging in to the AWS Management Console and navigating to the VPC dashboard. Select the VPC and checking the Description at the bottom of the screen. | 172.31.0.0
+`<vpc_subnet_mask>` | The subnet mask for the Amazon VPC. | This value can be found by logging in to the AWS Management Console, and navigating to the VPC dashboard. Select the VPC, and check the Details at the bottom of the screen. Then convert the subnet mask bit notation to the correct subnet mask (for example, the /16 notation converts to a 255.255.0.0 subnet mask). | 255.255.0.0
+`<amzn_vpn_map>` | A unique name for the crypto map. If there is already a crypto maps configured, then change the mapping number. | [Cisco Documentation: Configuring Crypto Maps](https://www.cisco.com/c/en/us/td/docs/security/vpn_modules/6342/vpn_cg/6342site3.html#wp1036915) | amzn_vpn_map
+`<sla_monitor_address>` | An IP address in the Amazon VPC that can serve as an SLA monitor keeping the Site-To-Site tunnel alive. | Set this an available host in the AWS VPC. The host must reply to ICMP echo requests. | 172.31.0.5
+`<local_subnet>` | The IP address for the internal private network of the MacStadium cloud as provided in Appendix A of your IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 10.221.254.0
   
   1. Verify the configuration file from the AWS Management Console.
   2. Open the configuration file.
@@ -297,7 +264,7 @@ By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadiu
        * `object network obj-SrcNet subnet 0.0.0.0 0.0.0.0`
 
 <Warning>
-  Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the `&lt;sla_monitor_address>` value.
+  Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the `<sla_monitor_address>` value.
 </Warning>
   6. On the following line, change 0.0.0.0 0.0.0.0 to a combination of the IP address and the subnet mask for your Amazon VPC. 
      * These values are in the AWS Management Console. Navigate to the VPC dashboard and select the VPC, and check the Description at the bottom of the screen.
@@ -322,80 +289,37 @@ to
 
 ## Configuration Parameters for Route-based VPN - ASA 9.7 + VTI
 
-Placeholder Examples | Description | More Information |  Example  
----|---|---|---  
-      
-    
-```
-‹outside_interface>
-```
-| The name of the outside interface of the Cisco ASA/ASAv device as provided in Appendix A of your IP  
-Plan.  
-By default, the value is Outside. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | Outside  
-      
-    
-```
-<local_subnet>
-```
-|  The IP address for the internal private network of your  
-MacStadium cloud as provided in  
-Appendix A of your IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 10.221.254.0  
-      
-    
-```
-<local_subnet_mask>
-```
-|  The subnet mask for the internal private LAN of the MacStadium cloud as provided in Appendix A of the IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 255.255.255.0  
-      
-    
-```
-<vpc_subnet>
-```
-| The IPv4 address of the Amazon  
-VPC (without the subnet mask bit notation). | This value can be found by logging in to the AWS  
-Management Console, and navigate to your VPC dashboard.  
-Select the VPC and check the Description at the bottom of the  
-screen. | 172.31.0.0  
+Placeholder Examples | Description | More Information | Example
+---|---|---|---
+`<outside_interface>` | The name of the outside interface of the Cisco ASA/ASAv device as provided in Appendix A of your IP Plan. By default, the value is Outside. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | Outside
+`<local_subnet>` | The IP address for the internal private network of your MacStadium cloud as provided in Appendix A of your IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 10.221.254.0
+`<local_subnet_mask>` | The subnet mask for the internal private LAN of the MacStadium cloud as provided in Appendix A of the IP Plan. By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadium-overview/ip-plan) | 255.255.255.0
+`<vpc_subnet>` | The IPv4 address of the Amazon VPC (without the subnet mask bit notation). | This value can be found by logging in to the AWS Management Console, and navigate to your VPC dashboard. Select the VPC and check the Description at the bottom of the screen. | 172.31.0.0
   
   1. Verify the configuration file from the AWS Management Console.
 
   2. Open the configuration file.
 
-  3. Replace the placeholders with their respective values. Currently, only the placeholder \<outside_interface> is available in the AWS script. Use Table 1: Configuration parameters for reference.
+  3. Replace the placeholders with their respective values. Currently, only the placeholder `<outside_interface>` is available in the AWS script. Use Table 1: Configuration parameters for reference.
 
   4. Change the name of the tunnel interfaces. Example:
 
 ```
  * interface tunnel 100 nameif aws-vpn-1 interface tunnel 200 nameif aws-vpn-2
 ```
-  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network \<local_subnet> mask \<local_subnet_mask>
+  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network `<local_subnet>` mask `<local_subnet_mask>`
 
   6. Replace the placeholders with their respective values.
 
   7. For a route-based VPN, enable the TCP State Bypass feature to allow the outbound and inbound traffic to flow through separate VPN tunnels as follows:
 
-Placeholder Example | Description | More Information | Example  
----|---|---|---  
-           
-```
-     ‹acl-state-bypass>
-```
-| A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation:  
-Access Control Lists | acl-state-bypass  
-           
-```
-     <cm_state-bypass>
-```
-| A unique name for the Class-map. | Cisco Documentation:  
-TCP State Bypass | cm-state-bypass  
-           
-```
-     <pm-state-bypass>
-```
-| A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation:  
-TCP State Bypass | pm-state-bypass  
-     * Define the Access list with the source and destination networks: access-list \<acl-state-bypass> extended permit ip 
-       * \<local_subnet> \<local_subnet_mask> \<vpc_subnet> \<vpc_subnet_mask>
+Placeholder Example | Description | More Information | Example
+---|---|---|---
+`<acl-state-bypass>` | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation: Access Control Lists | acl-state-bypass
+`<cm_state-bypass>` | A unique name for the Class-map. | Cisco Documentation: TCP State Bypass | cm-state-bypass
+`<pm-state-bypass>` | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation: TCP State Bypass | pm-state-bypass
+     * Define the Access list with the source and destination networks: access-list `<acl-state-bypass>` extended permit ip
+       * `<local_subnet>` `<local_subnet_mask>` `<vpc_subnet>` `<vpc_subnet_mask>`
 
 ```
  * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection: 
@@ -437,7 +361,7 @@ For more information about VPN routing, see [Amazon VPC Documentation: Site-To-S
 
 ### Why OpenConnect?
 
-For mostly CLI users, use [OpenConnect](https://www.infradead.org/openconnect/index.html) \- an open-source VPN client available from the command line.
+For mostly CLI users, use [OpenConnect](https://www.infradead.org/openconnect/index.html) - an open-source VPN client available from the command line.
 
 ## Download and Install OpenConnect
 
