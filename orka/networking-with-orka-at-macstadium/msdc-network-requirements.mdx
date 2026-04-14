@@ -1,9 +1,13 @@
 ---
-title: "On-Prem Network Requirements"
-description: "Physical host network requirements for Orka on-prem deployments, including the Calico pod network CIDR constraint."
+title: "MSDC Network Requirements"
+description: "Physical host network requirements for Orka clusters hosted at MacStadium data centers (Atlanta, Dublin, Las Vegas), including the Calico pod network CIDR constraint."
 ---
 
-Orka on-prem deployments use [Calico](https://docs.tigera.io/calico/latest/about/) for pod networking. During cluster bootstrap, `kubeadm` assigns Calico a pod network CIDR — the address space Kubernetes uses internally for pod-to-pod communication. If your physical host network overlaps with that CIDR, pods on the affected hosts will lose network connectivity.
+<Note>
+  This page applies to Orka clusters hosted at MacStadium data centers (Atlanta, Dublin, and Las Vegas). It does not apply to Orka on AWS or customer on-premises deployments.
+</Note>
+
+Orka uses [Calico](https://docs.tigera.io/calico/latest/about/) for pod networking. During cluster bootstrap, `kubeadm` assigns Calico a pod network CIDR — the address space Kubernetes uses internally for pod-to-pod communication. If your physical host network overlaps with that CIDR, pods on the affected hosts will lose network connectivity.
 
 ## Default pod network CIDR
 
