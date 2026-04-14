@@ -15,7 +15,7 @@
     "links": [
       {
         "name": "Support",
-        "url": "https://support.macstadium.com"
+        "url": "https://portal.macstadium.com/support-center/tickets"
       },
       {
         "name": "Portal",
@@ -29,7 +29,7 @@
   },
   "feedback": {
     "suggestEdit": true,
-    "raiseIssue": true
+    "raiseIssue": false
   },
   "integrations": {
     "telemetry": {
