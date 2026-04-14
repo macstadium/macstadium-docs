@@ -61,23 +61,23 @@ For more information about this verification command, see [Cisco Documentation: 
   2. Verify that you have created a virtual machine instance in GCP and that you have enabled user login on it. 
      * For more information about user login on GCP instances, see [Google Cloud Documentation: Setting up and configuring OS Login](https://cloud.google.com/compute/docs/instances/managing-instance-access).
   3. In the terminal on your MacStadium VM, run the following command. 
-     * Replace \<user> with the username for your GCP instance.
-     * Replace \<gcp-vm-ip> with the private IP of the GCP instance. 
+     * Replace `<user>` with the username for your GCP instance.
+     * Replace `<gcp-vm-ip>` with the private IP of the GCP instance. 
            
 ```
        ssh <user>@<gcp-vm-ip>
 ```
   4. When prompted, provide your password or key for the specified username on the specified GCP instance. 
-     * If the connection is successful, the prefix of the terminal becomes \<user>@\<gcp-vm-ip>. This indicates that you have connected from MacStadium to GCP over the tunnel.
+     * If the connection is successful, the prefix of the terminal becomes `<user>`@`<gcp-vm-ip>`. This indicates that you have connected from MacStadium to GCP over the tunnel.
   5. Run the following command. 
-     * Replace \<user> with the username for your MacStadium VM.
-     * Replace \<macstadium-vm-ip> with the private IP of the MacStadium VM. 
+     * Replace `<user>` with the username for your MacStadium VM.
+     * Replace `<macstadium-vm-ip>` with the private IP of the MacStadium VM. 
            
 ```
        ssh <user>@<macstadium-vm-ip>
 ```
   6. When prompted, provide your password or key for the specified username on the specified MacStadium VM. 
-     * If the connection is successful, the prefix of the terminal becomes \<user>@\<macstadium-vm-ip>. This indicates that you have connected from GCP to MacStadium over the tunnel.
+     * If the connection is successful, the prefix of the terminal becomes `<user>`@`<macstadium-vm-ip>`. This indicates that you have connected from GCP to MacStadium over the tunnel.
 
 
 

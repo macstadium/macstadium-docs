@@ -287,7 +287,7 @@ To use the MacStadium provided functionality you need to:
   3. Run the container
          
 ```
-     docker run -it -v \<kube_config_location>:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash  
+     docker run -it -v `<kube_config_location>`:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash  
 ```
   4. Run the backup playbook inside the `/ansible` folder
          

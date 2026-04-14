@@ -288,7 +288,7 @@ By default, this is the Private-1 network. | [The IP Plan](/macstadium/macstadiu
      * To uncomment, remove ! at the start of the line.
      * Keep the following line to ensure the SLA monitor works as expected. 
        * `object network obj-SrcNet subnet 0.0.0.0 0.0.0.0`
-       * **WARNING** : Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the \<sla_monitor_address> value.
+       * **WARNING** : Based on the network configuration and requirements, the line can be modified to map to the subnet and the subnet mask for the Private-1 network from your IP Plan. If this line is modified, then do not configure the `<sla_monitor_address>` value.
   6. On the following line, change 0.0.0.0 0.0.0.0 to a combination of the IP address and the subnet mask for your Amazon VPC. 
      * These values are in the AWS Management Console. Navigate to the VPC dashboard and select the VPC, and check the Description at the bottom of the screen.
      * Convert the subnet mask bit notation to the correct subnet mask (for example, the /16 notation converts to a 255.255.0.0 subnet mask).
@@ -351,14 +351,14 @@ screen. | 172.31.0.0
 
   2. Open the configuration file.
 
-  3. Replace the placeholders with their respective values. Currently, only the placeholder \<outside_interface> is available in the AWS script. Use Table 1: Configuration parameters for reference.
+  3. Replace the placeholders with their respective values. Currently, only the placeholder `<outside_interface>` is available in the AWS script. Use Table 1: Configuration parameters for reference.
 
   4. Change the name of the tunnel interfaces. Example:
 
 ```
  * interface tunnel 100 nameif aws-vpn-1 interface tunnel 200 nameif aws-vpn-2
 ```
-  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network \<local_subnet> mask \<local_subnet_mask>
+  5. Replace the network address and mask on the BGP configuration. Example: router bgp 65513 address-family ipv4 unicast network `<local_subnet>` mask `<local_subnet_mask>`
 
   6. Replace the placeholders with their respective values.
 
@@ -384,8 +384,8 @@ TCP State Bypass | cm-state-bypass
 ```
 | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation:  
 TCP State Bypass | pm-state-bypass  
-     * Define the Access list with the source and destination networks: access-list \<acl-state-bypass> extended permit ip 
-       * \<local_subnet> \<local_subnet_mask> \<vpc_subnet> \<vpc_subnet_mask>
+     * Define the Access list with the source and destination networks: access-list `<acl-state-bypass>` extended permit ip 
+       * `<local_subnet>` `<local_subnet_mask>` `<vpc_subnet>` `<vpc_subnet_mask>`
 
 ```
  * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection: 
