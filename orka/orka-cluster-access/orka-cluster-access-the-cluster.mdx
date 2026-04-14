@@ -32,11 +32,13 @@ You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overvie
 
   * For clusters deployed before Orka 2.1, it's the .100 address for your Private-1 network (usually, 10.221.188.100), prefixed with http. For example: http://10.221.188.100.
   * For clusters deployed with Orka 2.1 or later, it's the .20 address for your Private-1 network (usually 10.221.188.20), prefixed with http. For example: http://10.221.188.20.
-  * You can also use https://`<orka-domain>` and https://`<custom-domain>`(if configured). To get the Orka domain for your Orka cluster, contact MacStadium. To use an external custom domain, see here.
+  * You can also use https://\<orka-domain> and https://\<custom-domain>(if configured). To get the Orka domain for your Orka cluster, contact MacStadium. To use an external custom domain, see here.
 
 
 
-**Note:** You can use http://`<orka-IP>`, https://`<orka-domain>`, and https://`<custom-domain>` interchangeably in your workflows.
+<Note>
+  You can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
+</Note>
 
 ## Log in to the Orka cluster
 
@@ -44,7 +46,7 @@ Orka customers log in to their cluster with their MacStadium Customer Portal cre
 
 ### Using the Orka3 CLI
 
-If this is the first time you are logging in after installing the Orka CLI, you need to add the `<ORKA_ENDPOINT>` to your CLI configuration:
+If this is the first time you are logging in after installing the Orka CLI, you need to add the \<ORKA_ENDPOINT> to your CLI configuration:
     
     
 ```
@@ -74,7 +76,7 @@ If you are using Orka Web UI, complete the following steps:
      orka3 serviceaccount token <SERVICE_ACCOUNT>
 ```
 
-  2. In the browser, navigate to your `<ORKA_ENDPOINT>` and, when prompted, provide the token obtained in Step 1.
+  2. In the browser, navigate to your \<ORKA_ENDPOINT> and, when prompted, provide the token obtained in Step 1.
 
 
 
@@ -104,11 +106,11 @@ If you are using the Orka API, complete the following steps:
      orka3 serviceaccount token <SERVICE_ACCOUNT>
 ```
 
-  2. In the browser, navigate to your `<ORKA_ENDPOINT>`/api/v1/swagger and click Authorize.
+  2. In the browser, navigate to your \<ORKA_ENDPOINT>/api/v1/swagger and click Authorize.
 
-  3. In the Value text box, type Bearer `<TOKEN>` and click Authorize.
+  3. In the Value text box, type Bearer \<TOKEN> and click Authorize.
 
-  4. Replace `<TOKEN>` with the token obtained in Step 1.
+  4. Replace \<TOKEN> with the token obtained in Step 1.
 
   5. Click Close
 
