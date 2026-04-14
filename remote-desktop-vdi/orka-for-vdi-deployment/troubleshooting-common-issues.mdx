@@ -84,11 +84,9 @@ zendesk_id: 44333132574107
 ```
   * Check Citrix Cloud console
 
-```
 * Machine state should be “Registered” and “Available”
 
 * Machine state should not be “Unregistered”, “Maintenance”, or “In Use”
-```
   * Test Rendezvous connectivity (if using)
         
 ```
@@ -106,7 +104,6 @@ zendesk_id: 44333132574107
     ```
   * Check client side for issues
 
-```
 * Update Citrix Workspace app to the latest version
 
 * Clear Citrix Workspace app cache
@@ -114,7 +111,6 @@ zendesk_id: 44333132574107
 * Try different client devices to help identify the problem
 
 * If available, test from a different network to rule out network restrictions
-```
 **Common causes:**
 
   * VM powered ‘Off’, or crashed
@@ -156,11 +152,9 @@ zendesk_id: 44333132574107
 ```
   * Check VM resource allocation
 
-```
 * Ensure VM has adequate CPU/RAM allocated
 
 * Compare allocation to baseline requirements to ensure minimums are met
-```
   * Check network latency with:
 
     ```
@@ -172,22 +166,18 @@ zendesk_id: 44333132574107
   * Check for packet loss
   * Review HDX policies
 
-```
 * Check Citrix policies for codec settings
 
 * Verify compression settings are appropriate for the connection
 
 * Ensure adaptive transport is enabled
-```
   * Application specific issues
 
-```
 * Some applications may not perform well over HDX
 
 * Check Citrix compatibility for specific software
 
 * Consider GPU acceleration needs, if any
-```
 **Common causes:**
 
   * Insufficient VM resources
@@ -220,32 +210,24 @@ zendesk_id: 44333132574107
 
   * Check HDX policies in Citrix Cloud
 
-```
 * Navigate to Policies → HDX Settings
 
 * Verify that “Client clipboard redirection” is enabled
 
 * Verify that “Client drive redirection” is enabled
-```
   * Restart the session
 
-```
 * Log out and back in (sometimes, policies don’t apply until a new session has been started)
-```
   * Update Citrix Workspace application
 
-```
 * Ensure the latest version is installed, as older versions may have bugs when using the Clipboard
-```
   * Test with different types of content
 
-```
 * Try plain text first
 
 * Then try formatted text, images, or files
 
 * Isolate what’s working vs. what’s not working
-```
 **Common causes:**
 
   * HDX policy is blocking the clipboard/file transfer
@@ -316,7 +298,6 @@ ansible hosts -i inventory \
 ```
   * Attempt to manually deploy
 
-```
 * SSH to Orka host
 
 * Manually run
@@ -324,7 +305,6 @@ ansible hosts -i inventory \
       orka-engine vm create
 
 * Observe error messages
-```
   * Force VM shutdown if VM is still stuck
 
 
@@ -375,11 +355,9 @@ ansible-playbook -i inventory stop_orka_vm.yml \
 ```
   * Verify registry credentials
 
-```
 * Check Ansible Vault contains correct credentials
 
 * Test authentication manually
-```
   * Check available disk space
         
 ```
@@ -389,11 +367,9 @@ ansible-playbook -i inventory stop_orka_vm.yml \
 ```
   * Review image size
 
-```
 * Images larger than 20GB may timeout on slow networks
 
 * Consider optimizing images as needed
-```
   * Test with a smaller image
         
 ```
