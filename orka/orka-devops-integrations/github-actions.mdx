@@ -1,34 +1,13 @@
 ---
 title: "GitHub Actions"
-description: "Run macOS builds on Orka with GitHub Actions. Covers dynamic ephemeral runners (recommended) and static runner setup with service account configuration."
+description: "Run macOS builds on Orka with GitHub Actions using dynamic ephemeral runners that scale automatically with demand."
 zendesk_id: 28398644632091
 ---
 
-How to use GitHub Actions with your Orka environment.
-
-MacStadium provides 2 approaches to integrating with GitHub Actions
-
-  1. A dynamic ephemeral runner which automatically scales the number of runners based on the demand, ensuring optimal resource utilization.
-  2. Static runners which run in long-lived VMs that GitHub Actions will use as needed
-
-
-
-Dynamic ephemeral runners are recommended for most teams — they scale automatically with demand, so you're not paying for idle VMs between builds.
+MacStadium provides a dynamic ephemeral runner integration for GitHub Actions. Runners scale automatically based on demand, so you're not paying for idle VMs between builds.
 
 <Note>Orka 3.1.x users should run the most recent [release version](https://github.com/macstadium/orka-github-actions-integration/releases) to get the latest features and fixes.</Note>
 
 ## Set up the dynamic ephemeral runner
 
-For the latest information about how to use the dynamic ephemeral runners, see [https://github.com/macstadium/orka-github-actions-integration/](https://github.com/macstadium/orka-github-actions-integration/)
-
-## Set up the static runners
-
-You can work with single or multiple self-hosted runners. Every single self-hosted runner is a permanent agent for your workflows - it persists over time and GitHub Actions uses it when you need to run a workflow.
-
-## Set up a single static self-hosted runner
-
-For the latest information about how to set up a single static self-hosted runner, see [Using an Automatically Configured Single Self-Hosted GitHub Actions Runner](https://github.com/macstadium/orka-integrations/blob/master/GitHub/single-self-hosted-runner.md).
-
-## Set up multiple static self-hosted runners
-
-For the latest information about how to set up multiple static self-hosted runners, see [Using Multiple Automatically Configured Self-Hosted GitHub Actions Runners](https://github.com/macstadium/orka-integrations/blob/master/GitHub/multiple-self-hosted-runners.md).
+For setup instructions and the latest documentation, see the [orka-github-actions-integration](https://github.com/macstadium/orka-github-actions-integration/) repository.
