@@ -15,7 +15,7 @@
     "links": [
       {
         "name": "Support",
-        "url": "https://support.macstadium.com"
+        "url": "https://portal.macstadium.com/support-center/tickets"
       },
       {
         "name": "Portal",
@@ -28,8 +28,7 @@
     "repo": "macstadium-docs"
   },
   "feedback": {
-    "suggestEdit": true,
-    "raiseIssue": true
+    "suggestEdit": true
   },
   "integrations": {
     "telemetry": {
@@ -134,6 +133,7 @@
               {
                 "group": "Networking",
                 "pages": [
+                  "orka/networking-with-orka-at-macstadium/msdc-network-requirements",
                   "orka/networking-with-orka-at-macstadium/vpn-connection",
                   "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
                   "orka/networking-with-orka-at-macstadium/external-custom-domains",
@@ -358,37 +358,73 @@
                   "iaas/bare-metal-macs/bare-metal-hosts",
                   "iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks",
                   "iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time",
-                  "iaas/bare-metal-macs/vnc-clients",
                   "iaas/bare-metal-macs/common-tools",
-                  "iaas/bare-metal-macs/2018-mac-mini-deactivation-process",
-                  "iaas/bare-metal-macs/mac-mini-comparison-chart"
+                  "iaas/bare-metal-macs/2018-mac-mini-deactivation-process"
                 ]
               },
               {
                 "group": "Networking",
                 "pages": [
-                  "iaas/networking/networking-overview"
-                ]
-              },
-              {
-                "group": "Cisco Firewalls",
-                "pages": [
-                  "iaas/cisco-firewalls/network-onboarding-form",
-                  "iaas/cisco-firewalls/prepare-the-vpn-configuration-for-input-into-cisco-asaasav",
-                  "iaas/cisco-firewalls/network-firewalls-overview",
-                  "iaas/cisco-firewalls/logging-into-cisco-firewall",
-                  "iaas/cisco-firewalls/creating-local-user-accounts-on-a-cisco-asa",
-                  "iaas/cisco-firewalls/backup-and-restore-firewall-config-using-asdm",
-                  "iaas/cisco-firewalls/managing-interfaces",
-                  "iaas/cisco-firewalls/network-firewalls-configuration",
-                  "iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet",
-                  "iaas/cisco-firewalls/checking-the-firewall-version",
-                  "iaas/cisco-firewalls/changing-the-vpn-firewall-password",
-                  "iaas/cisco-firewalls/firewall-change-request-form",
-                  "iaas/cisco-firewalls/network-firewalls-mac-mini-connect",
-                  "iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew",
-                  "iaas/cisco-firewalls/network-firewalls-for-ci-build-node-ansible",
-                  "iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn"
+                  "iaas/networking/networking-overview",
+                  {
+                    "group": "Cisco Firewalls",
+                    "pages": [
+                      "iaas/cisco-firewalls/network-onboarding-form",
+                      "iaas/cisco-firewalls/prepare-the-vpn-configuration-for-input-into-cisco-asaasav",
+                      "iaas/cisco-firewalls/network-firewalls-overview",
+                      "iaas/cisco-firewalls/logging-into-cisco-firewall",
+                      "iaas/cisco-firewalls/creating-local-user-accounts-on-a-cisco-asa",
+                      "iaas/cisco-firewalls/backup-and-restore-firewall-config-using-asdm",
+                      "iaas/cisco-firewalls/managing-interfaces",
+                      "iaas/cisco-firewalls/network-firewalls-configuration",
+                      "iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet",
+                      "iaas/cisco-firewalls/checking-the-firewall-version",
+                      "iaas/cisco-firewalls/changing-the-vpn-firewall-password",
+                      "iaas/cisco-firewalls/firewall-change-request-form",
+                      "iaas/cisco-firewalls/network-firewalls-mac-mini-connect",
+                      "iaas/cisco-firewalls/network-firewalls-for-ci-build-node-homebrew",
+                      "iaas/cisco-firewalls/network-firewalls-for-ci-build-node-ansible",
+                      "iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn"
+                    ]
+                  },
+                  {
+                    "group": "Connecting to Other Clouds",
+                    "pages": [
+                      "iaas/connecting-to-other-clouds/other-clouds",
+                      "iaas/connecting-to-other-clouds/private-cloud-networking-setup",
+                      "iaas/connecting-to-other-clouds/site-to-site-vpn-config",
+                      {
+                        "group": "AWS",
+                        "pages": [
+                          "iaas/aws/aws-troubleshooting",
+                          "iaas/aws/aws-networking-setup",
+                          "iaas/aws/site-to-site-vpn-configuration-with-aws",
+                          "iaas/aws/aws-vpn-config-for-cisco-asaasav",
+                          "iaas/aws/verify-aws"
+                        ]
+                      },
+                      {
+                        "group": "Azure",
+                        "pages": [
+                          "iaas/azure/azure-networking-setup",
+                          "iaas/azure/azure-troubleshooting",
+                          "iaas/azure/site-to-site-vpn-configuration-with-azure",
+                          "iaas/azure/azure-vpn-config-for-cisco-asaasav",
+                          "iaas/azure/verify-azure"
+                        ]
+                      },
+                      {
+                        "group": "Google Cloud Platform",
+                        "pages": [
+                          "iaas/google-cloud-platform/google-cloud-networking-setup",
+                          "iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp",
+                          "iaas/google-cloud-platform/gcp-troubleshooting",
+                          "iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav",
+                          "iaas/google-cloud-platform/verify-gcp"
+                        ]
+                      }
+                    ]
+                  }
                 ]
               },
               {
@@ -410,61 +446,12 @@
                 ]
               },
               {
-                "group": "Connecting to Other Clouds",
-                "pages": [
-                  "iaas/connecting-to-other-clouds/other-clouds",
-                  "iaas/connecting-to-other-clouds/private-cloud-networking-setup",
-                  "iaas/connecting-to-other-clouds/site-to-site-vpn-config",
-                  {
-                    "group": "AWS",
-                    "pages": [
-                      "iaas/aws/aws-troubleshooting",
-                      "iaas/aws/aws-networking-setup",
-                      "iaas/aws/site-to-site-vpn-configuration-with-aws",
-                      "iaas/aws/aws-vpn-config-for-cisco-asaasav",
-                      "iaas/aws/verify-aws"
-                    ]
-                  },
-                  {
-                    "group": "Azure",
-                    "pages": [
-                      "iaas/azure/azure-networking-setup",
-                      "iaas/azure/azure-troubleshooting",
-                      "iaas/azure/site-to-site-vpn-configuration-with-azure",
-                      "iaas/azure/azure-vpn-config-for-cisco-asaasav",
-                      "iaas/azure/verify-azure"
-                    ]
-                  },
-                  {
-                    "group": "Google Cloud Platform",
-                    "pages": [
-                      "iaas/google-cloud-platform/google-cloud-networking-setup",
-                      "iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp",
-                      "iaas/google-cloud-platform/gcp-troubleshooting",
-                      "iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav",
-                      "iaas/google-cloud-platform/verify-gcp"
-                    ]
-                  }
-                ]
-              },
-              {
                 "group": "FAQs",
                 "pages": [
                   "iaas/iaas-faqs/troubleshooting-connectivity-issues",
                   "iaas/iaas-faqs/macstadium-api",
                   "iaas/iaas-faqs/reboot-your-mac",
-                  "iaas/iaas-faqs/what-do-i-do-if-i-accidentally-turned-off-vnc-on-my-hosted-mac",
-                  "iaas/iaas-faqs/whats-the-ola-on-rebooting-a-dedicated-mac-host",
-                  "iaas/iaas-faqs/what-are-macstadiums-proprietary-mac-pro-upgrades",
-                  "iaas/iaas-faqs/how-do-i-order-multiple-servers-at-one-time",
-                  "iaas/iaas-faqs/does-macstadium-offer-a-hosted-imac-pro",
-                  "iaas/iaas-faqs/why-are-coreaudiod-and-launchd-using-a-high-amount-of-resources",
-                  "iaas/iaas-faqs/what-is-instant-provisioning-and-how-long-does-it-take",
-                  "iaas/iaas-faqs/is-there-macos-software-to-replace-the-popular-web-hosting-software-offered-by-l",
-                  "iaas/iaas-faqs/do-i-need-a-vnc-server-installed-on-my-mac",
                   "iaas/iaas-faqs/do-i-have-root-and-admin-access-to-subscription-based-mac-servers",
-                  "iaas/iaas-faqs/can-a-hosted-mac-server-offer-a-virtual-desktop-at-4k-resolution",
-                  "iaas/iaas-faqs/can-i-use-a-remote-mac-for-ios-development",
                   "iaas/iaas-faqs/can-i-change-the-os-on-my-server-from-macos-to-linux"
                 ]
               }
@@ -474,7 +461,6 @@
       },
       {
         "version": "Orka 2.x (Legacy)",
-        "tag": "Legacy",
         "groups": [
           {
             "group": "Orka 2.x Migration Guides",
