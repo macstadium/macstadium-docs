@@ -21,7 +21,9 @@ To create a site-to-site VPN from your Azure private cloud to your MacStadium pr
 
 ## Create an Azure virtual network
 
-_**NOTE** : If you already have an Azure virtual network configured, you can skip this step._
+<Note>
+  If you already have an Azure virtual network configured, you can skip this step.
+</Note>
 
 Azure virtual networks let you manage connectivity for your Azure cloud resources. Any Azure virtual machines that you want to connect to from MacStadium must be on the Azure virtual network that sits at the Azure end of your VPN connection.
 
@@ -51,7 +53,9 @@ This image shows a sample Azure virtual network configuration.
 
 ## Create a gateway subnet
 
-_**NOTE** : If you already have a gateway subnet configured for your Azure virtual network, you can skip this step._
+<Note>
+  If you already have a gateway subnet configured for your Azure virtual network, you can skip this step.
+</Note>
 
 After the deployment of your virtual network is complete, you need to create a gateway subnet. The gateway subnet consists of IPs that will be used by the gateway service.
 
@@ -145,7 +149,9 @@ With a virtual network gateway and a local network gateway in place, you can cre
   5. Select Virtual network gateway.
   6. For Shared key (PSK), provide an IPSec pre-shared key that will be used to encrypt your data over the site-to-site VPN. 
      * You can use a generator tool such as the [IFM - IPSec Pre-shared Key (PSK) Generator](http://www.ifm.net.nz/cookbooks/IPSec-Pre-shared-Key-PSK-Generator.html).
-     * **IMPORTANT** : Keep a record of the pre-shared key. You will need it later.
+<Warning>
+  Keep a record of the pre-shared key. You will need it later.
+</Warning>
 
   7. Review the remaining pre-filled settings and click OK.
   8. Wait for the operation to complete. 
