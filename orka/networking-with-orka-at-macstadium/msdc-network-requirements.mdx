@@ -1,54 +1,42 @@
 ---
 title: "MSDC Network Requirements"
-description: "Physical host network requirements for Orka clusters hosted at MacStadium data centers (Atlanta, Dublin, Las Vegas), including the Calico pod network CIDR constraint."
+description: "Physical host network requirements for Orka clusters hosted at MacStadium data centers (Atlanta, Dublin, Las Vegas), including reserved address ranges and how to request a custom subnet."
 ---
 
 <Note>
   This page applies to Orka clusters hosted at MacStadium data centers (Atlanta, Dublin, and Las Vegas). It does not apply to Orka on AWS or customer on-premises deployments.
 </Note>
 
-Orka uses [Calico](https://docs.tigera.io/calico/latest/about/) for pod networking. During cluster bootstrap, `kubeadm` assigns Calico a pod network CIDR — the address space Kubernetes uses internally for pod-to-pod communication. If your physical host network overlaps with that CIDR, pods on the affected hosts will lose network connectivity.
+MacStadium creates and manages the physical host network for MSDC-hosted Orka clusters. The default subnet is `10.221.188.0/23`. If your organization needs a different subnet to avoid conflicts with your own network topology, you can request one, but the choice is constrained by three reserved address ranges described below.
 
-## Default pod network CIDR
+## Reserved address ranges
 
-Orka bootstraps the Kubernetes cluster with a default Calico pod network CIDR of:
+All three [RFC 1918](https://datatracker.ietf.org/doc/html/rfc1918) private blocks are in use at MSDC in some capacity. When requesting a custom subnet, it must fall within `10.0.0.0/8`.
 
-```
-192.168.0.0/16
-```
+| Block | Reserved for | Can be used for host network? |
+|-------|-------------|-------------------------------|
+| `10.0.0.0/8` | Physical host networks (default: `10.221.188.0/23`) | Yes |
+| `172.16.0.0/12` | MSDC storage network (SAN) | No |
+| `192.168.0.0/16` | Calico pod network (Kubernetes internal) | No |
 
-This address space is reserved for Kubernetes internal use. **Your physical Mac host network must not fall within this block.**
+### Why `192.168.0.0/16` is off-limits
 
-## What counts as a conflict
+Orka uses [Calico](https://docs.tigera.io/calico/latest/about/) for pod networking. During cluster bootstrap, `kubeadm` assigns Calico the `192.168.0.0/16` block as its pod network CIDR. If physical Mac hosts are on any subnet within this block, Calico will route pod traffic to physical addresses and vice versa, causing intermittent or complete networking failures for VMs and Orka services.
 
-Any subnet of `192.168.0.0/16` assigned to your physical Mac hosts will conflict. Common examples:
+### Why `172.16.0.0/12` is off-limits
 
-| Physical network | Conflicts? |
-|-----------------|-----------|
-| `192.168.0.0/24` | Yes, subnet of `192.168.0.0/16` |
-| `192.168.34.0/24` | Yes, subnet of `192.168.0.0/16` |
-| `192.168.1.0/24` | Yes, subnet of `192.168.0.0/16` |
-| `10.0.0.0/24` | No |
-| `10.221.188.0/24` | No |
-| `172.16.0.0/12` | No |
-
-When a conflict exists, Calico routes pod traffic to physical addresses and vice versa, causing intermittent or complete networking failures for VMs and Orka services.
+MacStadium uses this block for the storage area network (SAN) at MSDC facilities. Placing host traffic in this range creates conflicts with storage connectivity.
 
 <Warning>
-  If your physical host network overlaps with `192.168.0.0/16`, contact MacStadium before attempting cluster bootstrap. Resolving a CIDR conflict after the cluster is live requires a full cluster rebuild.
+  Resolving either conflict after the cluster is live requires a full cluster rebuild. Contact MacStadium before the cluster is bootstrapped if there is any question about subnet selection.
 </Warning>
 
-## Recommended approach
+## Requesting a custom subnet
 
-Design your physical Mac host network outside `192.168.0.0/16`. The [RFC 1918](https://datatracker.ietf.org/doc/html/rfc1918) private address space gives you two other ranges with no such constraint:
-
-- `10.0.0.0/8`
-- `172.16.0.0/12`
-
-If your organization's existing infrastructure requires hosts on a subnet within `192.168.0.0/16`, contact your MacStadium account team before proceeding. MacStadium can verify there are no conflicts with your IP Plan and advise on the right path forward.
+If `10.221.188.0/23` conflicts with your organization's network (for example, your VPN or corporate routing overlaps with it), contact your MacStadium account team to request a different subnet. Any alternative must be a subnet within `10.0.0.0/8`.
 
 ## Checklist before bootstrapping
 
-- [ ] Confirm your physical Mac host network does not fall within `192.168.0.0/16`
-- [ ] If it does, contact MacStadium before bootstrapping
-- [ ] Verify your host network doesn't overlap with your VPN or other connected subnets
+- [ ] Confirm the assigned host subnet falls within `10.0.0.0/8`
+- [ ] Confirm it does not overlap with your VPN or corporate network
+- [ ] If you need a different subnet, request it from MacStadium before cluster bootstrap
