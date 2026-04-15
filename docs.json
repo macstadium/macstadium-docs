@@ -1526,5 +1526,8 @@
       "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn",
       "permanent": true
     }
-  ]
+  ],
+  "fonts": {
+    "family": "Lato"
+  }
 }
