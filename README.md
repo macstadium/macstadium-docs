@@ -8,10 +8,9 @@ Docs are written in MDX (Markdown + JSX) and organized by product category. `min
 
 ## Contributing
 
-**Small fixes** (typos, broken links, outdated steps): use the **Suggest Edit** button on any page — it opens a pre-filled GitHub PR against the source file.
+**Small fixes** (typos, broken links, outdated steps): use the **Suggest Edit** button on any page. It opens a pre-filled GitHub PR against the source file.
 
 **Larger changes**: branch off `main`, make your edits, and open a PR. A preview deployment will be posted automatically on the PR for review before merge.
-
 ## Local preview
 
 Install the Mintlify CLI:
