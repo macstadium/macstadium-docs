@@ -130,21 +130,32 @@
           {
             "group": "Networking",
             "pages": [
+              "orka/networking-with-orka-at-macstadium/msdc-network-requirements",
               "orka/networking-with-orka-at-macstadium/vpn-connection",
               "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
               "orka/networking-with-orka-at-macstadium/external-custom-domains",
-              "orka/networking-with-orka-at-macstadium/aws-orka-connections",
-              "orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel",
-              "orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file",
-              "orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel",
-              "orka/networking-with-orka-at-macstadium/4-aws-verifying-the-vpn-tunnel",
-              "orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting",
-              "orka/networking-with-orka-at-macstadium/gcp-orka-connections",
-              "orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel",
-              "orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file",
-              "orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel",
-              "orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel",
-              "orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
+              {
+                "group": "AWS",
+                "pages": [
+                  "orka/networking-with-orka-at-macstadium/aws-orka-connections",
+                  "orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel",
+                  "orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file",
+                  "orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel",
+                  "orka/networking-with-orka-at-macstadium/4-aws-verifying-the-vpn-tunnel",
+                  "orka/networking-with-orka-at-macstadium/aws-vpn-tunnel-troubleshooting"
+                ]
+              },
+              {
+                "group": "GCP",
+                "pages": [
+                  "orka/networking-with-orka-at-macstadium/gcp-orka-connections",
+                  "orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel",
+                  "orka/networking-with-orka-at-macstadium/2-gcp-vpn-tunnel-configuration-file",
+                  "orka/networking-with-orka-at-macstadium/3-orka-side-of-the-gcp-vpn-tunnel",
+                  "orka/networking-with-orka-at-macstadium/4-verifying-the-gcp-vpn-tunnel",
+                  "orka/networking-with-orka-at-macstadium/gcp-vpn-tunnel-troubleshooting"
+                ]
+              }
             ]
           },
           {
