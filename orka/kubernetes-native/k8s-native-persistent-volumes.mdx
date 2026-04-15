@@ -82,7 +82,7 @@ spec:
 ```
 The values for metadata:name and metadata:namespace must match the values for claimRef:name and claimRef:namespace declared in the manifest of the persistent volume. Double-check with the MacStadium team for these values.
 
-  2. Apply the PVC. Replace pvc.yaml with the complete file path to your own PVC manifest. Replace \<NAMESPACE> with the namespace you created earlier. 
+  2. Apply the PVC. Replace pvc.yaml with the complete file path to your own PVC manifest. Replace `<NAMESPACE>` with the namespace you created earlier. 
          
 ```
      kubectl apply -f pvc.yaml --namespace=<NAMESPACE>
@@ -100,7 +100,7 @@ If the persistent volume claim works as expected, you will see a similar output:
 
 **Status Pending?**
 
-If the status is Pending instead of Bound, double-check your PVC manifest, fix any naming issues, remove the old pvc with kubectl delete pvc \<NAME>, and re-apply the fixed manifest. If the problem persists, contact the MacStadium team.
+If the status is Pending instead of Bound, double-check your PVC manifest, fix any naming issues, remove the old pvc with kubectl delete pvc `<NAME>`, and re-apply the fixed manifest. If the problem persists, contact the MacStadium team.
 
 ## Step 4: Deploy a pod that uses the persistent volume
 

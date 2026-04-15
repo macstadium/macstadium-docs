@@ -49,8 +49,6 @@ Using an ASDM allows you to make line-by-line changes, while using a graphical u
   3. Use the credential documented in the IP Plan to authenticate; when prompted, enter a username and password.
   4. Enter global configuration mode by typing the command `configure terminal`
   5. Create the new user account by typing the command in the following format: `username username password password privilege priv_level`
-     * **NOTES:**
-
 <Note>
   - The `username` keyword is a string from 3 to 64 characters long. The space and question mark characters cannot be used for usernames.
   - The `password` keyword is a string from 3 to 127 characters long. The space and question mark characters cannot be used within the passwords.
@@ -68,7 +66,13 @@ To confirm the creation of the user account, enter the command show `running-con
 
 This command displays all the user accounts configured on the ASA.
 
-`ciscoasa# show running-config username username exampleuser1 password ***** pbkdf2 privilege 1 username clientuser1 password ***** pbkdf2 privilege 15 username admin password ***** pbkdf2 privilege 15 ciscoasa#`
+```
+ciscoasa# show running-config username
+username exampleuser1 password ***** pbkdf2 privilege 1
+username clientuser1 password ***** pbkdf2 privilege 15
+username admin password ***** pbkdf2 privilege 15
+ciscoasa#
+```
 
 When a password is defined in the username command, the ASA creates an MD5 hash of it when it is saved for security purposes. When verifying configuration with the show running-config command, the username command does not show the actual password; it shows the encrypted password followed by the encrypted keyword.
 
@@ -83,11 +87,21 @@ When a password is defined in the username command, the ASA creates an MD5 hash 
 
 If the authentication is successful, then proceed to test the level of access for the user account either at the ASA or at the RAVPN client.
 
-`ciscoasa # disable ciscoasa > login Username: exampleuser1 Password: *************** ciscoasa > enablePassword: ********* Password: ***************`
+```
+ciscoasa # disable
+ciscoasa > login
+Username: exampleuser1
+Password: ***************
+ciscoasa > enable
+Password: *********
+Password: ***************
+```
 
 **Unsuccessful Authentication**
 
-`[ exampleuser1 ]` You do NOT have Admin Rights to the console !
+```
+[ exampleuser1 ] You do NOT have Admin Rights to the console !
+```
 
 **Password**
 
@@ -104,7 +118,18 @@ To remove a user account, use `no version` with the username that is being remov
 
 
 
-`ciscoasa# configure terminal ciscoasa(config)# no username exampleuser1 ciscoasa(config)# end ciscoasa# write memory Building configuration... Cryptochecksum: b327981a 7a0e4ca2 ba149024 d05c9ab5 24790 bytes copied in 0.60 secs [OK] ciscoasa# show run ciscoasa# show running-config username username admin password ***** pbkdf2 privilege 15 username clientuser1 password ***** pbkdf2 privilege 15`
+```
+ciscoasa# configure terminal
+ciscoasa(config)# no username exampleuser1
+ciscoasa(config)# end
+ciscoasa# write memory
+Building configuration...
+Cryptochecksum: b327981a 7a0e4ca2 ba149024 d05c9ab5
+24790 bytes copied in 0.60 secs [OK]
+ciscoasa# show running-config username
+username admin password ***** pbkdf2 privilege 15
+username clientuser1 password ***** pbkdf2 privilege 15
+```
 
 ## Via Cisco Adaptive Security Device Manager (ASDM)
 
@@ -119,7 +144,7 @@ To remove a user account, use `no version` with the username that is being remov
 ![a2714fa-image.png](/images/attachments/28269093218075.png)
   5. Click Add to create a new user account.
   6. In the Add User Account window, confirm that Identity is selected at the left of the window and then enter the username and password for the new user account. 
-     * **NOTE** : Specify a Access Restriction by selecting an option in the section below.  
+     * Specify a Access Restriction by selecting an option in the section below.  
 ![8dded1a-image.png](/images/attachments/28269093219099.png)
 
   7. Click OK to save the new user account
@@ -128,7 +153,9 @@ To remove a user account, use `no version` with the username that is being remov
 
 
 
-**NOTE:** Test the new account by logging out of the ASDM and then logging back in with the new credentials.
+<Note>
+  Test the new account by logging out of the ASDM and then logging back in with the new credentials.
+</Note>
 
 #### **Removing an Account from the Local Database**
 
@@ -139,7 +166,9 @@ To remove a user account, use `no version` with the username that is being remov
 
 
 
-**NOTE:** For information on Advanced Options for user account creations and management, see the following guides:
+<Note>
+  For information on Advanced Options for user account creations and management, see the following guides:
+</Note>
 
 [Cisco ASDM 7.18 AAA Local User Guide](https://www.cisco.com/c/en/us/td/docs/security/asa/asa918/asdm718/general/asdm-718-general-config/aaa-local.html)
 
