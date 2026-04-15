@@ -1529,5 +1529,9 @@
   ],
   "fonts": {
     "family": "Lato"
+  },
+  "banner": {
+    "content": "Welcome to the new MacStadium Documentation site. We've migrated from support.macstadium.com, you're in the right place.",
+    "dismissible": true
   }
 }
