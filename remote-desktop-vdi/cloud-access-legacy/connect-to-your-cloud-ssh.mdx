@@ -5,27 +5,31 @@ zendesk_id: 28267150475803
 ---
 
 <Warning>
-  **Cloud Access is no longer sold directly by MacStadium.** Renewals are supported, but new customers should purchase [HP Anyware](https://anyware.hp.com/) directly. This documentation is preserved for existing customers. For remote macOS access, see [Orka for VDI](/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture). Questions? Contact [support@macstadium.com](mailto:support@macstadium.com).
+  **Cloud Access is no longer sold directly by MacStadium.** Renewals are
+  supported, but new customers should purchase [HP
+  Anyware](https://anyware.hp.com/) directly. This documentation is preserved
+  for existing customers. For remote macOS access, see [MacStadium
+  VDI](/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture).
+  Questions? Contact [support@macstadium.com](mailto:support@macstadium.com).
 </Warning>
-
 
 MacStadium understands that your workflow shouldn't need to be retooled to use our infrastructure as a service. To that end, we also offer simple connections to your private cloud via SSH.
 
 ## Prerequisite:
 
-ESXi server running version 6.0 U2 or later as well as a local computer with a web browser and SSH client.*
+ESXi server running version 6.0 U2 or later as well as a local computer with a web browser and SSH client.\*
 
-  1. Navigate to your ESXi server’s embedded host client using the IP address or domain name.
-  2. Enable SSH Screen 1
-  3. Select Manage in the left sidebar Navigator to access the settings for your host
-  4. Enable SSH Screen 2
-  5. Select the Services tab.
-  6. Enable SSH Screen 3 
-     * There are two services we’ll pay attention to here: **TSM** (ESXi Shell) and **TSM-SSH** (SSH), with the latter being our main goal.
-  7. Highlight the **TSM-SSH service (SSH)** and either right-click or use the menu item at the top of the window to select Start.
-  8. Enable SSH Screen 4 
-     * If you’d like to use the ESXi Shell remotely over SSH, go ahead and complete the same process for the TSM service.
-     * If you’re only granting temporary access and will either stop the service manually after use or you wish for the service to be off when you next restart ESXi or the server, you can stop here.
-     * If you’d like SSH (or SSH and the ESXi Shell) to remain on and persist through reboots, continue to the next step.
-  9. Persistent SSH access across ESXi host reboots
-  10. By right-clicking on a service or clicking the Actions menu item, you can adjust the policy for the service. This means you can set the service to remain on based on firewall ports or with the host and after restart.
+1. Navigate to your ESXi server’s embedded host client using the IP address or domain name.
+2. Enable SSH Screen 1
+3. Select Manage in the left sidebar Navigator to access the settings for your host
+4. Enable SSH Screen 2
+5. Select the Services tab.
+6. Enable SSH Screen 3
+   - There are two services we’ll pay attention to here: **TSM** (ESXi Shell) and **TSM-SSH** (SSH), with the latter being our main goal.
+7. Highlight the **TSM-SSH service (SSH)** and either right-click or use the menu item at the top of the window to select Start.
+8. Enable SSH Screen 4
+   - If you’d like to use the ESXi Shell remotely over SSH, go ahead and complete the same process for the TSM service.
+   - If you’re only granting temporary access and will either stop the service manually after use or you wish for the service to be off when you next restart ESXi or the server, you can stop here.
+   - If you’d like SSH (or SSH and the ESXi Shell) to remain on and persist through reboots, continue to the next step.
+9. Persistent SSH access across ESXi host reboots
+10. By right-clicking on a service or clicking the Actions menu item, you can adjust the policy for the service. This means you can set the service to remain on based on firewall ports or with the host and after restart.
