@@ -1,10 +1,10 @@
 ---
 title: "Troubleshooting Quick Reference"
-description: "Quick-reference for Orka for VDI issues organized by symptom. Each section lists likely causes, diagnostic commands, and recommended solutions."
+description: "Quick-reference for MacStadium VDI issues organized by symptom. Each section lists likely causes, diagnostic commands, and recommended solutions."
 zendesk_id: 44261906056859
 ---
 
-## Orka for VDI Environment
+## MacStadium VDI Environment
 
 ### How to Use This Guide
 
@@ -374,7 +374,7 @@ Important prerequisite: Bridged networking requires a DHCP server on your networ
 
 Quick diagnostic:
 
-  1. Check cluster configuration on the Orka for VDI management node: `cat /path/to/cluster.yml | grep vm_network_mode`. This should show: `vm_network_mode: bridge`.
+  1. Check cluster configuration on the MacStadium VDI management node: `cat /path/to/cluster.yml | grep vm_network_mode`. This should show: `vm_network_mode: bridge`.
 
   2. Check host interface configuration: `cat /path/to/nodes.yml | grep osx_node_vm_network_interface` or check the `hosts` file: `cat /path/to/hosts | grep osx_node_vm_network_interface`
 
@@ -1233,7 +1233,7 @@ Quick diagnostic:
 
   1. Check what the playbook claims to change, look at the task output while the playbook is running
 
-  2. Verify the actual state on the Orka for VDI host `ssh admin@<host-ip>` and check if the claimed changes actually exist
+  2. Verify the actual state on the MacStadium VDI host `ssh admin@<host-ip>` and check if the claimed changes actually exist
 
   3. Run the playbook in check mode: `ansible-playbook -i dev/inventory <playbook> --check`
 

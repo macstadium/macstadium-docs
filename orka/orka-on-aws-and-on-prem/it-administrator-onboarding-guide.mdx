@@ -1,27 +1,27 @@
 ---
 title: "IT Administrator Onboarding Guide"
-description: "IT admin guide for Orka for VDI. Covers Ansible, Citrix Cloud, and Orka Engine interfaces, user provisioning, image management, and daily operations."
+description: "IT admin guide for MacStadium VDI. Covers Ansible, Citrix Cloud, and Orka Engine interfaces, user provisioning, image management, and daily operations."
 zendesk_id: 44260623061915
 ---
 
-This guide introduces IT administrators to managing a deployed Orka for VDI environment. Once you've completed the initial deployment following the [Orka for VDI deployment guide](/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide) this document covers ongoing operations, user management, and system maintenance.
+This guide introduces IT administrators to managing a deployed MacStadium VDI environment. Once you've completed the initial deployment following the [MacStadium VDI deployment guide](/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide) this document covers ongoing operations, user management, and system maintenance.
 
 **What this guide covers:**
 
-  * Understanding your role and responsibilities in the support and maintenance of your organization’s Orka for VDI architecture
+  * Understanding your role and responsibilities in the support and maintenance of your organization’s MacStadium VDI architecture
 
   * Navigating core management interfaces (Ansible, Citrix Cloud, Orka Engine)
 
   * Executing common operational tasks (provisioning desktops, managing images, troubleshooting)
 
-  * Establishing operational best practices for your Orka for VDI environment
+  * Establishing operational best practices for your MacStadium VDI environment
 
 
 
 
-## Your role in managing Orka for VDI
+## Your role in managing MacStadium VDI
 
-As an administrator, you will be responsible for managing the three interconnected systems that make up Orka for VDI. These are:
+As an administrator, you will be responsible for managing the three interconnected systems that make up MacStadium VDI. These are:
 
 **Orka Engine (virtualization layer):**
 
@@ -112,13 +112,13 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 ### Architecture overview:
 
   
-![Orka for VDI architecture diagram](/images/attachments/orka-vdi-architecture.png)
+![MacStadium VDI architecture diagram](/images/attachments/orka-vdi-architecture.png)
 
 ## Getting Started
 
 ### Ansible access and credentials setup
 
-You will want to verify that you have access to all three Orka for VDI management layers.
+You will want to verify that you have access to all three MacStadium VDI management layers.
 
 #### Ansible control node:
 
@@ -770,7 +770,7 @@ To view existing Delivery Groups: Navigate to Citrix Cloud Console → Web Studi
 
 #### Create a new Delivery Group
 
-In a scenario where a team may need new MacOS desktops within your Orka for VDI instance, you can run an Ansible deployment playbook similar to the following example:  
+In a scenario where a team may need new MacOS desktops within your MacStadium VDI instance, you can run an Ansible deployment playbook similar to the following example:  
   
 `ansible-playbook -i dev/inventory deploy.yml \`  
 `-e "vm_group=citrix-vda-marketing \`  
