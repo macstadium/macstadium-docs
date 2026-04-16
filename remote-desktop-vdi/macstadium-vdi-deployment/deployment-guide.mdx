@@ -363,17 +363,25 @@ ansible-playbook pull_image.yml -i inventory -e "remote_image_name=ghcr.io/macst
 
 Semaphore provides a browser-based interface for running orchestration playbooks without CLI access. All task templates, inventory, and repository configuration are set up automatically on first launch.
 
-### 7.1  Install Docker
+### 7.1  Install Prerequisites
 
 **Run on: Controller**
 
-Docker is required to run Semaphore. Install it through Homebrew:
+Docker and `uv` are required to run Semaphore.
+
+Install Docker through Homebrew:
 
 ```
 brew install docker docker-compose
 ```
 
 **Note:** Docker Desktop is an alternative if you prefer a GUI installer. Either option works.
+
+Install `uv` (used to run the Semaphore configuration script):
+
+```
+brew install uv
+```
 
 ### 7.2  Configure the Environment
 
@@ -420,21 +428,46 @@ Semaphore is available at `http://localhost:3000`. Log in with the admin credent
 
 ### 7.4  Configure SSH Credentials
 
-After logging in, navigate to Key Store and edit the Mac Hosts SSH key. Replace the placeholder credentials with the actual SSH username and private key (or password) for your Mac hosts.
+You can configure SSH credentials either via the setup script or manually through the Semaphore UI.
+
+**Option A — Setup script (recommended)**
+
+`uv` is required to run this script — it’s a lightweight Python package manager used to execute the configuration script without managing a virtual environment manually. It handles SSH key setup and optionally sets default VM credentials and OCI registry credentials in one step.
+
+```bash
+SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
+```
+
+Run `uv run ./semaphore/configure_semaphore.py --help` to see additional parameters, including default VM username/password and OCI registry credentials.
+
+**Option B — Manual (UI)**
+
+After logging in, navigate to **Key Store** and edit the Mac Hosts SSH key. Replace the placeholder credentials with the actual SSH username and private key (or password) for your Mac hosts.
 
 ### 7.5  Available Task Templates
 
 The following templates are pre-configured and ready to use in the Orka Engine Orchestration project. Each template prompts for required inputs when you click Run.
 
-| Template | Playbook | Required Inputs |
+| Template | Playbook | Survey Variables |
 | --- | --- | --- |
-| Deploy VMs | deploy.yml | vm_group, desired_vms |
-| Delete VMs | delete.yml | vm_group, delete_count |
-| Manage VM | vm.yml | vm_name, desired_state |
-| List VMs | list.yml | vm_group (optional) |
-| Pull Image | pull_image.yml | remote_image_name |
-| Install Engine | install_engine.yml | orka_license_key, engine_url |
-| Create Image | create_image.yml | remote_image_name, vm_image |
+| Deploy VMs | `deploy.yml` | `vm_name`, `vm_image` |
+| Delete VMs | `delete.yml` | `vm_name` |
+| Manage VM | `vm.yml` | `vm_name`, `desired_state` (`running`, `stopped`, `absent`) |
+| List VMs | `list.yml` | `vm_name` (optional) |
+| Pull Image | `pull_image.yml` | `remote_image_name` |
+| Install Engine | `install_engine.yml` | `orka_license_key`, `engine_url` |
+| Create Image | `create_image.yml` | `remote_image_name`, `vm_image` |
+| Push Image | `push_image.yml` | `vm_name`, `oci_url` |
+| Provision User to VM | `provision_user.yml` | `vm_name`, `new_username`, `new_user_password` |
+| Install Citrix VDA | `install_citrix_vda.yml` | `vm_name` |
+| Register Citrix VDA | `register_citrix_vda.yml` | `vm_name`, `enrollment_token` |
+| Install Android SDK | `install_android_sdk.yml` | `install_android_sdk_force` (optional) |
+| Install Android SDK Components | `sdkmanager_install.yml` | `platform`, `image_types` (optional) |
+| Uninstall Android SDK Components | `sdkmanager_uninstall.yml` | `platform` |
+| Create Android Virtual Device | `deploy_avd.yml` | `vm_name`, `platform` (optional), `image_type` (optional) |
+| List Android Virtual Devices | `list_avds.yml` | `vm_name` (optional) |
+| Delete Android Virtual Device | `delete_avd.yml` | `vm_name`, `avd_index` |
+| Manage Android Virtual Device | `avd.yml` | `vm_name`, `desired_state` (`running`, `stopped`, `absent`), `avd_index` (optional), `cpu` (optional), `memory` (optional) |
 
 
 ### 7.6  Stop Semaphore
