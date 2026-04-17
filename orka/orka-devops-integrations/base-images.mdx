@@ -1,31 +1,85 @@
 ---
 title: "Base Images"
-description: "Manage Orka base images: list, pull, generate, upload, and update. Covers local cluster images and OCI-compatible images from public or private registries."
+description: "Manage Orka base images with the orka3 CLI. Covers listing, copying, and deleting images, creating images from VMs, and working with OCI registry images."
 zendesk_id: 28332123227803
 ---
 
-How to list, pull, generate, upload, and update base images with the Orka CLI.  
-  
-This page discusses base image workflows in the Orka CLI. For more information about workflows with the Orka API, see [Orka API Reference: Images](https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest#c311a394-6be6-4e8c-8b9b-b7185df6563e).
+How to work with base images in Orka using the `orka3` CLI.
 
-On this page, you will learn how to:
+For a full list of image commands and flags, see the [Image Management CLI reference](/orka/orka3-cli-reference/image-management).
 
-  * List the available base images.
-  * Add base images to the local Orka storage by generating, uploading or pulling files.
-  * Download a base image from Orka storage to your local machine.
-  * Use VMs to expand and enrich your collection of base images.
+## List available images
 
-
-
-#### **Quick command summary**
-    
-    
+```bash
+orka3 image list
+orka3 image list <IMAGE_NAME>   # Filter by name
 ```
-orka image [list / list-remote / upload / download / pull / generate]  
-orka image [commit / save]
+
+Images are scoped to the namespace you're targeting. Use `--namespace` or set `ORKA_DEFAULT_NAMESPACE` to avoid repeating it.
+
+## Copy and delete images
+
+```bash
+orka3 image copy <SOURCE> <DESTINATION>
+orka3 image delete <IMAGE>
 ```
-#### **Apple ARM-based Nodes Support**
 
-Orka 2.0 introduces Apple ARM-based nodes support which adds a new type of images. To deploy a VM on an Apple ARM-based node, you need to use any of the Apple Silicon images which have extension .orkasi and are marked as Apple Silicon in the image list. Supported operations for Apple Silicon images are: list, list-remote, pull, commit, save.
+## Create images from VMs
 
-Read more about Apple ARM-based Support to see which commands and options are supported for VMs deployed on Apple ARM-based nodes.
+After making changes to a running VM, you have two options:
+
+**Save as a new image** — preserves the original:
+
+```bash
+orka3 vm save <VM_NAME> <NEW_IMAGE_NAME>
+```
+
+**Commit back to the source image** — overwrites the original:
+
+```bash
+orka3 vm commit <VM_NAME>
+```
+
+Both operations are async. Check status with `orka3 image list <IMAGE_NAME>`.
+
+## Push to an OCI registry (Apple Silicon only)
+
+On Apple Silicon nodes, you can push a VM's image to an OCI registry:
+
+```bash
+orka3 vm push <VM_NAME> <REGISTRY>/<IMAGE>:<TAG>
+```
+
+The command returns a job ID. Check push status with:
+
+```bash
+orka3 vm get-push-status <JOB_ID>
+```
+
+To pull from a private registry, add credentials first:
+
+```bash
+orka3 regcred add <REGISTRY_URL> --username "$USER" --password "$TOKEN"
+```
+
+## Deploy from an OCI registry
+
+You can deploy a VM directly from an OCI image without storing it locally first:
+
+```bash
+orka3 vm deploy --image ghcr.io/<ORG>/<REPO>/<IMAGE>:<TAG>
+```
+
+## Image caching (Apple Silicon only)
+
+On Apple Silicon nodes, the first deployment of an image on a node takes about 4 minutes. Subsequent deployments from the same cached image take about 5 seconds. Pre-cache images to avoid the delay:
+
+```bash
+orka3 imagecache add <IMAGE> --all              # Cache on all nodes in namespace
+orka3 imagecache add <IMAGE> --nodes <N1>,<N2>  # Cache on specific nodes
+orka3 imagecache info <IMAGE>                   # Check cache status
+```
+
+<Note>
+  Image caching is async. Use `orka3 imagecache info <IMAGE>` to monitor progress.
+</Note>

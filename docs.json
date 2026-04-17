@@ -214,6 +214,7 @@
             "pages": [
               "orka/orka-resources/orka3-cli-command-reference",
               "orka/orka-resources/working-with-vm-metadata",
+              "orka/orka-devops-integrations/base-images",
               "orka/orka-resources/image-caching",
               "orka/orka-resources/shared-vm-storage",
               "orka/orka-resources/burst",

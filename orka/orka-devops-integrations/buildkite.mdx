@@ -1,6 +1,6 @@
 ---
 title: "Buildkite"
-description: "Connect Orka to Buildkite using MacStadium official plugin. Covers permanent and ephemeral agent setup, plugin configuration, and version requirements."
+description: "Connect Orka to Buildkite using the MacStadium plugin. Supports permanent agents for reuse across builds and ephemeral agents that spin up and tear down per pipeline run."
 zendesk_id: 28398803332123
 ---
 
@@ -8,9 +8,7 @@ How to use Buildkite with your Orka environment.
 
 MacStadium provides seamless **[integration between Orka and Buildkite](https://github.com/macstadium/orka-integrations/tree/master/Buildkite)**. You can work with permanent or ephemeral agents.
 
-> **IMPORTANT**
-> 
-> Orka 3.1.x and above requires version [v2.0.0+](https://github.com/macstadium/orka-integrations/releases/tag/v2.0.0) of the plugin.
+<Warning>Orka 3.1.x and above requires version [v2.0.0+](https://github.com/macstadium/orka-integrations/releases/tag/v2.0.0) of the plugin.</Warning>
 
 ## Set up a permanent agent
 
