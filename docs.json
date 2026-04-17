@@ -298,15 +298,15 @@
               "remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
               "remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
               "remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases",
-              "remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues"
-            ]
-          },
-          {
-            "group": "Operational Guides",
-            "pages": [
-              "remote-desktop-vdi/operational-guides/ansible-quick-reference",
-              "remote-desktop-vdi/operational-guides/day-2-operations-guide",
-              "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+              "remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
+              {
+                "group": "Operational Guides",
+                "pages": [
+                  "remote-desktop-vdi/operational-guides/ansible-quick-reference",
+                  "remote-desktop-vdi/operational-guides/day-2-operations-guide",
+                  "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+                ]
+              }
             ]
           },
           {
