@@ -1,10 +1,10 @@
 ---
 title: "Troubleshooting Quick Reference"
-description: "Quick-reference for Orka for VDI issues organized by symptom. Each section lists likely causes, diagnostic commands, and recommended solutions."
+description: "Quick-reference for MacStadium VDI issues organized by symptom. Each section lists likely causes, diagnostic commands, and recommended solutions."
 zendesk_id: 44261906056859
 ---
 
-## Orka for VDI Environment
+## MacStadium VDI Environment
 
 ### How to Use This Guide
 
@@ -48,8 +48,7 @@ Quick diagnostic:
 
 ```bash
 ansible-playbook -i dev/inventory deploy.yml \
-  -e "vm_group=test" \
-  -e "desired_vms=1" \
+  -e "vm_name=test-01" \
   -e "vm_image=<image-name>" \
   -vvv
 
@@ -114,7 +113,7 @@ What you see:**** Requested 10 VMs but only 7 deployed, or deployment stopped pa
 Quick diagnostic:
 
 ```bash
-ansible-playbook -i dev/inventory list.yml -e "vm_group=<group>" | grep <group> | wc -l
+ansible-playbook -i dev/inventory list.yml -e "vm_name=<vm-name>"
 
 ansible hosts -i dev/inventory -m shell -a "top -l 1 | head -20"
 ```
@@ -374,7 +373,7 @@ Important prerequisite: Bridged networking requires a DHCP server on your networ
 
 Quick diagnostic:
 
-  1. Check cluster configuration on the Orka for VDI management node: `cat /path/to/cluster.yml | grep vm_network_mode`. This should show: `vm_network_mode: bridge`.
+  1. Check cluster configuration on the MacStadium VDI management node: `cat /path/to/cluster.yml | grep vm_network_mode`. This should show: `vm_network_mode: bridge`.
 
   2. Check host interface configuration: `cat /path/to/nodes.yml | grep osx_node_vm_network_interface` or check the `hosts` file: `cat /path/to/hosts | grep osx_node_vm_network_interface`
 
@@ -403,8 +402,8 @@ Solution steps:
   1. Delete all VMs (this is required before switching networking modes)  
   
 `ansible-playbook -i dev/inventory delete.yml \ `  
-`-e "vm_group=<all-groups>" \ `  
-`-e "delete_count=<all>"`
+`-e "vm_name=<vm-name>"`  
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 
   2. Verify configuration files  
   
@@ -416,10 +415,10 @@ Solution steps:
   4. Deploy a test VM:  
   
 `ansible-playbook -i dev/inventory deploy.yml \ `  
-`-e "vm_group=test" \ `  
-`-e "desired_vms=1"`
+`-e "vm_name=test-01" \ `  
+`-e "vm_image=<your-image>"`
 
-  5. Verify that the VM received a corporate IP address: `ansible-playbook -i dev/inventory list.yml | grep test`
+  5. Verify that the VM received a corporate IP address: `ansible-playbook -i dev/inventory list.yml -e "vm_name=test-01"`
 
 
 
@@ -563,8 +562,7 @@ Quick diagnostic:
   4. Try pulling the image to a specific host  
   
 `ansible-playbook -i dev/inventory deploy.yml \ `  
-`-e "vm_group=test" \ `  
-`-e "desired_vms=1" \ `  
+`-e "vm_name=test-01" \ `  
 `-e "vm_image=<exact-image-name>" \ `  
 `--limit <specific-host>`
 
@@ -671,9 +669,9 @@ Partial pull failure | Some hosts have corrupted image | Delete and re-pull on a
 
   3. Redeploy VMs from the freshly pulled image  
 `ansible-playbook -i dev/inventory deploy.yml \ `  
-`-e "vm_group=<group>" \ `  
-`-e "desired_vms=<count>" \ `  
-`-e "vm_image=<image>"`
+`-e "vm_name=<vm-name>" \ `  
+`-e "vm_image=<image>"`  
+_Run this command once for each VM to deploy._
 
 
 
@@ -1188,7 +1186,7 @@ Variable name typo or case mismatch | Names don't match exactly (case-sensitive)
 Variable already set with precedence | Playbook has default; your var has lower precedence | Extra vars (`-e`) should override; verify syntax is correct  
 Wrong variable data type | Passing string where an integer expected or vice versa | Check playbook documentation for expected data type; convert if needed  
 Variable not used in playbook | Playbook doesn't reference that variable | Verify playbook supports variable; check playbook source code or docs  
-Syntax error in `-e` flag | Command line parsing failed silently | Use proper quotes: `-e "vm_group=test"` not `-e vm_group=test`  
+Syntax error in `-e` flag | Command line parsing failed silently | Use proper quotes: `-e "vm_name=test"` not `-e vm_name=test`  
 Multiple `-e` flags parsed incorrectly | Only first `-e` being applied | Ensure each `-e` flag is separate and properly formatted  
 Variable scope issue | Variable defined in wrong `group_vars` location | Check variable is in correct inventory group or `all` group  
 Special characters not escaped | Variable value contains spaces or special chars | Quote values properly: `-e "vm_name=test vm"` needs quotes  
@@ -1233,7 +1231,7 @@ Quick diagnostic:
 
   1. Check what the playbook claims to change, look at the task output while the playbook is running
 
-  2. Verify the actual state on the Orka for VDI host `ssh admin@<host-ip>` and check if the claimed changes actually exist
+  2. Verify the actual state on the MacStadium VDI host `ssh admin@<host-ip>` and check if the claimed changes actually exist
 
   3. Run the playbook in check mode: `ansible-playbook -i dev/inventory <playbook> --check`
 

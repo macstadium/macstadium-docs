@@ -6,23 +6,31 @@ zendesk_id: 44259626250267
 
 ## Overview
 
-This guide walks through the full setup of Orka Engine Orchestration for VDI deployments. It covers network preparation, controller and host configuration, Orka Engine installation, VM deployment, and the optional Semaphore web interface.
+This guide walks through the full setup of Orka Engine Orchestration for VDI deployments. It covers network preparation, controller and host configuration, Orka Engine installation, VM deployment, and the Semaphore web interface.
 
 There are three roles in this setup:
 
-* **Controller:** the machine running Ansible and the orchestration playbooks. This is typically a dedicated VM.
-* **Hosts:** physical Mac hardware running Orka Engine and the macOS VMs.
-* **VMs:** macOS virtual machines provisioned and managed through the orchestration library.
-
+- **Controller:** the machine running Ansible and the orchestration playbooks. This is typically a dedicated VM.
+- **Hosts:** physical Mac hardware running Orka Engine and the macOS VMs.
+- **VMs:** macOS virtual machines provisioned and managed through the orchestration library.
 
 **Note:** Total deployment time can depend on node count, but budget 30-60 minutes to set up your initial controller and host.
 
 ## Prerequisites
 
-* An Ansible controller (macOS or Linux, minimum: 2 vCPU, 4 GB RAM, 20 GB storage; recommended: 4 vCPU, 8 GB RAM, 50 GB storage)
-* One or more physical Apple Silicon based Mac hosts with macOS Sonoma, Sequoia, or Tahoe Minimum specifications per Orka host: • Apple Silicon processor (any M-series chip) • 8GB RAM • 512GB storage • 1GB Ethernet • macOS 13 (Ventura) or later
-* Recommended specifications per Orka host: • M2 Pro, M4 Pro, or higher • 16GB+ RAM (32GB+ recommended for high-density deployments) • 1TB+ storage • 10GB Ethernet • macOS 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe)
-
+- An Ansible controller (macOS or Linux, minimum: 2 vCPU, 4 GB RAM, 20 GB storage; recommended: 4 vCPU, 8 GB RAM, 50 GB storage)
+- One or more physical Apple Silicon based Mac hosts with macOS Sonoma, Sequoia, or Tahoe Minimum specifications per Orka host:
+  - Apple Silicon processor (any M-series chip)
+  - 8GB RAM
+  - 512GB storage
+  - 1GB Ethernet
+  - macOS 13 (Ventura) or later
+- Recommended specifications per Orka host:
+  - M2 Pro, M4 Pro, or higher
+  - 16GB+ RAM (32GB+ recommended for high-density deployments)
+  - 1TB+ storage
+  - 10GB Ethernet
+  - macOS 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe)
 
 An Orka Engine license key and installer URL (contact your MacStadium account representative)
 An administrator account on each machine
@@ -42,42 +50,37 @@ To configure manually:
 2. Set IP Address, Subnet Mask, Router, and DNS Servers from your management VLAN.
 3. Apply settings and verify connectivity.
 
-
 To use a DHCP reservation:
 
 1. Note the MAC address of each host from System Settings then Network then Details then Hardware.
 2. Configure your DHCP server to assign a fixed IP to each MAC address.
 3. Verify the host receives the reserved IP.
 
-
 Document the following for each host before proceeding. This information populates the Ansible inventory file.
 
-| Field | Example |
-| --- | --- |
-| Hostname | mac-node-1 |
-| IP address | 10.0.100.10 |
-| MAC address | a1:b2:c3:d4:e5:f6 |
-| Hardware model | Mac mini M4 |
-| Network interface | en0 |
-
+| Field             | Example           |
+| ----------------- | ----------------- |
+| Hostname          | mac-node-1        |
+| IP address        | 10.0.100.10       |
+| MAC address       | a1:b2:c3:d4:e5:f6 |
+| Hardware model    | Mac mini M4       |
+| Network interface | en0               |
 
 ### Firewall Requirements (Citrix DaaS)
 
-If deploying Orka for VDI with Citrix DaaS, ensure the following traffic is permitted:
+If deploying MacStadium VDI with Citrix DaaS, ensure the following traffic is permitted:
 
 Outbound from VMs (TCP 443):
 
-* `[customer_ID].xendesktop.net` - Citrix DaaS controller
-* `*.*.nssvc.net` - Citrix Gateway Service
-* `*.citrixworkspacesapi.net` - Gateway connectivity checks
-* On-premises delivery controller FQDNs (for CVAD deployments)
-* If Citrix Rendezvous is enabled, also allow outbound TCP/UDP 443 to *.*.nssvc.net.
-
+- `[customer_ID].xendesktop.net` - Citrix DaaS controller
+- `*.*.nssvc.net` - Citrix Gateway Service
+- `*.citrixworkspacesapi.net` - Gateway connectivity checks
+- On-premises delivery controller FQDNs (for CVAD deployments)
+- If Citrix Rendezvous is enabled, also allow outbound TCP/UDP 443 to _._.nssvc.net.
 
 Inbound to VMs:
 
-* TCP/UDP 1494 and 2598 for HDX sessions
-
+- TCP/UDP 1494 and 2598 for HDX sessions
 
 ## 1.  Controller Setup
 
@@ -252,13 +255,12 @@ vm_image: ghcr.io/macstadium/orka-images/sequoia:latest
 
 Variable reference:
 
-| max_vms_per_host | Maximum VMs allowed per host |
-| --- | --- |
-| engine_binary | Path to the Orka Engine binary |
-| ansible_user | SSH username on each host |
-| vm_image | Default base image for VM deployments |
+| max_vms_per_host  | Maximum VMs allowed per host                                  |
+| ----------------- | ------------------------------------------------------------- |
+| engine_binary     | Path to the Orka Engine binary                                |
+| ansible_user      | SSH username on each host                                     |
+| vm_image          | Default base image for VM deployments                         |
 | network_interface | (Optional) Network interface for bridged networking, e.g. en0 |
-
 
 ## 5.  Install Orka Engine
 
@@ -301,24 +303,26 @@ All playbook commands are run from the controller inside ~/orka-automation/orka-
 
 **Run on: Controller**
 
-Deploy a group of VMs. The `vm_group` name is used to track and manage the VMs as a set.
+Deploy a VM by name. Run once per VM to deploy multiple.
 
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4"
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=<your-image>"
 ```
 
 For VDI workloads, use bridged networking so VMs receive IP addresses directly on your LAN. Specify the network interface (typically `en0` for Ethernet):
 
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4" -e "network_interface=en0"
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=<your-image>" -e "network_interface=en0"
 ```
 
-**Note:**** **When network_interface is not specified, VMs deploy in NAT mode. Bridged mode is recommended for VDI because VMs are directly reachable by Citrix Cloud and end users without port forwarding.
+_Run this command once for each additional VM, using a unique `vm_name` each time._
+
+**Note:\*\*** \*\*When network_interface is not specified, VMs deploy in NAT mode. Bridged mode is recommended for VDI because VMs are directly reachable by Citrix Cloud and end users without port forwarding.
 
 To preview what will be deployed without making any changes, add `--tags plan`:
 
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4" --tags plan
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=<your-image>" --tags plan
 ```
 
 ### 6.2  List VMs
@@ -326,7 +330,7 @@ ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms
 **Run on: Controller**
 
 ```
-ansible-playbook list.yml -i inventory -e "vm_group=vdi-group"
+ansible-playbook list.yml -i inventory -e "vm_name=vdi-group"
 ```
 
 ### 6.3  Manage Individual VMs
@@ -343,11 +347,13 @@ ansible-playbook vm.yml -i inventory -e "vm_name=my-vm-name" -e "desired_state=r
 
 **Run on: Controller**
 
-Delete a specific number of VMs from a group. Add --tags plan to preview before deleting.
+Delete a VM by name.
 
 ```
-ansible-playbook delete.yml -i inventory -e "vm_group=vdi-group" -e "delete_count=2"
+ansible-playbook delete.yml -i inventory -e "vm_name=vdi-group-01"
 ```
+
+_Run this command once for each VM to remove._
 
 ### 6.5  Pull Images
 
@@ -359,21 +365,29 @@ Pre-pull an image to all hosts so it is ready for fast deployment:
 ansible-playbook pull_image.yml -i inventory -e "remote_image_name=ghcr.io/macstadium/orka-images/sequoia:latest"
 ```
 
-## 7.  Semaphore Web UI (Optional)
+## 7.  Semaphore Web UI
 
-Semaphore provides a browser-based interface for running orchestration playbooks without CLI access. All task templates, inventory, and repository configuration are set up automatically on first launch.
+Semaphore provides a browser-based interface for running orchestration playbooks. It is the primary way IT administrators interact with MacStadium VDI. The CLI is available for troubleshooting and advanced or custom workflows. All task templates, inventory, and repository configuration are set up automatically on first launch.
 
-### 7.1  Install Docker
+### 7.1  Install Prerequisites
 
 **Run on: Controller**
 
-Docker is required to run Semaphore. Install it through Homebrew:
+Docker and `uv` are required to run Semaphore.
+
+Install Docker through Homebrew:
 
 ```
 brew install docker docker-compose
 ```
 
 **Note:** Docker Desktop is an alternative if you prefer a GUI installer. Either option works.
+
+Install `uv` (used to run the Semaphore configuration script):
+
+```
+brew install uv
+```
 
 ### 7.2  Configure the Environment
 
@@ -420,22 +434,46 @@ Semaphore is available at `http://localhost:3000`. Log in with the admin credent
 
 ### 7.4  Configure SSH Credentials
 
-After logging in, navigate to Key Store and edit the Mac Hosts SSH key. Replace the placeholder credentials with the actual SSH username and private key (or password) for your Mac hosts.
+You can configure SSH credentials either via the setup script or manually through the Semaphore UI.
+
+**Option A: Setup script (recommended)**
+
+`uv` is required to run this script. It is a lightweight Python package manager that executes the configuration script without requiring a virtual environment. It handles SSH key setup and optionally sets default VM credentials and OCI registry credentials in one step.
+
+```bash
+SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
+```
+
+Run `uv run ./semaphore/configure_semaphore.py --help` to see additional parameters, including default VM username/password and OCI registry credentials.
+
+**Option B: Manual (UI)**
+
+After logging in, navigate to **Key Store** and edit the Mac Hosts SSH key. Replace the placeholder credentials with the actual SSH username and private key (or password) for your Mac hosts.
 
 ### 7.5  Available Task Templates
 
 The following templates are pre-configured and ready to use in the Orka Engine Orchestration project. Each template prompts for required inputs when you click Run.
 
-| Template | Playbook | Required Inputs |
-| --- | --- | --- |
-| Deploy VMs | deploy.yml | vm_group, desired_vms |
-| Delete VMs | delete.yml | vm_group, delete_count |
-| Manage VM | vm.yml | vm_name, desired_state |
-| List VMs | list.yml | vm_group (optional) |
-| Pull Image | pull_image.yml | remote_image_name |
-| Install Engine | install_engine.yml | orka_license_key, engine_url |
-| Create Image | create_image.yml | remote_image_name, vm_image |
-
+| Template                         | Playbook                   | Survey Variables                                                                                                           |
+| -------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Deploy VMs                       | `deploy.yml`               | `vm_name`, `vm_image`                                                                                                      |
+| Delete VMs                       | `delete.yml`               | `vm_name`                                                                                                                  |
+| Manage VM                        | `vm.yml`                   | `vm_name`, `desired_state` (`running`, `stopped`, `absent`)                                                                |
+| List VMs                         | `list.yml`                 | `vm_name` (optional)                                                                                                       |
+| Pull Image                       | `pull_image.yml`           | `remote_image_name`                                                                                                        |
+| Install Engine                   | `install_engine.yml`       | `orka_license_key`, `engine_url`                                                                                           |
+| Create Image                     | `create_image.yml`         | `remote_image_name`, `vm_image`                                                                                            |
+| Push Image                       | `push_image.yml`           | `vm_name`, `oci_url`                                                                                                       |
+| Provision User to VM             | `provision_user.yml`       | `vm_name`, `new_username`, `new_user_password`                                                                             |
+| Install Citrix VDA               | `install_citrix_vda.yml`   | `vm_name`                                                                                                                  |
+| Register Citrix VDA              | `register_citrix_vda.yml`  | `vm_name`, `enrollment_token`                                                                                              |
+| Install Android SDK              | `install_android_sdk.yml`  | `install_android_sdk_force` (optional)                                                                                     |
+| Install Android SDK Components   | `sdkmanager_install.yml`   | `platform`, `image_types` (optional)                                                                                       |
+| Uninstall Android SDK Components | `sdkmanager_uninstall.yml` | `platform`                                                                                                                 |
+| Create Android Virtual Device    | `deploy_avd.yml`           | `vm_name`, `platform` (optional), `image_type` (optional)                                                                  |
+| List Android Virtual Devices     | `list_avds.yml`            | `vm_name` (optional)                                                                                                       |
+| Delete Android Virtual Device    | `delete_avd.yml`           | `vm_name`, `avd_index`                                                                                                     |
+| Manage Android Virtual Device    | `avd.yml`                  | `vm_name`, `desired_state` (`running`, `stopped`, `absent`), `avd_index` (optional), `cpu` (optional), `memory` (optional) |
 
 ### 7.6  Stop Semaphore
 
@@ -504,12 +542,11 @@ Fork the `orka-engine-orchestration` repository on GitHub so you can customize i
 
 **Note:** The following remote host CLI commands are for advanced troubleshooting and diagnostics. It is recommended to use the Ansible playbooks or Semaphore UI when available.
 
-
-| MacStadium Support | [support@macstadium.com](mailto:support@macstadium.com) |
-| --- | --- |
+| MacStadium Support             | [support@macstadium.com](mailto:support@macstadium.com)                                        |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- |
 | orka-engine-orchestration repo | [orka-engine-orchestration on GitHub](https://github.com/macstadium/orka-engine-orchestration) |
-| Orka Engine CLI help | orka-engine --help |
-| VM commands | orka-engine vm --help |
-| Image commands | orka-engine image --help |
-| Ansible docs | [Ansible documentation](https://docs.ansible.com) |
-| Citrix VDA for macOS | [Citrix documentation](https://docs.citrix.com) |
+| Orka Engine CLI help           | orka-engine --help                                                                             |
+| VM commands                    | orka-engine vm --help                                                                          |
+| Image commands                 | orka-engine image --help                                                                       |
+| Ansible docs                   | [Ansible documentation](https://docs.ansible.com)                                              |
+| Citrix VDA for macOS           | [Citrix documentation](https://docs.citrix.com)                                                |

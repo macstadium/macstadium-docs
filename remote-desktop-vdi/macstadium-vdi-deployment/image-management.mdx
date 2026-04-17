@@ -1,10 +1,10 @@
 ---
 title: "VDI golden image management"
-description: "Create and manage golden images for Orka for VDI: build images with Citrix VDA pre-installed, automate builds with Ansible, and distribute across hosts."
+description: "Create and manage golden images for MacStadium VDI: build images with Citrix VDA pre-installed, automate builds with Ansible, and distribute across hosts."
 zendesk_id: 44332794850971
 ---
 
-Image management is critical for maintaining a scalable Orka for VDI environment. This section covers creating a golden image with the Citrix VDA pre-installed, automating image builds, distributing images across hosts, and implementing version control practices for long-term maintenance.
+Image management is critical for maintaining a scalable MacStadium VDI environment. This section covers creating a golden image with the Citrix VDA pre-installed, automating image builds, distributing images across hosts, and implementing version control practices for long-term maintenance.
 
 ## Creating a golden image with Citrix VDA
 
@@ -44,7 +44,7 @@ This implementation doesn’t have a dedicated playbook. To refresh VMs with a n
 ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
 
 # Step 2: Deploy a replacement VM from the new image version 
-ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
 ```
 ## Cache management
 

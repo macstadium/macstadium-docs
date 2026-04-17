@@ -1,16 +1,16 @@
 ---
 title: "Production Rollout"
-description: "Transition Orka for VDI from testing to production. Covers user access policies, golden image readiness, monitoring setup, and team training requirements."
+description: "Transition MacStadium VDI from testing to production. Covers user access policies, golden image readiness, monitoring setup, and team training requirements."
 zendesk_id: 44334107315611
 ---
 
-A production rollout transitions your Orka for VDI environment from testing to live operation. This step in the deployment lifecycle typically covers configuring user access, operational monitoring, backup strategies, and scaling concerns.
+A production rollout transitions your MacStadium VDI environment from testing to live operation. This step in the deployment lifecycle typically covers configuring user access, operational monitoring, backup strategies, and scaling concerns.
 
 Before transitioning to production, you will want to ensure that you have completed environment testing, golden images have been tested and are ready for deployment, troubleshooting procedures have been documented, your operations and support teams have been trained on daily support tasks, and relevant escalation procedures have been defined.
 
 ### User assignment and access policies
 
-Configures how users access desktops and what permissions they have within the Orka for VDI environment.
+Configures how users access desktops and what permissions they have within the MacStadium VDI environment.
 
 #### User assignment strategies
 
@@ -176,7 +176,7 @@ Before production rollout, communicate to users:
 
 
 
-Consider a phased rollout approach if time allows, beginning with a pilot team and progressing through teams/departments until full production adoption has been reached. This allows for additional time to monitor any issues before expanding Orka for VDI access to further teams.
+Consider a phased rollout approach if time allows, beginning with a pilot team and progressing through teams/departments until full production adoption has been reached. This allows for additional time to monitor any issues before expanding MacStadium VDI access to further teams.
 
 ### Monitoring and Observability
 
@@ -303,7 +303,7 @@ What to include in backups:
 
 VM images (golden images):
 
-  * Base macOS images with Orka for VDI pre-installed
+  * Base macOS images with MacStadium VDI pre-installed
 
   * Department-specific images with specific software or applications installed
 
@@ -438,7 +438,7 @@ When scheduling quarterly disaster planning, consider the following tests:
 
 #### Scale considerations
 
-As your company grows and your needs evolve, you will want to plan for onboarding additional users to your Orka for VDI instance. When undertaking capacity planning, it is important to ensure that you document your infrastructure’s current state.
+As your company grows and your needs evolve, you will want to plan for onboarding additional users to your MacStadium VDI instance. When undertaking capacity planning, it is important to ensure that you document your infrastructure’s current state.
 
 ##### Example ‘State of current infrastructure’:
 
@@ -537,7 +537,7 @@ Define thresholds that trigger capacity expansion:
 
 As your user base grows, you may wish to add more Orka hosts:
 
-  1. Procure additional Mac hardware meeting minimum Orka for VDI requirements
+  1. Procure additional Mac hardware meeting minimum MacStadium VDI requirements
 
   2. Install macOS and configure your network (static IP or DHCP reservation)
 
@@ -568,8 +568,9 @@ As your user base grows, you may wish to add more Orka hosts:
     
     
 ```
-ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=40" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 **Vertical scaling (increase VM resources):**
 
 If users need more powerful desktops, upgrade to higher-spec Macs:
@@ -581,4 +582,4 @@ If users need more powerful desktops, upgrade to higher-spec Macs:
 
 
 
-A production rollout marks the transition from project to operational service. With proper user access controls, monitoring, backup procedures, and scaling plans in place, your Orka for VDI environment is ready to deliver reliable macOS virtual desktops to users at scale.
+A production rollout marks the transition from project to operational service. With proper user access controls, monitoring, backup procedures, and scaling plans in place, your MacStadium VDI environment is ready to deliver reliable macOS virtual desktops to users at scale.

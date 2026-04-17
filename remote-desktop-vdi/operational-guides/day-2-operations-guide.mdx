@@ -1,10 +1,10 @@
 ---
 title: "Day-2 Operations Guide"
-description: "Ongoing operations for a production Orka for VDI deployment: capacity planning, image management, user lifecycle, incident response, and compliance."
+description: "Ongoing operations for a production MacStadium VDI deployment: capacity planning, image management, user lifecycle, incident response, and compliance."
 zendesk_id: 44261455694619
 ---
 
-This guide covers the ongoing operational tasks for managing a production Orka for VDI environment. It assumes your deployment is complete, users are onboarded, and you're now responsible for day-to-day operations, maintenance, and optimization.  
+This guide covers the ongoing operational tasks for managing a production MacStadium VDI environment. It assumes your deployment is complete, users are onboarded, and you're now responsible for day-to-day operations, maintenance, and optimization.  
   
 What this guide covers:
 
@@ -36,7 +36,7 @@ What this guide assumes:
 
 Prerequisites:
 
-  * SSH access to Orka for VDI hosts
+  * SSH access to MacStadium VDI hosts
 
   * Citrix Cloud admin credentials
 
@@ -107,7 +107,7 @@ You will want to review your Ansible logs weekly to help you spot trends before 
 
  * Request a host in same subnet as your existing infrastructure
 
- * Install Orka for VDI on your new Mac host machine(s)
+ * Install MacStadium VDI on your new Mac host machine(s)
 ```
   2. Add host to Ansible inventory
 
@@ -158,8 +158,7 @@ Repeat this for each image your environment uses. This prevents slow first deplo
          
 ```
      ansible-playbook -i inventory deploy.yml \
-       -e "vm_group=test-new-host" \
-       -e "desired_vms=1" \
+       -e "vm_name=test-new-host-01" \
        -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
        --limit mac-node-4
 ```
@@ -168,8 +167,7 @@ Verify the test VM boots, registers with Citrix VDA, and is accessible. Once thi
          
 ```
      ansible-playbook -i inventory delete.yml \
-       -e "vm_group=test-new-host" \
-       -e "delete_count=1"
+       -e "vm_name=test-new-host-01"
 ```
   7. Deploy production VMs  
   
@@ -178,9 +176,11 @@ With your new host successfully verified, you can now deploy additional desktops
          
 ```
      ansible-playbook -i inventory deploy.yml \
-       -e "vm_group=citrix-vda-finance" \
-       -e "desired_vms=15"
+       -e "vm_name=citrix-vda-finance-01" \
+       -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
+_Run this command once for each additional VM, using a unique `vm_name` each time._
+
 This may take anywhere between 2-4 hours for full host integration and testing.
 
 
@@ -199,7 +199,7 @@ This may take anywhere between 2-4 hours for full host integration and testing.
 
 
 
-**Important note:** Decommissioning Orka for VDI hosts requires migrating or deleting VMs first. Orka for VDI does not support live VM migration between hosts.
+**Important note:** Decommissioning MacStadium VDI hosts requires migrating or deleting VMs first. MacStadium VDI does not support live VM migration between hosts.
 
 #####  **Steps to decommission a host:**
 
@@ -222,10 +222,10 @@ You will want to note all VM names running on the host you're removing.
        -e "vm_name=citrix-vda-finance-abc123" \
        -e "desired_state=absent"
      
-     # Redeploy VM group to desired count
+     # Redeploy VM
      ansible-playbook -i inventory deploy.yml \
-       -e "vm_group=citrix-vda-finance" \
-       -e "desired_vms=10"
+       -e "vm_name=citrix-vda-finance-new-01" \
+       -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
 **Option B:** Snapshot and recreate VMs for dedicated desktops with user data.  
   
@@ -270,7 +270,7 @@ Confirm that your VMs are now running only on the remaining hosts.
 
 
 
-Once an Orka for VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
+Once an MacStadium VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
   
 Estimated timeline: This may take between 4-8 hours depending on your VM count and migration complexity.
 
@@ -291,8 +291,7 @@ Recommended workflow:
          
 ```
      ansible-playbook -i inventory deploy.yml \
-       -e "vm_group=image-test" \
-       -e "desired_vms=1" \
+       -e "vm_name=image-test-01" \
        -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
   2. Access the test VM and install updates  
@@ -338,17 +337,14 @@ Inside the VM:
 ```
 ansible-playbook -i inventory create_image.yml \
   -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
-  -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.1" \
-  -e "registry_username=deploy" \
-  -e "@vault_passwords.yml"
+  -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.1"
 ```
   4. Delete the test VM  
 
          
 ```
      ansible-playbook -i inventory delete.yml \
-       -e "vm_group=image-test" \
-       -e "delete_count=1"
+       -e "vm_name=image-test-01"
 ```
 ##### Pilot update rollout
 
@@ -358,10 +354,10 @@ You may want to deploy the updated image to a small group of users first, as see
     
 ```
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=citrix-vda-finance-pilot" \
-  -e "desired_vms=5" \
+  -e "vm_name=citrix-vda-finance-pilot-01" \
   -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
 ```
+_Run this command once for each additional pilot VM, using a unique `vm_name` each time._
 You will want to monitor the updated image deployment for 3-5 business days, collecting user feedback on any new issues or errors, performance changes, and application compatibility issues that may arise.
 
 ##### Full production rollout
@@ -372,14 +368,16 @@ If the pilot succeeds, you can proceed to update all VMs in production. For pool
 ```
 # Delete existing VMs from finance group
 ansible-playbook -i inventory delete.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "delete_count=10"
+  -e "vm_name=citrix-vda-finance-01"
+
+_Run this command once for each VM to remove._
 
 # Redeploy with new image version
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "desired_vms=10" \
+  -e "vm_name=citrix-vda-finance-01" \
   -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 ```
 You will want to schedule the update to take place during a scheduled maintenance window (evenings or weekends are recommended) to avoid user disruption.
 
@@ -457,15 +455,17 @@ Rollback plan: Keep the previous golden image version available for 30 days afte
     
 ```
 # Delete existing VMs from finance group
-ansible-playbook -i inventory-delete.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "delete_count=10"
+ansible-playbook -i inventory delete.yml \
+  -e "vm_name=citrix-vda-finance-01"
+
+_Run this command once for each VM to remove._
 
 # Redeploy with previous image version (rollback)
-ansible-playbook -i inventory-deploy.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "desired_vms=10" \
+ansible-playbook -i inventory deploy.yml \
+  -e "vm_name=citrix-vda-finance-01" \
   -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 ```
 ### User Lifecycle
 
@@ -502,8 +502,12 @@ Compare the listed VM count against the number of users in the Delivery Group. I
 ```
 # Add two more desktops
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "desired_vms=12"
+  -e "vm_name=citrix-vda-finance-11" \
+  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+
+ansible-playbook -i inventory deploy.yml \
+  -e "vm_name=citrix-vda-finance-12" \
+  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
   3. User logs in
 
@@ -608,13 +612,17 @@ After offboarding multiple users, you may have excess VMs. If usage is consisten
     
 ```
 # List VMs in finance group
-ansible-playbook -i inventory list.yml \
-  -e "vm_group=citrix-vda-finance"
+ansible-playbook -i inventory list.yml | grep citrix-vda-finance
 
 # Delete 3 VMs from finance group
 ansible-playbook -i inventory delete.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "delete_count=3"
+  -e "vm_name=citrix-vda-finance-10"
+
+ansible-playbook -i inventory delete.yml \
+  -e "vm_name=citrix-vda-finance-11"
+
+ansible-playbook -i inventory delete.yml \
+  -e "vm_name=citrix-vda-finance-12"
 ```
 ### Backup and Recovery
 
@@ -660,7 +668,7 @@ Approach 2: Host-level storage snapshots (for dedicated desktops)
 
 If your users have dedicated VMs with local data that must be preserved, use host-level tools:
 
-  1. SSH to your Orka for VDI host
+  1. SSH to your MacStadium VDI host
 
   2. Use APFS snapshot capabilities on the host:
 
@@ -679,7 +687,7 @@ tmutil localsnapshot
 
 
 
-Note:**** This approach is not automated in Orka for VDI. You'll need to build custom tooling or manual procedures.
+Note:**** This approach is not automated in MacStadium VDI. You'll need to build custom tooling or manual procedures.
 
 Approach 3: Third-party backup tools
 
@@ -713,7 +721,7 @@ ansible-playbook -i inventory pull_image.yml \
 
 Prerequisites:
 
-  * Secondary Orka for VDI environment located in a different datacenter (requires MacStadium private cloud in multiple locations)
+  * Secondary MacStadium VDI environment located in a different datacenter (requires MacStadium private cloud in multiple locations)
 
   * Golden images replicated to a secondary registry accessible from the DR site
 
@@ -748,10 +756,10 @@ Prerequisites:
          
 ```
      ansible-playbook -i inventory-dr deploy.yml \
-       -e "vm_group=citrix-vda-finance" \
-       -e "desired_vms=10" \
+       -e "vm_name=citrix-vda-finance-01" \
        -e "vm_image=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
+_Run this command once for each additional VM, using a unique `vm_name` each time._
   4. Update Citrix Cloud configuration
 
 
@@ -809,7 +817,7 @@ Recovery depends on your backup approach.
 
 If you are using host-level snapshots:
 
-  1. SSH to the Orka for VDI host
+  1. SSH to the MacStadium VDI host
 
   2. Stop the affected VM:
          
@@ -850,7 +858,7 @@ Requirements:
 
   * All existing VMs must be deleted before switching modes
 
-  * Orka for VDI running Orka Engine 3.5+
+  * MacStadium VDI running Orka Engine 3.5+
 
 
 
@@ -868,11 +876,11 @@ Important limitations:
 
 Configuration:
 
-Bridged networking is configured in your Orka for VDI cluster configuration files before deploying VMs.
+Bridged networking is configured in your MacStadium VDI cluster configuration files before deploying VMs.
 
 Step 1: Configure cluster-wide bridge mode
 
-Edit `cluster.yml` on your Orka for VDI management node:
+Edit `cluster.yml` on your MacStadium VDI management node:
     
     
 ```
@@ -922,12 +930,11 @@ Important note: You **cannot** switch networking modes with VMs running.
 # List all VMs
 ansible-playbook -i inventory list.yml
 
-# Delete all VMs (adjust groups and counts as needed)
+# Delete all VMs
 ansible-playbook -i inventory delete.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "delete_count=10"
+  -e "vm_name=citrix-vda-finance-01"
 
-# Repeat for each VM group in your environment
+_Run this command once for each VM to remove._
 ```
 Step 4: Apply configuration changes
 
@@ -944,10 +951,11 @@ Deploy your VMs normally. They will now use bridged networking automatically:
     
 ```
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "desired_vms=10" \
+  -e "vm_name=citrix-vda-finance-01" \
   -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
+_Run this command once for each additional VM, using a unique `vm_name` each time._
+
 Step 6: Verify that VMs received DHCP addresses
     
     
@@ -1109,14 +1117,16 @@ M4 Macs support GPU passthrough for VMs. This requires:
 
   * Orka 3.5+
 
-  * macOS 15.5+ on the Orka for VDI host
+  * macOS 15.5+ on the MacStadium VDI host
 
   * Specific VM configuration
 
 
 
 
-**Note:** GPU acceleration is not yet automated in the Orka Engine Ansible playbooks. Contact MacStadium support for GPU-enabled VM deployment guidance.
+<Note>
+  GPU acceleration is not yet automated in the Orka Engine Ansible playbooks. Contact MacStadium support for GPU-enabled VM deployment guidance.
+</Note>
 
   4. Test with Citrix HDX Monitor
 
@@ -1226,8 +1236,7 @@ Create a playbook that deploys a test VM, installs updates, and creates a new go
     - name: Deploy test VM
       command: >
         ansible-playbook -i inventory deploy.yml
-        -e "vm_group=image-test"
-        -e "desired_vms=1"
+        -e "vm_name=image-test-01"
         -e "vm_image={{ current_image }}"
 
     - name: Wait for VM to be ready
@@ -1248,8 +1257,7 @@ Create a playbook that deploys a test VM, installs updates, and creates a new go
     - name: Clean up test VM
       command: >
         ansible-playbook -i inventory delete.yml
-        -e "vm_group=image-test"
-        -e "delete_count=1"
+        -e "vm_name=image-test-01"
 ```
   2. Scheduled capacity scaling
 
@@ -1261,11 +1269,13 @@ Schedule a cron job to automatically scale capacity up during business hours and
     
 ```
 # Scale up at 7 AM weekdays
-0 7 * * 1-5 ansible-playbook -i /path/to/inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=15"
+0 7 * * 1-5 /path/to/scale-up.sh
 
 # Scale down at 7 PM weekdays
-0 19 * * 1-5 ansible-playbook -i /path/to/inventory delete.yml -e "vm_group=citrix-vda-finance" -e "delete_count=5"
+0 19 * * 1-5 /path/to/scale-down.sh
 ```
+
+Where scale-up.sh deploys VMs with vm_name for each VM, and scale-down.sh deletes them by vm_name.
   3. Health check automation
 
 
@@ -1326,8 +1336,7 @@ jobs:
       - name: Deploy test VM
         run: |
           ansible-playbook -i inventory deploy.yml \
-            -e "vm_group=image-test" \
-            -e "desired_vms=1" \
+            -e "vm_name=image-test-01" \
             -e "vm_image=registry.example.com/citrix-vda/dev-base:latest"
 
       - name: Copy application to test VM
@@ -1351,11 +1360,11 @@ jobs:
       - name: Deploy to production
         run: |
           ansible-playbook -i inventory deploy.yml \
-            -e "vm_group=citrix-vda-dev" \
-            -e "desired_vms=20" \
+            -e "vm_name=citrix-vda-dev-01" \
             -e "vm_image=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}"
+          # Repeat for each VM: vm_name=citrix-vda-dev-02, vm_name=citrix-vda-dev-03, etc. (20 total)
 ```
-This fully automates the process from code commit to production Orka for VDI deployment.
+This fully automates the process from code commit to production MacStadium VDI deployment.
 
 #### Scheduled Maintenance Tasks
 
@@ -1468,10 +1477,11 @@ Deploy tenant VMs only to their assigned hosts using `--limit`:
     
 ```
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "desired_vms=10" \
+  -e "vm_name=citrix-vda-finance-01" \
+  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest" \
   --limit finance_hosts
 ```
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 Pros: Complete resource isolation, no noisy neighbor problems   
 Cons: Reduced flexibility, potential for underutilization
 
@@ -1486,10 +1496,10 @@ Track resources per tenant:
 # List VMs by group
 
 # Count finance VMs
-ansible-playbook -i inventory list.yml -e "vm_group=citrix-vda-finance" | wc -l
+ansible-playbook -i inventory list.yml | grep citrix-vda-finance | wc -l
 
 # Count engineering VMs
-ansible-playbook -i inventory list.yml -e "vm_group=citrix-vda-engineering" | wc -l
+ansible-playbook -i inventory list.yml | grep citrix-vda-engineering | wc -l
 ```
 Calculate costs:
 
@@ -1619,7 +1629,7 @@ ansible-playbook -i inventory list.yml
 
 Possible causes:
 
-  1. Orka for VDI host is out of disk space
+  1. MacStadium VDI host is out of disk space
 
   2. Image pull failure (registry unreachable or authentication issue)
 
@@ -1658,7 +1668,7 @@ ansible-playbook -i inventory list.yml | \
     -e "vm_name={}" \
     -e "desired_state=running"
 ```
-Consider scripting auto-start behavior or coordinating with MacStadium to enable Orka for VDI auto-start features.
+Consider scripting auto-start behavior or coordinating with MacStadium to enable MacStadium VDI auto-start features.
 
 ### Triage Decision Tree
 
@@ -1748,20 +1758,20 @@ Escalate when:
 
 Subject: [URGENT] VDI Issue   
   
-\- \<brief description>   
+- &lt;brief description&gt;   
   
-Impact: \- Number of users affected: X \- Severity: High / Medium / Low   
+Impact: - Number of users affected: X - Severity: High / Medium / Low   
   
-\- Business impact: \<description> Problem: \<Clear description of the issue>   
+- Business impact: &lt;description&gt; Problem: &lt;Clear description of the issue&gt;   
   
 Steps taken:
 1. [what you've already tried]
 2. [troubleshooting done]
 3. [results]
   
-Next steps needed: \<what you need from the escalation team>   
+Next steps needed: &lt;what you need from the escalation team&gt;   
   
-Contact: \<your name>, \<phone>, \<email>
+Contact: &lt;your name&gt;, &lt;phone&gt;, &lt;email&gt;
 
 ### Post-Incident Review Template
 
@@ -1810,9 +1820,9 @@ Preventative Measures: (How to prevent this from happening again in the future)
 
 Action Items
 
-  * Task 1 - Assigned to \<name> \- Due \<date>
+  * Task 1 - Assigned to &lt;name&gt; - Due &lt;date&gt;
 
-  * Task 2 - Assigned to \<name> \- Due \<date>
+  * Task 2 - Assigned to &lt;name&gt; - Due &lt;date&gt;
 
 
 
@@ -1952,14 +1962,16 @@ If a new image causes issues within the first 24 hours:
 ```
 # Delete old VMs
 ansible-playbook -i inventory delete.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "delete_count=10"
+  -e "vm_name=citrix-vda-finance-01"
+
+_Run this command once for each VM to remove._
 
 # Redeploy with previous version (rollback)
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=citrix-vda-finance" \
-  -e "desired_vms=10" \
+  -e "vm_name=citrix-vda-finance-01" \
   -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"  # Previous version
+
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 ```
   3. Verify users can connect to the now rolled-back VMs
 
@@ -1996,20 +2008,20 @@ Planned maintenance notification (send 3-5 business days in advance):
 
 Subject: Scheduled VDI Maintenance  
   
-\<Date>   
-\<Time>   
-We will be performing maintenance on the macOS virtual desktop environment on \<date> from \<start time> to \<end time> \<timezone>.   
+&lt;Date&gt;   
+&lt;Time&gt;   
+We will be performing maintenance on the macOS virtual desktop environment on &lt;date&gt; from &lt;start time&gt; to &lt;end time&gt; &lt;timezone&gt;.   
   
 What to expect:   
-\- Brief interruption to desktop access (approximately 15 minutes)   
-\- You may need to reconnect through Citrix Workspace after maintenance   
-\- All data stored on network drives will be unaffected  
+- Brief interruption to desktop access (approximately 15 minutes)   
+- You may need to reconnect through Citrix Workspace after maintenance   
+- All data stored on network drives will be unaffected  
   
 What we're doing:   
-\- Installing macOS security updates   
-\- Updating desktop images with latest applications   
+- Installing macOS security updates   
+- Updating desktop images with latest applications   
   
-If you have questions or concerns, please contact \<support email>.   
+If you have questions or concerns, please contact &lt;support email&gt;.   
   
 Thank you,   
 IT Team
@@ -2020,12 +2032,12 @@ Subject: URGENT: VDI Service Interruption
   
 We are currently experiencing an issue with the macOS virtual desktop service. Some users may be unable to connect or experiencing poor performance.   
   
-Current status: \- Issue first detected: \<time>   
-\- Users impacted: \<estimated number or "some" / "all">   
+Current status: - Issue first detected: &lt;time&gt;   
+- Users impacted: &lt;estimated number or "some" / "all"&gt;   
   
-\- IT team actively working on resolution Workaround (if available): \<any temporary workaround users can try>   
+- IT team actively working on resolution Workaround (if available): &lt;any temporary workaround users can try&gt;   
   
-We will send updates every 30 minutes until resolved. Next update: \<time>   
+We will send updates every 30 minutes until resolved. Next update: &lt;time&gt;   
   
 IT Team
 
@@ -2035,12 +2047,12 @@ Subject: RESOLVED: VDI Service Restored
   
 The macOS virtual desktop service issue has been resolved. All services are now operating normally.   
   
-Summary: \- Issue duration: \<start time> to \<end time>   
+Summary: - Issue duration: &lt;start time&gt; to &lt;end time&gt;   
   
-\- Root cause: \<brief, non-technical explanation>   
-\- Resolution: \<what was done to fix it>   
+- Root cause: &lt;brief, non-technical explanation&gt;   
+- Resolution: &lt;what was done to fix it&gt;   
   
-If you continue to experience issues, please contact \<support email>.   
+If you continue to experience issues, please contact &lt;support email&gt;.   
   
 Thank you for your patience, IT Team
 
@@ -2257,15 +2269,17 @@ ansible hosts -i inventory \
     
     
 ```
-# Deploy VMs
+# Deploy VM
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=webapp" \
-  -e "desired_vms=10"
+  -e "vm_name=webapp-01" \
+  -e "vm_image=<your-image>"
+
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 
 # Plan deployment (dry-run)
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=webapp" \
-  -e "desired_vms=10" \
+  -e "vm_name=webapp-01" \
+  -e "vm_image=<your-image>" \
   --tags plan
 ```
 #### VM lifecycle:
@@ -2302,15 +2316,15 @@ ansible-playbook -i inventory vm.yml \
     
     
 ```
-# Delete VMs
+# Delete VM
 ansible-playbook -i inventory delete.yml \
-  -e "vm_group=webapp" \
-  -e "delete_count=5"
+  -e "vm_name=webapp-01"
+
+_Run this command once for each VM to remove._
 
 # Plan deletion (dry-run)
 ansible-playbook -i inventory delete.yml \
-  -e "vm_group=webapp" \
-  -e "delete_count=5" \
+  -e "vm_name=webapp-01" \
   --tags plan
 ```
 #### List VMs:
@@ -2320,9 +2334,8 @@ ansible-playbook -i inventory delete.yml \
 # List all VMs
 ansible-playbook -i inventory list.yml
 
-# List VMs in specific group
-ansible-playbook -i inventory list.yml \
-  -e "vm_group=webapp"
+# List VMs matching a name pattern
+ansible-playbook -i inventory list.yml -e "vm_name=webapp"
 ```
 #### Image operations:
     
@@ -2441,7 +2454,7 @@ Citrix Support | Citrix Cloud, VDA, licensing | [Citrix Support](http://support.
 
 ##### MacStadium:
 
-  * Your Orka for VDI host is down
+  * Your MacStadium VDI host is down
 
   * Experiencing Orka Engine failures
 

@@ -1,5 +1,5 @@
 ---
-title: "Jamf Enrollment for Orka VDI Desktops"
+title: "Jamf Enrollment for MacStadium VDI Desktops"
 description: "Enroll Orka-provisioned macOS VMs into Jamf Pro using a golden image with LaunchDaemon and LaunchAgent scripts. Covers setup and enrollment flow."
 ---
 
@@ -9,7 +9,7 @@ This guide walks through how to enroll Orka-provisioned macOS VMs into your Jamf
 
 ## What's Different About VMs
 
-Jamf's standard automated enrollment uses Apple Business Manager (ABM) and Automated Device Enrollment (ADE). Apple does not support ABM registration for virtual machines, so that path isn't available for Orka VDI desktops.
+Jamf's standard automated enrollment uses Apple Business Manager (ABM) and Automated Device Enrollment (ADE). Apple does not support ABM registration for virtual machines, so that path isn't available for MacStadium VDI desktops.
 
 On modern macOS (10.13 and later), Jamf's User-Initiated Enrollment installs an MDM profile on the device. Installing an MDM profile on an unsupervised machine requires the user to explicitly approve it. Since VMs can't be supervised through ABM, you can't skip that approval step entirely.
 
@@ -55,7 +55,7 @@ Enrollment invitations in Jamf Pro 11 live under Computers, but may be inside th
 
 1. Click **Computers** at the top of the left sidebar.
 2. Click **Enrollment Invitations** in the sidebar.
-3. Click **New** and follow the prompts. Set the expiration date as far out as your instance allows — align it to your image rotation schedule so the invitation doesn't go stale before you re-seal the image.
+3. Click **New** and follow the prompts. Set the expiration date as far out as your instance allows, and align it to your image rotation schedule so the invitation does not go stale before you re-seal the image.
 4. Scope the invitation to a specific Jamf site or LDAP group if needed.
 5. After saving, open the invitation record and copy the **Invitation ID**. This is the value you'll use as `INVITATION_CODE` in both scripts below.
 
@@ -242,7 +242,7 @@ chmod 644 /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
 
 ### Step 7: Seal the Golden Image
 
-1. Don't load the LaunchDaemon or LaunchAgent in the image itself — they load on first boot and first login of each provisioned VM.
+1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
 2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
 3. Confirm no Jamf management framework is already installed. If `/Library/Application Support/JAMF/` exists, remove it before sealing: `sudo rm -rf "/Library/Application Support/JAMF/"`.
 4. Publish the image in Orka.
@@ -267,7 +267,7 @@ In Jamf Pro, go to **Computers > Search Computers** and search for the VM by hos
 
 ## A Few Things Worth Knowing
 
-**Each VM gets its own record.** Orka assigns each VM a unique hardware UUID, so every desktop shows up as a separate computer in Jamf. When you destroy and reprovision a VM, the new instance creates a new record. Stale records from old VMs stick around until you clean them up manually — plan for that if you're running a high-churn environment.
+**Each VM gets its own record.** Orka assigns each VM a unique hardware UUID, so every desktop shows up as a separate computer in Jamf. When you destroy and reprovision a VM, the new instance creates a new record. Stale records from old VMs stick around until you clean them up manually, so plan for that if you're running a high-churn environment.
 
 **Watch your invitation expiry.** If the enrollment invitation expires, the script hits its retry limit and stops trying. For long-lived golden images, set the invitation to "Never Expires." If you rotate invitations, update the script and re-seal the image before the old code goes stale.
 

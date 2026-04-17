@@ -15,7 +15,7 @@
     "links": [
       {
         "name": "Support",
-        "url": "https://portal.macstadium.com/support-center/tickets"
+        "url": "https://support.macstadium.com"
       },
       {
         "name": "Portal",
@@ -29,7 +29,11 @@
   },
   "feedback": {
     "suggestEdit": true,
-    "raiseIssue": false
+    "raiseIssue": true
+  },
+  "banner": {
+    "content": "Welcome to the new MacStadium Documentation site. We've migrated from support.macstadium.com, you're in the right place.",
+    "dismissible": true
   },
   "integrations": {
     "telemetry": {
@@ -286,26 +290,27 @@
         "group": "Remote Desktop / VDI",
         "pages": [
           {
-            "group": "Orka for VDI",
+            "group": "MacStadium VDI",
             "pages": [
-              "remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
-              "remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
-              "remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
-              "remote-desktop-vdi/orka-for-vdi-deployment/citrix-daas-configuration",
-              "remote-desktop-vdi/orka-for-vdi-deployment/image-management",
-              "remote-desktop-vdi/orka-for-vdi-deployment/jamf-enrollment",
-              "remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing",
-              "remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
-              "remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
-              "remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues"
-            ]
-          },
-          {
-            "group": "Operational Guides",
-            "pages": [
-              "remote-desktop-vdi/operational-guides/ansible-quick-reference",
-              "remote-desktop-vdi/operational-guides/day-2-operations-guide",
-              "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+              "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
+              "remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
+              "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
+              "remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
+              "remote-desktop-vdi/macstadium-vdi-deployment/image-management",
+              "remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment",
+              "remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices",
+              "remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
+              "remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
+              "remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases",
+              "remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
+              {
+                "group": "Operational Guides",
+                "pages": [
+                  "remote-desktop-vdi/operational-guides/ansible-quick-reference",
+                  "remote-desktop-vdi/operational-guides/day-2-operations-guide",
+                  "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+                ]
+              }
             ]
           },
           {
@@ -466,6 +471,46 @@
       "destination": "/"
     },
     {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/citrix-daas-configuration",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/image-management",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/image-management"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/jamf-enrollment",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/production-rollout"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases"
+    },
+    {
+      "source": "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues"
+    },
+    {
       "source": "/getting-started/creating-your-first-node",
       "destination": "/orka/quick-start-guides/orka3-cli-quick-start"
     },
@@ -499,7 +544,7 @@
     },
     {
       "source": "/docs/ansible",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
     },
     {
       "source": "/docs/:path*",
@@ -537,7 +582,7 @@
     },
     {
       "source": "/hc/en-us/articles/44257766268571-Overview-Architecture",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
       "permanent": true
     },
     {
@@ -892,7 +937,7 @@
     },
     {
       "source": "/hc/en-us/articles/44259626250267-Deployment-Guide",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
       "permanent": true
     },
     {
@@ -997,7 +1042,7 @@
     },
     {
       "source": "/hc/en-us/articles/44332755734299-Ansible-Playbook-Implementation",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
       "permanent": true
     },
     {
@@ -1102,7 +1147,7 @@
     },
     {
       "source": "/hc/en-us/articles/44332686963867-Citrix-DaaS-Configuration",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/citrix-daas-configuration",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
       "permanent": true
     },
     {
@@ -1202,7 +1247,7 @@
     },
     {
       "source": "/hc/en-us/articles/44332794850971-Image-Management",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/image-management",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/image-management",
       "permanent": true
     },
     {
@@ -1297,7 +1342,7 @@
     },
     {
       "source": "/hc/en-us/articles/44332879842587-Validation-and-Testing",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/validation-and-testing",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
       "permanent": true
     },
     {
@@ -1357,7 +1402,7 @@
     },
     {
       "source": "/hc/en-us/articles/44334107315611-Production-Rollout",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/production-rollout",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
       "permanent": true
     },
     {
@@ -1412,7 +1457,7 @@
     },
     {
       "source": "/hc/en-us/articles/44339727223451-Business-Outcomes-Use-Cases",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/business-outcomes-use-cases",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases",
       "permanent": true
     },
     {
@@ -1452,7 +1497,7 @@
     },
     {
       "source": "/hc/en-us/articles/44333132574107-Troubleshooting-Common-Issues",
-      "destination": "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
       "permanent": true
     },
     {
@@ -1555,12 +1600,5 @@
       "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn",
       "permanent": true
     }
-  ],
-  "fonts": {
-    "family": "Lato"
-  },
-  "banner": {
-    "content": "Welcome to the new MacStadium Documentation site. We've migrated from support.macstadium.com, you're in the right place.",
-    "dismissible": true
-  }
+  ]
 }
