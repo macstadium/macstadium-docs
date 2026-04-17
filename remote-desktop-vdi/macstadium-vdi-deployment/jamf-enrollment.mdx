@@ -1,5 +1,5 @@
 ---
-title: "Jamf Enrollment for Orka VDI Desktops"
+title: "Jamf Enrollment for MacStadium VDI Desktops"
 description: "Enroll Orka-provisioned macOS VMs into Jamf Pro using a golden image with LaunchDaemon and LaunchAgent scripts. Covers setup and enrollment flow."
 ---
 
@@ -9,7 +9,7 @@ This guide walks through how to enroll Orka-provisioned macOS VMs into your Jamf
 
 ## What's Different About VMs
 
-Jamf's standard automated enrollment uses Apple Business Manager (ABM) and Automated Device Enrollment (ADE). Apple does not support ABM registration for virtual machines, so that path isn't available for Orka VDI desktops.
+Jamf's standard automated enrollment uses Apple Business Manager (ABM) and Automated Device Enrollment (ADE). Apple does not support ABM registration for virtual machines, so that path isn't available for MacStadium VDI desktops.
 
 On modern macOS (10.13 and later), Jamf's User-Initiated Enrollment installs an MDM profile on the device. Installing an MDM profile on an unsupervised machine requires the user to explicitly approve it. Since VMs can't be supervised through ABM, you can't skip that approval step entirely.
 

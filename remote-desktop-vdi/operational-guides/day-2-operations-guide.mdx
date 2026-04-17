@@ -1,10 +1,10 @@
 ---
 title: "Day-2 Operations Guide"
-description: "Ongoing operations for a production Orka for VDI deployment: capacity planning, image management, user lifecycle, incident response, and compliance."
+description: "Ongoing operations for a production MacStadium VDI deployment: capacity planning, image management, user lifecycle, incident response, and compliance."
 zendesk_id: 44261455694619
 ---
 
-This guide covers the ongoing operational tasks for managing a production Orka for VDI environment. It assumes your deployment is complete, users are onboarded, and you're now responsible for day-to-day operations, maintenance, and optimization.  
+This guide covers the ongoing operational tasks for managing a production MacStadium VDI environment. It assumes your deployment is complete, users are onboarded, and you're now responsible for day-to-day operations, maintenance, and optimization.  
   
 What this guide covers:
 
@@ -36,7 +36,7 @@ What this guide assumes:
 
 Prerequisites:
 
-  * SSH access to Orka for VDI hosts
+  * SSH access to MacStadium VDI hosts
 
   * Citrix Cloud admin credentials
 
@@ -107,7 +107,7 @@ You will want to review your Ansible logs weekly to help you spot trends before 
 
  * Request a host in same subnet as your existing infrastructure
 
- * Install Orka for VDI on your new Mac host machine(s)
+ * Install MacStadium VDI on your new Mac host machine(s)
 ```
   2. Add host to Ansible inventory
 
@@ -199,7 +199,7 @@ This may take anywhere between 2-4 hours for full host integration and testing.
 
 
 
-**Important note:** Decommissioning Orka for VDI hosts requires migrating or deleting VMs first. Orka for VDI does not support live VM migration between hosts.
+**Important note:** Decommissioning MacStadium VDI hosts requires migrating or deleting VMs first. MacStadium VDI does not support live VM migration between hosts.
 
 #####  **Steps to decommission a host:**
 
@@ -270,7 +270,7 @@ Confirm that your VMs are now running only on the remaining hosts.
 
 
 
-Once an Orka for VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
+Once an MacStadium VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
   
 Estimated timeline: This may take between 4-8 hours depending on your VM count and migration complexity.
 
@@ -660,7 +660,7 @@ Approach 2: Host-level storage snapshots (for dedicated desktops)
 
 If your users have dedicated VMs with local data that must be preserved, use host-level tools:
 
-  1. SSH to your Orka for VDI host
+  1. SSH to your MacStadium VDI host
 
   2. Use APFS snapshot capabilities on the host:
 
@@ -679,7 +679,7 @@ tmutil localsnapshot
 
 
 
-Note:**** This approach is not automated in Orka for VDI. You'll need to build custom tooling or manual procedures.
+Note:**** This approach is not automated in MacStadium VDI. You'll need to build custom tooling or manual procedures.
 
 Approach 3: Third-party backup tools
 
@@ -713,7 +713,7 @@ ansible-playbook -i inventory pull_image.yml \
 
 Prerequisites:
 
-  * Secondary Orka for VDI environment located in a different datacenter (requires MacStadium private cloud in multiple locations)
+  * Secondary MacStadium VDI environment located in a different datacenter (requires MacStadium private cloud in multiple locations)
 
   * Golden images replicated to a secondary registry accessible from the DR site
 
@@ -809,7 +809,7 @@ Recovery depends on your backup approach.
 
 If you are using host-level snapshots:
 
-  1. SSH to the Orka for VDI host
+  1. SSH to the MacStadium VDI host
 
   2. Stop the affected VM:
          
@@ -850,7 +850,7 @@ Requirements:
 
   * All existing VMs must be deleted before switching modes
 
-  * Orka for VDI running Orka Engine 3.5+
+  * MacStadium VDI running Orka Engine 3.5+
 
 
 
@@ -868,11 +868,11 @@ Important limitations:
 
 Configuration:
 
-Bridged networking is configured in your Orka for VDI cluster configuration files before deploying VMs.
+Bridged networking is configured in your MacStadium VDI cluster configuration files before deploying VMs.
 
 Step 1: Configure cluster-wide bridge mode
 
-Edit `cluster.yml` on your Orka for VDI management node:
+Edit `cluster.yml` on your MacStadium VDI management node:
     
     
 ```
@@ -1109,7 +1109,7 @@ M4 Macs support GPU passthrough for VMs. This requires:
 
   * Orka 3.5+
 
-  * macOS 15.5+ on the Orka for VDI host
+  * macOS 15.5+ on the MacStadium VDI host
 
   * Specific VM configuration
 
@@ -1357,7 +1357,7 @@ jobs:
             -e "desired_vms=20" \
             -e "vm_image=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}"
 ```
-This fully automates the process from code commit to production Orka for VDI deployment.
+This fully automates the process from code commit to production MacStadium VDI deployment.
 
 #### Scheduled Maintenance Tasks
 
@@ -1621,7 +1621,7 @@ ansible-playbook -i inventory list.yml
 
 Possible causes:
 
-  1. Orka for VDI host is out of disk space
+  1. MacStadium VDI host is out of disk space
 
   2. Image pull failure (registry unreachable or authentication issue)
 
@@ -1660,7 +1660,7 @@ ansible-playbook -i inventory list.yml | \
     -e "vm_name={}" \
     -e "desired_state=running"
 ```
-Consider scripting auto-start behavior or coordinating with MacStadium to enable Orka for VDI auto-start features.
+Consider scripting auto-start behavior or coordinating with MacStadium to enable MacStadium VDI auto-start features.
 
 ### Triage Decision Tree
 
@@ -2443,7 +2443,7 @@ Citrix Support | Citrix Cloud, VDA, licensing | [Citrix Support](http://support.
 
 ##### MacStadium:
 
-  * Your Orka for VDI host is down
+  * Your MacStadium VDI host is down
 
   * Experiencing Orka Engine failures
 

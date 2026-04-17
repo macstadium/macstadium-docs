@@ -130,6 +130,40 @@ ansible-playbook -i inventory vm.yml "vm_name=citrix-vda-abc123" -e "desired_sta
 
 
 
+#### Provision User to VM
+
+Provisions a new admin user account on a running VM. The playbook connects to the VM via the Mac host as a jump proxy, so `sshpass` must be installed on the Ansible runner. Apple Command Line Tools will be installed on the VM automatically if not already present.
+
+```bash
+ansible-playbook -i inventory provision_user.yml -e "vm_name=<vm_name>" -e "vm_username=<existing_admin_username>" -e "vm_password=<existing_admin_password>" -e "new_username=<new_username>" -e "new_user_password=<new_user_password>"
+```
+
+The playbook is idempotent — if the user already exists it will skip creation.
+
+#### Install Citrix VDA
+
+Installs Citrix Virtual Delivery Agent on a running VM. The playbook locates the VM across all hosts, installs prerequisites (.NET runtime, developer tools), sets the VM hostname, downloads and installs the Citrix VDA package, grants required TCC permissions, then reboots the VM to complete installation.
+
+`sshpass` must be installed on the Ansible runner. We recommend hosting your Citrix VDA installer in an S3 bucket with a presigned URL.
+
+```bash
+ansible-playbook -i inventory install_citrix_vda.yml -e "vm_name=<vm_name>" -e "vm_username=<admin_username>" -e "vm_password=<admin_password>" -e "citrix_installer_url=<citrix_dmg_url>" -e "hostname_suffix=<domain_suffix>"
+```
+
+Where:
+
+- `vm_name` — the exact name of the running VM (also used as the VM hostname)
+- `citrix_installer_url` — download URL for the Citrix VDA `.dmg`
+- `hostname_suffix` — domain suffix appended to `vm_name` to form the full hostname (e.g. `corp.example.com`). Leave blank to use the VM name as the hostname.
+
+#### Register Citrix VDA
+
+Registers an installed Citrix VDA with a Delivery Controller using an enrollment token. Run this after `install_citrix_vda.yml` has completed successfully.
+
+```bash
+ansible-playbook -i inventory register_citrix_vda.yml -e "vm_name=<vm_name>" -e "vm_username=<admin_username>" -e "vm_password=<admin_password>" -e "enrollment_token=<enrollment_token>"
+```
+
 ### Playbook customization for your environment
 
 The Ansible playbook examples referenced throughout this document will require additional customization to match your infrastructure and organizational requirements.  
