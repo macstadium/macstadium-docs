@@ -7,16 +7,26 @@ zendesk_id: 28329406438683
 ## Before you begin
 
   * The server address from Step 1: VPN in the [IP Plan](/macstadium/macstadium-overview/ip-plan).
-  * The username and password from Step 1: VPN in the IP Plan. 
+  * The username and password from Step 1: VPN in the IP Plan.
 
+## When VPN is required
 
+Your Orka cluster sits behind a dedicated Cisco ASAv firewall. VMs and the Orka management plane are on a private network and not reachable from the public internet without VPN.
+
+| Scenario | VPN required? |
+|---|---|
+| `orka3` CLI commands (deploy, list, delete VMs) | Yes |
+| Orka web UI | Yes |
+| SSH into a VM | Yes |
+| VNC / Screen Sharing into a VM | Yes |
+| CI/CD runner already inside your corporate network (routed through VPN) | Depends on your network topology |
+| VDI end-user sessions via Citrix Workspace app | No — Citrix proxies the session over outbound TCP 443 |
+
+<Note>
+  VDI end users do not need a VPN client. Citrix Workspace app establishes the session outbound through Citrix Cloud. VPN is only required for administrators managing the Orka cluster itself.
+</Note>
 
 To protect your environment, MacStadium deploys your Orka cluster with a dedicated [Cisco Adaptive Security Virtual Appliance (ASAv)](https://www.cisco.com/c/en/us/products/collateral/security/adaptive-security-virtual-appliance-asav/datasheet-c78-733399.html) firewall. Cisco ASAv runs the same software as physical Cisco ASAs and delivers full ASA firewall and VPN capabilities to the cloud.
-
-Your Orka cluster sits behind its dedicated Cisco ASAv firewall. You need to be connected to the cluster via VPN to do any of the following tasks:
-
-  * Manage your Orka VMs and K8s pods.
-  * Log in to the firewall and manage connectivity between your cluster and the outside world (for example, enterprise networks, other private and public clouds).
 
 
 
