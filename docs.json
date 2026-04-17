@@ -170,7 +170,6 @@
               "orka/orka-devops-integrations/gitlab",
               "orka/orka-devops-integrations/buildkite",
               "orka/orka-devops-integrations/teamcity",
-              "orka/orka-devops-integrations/drone",
               "orka/orka-devops-integrations/packer",
               "orka/orka-devops-integrations/claude-code"
             ]
