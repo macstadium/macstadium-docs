@@ -568,9 +568,8 @@ As your user base grows, you may wish to add more Orka hosts:
     
     
 ```
-ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda-finance" -e "desired_vms=40" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
-_Run this command once for each additional VM, using a unique `vm_name` each time._
 **Vertical scaling (increase VM resources):**
 
 If users need more powerful desktops, upgrade to higher-spec Macs:

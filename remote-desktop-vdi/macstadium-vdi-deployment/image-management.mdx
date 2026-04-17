@@ -44,7 +44,7 @@ This implementation doesn’t have a dedicated playbook. To refresh VMs with a n
 ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
 
 # Step 2: Deploy a replacement VM from the new image version 
-ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
+ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
 ```
 ## Cache management
 

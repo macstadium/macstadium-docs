@@ -36,9 +36,7 @@ This test validates the complete user journey from authentication to desktop usa
   1. Deploy 2-3 test VMs from your golden image, for example:
          
 ```
-     ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-test-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
-     ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-test-02" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
-     ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-test-03" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+     ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-test" -e "desired_vms=3" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
   2. Verify VDA registration via the Citrix Cloud Console. Navigate to Manage → Virtual Apps and Desktops → Delivery Groups and confirm the VMs appear with a Registered status.
 
@@ -354,7 +352,7 @@ These operations form the foundation of desktop pool management with MacStadium 
   1. Deploy VM from a golden image:
          
 ```
-     ansible-playbook -i inventory deploy.yml -e "vm_name=lifecycle-test-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+     ansible-playbook -i inventory deploy.yml -e "vm_group=lifecycle-test" -e "desired_vms=1" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
 After the VM has been deployed, you will want to confirm the VM has received an IP address from DHCP, it is accessible via SSH, the VDA service has started automatically and has been registered with Citrix Cloud, the desktop appears in Citrix Workspace, and users can successfully launch a session. You may also wish to record the amount of time it takes to complete this workflow from the time launch commands are executed to desktop availability.  
 
@@ -396,7 +394,7 @@ To recover a VM:
 Example: 
          
 ```
-     ansible-playbook -i inventory deploy.yml -e "vm_name=recovered-vm-01" -e "vm_image=registry.example.com/backups/sonoma-finance:2025-01-15"
+     ansible-playbook -i inventory deploy.yml -e "vm_group=recovered-vm" -e "desired_vms=1" -e "vm_image=registry.example.com/backups/sonoma-finance:2025-01-15"
 ```
 You will want to confirm that the VM has been recovered from backup, retains its configuration from the backup point, the VDA re-registers successfully, and the desktop is functional.  
   
@@ -456,70 +454,3 @@ Some metrics to consider measuring are:
 
  4. What is the average network bandwidth per session?
 ```
-
-#### Android Virtual Device validation
-
-If your deployment includes Android Virtual Devices, validate the AVD setup before production use.
-
-##### AVD creation and status
-
-  1. Create an AVD for a running VM:
-
-```bash
-ansible-playbook -i inventory deploy_avd.yml -e "vm_name=citrix-test-01"
-```
-
-  2. Confirm the AVD appears in the list with a running status:
-
-```bash
-ansible-playbook -i inventory list_avds.yml -e "vm_name=citrix-test-01"
-```
-
-**Expected result:** AVD listed with status `running`, host, and ADB relay port visible.
-
-##### ADB connectivity from the VM
-
-  1. Inside the Citrix desktop session on `citrix-test-01`, open Terminal.
-
-  2. List connected Android devices:
-
-```bash
-adb devices
-```
-
-**Expected result:** The host-side emulator appears as a connected device (e.g. `emulator-5554 device`).
-
-  3. Confirm ADB shell access:
-
-```bash
-adb shell getprop ro.build.version.release
-```
-
-**Expected result:** Android version string returned without error.
-
-##### ADB relay port reachability
-
-  1. From within the VM, verify the relay port is reachable. The default relay port is shown in the `list_avds.yml` output.
-
-```bash
-nc -zv localhost <relay_port>
-```
-
-**Expected result:** Connection succeeds (`Connection to localhost <relay_port> port [tcp/*] succeeded`).
-
-##### AVD lifecycle
-
-  1. Stop the AVD and confirm it is no longer listed as running:
-
-```bash
-ansible-playbook -i inventory avd.yml -e "vm_name=citrix-test-01" -e "desired_state=stopped"
-ansible-playbook -i inventory list_avds.yml -e "vm_name=citrix-test-01"
-```
-
-  2. Restart the AVD and re-verify ADB connectivity from the VM:
-
-```bash
-ansible-playbook -i inventory avd.yml -e "vm_name=citrix-test-01" -e "desired_state=running"
-```
-
-**Expected result:** AVD restarts cleanly, ADB reconnects automatically, relay port is reachable again.
