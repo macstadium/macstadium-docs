@@ -18,7 +18,7 @@ _"We have contractors in one-off locations and in other countries where we are h
 
 #### Security Risks
 
-Physical Mac endpoints are vulnerable to theft, loss, and unauthorized access. Traditional Mobile Device Management (MDM) solutions have limitations—data still resides on the device, policies can be bypassed by savvy users, and protection depends on internet connectivity.
+Physical Mac endpoints are vulnerable to theft, loss, and unauthorized access. Traditional Mobile Device Management (MDM) solutions have limitations: data still resides on the device, policies can be bypassed by savvy users, and protection depends on internet connectivity.
 
 Organizations with data sovereignty requirements face additional challenges ensuring that sensitive information remains within specific geographic boundaries.
 
@@ -83,9 +83,15 @@ Media rendering, complex iOS builds, AI/ML workloads, and other compute-intensiv
 
 **Learn more:** [Investing in High-Performance Apple Hardware](https://www.macstadium.com/blog/citrix-macstadium-investing-in-high-performance-apple-hardware)
 
+#### Mobile Developers Requiring Android Testing
+
+Mobile developers building cross-platform apps need Android emulator access alongside their macOS desktop. Because Android emulators require bare-metal hardware virtualization, they cannot run inside a macOS VM. MacStadium VDI solves this by running the Android emulator natively on the Apple Silicon host node (the same physical machine as the macOS VM) and establishing an ADB relay between the host-side emulator and the developer's Citrix session. The result is a single desktop experience with both macOS and Android accessible without leaving the VDI session.
+
+**Learn more:** [Android Virtual Devices](/remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices)
+
 ### Why Choose MacStadium for Citrix VDI?
 
-**Genuine Apple Hardware:** MacStadium provides access to authentic Mac mini and Studio hardware in cloud compute environments—no emulation, no compromises. [View available models](https://www.macstadium.com/bare-metal-mac).
+**Genuine Apple Hardware:** MacStadium provides access to authentic Mac mini and Studio hardware in cloud compute environments, with no emulation and no compromises. [View available models](https://www.macstadium.com/bare-metal-mac).
 
 **Proven Citrix Technology:** Leverage HDX protocol, established security posture, SSO/MFA integration, and the familiar Citrix administration experience your team already knows.
 

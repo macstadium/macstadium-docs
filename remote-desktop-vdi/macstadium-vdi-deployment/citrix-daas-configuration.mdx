@@ -389,14 +389,14 @@ For pilot deployments or troubleshooting:
        ```bash
        # Plan deployment (dry-run)
        ansible-playbook -i inventory deploy.yml \
-         -e "vm_group=citrix-vda-test" \
-         -e "desired_vms=1" \
+         -e "vm_name=citrix-vda-test-01" \
+         -e "vm_image=<your-image>" \
          --tags plan
 
        # Execute deployment
        ansible-playbook -i inventory deploy.yml \
-         -e "vm_group=citrix-vda-test" \
-         -e "desired_vms=1"
+         -e "vm_name=citrix-vda-test-01" \
+         -e "vm_image=<your-image>"
        ```
 
      - Allocate appropriate VM resources (CPU, RAM, storage)
