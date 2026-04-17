@@ -1600,6 +1600,74 @@
       "source": "/hc/en-us/articles/28244765690395-Network-Firewalls-Cloud-Connect-VPN",
       "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn",
       "permanent": true
+    },
+    {
+      "source": "/var/log/system.log",
+      "destination": "/"
+    },
+    {
+      "source": "/mintlify-assets",
+      "destination": "/"
+    },
+    {
+      "source": "/orka/orka-overview/licensing-faq",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/macstadium-admin-accounts",
+      "destination": "/macstadium/macstadium-overview/macstadium-portal"
+    },
+    {
+      "source": "/docs/preparing-the-vm-template",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/image-management"
+    },
+    {
+      "source": "/docs/private-cloud",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/ticketing-and-support-1",
+      "destination": "/macstadium/support/support"
+    },
+    {
+      "source": "/docs/site-to-site-vpn-configuration-with-aws",
+      "destination": "/iaas/aws/site-to-site-vpn-configuration-with-aws"
+    },
+    {
+      "source": "/docs/install-macos",
+      "destination": "/iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation"
+    },
+    {
+      "source": "/docs/networking",
+      "destination": "/iaas/networking/networking-overview"
+    },
+    {
+      "source": "/docs/macos-version-in-your-vmware-cloud",
+      "destination": "/iaas/x86-vms-private-cloud-vms/private-cloud-x86-vms"
+    },
+    {
+      "source": "/docs/login-to-vcenter",
+      "destination": "/macstadium/macstadium-overview/macstadium-portal"
+    },
+    {
+      "source": "/docs/gcp-preparing-the-vpn-configuration-for-input-into-cisco-asaasav",
+      "destination": "/iaas/google-cloud-platform/gcp-vpn-config-for-cisco-asaasav"
+    },
+    {
+      "source": "/docs/google-cloud-setup",
+      "destination": "/iaas/google-cloud-platform/google-cloud-networking-setup"
+    },
+    {
+      "source": "/docs/patching-and-updating-your-vmware-cloud-using-update-manager",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/ip-plan",
+      "destination": "/macstadium/macstadium-overview/ip-plan"
+    },
+    {
+      "source": "/docs/install-osx-build-tools",
+      "destination": "/iaas/bare-metal-macs/common-tools"
     }
   ]
 }
