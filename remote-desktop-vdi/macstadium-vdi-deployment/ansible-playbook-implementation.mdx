@@ -39,10 +39,10 @@ Playbooks eliminate manual work by automating repetitive tasks, ensuring consist
     
 ```
 # Plan deployment (dry-run)
-ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" --tags plan
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image=<your-image>" --tags plan
 
 # Execute deployment
-ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vms=1" 
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image=<your-image>"
 ```
 #### Delete a single VM 
     
@@ -50,17 +50,19 @@ ansible-playbook -i inventory deploy.yml -e "vm_group=citrix-vda" -e "desired_vm
 ```
 ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
 ```
-#### Delete multiple VMs matching a specific naming convention
+#### Delete a VM by name
     
     
 ```
 # Plan deletion (dry-run)
-ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5" --tags plan
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-test-01" --tags plan
 
 # Execute deletion
-ansible-playbook -i inventory delete.yml -e "vm_group=citrix-vda-test" -e "delete_count=5"
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-test-01"
 ```
-Note: This deletes a defined number of VMs from the group with that name. To delete a VM on a specific host, use:
+_Run this command once for each VM to remove._
+
+To delete a VM on a specific host, use:
     
     
 ```
@@ -138,7 +140,7 @@ Provisions a new admin user account on a running VM. The playbook connects to th
 ansible-playbook -i inventory provision_user.yml -e "vm_name=<vm_name>" -e "vm_username=<existing_admin_username>" -e "vm_password=<existing_admin_password>" -e "new_username=<new_username>" -e "new_user_password=<new_user_password>"
 ```
 
-The playbook is idempotent — if the user already exists it will skip creation.
+The playbook is idempotent. If the user already exists it will skip creation.
 
 #### Install Citrix VDA
 

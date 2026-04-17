@@ -1,6 +1,6 @@
 ---
 title: "Ansible Quick Reference"
-description: "Quick-reference Ansible commands for Orka-based Citrix VDI: connectivity tests, Orka Engine version checks, VM lifecycle, VDA management, and image ops."
+description: "Quick-reference Ansible commands for Orka-based Citrix VDI: connectivity tests, Orka Engine version checks, VM lifecycle, VDA management, image ops, and Android Virtual Devices."
 zendesk_id: 44260146530715
 ---
 
@@ -32,7 +32,7 @@ ansible hosts -i /inventory -m shell -a "python3 --version"
     
     
 ```
-ansible-playbook -i /inventory install-engine.yml \
+ansible-playbook -i /inventory install_engine.yml \
   -e "orka_license_key=YOUR_KEY" \
   -e "engine_url=https://download.url/orka-engine"
 ```
@@ -41,41 +41,38 @@ ansible-playbook -i /inventory install-engine.yml \
     
 ```
 ansible-playbook -i /inventory deploy.yml \
-  -e "vm_group=webapp" \
-  -e "desired_vms=10" \
+  -e "vm_name=my-vm" \
   --tags plan
 ```
-### Deploy VM Group
+### Deploy VM
     
     
 ```
 ansible-playbook -i /inventory deploy.yml \
-  -e "vm_group=webapp" \
-  -e "desired_vms=10"
+  -e "vm_name=my-vm" \
+  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest"
 ```
 ### Plan Deletion (Dry Run)
     
     
 ```
 ansible-playbook -i /inventory delete.yml \
-  -e "vm_group=webapp" \
-  -e "delete_count=5" \
+  -e "vm_name=my-vm" \
   --tags plan
 ```
-### Delete VM Group
+### Delete VM
     
     
 ```
 ansible-playbook -i /inventory delete.yml \
-  -e "vm_group=webapp" \
-  -e "delete_count=5"
+  -e "vm_name=my-vm"
 ```
 ### Stop VM
     
     
 ```
 ansible-playbook -i /inventory vm.yml \
-  -e "vm_name=webapp-abc123" \
+  -e "vm_name=my-vm" \
   -e "desired_state=stopped"
 ```
 ### Start VM
@@ -83,7 +80,7 @@ ansible-playbook -i /inventory vm.yml \
     
 ```
 ansible-playbook -i /inventory vm.yml \
-  -e "vm_name=webapp-abc123" \
+  -e "vm_name=my-vm" \
   -e "desired_state=running"
 ```
 ### Delete Single VM
@@ -91,7 +88,7 @@ ansible-playbook -i /inventory vm.yml \
     
 ```
 ansible-playbook -i /inventory vm.yml \
-  -e "vm_name=webapp-abc123" \
+  -e "vm_name=my-vm" \
   -e "desired_state=absent"
 ```
 ### List All VMs
@@ -100,11 +97,11 @@ ansible-playbook -i /inventory vm.yml \
 ```
 ansible-playbook -i /inventory list.yml
 ```
-### List VMs from Group
+### List VMs by Name
     
     
 ```
-ansible-playbook -i /inventory list.yml -e "vm_group=webapp"
+ansible-playbook -i /inventory list.yml -e "vm_name=my-vm"
 ```
 ### Pull Image to All Hosts
     
@@ -132,34 +129,140 @@ ansible-playbook -i /inventory create_image.yml \
 ```
 * * *
 
+## Android Virtual Devices
+
+### Install Android SDK on Hosts
+    
+    
+```
+ansible-playbook -i /inventory install_android_sdk.yml
+```
+
+To force reinstallation on hosts where the SDK is already present:
+
+```
+ansible-playbook -i /inventory install_android_sdk.yml \
+  -e "install_android_sdk_force=true"
+```
+### Install SDK Platforms and System Images
+    
+    
+```
+ansible-playbook -i /inventory sdkmanager_install.yml
+```
+
+With a specific platform and image types:
+
+```
+ansible-playbook -i /inventory sdkmanager_install.yml \
+  -e "platform=android-34" \
+  -e "image_types=default,google_apis,google_apis_playstore"
+```
+### Create an AVD (Plan First)
+    
+    
+```
+ansible-playbook -i /inventory deploy_avd.yml \
+  -e "vm_name=my-vm" \
+  --tags plan
+```
+### Create an AVD
+    
+    
+```
+ansible-playbook -i /inventory deploy_avd.yml \
+  -e "vm_name=my-vm"
+```
+
+With custom platform, image type, and resources:
+
+```
+ansible-playbook -i /inventory deploy_avd.yml \
+  -e "vm_name=my-vm" \
+  -e "platform=android-34" \
+  -e "image_type=google_apis" \
+  -e "cpu=4" \
+  -e "memory=2048"
+```
+### Manage AVD State
+    
+    
+```
+# Start AVD
+ansible-playbook -i /inventory avd.yml \
+  -e "vm_name=my-vm" \
+  -e "desired_state=running"
+
+# Stop AVD
+ansible-playbook -i /inventory avd.yml \
+  -e "vm_name=my-vm" \
+  -e "desired_state=stopped"
+
+# Delete AVD (specify index if multiple exist)
+ansible-playbook -i /inventory avd.yml \
+  -e "vm_name=my-vm" \
+  -e "desired_state=absent" \
+  -e "avd_index=0"
+```
+### List AVDs
+    
+    
+```
+# All AVDs across all hosts
+ansible-playbook -i /inventory list_avds.yml
+
+# Filter by VM
+ansible-playbook -i /inventory list_avds.yml -e "vm_name=my-vm"
+```
+### Delete AVD by Index
+    
+    
+```
+ansible-playbook -i /inventory delete_avd.yml \
+  -e "vm_name=my-vm" \
+  -e "avd_index=0"
+```
+### Uninstall SDK Platform
+    
+    
+```
+ansible-playbook -i /inventory sdkmanager_uninstall.yml
+
+# Target a specific platform
+ansible-playbook -i /inventory sdkmanager_uninstall.yml \
+  -e "platform=android-34"
+```
+* * *
+
 ## Common Variable Combinations
 
-### Small Development Group
+### Deploy with Custom CPU and Memory
     
     
 ```
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=dev" \
-  -e "desired_vms=5" \
-  -e "max_vms_per_host=2"
+  -e "vm_name=dev-desktop" \
+  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
+  -e "cpu=4" \
+  -e "memory=8192"
 ```
-### Medium Production Group
+### Deploy with Network Interface
     
     
 ```
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=prod-webapp" \
-  -e "desired_vms=20" \
-  -e "max_vms_per_host=5"
+  -e "vm_name=prod-desktop" \
+  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
+  -e "network_interface=en0"
 ```
-### Large-Scale Deployment
+### Deploy to Specific Host
     
     
 ```
 ansible-playbook -i inventory deploy.yml \
-  -e "vm_group=build-farm" \
-  -e "desired_vms=100" \
-  -e "max_vms_per_host=10"
+  -e "vm_name=build-01" \
+  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
+  --limit mac-node-1
 ```
 ### Image Creation with Auth
     
@@ -203,11 +306,15 @@ ansible-playbook -i inventory pull_image.yml \
 
 ### VM Naming Convention
 
-VMs are automatically named with group prefix:
+VMs are identified individually by name. Use clear, descriptive names:
 
-  * Group `webapp` → VMs: `webapp-abc123`, `webapp-def456`, etc.
+  * `dev-desktop-01`, `dev-desktop-02`
 
-  * Group `dev` → VMs: `dev-xyz789`, `dev-uvw456`, etc.
+  * `prod-build-runner`, `prod-build-runner-2`
+
+  * `ci-macOS-sonoma`
+
+AVDs are named automatically based on the VM: `{vm_name}-avd-0`, `{vm_name}-avd-1`, etc.
 
 
 
@@ -282,11 +389,11 @@ ansible-playbook -i /inventory <playbook.yml> --step
 
 ### Naming & Organization
 
-  * Use meaningful VM group names (e.g., `webapp-prod`, `build-farm-dev`)
+  * Use clear, descriptive VM names (e.g., `prod-desktop-01`, `build-runner-sonoma`)
 
   * Version your images with tags (`:v1.0`, `:v2.0`, not `:latest` in prod)
 
-  * Document group purposes in inventory comments
+  * Document VM purposes in inventory comments
 
 
 
@@ -334,9 +441,7 @@ ansible-playbook -i /inventory <playbook.yml> --step
 
 ### State & Tracking
 
-  * Let Ansible manage VM counts (incremental deployment)
-
-  * Don't manually create VMs in managed groups
+  * Let Ansible manage VMs (use playbooks, not manual creation)
 
   * Use `list.yml` to verify state before changes
 

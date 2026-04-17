@@ -6,7 +6,7 @@ zendesk_id: 44259626250267
 
 ## Overview
 
-This guide walks through the full setup of Orka Engine Orchestration for VDI deployments. It covers network preparation, controller and host configuration, Orka Engine installation, VM deployment, and the optional Semaphore web interface.
+This guide walks through the full setup of Orka Engine Orchestration for VDI deployments. It covers network preparation, controller and host configuration, Orka Engine installation, VM deployment, and the Semaphore web interface.
 
 There are three roles in this setup:
 
@@ -303,24 +303,26 @@ All playbook commands are run from the controller inside ~/orka-automation/orka-
 
 **Run on: Controller**
 
-Deploy a group of VMs. The `vm_group` name is used to track and manage the VMs as a set.
+Deploy a VM by name. Run once per VM to deploy multiple.
 
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4"
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=<your-image>"
 ```
 
 For VDI workloads, use bridged networking so VMs receive IP addresses directly on your LAN. Specify the network interface (typically `en0` for Ethernet):
 
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4" -e "network_interface=en0"
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=<your-image>" -e "network_interface=en0"
 ```
+
+_Run this command once for each additional VM, using a unique `vm_name` each time._
 
 **Note:\*\*** \*\*When network_interface is not specified, VMs deploy in NAT mode. Bridged mode is recommended for VDI because VMs are directly reachable by Citrix Cloud and end users without port forwarding.
 
 To preview what will be deployed without making any changes, add `--tags plan`:
 
 ```
-ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms=4" --tags plan
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=<your-image>" --tags plan
 ```
 
 ### 6.2  List VMs
@@ -328,7 +330,7 @@ ansible-playbook deploy.yml -i inventory -e "vm_group=vdi-group" -e "desired_vms
 **Run on: Controller**
 
 ```
-ansible-playbook list.yml -i inventory -e "vm_group=vdi-group"
+ansible-playbook list.yml -i inventory -e "vm_name=vdi-group"
 ```
 
 ### 6.3  Manage Individual VMs
@@ -345,11 +347,13 @@ ansible-playbook vm.yml -i inventory -e "vm_name=my-vm-name" -e "desired_state=r
 
 **Run on: Controller**
 
-Delete a specific number of VMs from a group. Add --tags plan to preview before deleting.
+Delete a VM by name.
 
 ```
-ansible-playbook delete.yml -i inventory -e "vm_group=vdi-group" -e "delete_count=2"
+ansible-playbook delete.yml -i inventory -e "vm_name=vdi-group-01"
 ```
+
+_Run this command once for each VM to remove._
 
 ### 6.5  Pull Images
 
@@ -361,9 +365,9 @@ Pre-pull an image to all hosts so it is ready for fast deployment:
 ansible-playbook pull_image.yml -i inventory -e "remote_image_name=ghcr.io/macstadium/orka-images/sequoia:latest"
 ```
 
-## 7.  Semaphore Web UI (Optional)
+## 7.  Semaphore Web UI
 
-Semaphore provides a browser-based interface for running orchestration playbooks without CLI access. All task templates, inventory, and repository configuration are set up automatically on first launch.
+Semaphore provides a browser-based interface for running orchestration playbooks. It is the primary way IT administrators interact with MacStadium VDI. The CLI is available for troubleshooting and advanced or custom workflows. All task templates, inventory, and repository configuration are set up automatically on first launch.
 
 ### 7.1  Install Prerequisites
 
@@ -432,9 +436,9 @@ Semaphore is available at `http://localhost:3000`. Log in with the admin credent
 
 You can configure SSH credentials either via the setup script or manually through the Semaphore UI.
 
-**Option A — Setup script (recommended)**
+**Option A: Setup script (recommended)**
 
-`uv` is required to run this script — it’s a lightweight Python package manager used to execute the configuration script without managing a virtual environment manually. It handles SSH key setup and optionally sets default VM credentials and OCI registry credentials in one step.
+`uv` is required to run this script. It is a lightweight Python package manager that executes the configuration script without requiring a virtual environment. It handles SSH key setup and optionally sets default VM credentials and OCI registry credentials in one step.
 
 ```bash
 SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
@@ -442,7 +446,7 @@ SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD uv run
 
 Run `uv run ./semaphore/configure_semaphore.py --help` to see additional parameters, including default VM username/password and OCI registry credentials.
 
-**Option B — Manual (UI)**
+**Option B: Manual (UI)**
 
 After logging in, navigate to **Key Store** and edit the Mac Hosts SSH key. Replace the placeholder credentials with the actual SSH username and private key (or password) for your Mac hosts.
 
