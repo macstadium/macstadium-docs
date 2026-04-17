@@ -15,7 +15,7 @@
     "links": [
       {
         "name": "Support",
-        "url": "https://portal.macstadium.com/support-center/tickets"
+        "url": "https://support.macstadium.com"
       },
       {
         "name": "Portal",
@@ -29,7 +29,7 @@
   },
   "feedback": {
     "suggestEdit": true,
-    "raiseIssue": false
+    "raiseIssue": true
   },
   "integrations": {
     "telemetry": {
@@ -134,6 +134,7 @@
               {
                 "group": "Networking",
                 "pages": [
+                  "orka/networking-with-orka-at-macstadium/msdc-network-requirements",
                   "orka/networking-with-orka-at-macstadium/vpn-connection",
                   "orka/networking-with-orka-at-macstadium/built-in-orka-domains",
                   "orka/networking-with-orka-at-macstadium/external-custom-domains",
@@ -1566,12 +1567,5 @@
       "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn",
       "permanent": true
     }
-  ],
-  "fonts": {
-    "family": "Lato"
-  },
-  "banner": {
-    "content": "Welcome to the new MacStadium Documentation site. We've migrated from support.macstadium.com, you're in the right place.",
-    "dismissible": true
-  }
+  ]
 }
