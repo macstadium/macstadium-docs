@@ -1452,7 +1452,7 @@
     },
     {
       "source": "/hc/en-us/articles/28211636270491-Mac-Mini-Comparison-Chart",
-      "destination": "/iaas/bare-metal-macs/mac-mini-comparison-chart",
+      "destination": "/iaas/bare-metal-macs/bare-metal-hosts",
       "permanent": true
     },
     {
