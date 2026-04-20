@@ -31,7 +31,7 @@ curl -H "Accept: application/json" -H "Content-Type: application/json" -H 'Autho
 ```
 ### Server Status by ID/IP
 
-URI: https://api.macstadium.com/core/api/servers/{id or ip_address}
+URI: `https://api.macstadium.com/core/api/servers/{id or ip_address}`
 Request: GET
 Return: JSON array\{id,name,power, type, location, status, creation date, cancel date} or error string. Power can be ‘On’, ‘Off’, ‘Rebooting’, or ‘Error’.  
 **Example 1:**
@@ -48,7 +48,7 @@ curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET -H
 ```
 ### Server Action (Power) by ID/IP
 
-URI: https://api.macstadium.com/core/api/servers/{id or ip_address}/{action}  
+URI: `https://api.macstadium.com/core/api/servers/{id or ip_address}/{action}`  
 Request: GET  
 Params: Action can be ‘On’,’Off’, or ‘Reboot’ (case insensitive).  
 Return: String. ‘True’ on success or an error message.  
