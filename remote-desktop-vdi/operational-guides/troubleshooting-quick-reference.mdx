@@ -94,7 +94,7 @@ ssh admin@<host-ip> sudo log show --predicate 'process == "orka-engine"' --last 
 ssh admin@<host-ip> orka-engine vm list <vm-name> --format json
 ```
 
-#### Likely causes and solutions:
+#### Likely Causes and Solutions
 
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
@@ -108,7 +108,7 @@ Boot disk missing | Logs show disk not found | Delete VM and redeploy from scrat
 
 ### Symptom: Wrong Number of VMs Deployed
 
-What you see:**** Requested 10 VMs but only 7 deployed, or deployment stopped partway through
+What you see: Requested 10 VMs but only 7 deployed, or deployment stopped partway through
 
 Quick diagnostic:
 
@@ -256,7 +256,7 @@ Most common fix: Verify that the VM can resolve the Cloud Connector hostname or 
 
 ### Symptom: VMs Register But Users Can't Connect
 
-What you see:**** Citrix Console shows VMs are "Registered" but users get connection errors
+What you see: Citrix Console shows VMs are "Registered" but users get connection errors
 
 Quick diagnostic:
 
@@ -657,7 +657,7 @@ Different image tags used | Tags differ across hosts | Standardize on specific t
 Registry changed without notification | Registry version changed | Coordinate with registry team on updates  
 Partial pull failure | Some hosts have corrupted image | Delete and re-pull on affected hosts  
   
-#### Solution steps:  
+#### Solution Steps  
   
 
 
@@ -1026,7 +1026,7 @@ Most common fix: Browser cache issue. Clear your cookies and cache, or try using
 
 ## Ansible Playbook Errors
 
-### Symptom: Playbook Fails with "Host unreachable"
+### Symptom: Playbook Fails with "Host Unreachable"
 
 What you see: Playbook errors: "Failed to connect to the host via ssh" / "Host is unreachable"
 
@@ -1058,7 +1058,7 @@ Host SSH configuration changed | SSH settings preventing key-based auth | Verify
 
 Most common fix: SSH key is not in `authorized_keys` on host. Add the Ansible control node's public key to the host.
 
-### Symptom: Playbook Fails with "Permission denied"
+### Symptom: Playbook Fails with "Permission Denied"
 
 What you see: Playbook errors with permission/sudo errors during execution
 
@@ -1090,7 +1090,7 @@ Host SSH configuration changed | SSH settings preventing key-based auth | Verify
   
 Most common fix: SSH key is not in `authorized_keys` on host. Add the Ansible control node's public key to the host.
 
-### Symptom: Playbook Fails with "Permission denied"
+### Symptom: Playbook Fails with "Permission Denied"
 
 What you see: Playbook errors with permission/sudo errors during execution
 

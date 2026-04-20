@@ -36,7 +36,7 @@ The Orka3 CLI will be helpful to:
 
 
 
-## 1. Before you begin
+## 1. Before You Begin
 
   1. Ensure you can access your cluster account in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](/macstadium/macstadium-overview/ip-plan) it from the [MacStadium portal](https://portal.macstadium.com/).
@@ -46,7 +46,7 @@ The Orka3 CLI will be helpful to:
 
 
 
-## 2. Download and configure the Orka3 CLI
+## 2. Download and Configure the Orka3 CLI
 
   1. Download and install the latest [Orka3 CLI](/orka/orka-overview/tools-integrations) that matches your environment version.
      * On macOS, run the `pkg` executable.
@@ -69,7 +69,7 @@ orka3 config set --api-url <ORKA_API_URL>
 ```
 This operation is a one-time effort. With it, you set the Orka service endpoint for your cluster.
 
-#### **What's your Orka API URL?**
+#### **What's Your Orka API URL?**
 
 You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 
@@ -94,7 +94,7 @@ orka3 completion {bash|fish|powershell|zsh}
 ```
 The Orka3 CLI prints detailed instructions for the selected shell type.
 
-## 3. Authenticate with your cluster
+## 3. Authenticate with Your Cluster
 
 Orka lets you log in with your MacStadium Customer Portal credentials. Your access privileges are based on the role configured by your account admin in the Customer Portal. By default, you will have access to the orka-default namespace. You can access additional namespaces if you have been added to additional role bindings.
 
@@ -106,7 +106,7 @@ Orka will launch a new browser tab (or window) and let you log in via the provid
 
 For CI/CD automation, use a service account token instead — service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
 
-## 4. Some CLI basics
+## 4. Some CLI Basics
 
 The Orka3 CLI is a powerful tool in the hands of both inexperienced and advanced users.
 
@@ -120,7 +120,7 @@ orka3 help
 orka3 <command> --help
 orka3 <parent_command> <command> --help
 ```
-## 5. Create and deploy your first VM instance
+## 5. Create and Deploy Your First VM Instance
 
   1. Open a new command-line prompt and run:
 
@@ -154,7 +154,7 @@ orka3 vm list
 ```
 This command lists all VM instances in the `orka-default` namespace. If nothing prints, no one has created any VM instances yet.
 
-#### **Do you want to see more information about the available VMs?**
+#### **Do You Want to See More Information About the Available VMs?**
 
 Run `orka3 vm list --output wide`.
 
@@ -184,7 +184,7 @@ orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest
 ```
 Orka creates a simple VM with the specified image and 3CPU and assigns a randomly generated name.
 
-#### **Did you know?**
+#### **Did You Know?**
 
 Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
 
@@ -214,7 +214,7 @@ For more detailed output, you can run `orka vm list --output wide`. In addition 
 
 When you have a lot of VMs, the output of `orka3 vm list` might become too crowded to use efficiently. Run `orka3 vm list <VM_NAME>` instead and get the system information for a single VM.
 
-## 6. Experience your VM instance
+## 6. Experience Your VM Instance
 
   1. Look at the last output of `orka3 vm list` again. Get that IP and `Screenshare` port.
   2. Launch Apple Screen Sharing on your local machine (`Cmd+K` in Finder). Type `vnc://<VM-IP>:<Screenshare-port>`.
@@ -251,7 +251,7 @@ If your cluster and CLI are not running the latest Orka version, download and in
 
 
 
-## 7. Preserve the image changes
+## 7. Preserve the Image Changes
 
 Changing a running VM's configuration or file system does not affect its base image. As soon as you delete the VM, your changes will be lost, and you will need to recreate them manually on other VMs.
 
@@ -341,7 +341,7 @@ orka3 vm delete <VM_NAME>
 orka3 vm list
 ```
 
-## Next steps
+## Next Steps
 
 Now that you've deployed and managed your first VM, you're ready to integrate Orka with your CI/CD pipeline:
 

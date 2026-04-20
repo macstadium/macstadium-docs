@@ -13,7 +13,7 @@ Orka Harbor OCI storage comes preconfigured with everything needed to push and p
 
 ![HarborArch.png](/images/attachments/41318654507163.png)
 
-### Getting your credentials
+### Getting Your Credentials
 
 Your Harbor credentials will be provided to you by our support team, and are included in your IP Plan. These will include your:
 
@@ -28,9 +28,9 @@ Your Harbor credentials will be provided to you by our support team, and are inc
 
 
 
-### Accessing the Harbor web interface
+### Accessing the Harbor Web Interface
 
-#### Initial login
+#### Initial Login
 
   1. You will need to be logged in to the Orka CLI using the `orka3 login` command in your terminal, and connected to the VPN as outlined in your IP plan.
 
@@ -48,7 +48,7 @@ Your Harbor credentials will be provided to you by our support team, and are inc
 
 
 
-### Harbor dashboard overview
+### Harbor Dashboard Overview
 
 Once logged in, you’ll see the Harbor dashboard, with several key sections:
 
@@ -67,9 +67,9 @@ Once logged in, you’ll see the Harbor dashboard, with several key sections:
 
 
 
-### Key Harbor web interface features
+### Key Harbor Web Interface Features
 
-#### Project summary:
+#### Project Summary
 
 The project section provides an overview of:
 
@@ -84,7 +84,7 @@ The project section provides an overview of:
 
 
 
-#### Repository management:
+#### Repository Management
 
 The ‘repositories’ section provides a detailed overview of:
 
@@ -97,7 +97,7 @@ The ‘repositories’ section provides a detailed overview of:
 
 
 
-#### User management:
+#### User Management
 
 As a Project Admin, you can:
 
@@ -110,7 +110,7 @@ As a Project Admin, you can:
 
 
 
-### Using Harbor with the Orka CLI:
+### Using Harbor with the Orka CLI
 
 Add credentials to Orka to access the Harbor OCI repository:
 
@@ -120,7 +120,7 @@ Add credentials to Orka to access the Harbor OCI repository:
   The `https://` scheme is required. Omitting it or using `http://` will cause push operations to fail with an App Transport Security (ATS) error on the Orka nodes.
 </Warning>
 
-### Pulling images:
+### Pulling Images
 
 Instruct all Orka nodes to fetch an image from the OCI repository:
 
@@ -136,7 +136,7 @@ Monitor the status of the image being fetched:
   
 For more information, run `orka3 regcred --help` command in the Orka CLI.
 
-### Pushing images:
+### Pushing Images
 
 The state of a running VM is saved on the host and pushed to your Harbor container registry. This operation is applicable only to Apple silicon-based VMs. The provided image must be in the following format: `server.com/repository/image:tag`.
 
@@ -150,13 +150,13 @@ For more information, run `orka3 regcred --help` in the Orka CLI.
 Pushing an OCI image is an async operation. To check the status of the operation, run:   
 `orka3 vm get-push-status JOB_NAME`
 
-#### Usage:
+#### Usage
 
 `orka3 vm push VM_NAME IMAGE[:TAG] [flags]`
 
-### Image management and deletion:
+### Image Management and Deletion
 
-#### Deleting images:
+#### Deleting Images
 
 **Note:** Images must be deleted through Harbor, not via the Orka CLI.
 
@@ -173,7 +173,7 @@ Pushing an OCI image is an async operation. To check the status of the operation
 
 ![HarborDeletion.png](/images/attachments/41318654520347.png)
 
-### Garbage collection:
+### Garbage Collection
 
   * **Default schedule:** Garbage collection runs hourly to reclaim storage space from deleted images
 
@@ -186,11 +186,11 @@ Pushing an OCI image is an async operation. To check the status of the operation
 
 Please note that deleted images are not immediately removed from storage. They are marked for deletion and then cleaned up during the next garbage collection cycle.
 
-### Storage quota and limits:
+### Storage Quota and Limits
 
 Your Harbor instance comes with pre-defined storage quotas. You can monitor your resource usage via the Harbor web interface under your project settings. If you attempt to push an image and have hit your storage quota, you will be met with an internal server error.
 
-#### Example:
+#### Example
     
     
 ```
@@ -204,7 +204,7 @@ If you encounter this error, we recommend logging into your Harbor instance usin
 
 If you have hit your quota and need to free up space on your instance urgently, or need to increase your storage limits for any reason, please contact our support team.
 
-###  Advanced features and configurations:
+### Advanced Features and Configurations
 
 For more detailed information about Harbor’s advanced features and capabilities, please refer to the official Harbor documentation:
 
@@ -219,9 +219,9 @@ For more detailed information about Harbor’s advanced features and capabilitie
 
 
 
-### Troubleshooting:
+### Troubleshooting
 
-#### Push fails with an App Transport Security error
+#### Push Fails with an App Transport Security Error
 
 If `orka3 vm get-push-status` returns an error referencing App Transport Security (ATS) or a secure connection requirement:
 
@@ -238,9 +238,9 @@ orka3 regcred remove <OCI.FQDN>
 orka3 regcred add -u <OCI.User> -p <OCI.Pass> https://<OCI.FQDN>
 ```
 
-### Additional support:
+### Additional Support
 
-#### Adding users:
+#### Adding Users
 
 If you need to add additional users to your project, please [contact the MacStadium Support team](mailto:support@macstadium.com) with:
 
@@ -253,11 +253,11 @@ If you need to add additional users to your project, please [contact the MacStad
 
 
 
-#### Configuration changes:
+#### Configuration Changes
 
 For any configuration changes such as custom garbage collection schedules, storage quota increases, or advanced security settings, please contact our support team.
 
-#### Support channels:
+#### Support Channels
 
   * Email [support@macstadium.com](mailto:support@macstadium.com)
 

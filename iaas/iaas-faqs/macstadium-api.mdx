@@ -6,7 +6,7 @@ zendesk_id: 28397141872539
 
 Interact with our system programmatically from your own applications
 
-## How it works
+## How It Works
 
 The API is similar to the [RESTful](https://en.wikipedia.org/wiki/Representational_State_Transfer) architecture, accepting and returning JSON data. Authentication is implemented as HTTP Basic Authentication over SSL (https) and Bearer token (generated from Users page -> Tokens tab). Failed authentication attempts return a 401 unauthorized. 20 failed authentication attempts lock out the requesting IP for 5 minutes (no response).
 

@@ -7,7 +7,7 @@ The Orka3 CLI skill gives [Claude Code](https://claude.ai/code) deep knowledge o
 
 <Note>Direct cluster access requires an active VPN connection and an authenticated `orka3` session. Without those, Claude answers from documentation only and suggests commands for you to run yourself.</Note>
 
-## What you can do
+## What You Can Do
 
 **Ask questions and get accurate answers**
 - "What images are available in my namespace?"
@@ -27,7 +27,7 @@ Claude can help you write CI/CD pipeline configuration, generate service account
 - "Image pull is stuck at Pending. What's the status?"
 - "List all VMs in the staging namespace and show me which ones are idle"
 
-## How it works
+## How It Works
 
 The skill loads as a system prompt when you open Claude Code. It gives Claude structured knowledge about:
 
@@ -39,7 +39,7 @@ The skill loads as a system prompt when you open Claude Code. It gives Claude st
 
 When the `orka3` CLI is available in your environment, Claude can also run commands directly and interpret the output in context.
 
-## Getting started
+## Getting Started
 
 Installation instructions and the full skill source are in the GitHub repository:
 
@@ -47,7 +47,7 @@ Installation instructions and the full skill source are in the GitHub repository
 
 You'll need Claude Code installed and a valid Anthropic API key. The skill installs in a single command.
 
-## Tips for getting the most out of it
+## Tips for Getting the Most Out of It
 
 - **Give Claude context about your environment.** Mention whether you're on Intel or Apple Silicon nodes, and which Orka version you're running. Claude will tailor commands accordingly.
 - **For CI/CD questions, describe your pipeline.** Tell Claude which CI platform you're using and whether you're running inside a container. The auth approach is different.

@@ -28,11 +28,11 @@ Persistent volumes are not applicable to standard Orka VMs. They can be consumed
 
 If you want to persist the storage of a standard Orka VM, use the VM commit, save, or push operations.
 
-## Step 1: Request a persistent volume
+## Step 1: Request a Persistent Volume
 
 Contact the MacStadium team and request a persistent volume (PV) for your Orka environment. Work closely with the team to help them create a PV that matches your requirements. Note that at this step, you need to decide on the name of the namespace where the PV will be created.
 
-## Step 2: Get Kubernetes-ready
+## Step 2: Get Kubernetes-Ready
 
 You need to install kubectl and configure a namespace with permissions to run custom pods.
 
@@ -60,7 +60,7 @@ You need to install kubectl and configure a namespace with permissions to run cu
        
      orka3 rb add-subject --namespace <NAMESPACE> --user <USER>
 ```
-## Step 3: Create the persistent volume claim
+## Step 3: Create the Persistent Volume Claim
 
 A persistent volume claim (PVC) lets you tap into your persistent volume and consume it. You need to create a basic yaml manifest for the PVC and apply it to the environment.
 
@@ -102,7 +102,7 @@ If the persistent volume claim works as expected, you will see a similar output:
 
 If the status is Pending instead of Bound, double-check your PVC manifest, fix any naming issues, remove the old pvc with kubectl delete pvc `<NAME>`, and re-apply the fixed manifest. If the problem persists, contact the MacStadium team.
 
-## Step 4: Deploy a pod that uses the persistent volume
+## Step 4: Deploy a Pod That Uses the Persistent Volume
 
 Now that you have created a PVC and bound it to the PV, you can deploy a pod that uses the PV. Create a pod manifest and apply it.
 
@@ -151,13 +151,13 @@ If the pod works as expected, you will see a similar output:
 ```
      kubectl describe pod <NAME>
 ```
-## (Optional) Step 5: Deploy a service to handle the networking between your pods and your Orka VMs
+## (Optional) Step 5: Deploy a Service to Handle the Networking Between Your Pods and Your Orka VMs
 
 If you want to have connectivity between your Orka VMs and any pods deployed with kubectl, you need to deploy a networking service. For more information, see [Kubernetes Documentation: Service](https://kubernetes.io/docs/concepts/services-networking/service/).
 
 Make sure to use the networking information provided in your [Orka IP Plan](/macstadium/macstadium-overview/ip-plan) when assigning IPs.
 
-## What's next: Delete the PVC and release the PV
+## What's Next: Delete the PVC and Release the PV
 
 When you no longer need to use a PVC and the respective PV, you can delete the PVC to release the PV.
 

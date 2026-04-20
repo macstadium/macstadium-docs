@@ -6,19 +6,19 @@ zendesk_id: 44260146530715
 
 ## Setup Commands
 
-### Test connectivity
+### Test Connectivity
     
     
 ```
 ansible hosts -i /inventory -m ping
 ```
-### Check Orka Engine version
+### Check Orka Engine Version
     
     
 ```
 ansible hosts -i /inventory -m shell -a "orka-engine --version"
 ```
-### Verify Python version
+### Verify Python Version
     
     
 ```
@@ -374,7 +374,7 @@ ansible-playbook -i /inventory <playbook.yml> --step
 
 ## Best Practices Checklist
 
-### Planning & Safety
+### Planning and Safety
 
   * Always use `--tags plan` before production deployments
 
@@ -387,7 +387,7 @@ ansible-playbook -i /inventory <playbook.yml> --step
 
 
 
-### Naming & Organization
+### Naming and Organization
 
   * Use clear, descriptive VM names (e.g., `prod-desktop-01`, `build-runner-sonoma`)
 
@@ -424,7 +424,7 @@ ansible-playbook -i /inventory <playbook.yml> --step
 
 
 
-### Security & Operations
+### Security and Operations
 
   * Store credentials securely (Ansible Vault)
 
@@ -439,7 +439,7 @@ ansible-playbook -i /inventory <playbook.yml> --step
 
 
 
-### State & Tracking
+### State and Tracking
 
   * Let Ansible manage VMs (use playbooks, not manual creation)
 

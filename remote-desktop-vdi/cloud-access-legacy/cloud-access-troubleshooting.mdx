@@ -20,7 +20,7 @@ Conflicts with JAMF Connect or other Authentication methods. JAMF connect and ot
 
 Most 6405 errors can be resolved by rebooting the remote device. If you choose to SSH into the device to perform the reboot, check if Filevault is enabled using fdesetup status at the terminal command line, otherwise screenshare or VNC can be used to access your machine to reboot, again checking for Filevault. If Filevault is enabled reboot using the terminal and the command sudo fdesetup authrestart 0. More information can be found on this error on HP’s website here.
 
-### Specific Causes:
+### Specific Causes
 
 **Switching users**
 
