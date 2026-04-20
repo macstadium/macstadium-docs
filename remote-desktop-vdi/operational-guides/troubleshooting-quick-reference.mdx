@@ -108,7 +108,7 @@ Boot disk missing | Logs show disk not found | Delete VM and redeploy from scrat
 
 ### Symptom: Wrong Number of VMs Deployed
 
-What you see:**** Requested 10 VMs but only 7 deployed, or deployment stopped partway through
+**What you see:** Requested 10 VMs but only 7 deployed, or deployment stopped partway through
 
 Quick diagnostic:
 
@@ -256,7 +256,7 @@ Most common fix: Verify that the VM can resolve the Cloud Connector hostname or 
 
 ### Symptom: VMs Register But Users Can't Connect
 
-What you see:**** Citrix Console shows VMs are "Registered" but users get connection errors
+**What you see:** Citrix Console shows VMs are "Registered" but users get connection errors
 
 Quick diagnostic:
 
@@ -408,7 +408,7 @@ _Run this command once for each additional VM, using a unique `vm_name` each tim
   2. Verify configuration files  
   
 `cat cluster.yml` should have: `vm_network_mode: bridge`  
-`cat nodes.yml` __should have:__`osx_node_vm_network_interface: <interface>`
+`cat nodes.yml` should have: `osx_node_vm_network_interface: <interface>`
 
   3. Reapply the host configuration: `ansible-playbook -i dev/inventory configure-hosts.yml`
 
@@ -615,7 +615,7 @@ Likely causes and solutions:
 Registry authentication failed | Curl returns 401 error | Verify push credentials; check permissions  
 Registry out of storage | Push fails with storage error | Expand registry storage; clean old images  
 Registry quota exceeded | Error mentions quota | Increase quota or clean up images  
-Insufficient host disk space | Can't create/prepare image locally for push | ree space on host; delete unused VMs using `delete.yml` or `vm.yml`  
+Insufficient host disk space | Can't create/prepare image locally for push | Free space on host; delete unused VMs using `delete.yml` or `vm.yml`  
 Source VM not stopped | Image creation requires stopped VM | Stop source VM before running `create_image.yml` playbook  
 Insecure registry without flag | TLS/cert error | Add `-e "insecure_push=true"` if appropriate  
 Network timeout during push | Push times out | Check network; try again during off-hours  
@@ -682,7 +682,7 @@ Most common fix: Images were pulled at different times, with registry updates be
 
 Symptom: Desktop Feels Sluggish for Users
 
-What you see**:** Users report slow response, lag, choppy mouse movement, etc.
+**What you see:** Users report slow response, lag, choppy mouse movement, etc.
 
 Quick diagnostic:
 
@@ -976,7 +976,7 @@ Quick diagnostic:
 ```
  1. Does SSO login work if the user enters their credentials manually?
 ```
-  4. Check the user's SSO/company omain login
+  4. Check the user's SSO/company domain login
 
 ```
  1. Are they logged in with the correct SSO/company domain account?
@@ -997,7 +997,7 @@ Most common fix: SSO is not enabled in Citrix Workspace. Enable SSO in the user'
 
 ### Symptom: Can't Access Citrix Cloud Admin Console
 
-What you see**:** Admins can't log into Citrix Cloud Console to manage environment(s)
+**What you see:** Admins can't log into Citrix Cloud Console to manage environment(s)
 
 Quick diagnostic:
 
@@ -1100,12 +1100,12 @@ Quick diagnostic:
 `ssh admin@<host-ip> `  
 `sudo ls /var/orka`
 
-  2. Check Ansible inventory   
-`sudo settings cat dev/inventory | grep ansible_become`
+  2. Check Ansible inventory settings:   
+`cat dev/inventory | grep ansible_become`
 
   3. Run the playbook with verbose output `ansible-playbook -i dev/inventory <playbook> -vvv`
 
-  4. 4\. Check if a specific task is failing, and/or look at which task in the playbook fails
+  4. Check if a specific task is failing, and/or look at which task in the playbook fails
 
 
 

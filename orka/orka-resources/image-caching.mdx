@@ -51,7 +51,7 @@ After the cluster nodes are upgraded to version 3.2, you can access the new Imag
   2. Run `orka3 remote-image list` to view Orka VM images available on MacStadium's public registry (ghcr.io/macstadium/orka-images/)
   3. Run `orka3 image list` to view images already downloaded to the cluster local registry (cluster NFS mount)
   4. Run `orka3 imagecache list` to view images currently stored on Orka Cluster nodes
-  5. View the Orka Cluster node names by typing `orka3 nodes list`
+  5. View the Orka Cluster node names by typing `orka3 node list`
   6. Add a new image to a cluster node `orka3 imagecache add`
   7. Check the status of an image caching operation `orka3 imagecache info`
   8. Rapidly deploy a new VM using a recently cached Orka image on a specific node `orka3 vm deploy --image <image_name> --node <node_name>`

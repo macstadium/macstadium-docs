@@ -317,7 +317,7 @@ ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-group-01" -e "vm_image=
 
 _Run this command once for each additional VM, using a unique `vm_name` each time._
 
-**Note:\*\*** \*\*When network_interface is not specified, VMs deploy in NAT mode. Bridged mode is recommended for VDI because VMs are directly reachable by Citrix Cloud and end users without port forwarding.
+**Note:** When network_interface is not specified, VMs deploy in NAT mode. Bridged mode is recommended for VDI because VMs are directly reachable by Citrix Cloud and end users without port forwarding.
 
 To preview what will be deployed without making any changes, add `--tags plan`:
 
