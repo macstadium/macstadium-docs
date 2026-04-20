@@ -10,7 +10,7 @@ Orka Engine provides macOS virtualization via Command Line Interface (CLI) on in
 
   * A host (or node) is a physical computer with a host macOS and an installation of Orka Engine.
   * An image is the bits on disk representing a VM that can be used for saving state and sharing.
-  * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](http://ghcr.io/macstadium/orka-images/ "http://ghcr.io/macstadium/orka-images/") with user credentials user/pwd:
+  * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](http://ghcr.io/macstadium/orka-images/) with user credentials user/pwd:
 
 
 
@@ -243,7 +243,7 @@ When the images pull is complete, it is available in `orka-engine image list` an
 
 If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then it can image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
 
-The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/ "http://ghcr.io") and the repo credentials are username=**dev1** and password=**repo**. 
+The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/) and the repo credentials are username=**dev1** and password=**repo**. 
 
 `orka-engine image push --username dev1 --password repo /Users/admin/.local/share/orka/data/sonoma-latest ghcr.io/images/sequoiaCI:latest `
 

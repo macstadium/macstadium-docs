@@ -99,7 +99,7 @@ Orka Cluster version 3.2 introduces a new feature, Scheduled Caching, and also p
 
 Scheduled caching enables users to configure their Orka clusters to proactively pull VM images, avoiding long startup times when the VM is first run.
 
-The scheduled caching feature requires planning for target nodes and optimal maintenance window periods. There is a noticeable impact on VMs running during image cache downloads (particularly on I/O operations). It is best to avoid caching while scheduling running builds unless the image size is smaller < 16GB.
+The scheduled caching feature requires planning for target nodes and optimal maintenance window periods. There is a noticeable impact on VMs running during image cache downloads (particularly on I/O operations). It is best to avoid caching while scheduling running builds unless the image size is smaller than 16GB.
 
 <Note>
   The cache downloads directly from OCI repositories are currently slower than normal image download times by approximately 2-3x. For the beta release it is better to cache from NFS stores. If necessary, pull repo images down to NFS stores and then begin cache downloads to cluster nodes. Caching an image to more than five nodes simultaneously also adds delay to cache download completion time.

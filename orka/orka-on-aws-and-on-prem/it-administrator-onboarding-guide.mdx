@@ -162,7 +162,7 @@ Verify Ansible access:
 
 Citrix Cloud Console is the web-based management control plane for Citrix DaaS.
 
-Access URL: [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com")  
+Access URL: [https://citrix.cloud.com](https://citrix.cloud.com/)  
 Login: Your Citrix Cloud administrator credentials
 
 #### Key sections:
@@ -267,7 +267,7 @@ An OCI registry is a container registry for storing your organization’s golden
 
 ## Citrix Cloud Console Navigation
 
-After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com"):
+After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/):
 
   1. Hamburger menu: Navigate between services
 
@@ -613,7 +613,13 @@ Important notes:
 
 
 Next, you’ll want to run the `create_image` playbook:  
-`ansible-playbook -i dev/inventory create_image.yml \ -e "vm_image=`[](http://ghcr.io/macstadium/orka-images/sonoma:latest)[GitHub](http://ghcr.io/macstadium/orka-images/sonoma:latest)` \ remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry_username={{ vault_registry_username }} \ registry_password={{ vault_registry_password }}"`
+```bash
+ansible-playbook -i dev/inventory create_image.yml \
+  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest \
+  remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \
+  registry_username={{ vault_registry_username }} \
+  registry_password={{ vault_registry_password }}"
+```
 
 What happens when running this playbook:
 
@@ -2037,27 +2043,27 @@ Before any production change:
 
   * Orka Documentation and Support: [support@macstadium.com](mailto:support@macstadium.com)
 
-  * Bare Metal Mac Options: [](https://www.macstadium.com/bare-metal-mac)[Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
+  * Bare Metal Mac Options: [Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
 
 
 
 
 #####  **Citrix**
 
-  * VDA for macOS Documentation: [](https://docs.citrix.com/en-us/mac-vda)[Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
+  * VDA for macOS Documentation: [Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
 
-  * System Requirements: [](https://docs.citrix.com/en-us/mac-vda/system-requirements)[System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements)
+  * System Requirements: [System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements)
 
-  * Citrix Cloud Console: [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com")
+  * Citrix Cloud Console: [https://citrix.cloud.com](https://citrix.cloud.com/)
 
-  * Citrix Support: [](https://support.citrix.com/)[Loading...](https://support.citrix.com/)
+  * Citrix Support: [Citrix Support](https://support.citrix.com/)
 
 
 
 
 #####  **Ansible:**
 
-  * Ansible Documentation: [](https://docs.ansible.com/)[Ansible Community | Ansible documentation](https://docs.ansible.com/)
+  * Ansible Documentation: [Ansible Community | Ansible documentation](https://docs.ansible.com/)
 
   * Ansible Vault Guide: [https://docs.ansible.com/ansible/latest/user_guide/vault.html](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
 
@@ -2070,7 +2076,7 @@ Before any production change:
 
   * Portal: [support@macstadium.com](mailto:support@macstadium.com)
 
-  * Email: [support@macstadium.com](mailto:support@macstadium.com "mailto:support@macstadium.com")
+  * Email: [support@macstadium.com](mailto:support@macstadium.com)
 
   * Phone: Available in support portal
 
@@ -2098,7 +2104,7 @@ When contacting MacStadium support, please provide the following information:
 
 #####  **Citrix Support:**
 
-  * Portal: [](https://support.citrix.com/)[Loading...](https://support.citrix.com/)
+  * Portal: [Citrix Support](https://support.citrix.com/)
 
   * Access via Citrix Cloud Console → Support
 
@@ -2109,6 +2115,6 @@ When contacting MacStadium support, please provide the following information:
 
 ####  **Citrix community forums:**
 
-  * Citrix Discussions: [https://discussions.citrix.com](https://discussions.citrix.com/ "https://discussions.citrix.com")
+  * Citrix Discussions: [https://discussions.citrix.com](https://discussions.citrix.com/)
 
-  * Citrix Community: [](https://community.citrix.com/)[Deploying Strong Network in Azure Kubernetes](https://community.citrix.com/)
+  * Citrix Community: [Citrix Community](https://community.citrix.com/)
