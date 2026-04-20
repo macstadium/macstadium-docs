@@ -14,13 +14,13 @@ MacStadium recommends using a recipe when deploying a new VM, especially for use
 
 2. Click **New VM**.
 
-![Screenshot 2024-10-11 at 8.35.49 AM.png](/images/attachments/29993884590491.png)
+![Private Cloud Machines Dashboard with New VM button](/images/attachments/29993884590491.png)
 
 _New VM_
 
 3. The _Select Type_ tab opens. The left-hand side of the screen contains a list of options (Operating Systems, Services, and so on.) The right-hand side of the screen contains a list of recipes.
 
-![Screenshot 2024-10-11 at 8.37.43 AM.png](/images/attachments/29993853779739.png)
+![Private Cloud Select Type tab showing OS recipes list with Ubuntu Server highlighted](/images/attachments/29993853779739.png)
 
 _EXAMPLE - > Existing Recipe, for Ubuntu Server (recommended)_
 
@@ -28,60 +28,60 @@ MacStadium recommends using a preexisting recipe if one exists for the OS you ne
 
 4. In this example, select the recipe for **Ubuntu Server 24.04** and click **Next.**
 
-5. The _Virtual Machine Setting_ tab opens. 
+5. The _Virtual Machine Setting_ tab opens.
 
-![Screenshot 2024-10-11 at 8.39.52 AM.png](/images/attachments/29993884595867.png)_Virtual Machine Settings Tab_
+![Private Cloud Virtual Machine Settings tab with recipe fields](/images/attachments/29993884595867.png)_Virtual Machine Settings Tab_
 
-  6. In the _VM Recipe Instance_ box, complete the following fields: 
+  6. In the _VM Recipe Instance_ box, complete the following fields:
 
 
 
-  * **Name** \- the machine name used for management inside Private Cloud 
+  * **Name** \- the machine name used for management inside Private Cloud
 
-  * **Cores** \- specifies the number of vCPUs allocated to this machine 
+  * **Cores** \- specifies the number of vCPUs allocated to this machine
 
-  * **RAM** \- specifies the amount of RAM allocated to this machine 
+  * **RAM** \- specifies the amount of RAM allocated to this machine
 
-  * **Cluster** \- specifies the compute cluster to deploy the machine to. This should be left as _Default_. 
+  * **Cluster** \- specifies the compute cluster to deploy the machine to. This should be left as _Default_.
 
   * **Hostname** \- the network hostname for the machine
 
 
 
 
-![Screenshot 2024-10-11 at 8.40.39 AM.png](/images/attachments/29993884598555.png)
+![Private Cloud VM Recipe Instance fields showing Name, Cores, RAM, Cluster, and Hostname](/images/attachments/29993884598555.png)
 
 _VM Recipe Instance_
 
-  7. In the Network box, users must select **Static** from the dropdown box. Users must also select the correct **Network** from the dropdown list in order to ensure connectivity to existing MacStadium infrastructure. Otherwise, Private Cloud will provision a new isolated network for the VM. 
+  7. In the Network box, users must select **Static** from the dropdown box. Users must also select the correct **Network** from the dropdown list in order to ensure connectivity to existing MacStadium infrastructure. Otherwise, Private Cloud will provision a new isolated network for the VM.
 
 
 
 
-![Screenshot 2024-10-11 at 8.41.29 AM.png](/images/attachments/29993887342619.png)
+![Private Cloud Network section with Static IP type and network dropdown](/images/attachments/29993887342619.png)
 
 _Network_
 
 Do not use DHCP as the IP Address Type when connecting VMs to existing networks. While DHCP is the default setting for IP Address Type, MacStadium Mac infrastructure is deployed with static IPs, and no DHCP server is present. **In order for network connectivity to work for deployed VMs on MacStadium networks, an IP must be set manually using the Static IP Address Type.**
 
-8. In the _Static IP Configuration_ box, all fields must be completed. However, the **auto** option in the IP Address field does not work. Complete the following fields: 
+8. In the _Static IP Configuration_ box, all fields must be completed. However, the **auto** option in the IP Address field does not work. Complete the following fields:
 
-  * **IP Address** – Specifies the IP address of the server. The default is **auto, this is an invalid option for the static IP**. Consult the IP Plan in your MacStadium Portal account to determine an IP Address that doesn’t conflict with existing machines. 
+  * **IP Address** – Specifies the IP address of the server. The default is **auto, this is an invalid option for the static IP**. Consult the IP Plan in your MacStadium Portal account to determine an IP Address that doesn't conflict with existing machines.
 
-  * **Subnet Mask** – Specifies the range used for the subnet. This is in CIDR notation. The most common selection is ‘/24’ 
+  * **Subnet Mask** – Specifies the range used for the subnet. This is in CIDR notation. The most common selection is '/24'
 
-  * **Default Gateway** – Specifies the IP to use for routed external traffic. This should be listed in the IP Plan 
+  * **Default Gateway** – Specifies the IP to use for routed external traffic. This should be listed in the IP Plan
 
-  * **Nameservers** – Specifies the DNS servers to use for name resolution. This is not optional, and must be completed in order to resolve hostnames. 
-
-
+  * **Nameservers** – Specifies the DNS servers to use for name resolution. This is not optional, and must be completed in order to resolve hostnames.
 
 
-The default IP Address is Auto, however, this option does not work. **Users must select an IP Address that is not currently being used by their machine, in the subnet of the network they are connected to.** Please consult the MacStadium _IP Plan_.  the private subnet, the client can have on reserver, addresses near the end of the subnet. A subnet of 10.254.232.0/24, for example, can reserve address range, 10.254.232.200 through 10.254.232.250 for VMs. 
 
-This only works for customers who will not use the entire subnet for bare metal hosts. In the Drives box, select the _OS Drive Size_ and _OS Drive Tier_. The _OS Drive Tier_ specifies the tier of storage to deploy to, currently, only Tier 2 is available. 
 
-![Screenshot 2024-10-11 at 8.49.43 AM.png](/images/attachments/29993884605339.png)
+The default IP Address is Auto, however, this option does not work. **Users must select an IP Address that is not currently being used by their machine, in the subnet of the network they are connected to.** Please consult the MacStadium _IP Plan_.  the private subnet, the client can have on reserver, addresses near the end of the subnet. A subnet of 10.254.232.0/24, for example, can reserve address range, 10.254.232.200 through 10.254.232.250 for VMs.
+
+This only works for customers who will not use the entire subnet for bare metal hosts. In the Drives box, select the _OS Drive Size_ and _OS Drive Tier_. The _OS Drive Tier_ specifies the tier of storage to deploy to, currently, only Tier 2 is available.
+
+![Private Cloud Drives section showing OS Drive Size and OS Drive Tier fields](/images/attachments/29993884605339.png)
 
  _Drives_
 
@@ -99,7 +99,7 @@ Or
 
 
 
-![Screenshot 2024-10-11 at 8.50.42 AM.png](/images/attachments/29993887346971.png)
+![Private Cloud User Configuration section with username, password, and SSH key fields](/images/attachments/29993887346971.png)
 
  _User Configuration_
 
@@ -107,27 +107,27 @@ Or
 
 11. The new VM screen (_Ubuntu Server_ , in this case) opens and the drives will begin to initialize. This may take a few minutes to complete, as Private Cloud will fetch the latest disk image for the selected operating system if an update is available. During this time, the Drive status will be listed as _Importing_.
 
-![Screenshot 2024-10-11 at 8.52.20 AM.png](/images/attachments/29993887349019.png)_New VM Screen_
+![Private Cloud new VM screen with drive status showing Importing](/images/attachments/29993887349019.png)_New VM Screen_
 
 12. Once the drive has finished importing, the status will change to _Offline._ At this point, the machine is initialized and ready to be powered on.
 
-![Screenshot 2024-10-11 at 8.53.28 AM.png](/images/attachments/29993887351451.png)_Offline = Ready to Launch_
+![Private Cloud VM screen with drive status showing Offline and ready to launch](/images/attachments/29993887351451.png)_Offline = Ready to Launch_
 
 13. Click the **Power** button and the _Confirmation box_ opens. Click **Power On**.
 
-![Screenshot 2024-10-11 at 8.56.04 AM.png](/images/attachments/29993884625051.png)
+![Private Cloud Power On confirmation dialog](/images/attachments/29993884625051.png)
 
 _Power On_
 
 14. Open the Console by clicking the **Console** button.
 
-![Screenshot 2024-10-11 at 8.58.39 AM.png](/images/attachments/29993884627483.png)
+![Private Cloud VM page with Console button highlighted](/images/attachments/29993884627483.png)
 
 Console Button
 
 15. When the Console opens, the disk boots and stops at a login prompt. Shortly after, the machine will start to download the latest available software updates.
 
-![Screenshot 2024-10-11 at 9.13.23 AM.png](/images/attachments/29993884630811.png)
+![Private Cloud console showing Ubuntu Server login prompt](/images/attachments/29993884630811.png)
 
 Console
 

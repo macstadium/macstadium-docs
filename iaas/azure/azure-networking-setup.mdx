@@ -31,7 +31,7 @@ For more information about virtual networks, see [Azure Documentation: What is A
 
   1. Verify that you have a resource group in Azure.
   2. In the search box at the top of the screen, type Virtual networks and select the respective entry in the filtered search results. Azure filters results as you type.  
-![e919ffb-select-virtual-networks.png](/images/attachments/28279723351835.png)
+![Azure search results with Virtual networks entry highlighted](/images/attachments/28279723351835.png)
   3. On the Virtual networks screen, click + Add.
   4. Provide a Name.
   5. For Address space, provide a range of IP addresses in the CIDR notation that can be used within the network. You must provide an IP range reserved for private use. For more information about the private IP range requirement, see [Azure Documentation: Designing networking for Microsoft Azure IaaS](https://docs.microsoft.com/en-us/office365/enterprise/designing-networking-for-microsoft-azure-iaas#step-4-determine-the-address-space-of-the-vnet). 
@@ -49,7 +49,7 @@ For more information about virtual networks, see [Azure Documentation: What is A
 
 This image shows a sample Azure virtual network configuration.
 
-![c889c7a-create-virtual-network.png](/images/attachments/28279723352603.png)
+![Sample Azure virtual network configuration form](/images/attachments/28279723352603.png)
 
 ## Create a gateway subnet
 
@@ -61,7 +61,7 @@ After the deployment of your virtual network is complete, you need to create a g
 
   1. On the Virtual Networks screen, select your virtual network, and click Subnets.
   2. Click + Gateway subnet.  
-![c449c82-select-vnet-subnets.png](/images/attachments/28279723353627.png)
+![Azure Virtual Networks Subnets tab with Gateway subnet button](/images/attachments/28279723353627.png)
   3. In the Address range text box, provide an IP range for the subnet in the CIDR notation. This IP range must be a subset of the IP range for the virtual network subnet you created earlier. 
      * For more information about CIDR notations, see [Understanding IP Addresses, Subnets, and CIDR Notation for Networking](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation). You can also use a [CIDR calculator such as this CIDR/Netmask Lookup Tool](https://www.ultratools.com/tools/netMask).
   4. (Optional) Modify the remaining pre-filled settings to match your requirements.
@@ -74,7 +74,7 @@ After the deployment of your virtual network is complete, you need to create a g
 
 This image shows a sample configuration for the gateway subnet of an Azure virtual network.
 
-![570b979-gateway-subnet-example.png](/images/attachments/28279723363099.png)
+![Sample gateway subnet configuration for an Azure virtual network](/images/attachments/28279723363099.png)
 
 ## Create a virtual network gateway
 
@@ -82,7 +82,7 @@ In Azure, the virtual network gateway represents the Azure side of your site-to-
 
   1. In the search box at the top of the screen, type Virtual network gateways and select the respective entry in the filtered search results. 
      * Azure filters results as you type.  
-![ef3e90f-select-virtual-network-gateways.png](/images/attachments/28279723364251.png)
+![Azure search results with Virtual network gateways entry highlighted](/images/attachments/28279723364251.png)
   2. On the Virtual network gateways screen, click + Add.
   3. Select Subscription.
   4. Select Virtual network. 
@@ -99,7 +99,7 @@ In Azure, the virtual network gateway represents the Azure side of your site-to-
   12. Check if the virtual network gateway is deployed successfully. 
      * On the Virtual network gateways screen, select the virtual network gateway and click Properties.
      * Verify that the Provisioning state is `Succeeded`.  
-![5b310df-provisioning-state.png](/images/attachments/28279723370011.png)
+![Azure virtual network gateway Properties showing Provisioning state Succeeded](/images/attachments/28279723370011.png)
 
 
 
@@ -107,7 +107,7 @@ In Azure, the virtual network gateway represents the Azure side of your site-to-
 
 This image shows a sample configuration for a virtual network gateway.
 
-![d2496b9-example-virtual-network-gateway.png](/images/attachments/28279691606043.png)
+![Sample Azure virtual network gateway configuration form](/images/attachments/28279691606043.png)
 
 ## Create a local network gateway
 
@@ -115,7 +115,7 @@ In Azure, the virtual network gateway represents the MacStadium side of your sit
 
   1. In the search box at the top of the screen, type Local network gateways and select the respective entry in the filtered search results. 
      * Azure filters results as you type.  
-![eebcd41-select-local-network-gateways_1.png](/images/attachments/28279723372827.png)
+![Azure search results with Local network gateways entry highlighted](/images/attachments/28279723372827.png)
   2. On the Local network gateways screen, click + Add.
   3. Provide a Name.
   4. For IP Address, provide the IP address of the public network listed in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan). 
@@ -141,10 +141,10 @@ With a virtual network gateway and a local network gateway in place, you can cre
 ```
  * Azure filters results as you type.  
 ```
-![88e1b4f-select-local-network-gateways_1.png](/images/attachments/28279723375515.png)
+![Azure search results with Local network gateways entry highlighted](/images/attachments/28279723375515.png)
   2. On the Local network gateways screen, select the local network gateway you created earlier.
   3. From the sidebar menu, select Connections and click + Add.  
-![c7ad933-select-lng-connections-2.png](/images/attachments/28279723379867.png)
+![Azure local network gateway Connections sidebar with Add button](/images/attachments/28279723379867.png)
   4. Provide Name.
   5. Select Virtual network gateway.
   6. For Shared key (PSK), provide an IPSec pre-shared key that will be used to encrypt your data over the site-to-site VPN. 
@@ -166,7 +166,7 @@ At this point, the status of your newly created connection is Unknown.
 
 This image shows a sample configuration for the VPN connection.
 
-![124bea3-example-connection_1.png](/images/attachments/28279691627675.png)
+![Sample Azure VPN connection configuration form](/images/attachments/28279691627675.png)
 
 ## Ensure that Azure allows inbound traffic
 

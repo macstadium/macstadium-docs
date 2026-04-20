@@ -34,9 +34,9 @@ In Amazon, the customer gateway represents the MacStadium endpoint of the site-t
 For more information about the customer gateway, see [Amazon VPC Documentation: Components of Your Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN).
 
   1. In the VPC service sidebar, locate the Virtual Private Network menu and select Customer Gateways.  
-![49f8c5c-select-customer-gateway.png](/images/attachments/28294500664987.png)
+![AWS VPC sidebar with Customer Gateways option highlighted](/images/attachments/28294500664987.png)
   2. Click Create Customer Gateway.  
-![2fc7463-create-customer-gateway.png](/images/attachments/28294500668187.png)
+![AWS Create Customer Gateway form with routing and IP address fields](/images/attachments/28294500668187.png)
   3. Provide a Name. 
      * Set a name that helps you identify the gateway easily.
   4. Select Static routing.
@@ -50,32 +50,32 @@ For more information about the customer gateway, see [Amazon VPC Documentation: 
 
 In Amazon, the virtual private gateway represents the Amazon endpoint of the site-to-site VPN connection.
 
-![e59358a-attach-virtual-private-gateway.png](/images/attachments/28294515711515.png)
+![AWS Virtual Private Gateways dashboard with gateway listed](/images/attachments/28294515711515.png)
 
 For more information about the virtual private gateway, see [Amazon VPC Documentation: Components of Your Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html#VPN).
 
   1. In the VPC service sidebar, locate the Virtual Private Network menu and select Virtual Private Gateways.
 
   2. Click Create Virtual Private Gateway.  
-![d91a7fa-create-virtual-private-gateway.png](/images/attachments/28294500683163.png)
+![AWS Create Virtual Private Gateway form with name and ASN fields](/images/attachments/28294500683163.png)
 
   3. Provide a Name tag. 
      * Set a name that helps you identify the gateway easily.
   4. Select Amazon default ASN and click Create Virtual Private Gateway.
   5. On the Virtual Private Gаteways dashboard, right-click the newly created virtual private gateway and select Attach to VPC.  
-![0ef8aa0-attach-virtual-private-gateway.png](/images/attachments/28294515715227.png)
+![AWS Virtual Private Gateways dashboard with Attach to VPC right-click option](/images/attachments/28294515715227.png)
 
 
 
 Next, you need to manually enable route propagation for the virtual private gateway. For more information about VPN routing, see [Amazon VPC Documentation: Site-to-Site VPN Routing Options](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html).
 
   1. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
-![16b5a00-select-route-tables.png](/images/attachments/28294515716507.png)
+![AWS VPC sidebar with Route Tables option highlighted](/images/attachments/28294515716507.png)
   2. In the list of routing tables, select the main route table for your VPC.
   3. At the bottom of the screen, select Route Propagation. 
      * If your virtual private gateway is not listed, make sure that it's attached to the VPC.
   4. Click Edit route propagation.  
-![747405e-route-propagation.png](/images/attachments/28294515717403.png)
+![AWS Route Table Route Propagation tab with Propagate checkbox and Edit button](/images/attachments/28294515717403.png)
   5. Select the Propagate checkbox and click Save.
 
 
@@ -85,9 +85,9 @@ Next, you need to manually enable route propagation for the virtual private gate
 After you have a customer gateway and a virtual private gateway in place, you can configure the site-to-site VPN connection. During setup, you need to choose the customer gateway and the virtual private gateway that you want to use and configure routing. You need to route traffic to your internal, private network. By default, this is the Private-1 network. You can find the networking information for this network in **Appendix B** of your IP Plan.
 
   1. In the VPC service sidebar, locate the Virtual Private Network menu and select Site-to-Site VPN Connections.  
-![06bea70-select-vpn.png](/images/attachments/28294515718299.png)
+![AWS VPC sidebar with Site-to-Site VPN Connections option highlighted](/images/attachments/28294515718299.png)
   2. Click Create VPN Connection.  
-![ed8e88c-us-east-2_console_aws_amazon_com_vpc_home_region_us-east-2-2.png](/images/attachments/28294500685339.png)
+![AWS Create VPN Connection form with gateway type, routing, and static IP fields](/images/attachments/28294500685339.png)
   3. Provide Name tag.
   4. For Target Gateway Type, select Virtual Private Gateway, and from the Virtual Private Gateway drop-down menu, select the virtual private gateway you created earlier.
   5. Select that you want to use an Existing customer gateway, and from the Customer Gateway ID drop-down menu, select the customer gateway that you created earlier.

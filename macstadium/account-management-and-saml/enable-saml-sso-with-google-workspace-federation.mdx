@@ -11,22 +11,22 @@ zendesk_id: 28262763988379
 
   1. Go to [Google Admin Console](https://admin.google.com/)
   2. Navigate to “Web and mobile apps” (Apps → Web and mobile apps in the left menu or use [this link](https://admin.google.com/ac/apps/unified))  
-![d7af030-image.png](/images/attachments/28262749454747.png)
+![Google Admin Console left menu with Web and mobile apps option highlighted](/images/attachments/28262749454747.png)
 
   3. Create a new “Custom SAML App” (click Add app)  
-![5673e45-image.png](/images/attachments/28262749456027.png)
+![Google Admin Web and mobile apps page with Add app dropdown showing Custom SAML app](/images/attachments/28262749456027.png)
 
   4. Enter “App name” (e.g. MacStadium Portal)
   5. Download the metadata by clicking Download Metadata - Keep this file for sharing with our support team later.  
-![3f929de-image.png](/images/attachments/28262763978523.png)
+![Google SAML app setup with Download Metadata button](/images/attachments/28262763978523.png)
   6. Configure 
      * ACS URL - [idp.macstadium.com/saml2/idpresponse](https://idp.macstadium.com/saml2/idpresponse)
      * Entity ID - urn:amazon:cognito:sp:us-east-1_pusi8jHs1
      * Configure email mapping with the "Show Advanced Settings" menu
      * Select EMAIL for the Name ID Format field
      * Select Primary Email for the Name ID field  
-![a4a569e-image.png](/images/attachments/28262763979675.png)
+![Google SAML app Service Provider Details with ACS URL, Entity ID, and Name ID fields](/images/attachments/28262763979675.png)
   7. Map Primary email to email  
-![2394d9c-image.png](/images/attachments/28262749462171.png)
+![Google SAML app Attribute mapping with Primary Email mapped to email](/images/attachments/28262749462171.png)
   8. Click Finish to complete the setup
   9. Provide our support team with the metadata file from step 5
