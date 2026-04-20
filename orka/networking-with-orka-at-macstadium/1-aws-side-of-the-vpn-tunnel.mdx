@@ -24,7 +24,7 @@ Routing from Amazon to Orka is static.
 
 
 
-![43b914e-find-services-vpc.png](/images/attachments/28401763351067.png)
+![AWS Management Console Find Services bar with VPC typed](/images/attachments/28401763351067.png)
 
 ## Step 2: Create a customer gateway
 
@@ -34,13 +34,13 @@ In Amazon, the [customer gateway](https://docs.aws.amazon.com/vpn/latest/s2svpn/
 
 
 
-![a8193dd-select-customer-gateway.png](/images/attachments/28401763352219.png)
+![AWS VPC sidebar with Customer Gateways selected](/images/attachments/28401763352219.png)
 
   2. Click **Create Customer Gateway**.
 
 
 
-![10e7b3a-click-create-customer-gateway.png](/images/attachments/28401777600795.png)
+![Create Customer Gateway button in AWS VPC console](/images/attachments/28401777600795.png)
 
   3. Fill in the form. 
      1. Provide a **Name**. Set a name that helps you identify the gateway easily.
@@ -50,13 +50,13 @@ In Amazon, the [customer gateway](https://docs.aws.amazon.com/vpn/latest/s2svpn/
 
 
 
-![42acf51-create-customer-gateway.png](/images/attachments/28401763358107.png)
+![Create Customer Gateway form with name, routing, and IP address fields](/images/attachments/28401763358107.png)
 
   4. Click **Create Customer Gateway**.
 
 
 
-![29e9e01-customer-gateway-success.png](/images/attachments/28401763363995.png)
+![AWS console confirmation of customer gateway created successfully](/images/attachments/28401763363995.png)
 
 ## Step 3: Set up a virtual private gateway
 
@@ -66,13 +66,13 @@ In Amazon, the [virtual private gateway](https://docs.aws.amazon.com/vpn/latest/
 
 
 
-![48dc4aa-select-virtual-private-gateway.png](/images/attachments/28401763366043.png)
+![AWS VPC sidebar with Virtual Private Gateways selected](/images/attachments/28401763366043.png)
 
   2. Click **Create Virtual Private Gateway**.
 
 
 
-![84ad5b2-click-create-vpg.png](/images/attachments/28401763368347.png)
+![Create Virtual Private Gateway button in AWS VPC console](/images/attachments/28401763368347.png)
 
   3. Fill in the form. 
      1. Provide a **Name tag**. Set a name that helps you identify the gateway easily.
@@ -81,19 +81,19 @@ In Amazon, the [virtual private gateway](https://docs.aws.amazon.com/vpn/latest/
 
 
 
-![5e294d4-create-virtual-private-gateway-2.png](/images/attachments/28401777617051.png)
+![Create Virtual Private Gateway form with name tag and ASN fields](/images/attachments/28401777617051.png)
 
   4. On the **Virtual Private Gateways** dashboard, right-click the newly created virtual private gateway and select **Attach to VPC**.
 
 
 
-![c28aca1-attach-virtual-private-gateway.png](/images/attachments/28401763373595.png)
+![Virtual Private Gateways dashboard with Attach to VPC option in context menu](/images/attachments/28401763373595.png)
 
   5. Select your VPC from the drop-down menu and click **Yes, Attach**.
 
 
 
-![3990736-attach-to-vpc.png](/images/attachments/28401777624475.png)
+![Attach to VPC dialog with VPC dropdown and Yes Attach button](/images/attachments/28401777624475.png)
 
 Next, you need to manually enable [route propagation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html) for the virtual private gateway.
 
@@ -101,7 +101,7 @@ Next, you need to manually enable [route propagation](https://docs.aws.amazon.co
 
 
 
-![8412767-select-route-tables.png](/images/attachments/28401763377691.png)
+![AWS VPC sidebar with Route Tables selected](/images/attachments/28401763377691.png)
 
   2. In the list of routing tables, select the main route table for your VPC.
   3. At the bottom of the screen, select **Route Propagation**. If your virtual private gateway is not listed, make sure that it's attached to the VPC.
@@ -109,7 +109,7 @@ Next, you need to manually enable [route propagation](https://docs.aws.amazon.co
 
 
 
-![4b2cb41-route-propagation.png](/images/attachments/28401763378843.png)
+![Route Propagation tab showing Edit route propagation button](/images/attachments/28401763378843.png)
 
   5. Select the **Propagate** checkbox and click **Save**.
 
@@ -123,13 +123,13 @@ After you have a customer gateway and a virtual private gateway in place, you ca
 
 
 
-![9554f7a-select-vpn.png](/images/attachments/28401777633563.png)
+![AWS VPC sidebar with Site-to-Site VPN Connections selected](/images/attachments/28401777633563.png)
 
   2. Click **Create VPN Connection**.
 
 
 
-![487d7f8-click-create-vpn.png](/images/attachments/28401763385883.png)
+![Create VPN Connection button in AWS VPC console](/images/attachments/28401763385883.png)
 
   3. Fill in the form. 
      1. Provide **Name tag**.
@@ -141,7 +141,7 @@ After you have a customer gateway and a virtual private gateway in place, you ca
 
 
 
-![9f41216-us-east-2_console_aws_amazon_com_vpc_home_region_us-east-2.png](/images/attachments/28401763388315.png)
+![Create VPN Connection form with gateway, routing, and CIDR prefix fields](/images/attachments/28401763388315.png)
 
   4. Click **Create VPN Connection**.
 
