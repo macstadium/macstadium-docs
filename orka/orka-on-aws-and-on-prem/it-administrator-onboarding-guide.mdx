@@ -76,7 +76,7 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * Max VMs per host: Typically two, due to Apple licensing restrictions
 
-  * Bridged networking: VMs recieve IPs directly from your network (no NAT needed)
+  * Bridged networking: VMs receive IPs directly from your network (no NAT needed)
 
 
 
@@ -134,7 +134,7 @@ Verify Ansible access:
   
 `ansible hosts -i dev/inventory -m ping`
 
-`ansible --version` __(v2.12 or later recommended)
+`ansible --version` (v2.12 or later recommended)
 
 #### Credentials stored in Ansible:
 
@@ -430,7 +430,7 @@ Having this information documented and updated regularly helps with capacity pla
 
 ### Provisioning a new desktop
 
-You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following perquisites have been met before proceeding:
+You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following prerequisites have been met before proceeding:
 
   * The user account exists in your identity provider (Azure AD, Okta, etc.)
 
@@ -445,7 +445,7 @@ You will need to refer to this workflow when a user requests access to a macOS v
 
   1. Select the appropriate golden image. Determine this based on the user’s department/role/access needs:  
   
-`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all avaliable images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
+`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all available images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
   
 If the golden image isn’t cached, run:  
 `ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"`  
@@ -518,7 +518,7 @@ No action is needed if the user has already been assigned to a Delivery Group. T
 \- Desktop should appear: “Mac OS Finance Desktop” (or configured display name)  
 \- User clicks desktop → session launches successfully   
   
-The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisoning workflow has completed, the user will now have access to their macOS virtual desktop.
+The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisioning workflow has completed, the user will now have access to their macOS virtual desktop.
 
 
 
@@ -570,7 +570,7 @@ The `create_image.yml` playbook automates the following:
 
 
 
-To prepare the configuration steps, you will need to nagivate to the `/scripts` directory in your project:  
+To prepare the configuration steps, you will need to navigate to the `/scripts` directory in your project:  
   
 `cd ~/ansible-citrix-orka/scripts `  
 `ls -la`  
@@ -1260,7 +1260,7 @@ Expected: Service running with PID
 
      * Verify that the token is not expired
 
-     * If the token is expired: Generate new a enrollment token, update Ansible Vault, and redeploy the VM
+     * If the token is expired: Generate a new enrollment token, update Ansible Vault, and redeploy the VM
   3. Check the Citrix VDA logs:
 
 
@@ -1886,7 +1886,7 @@ Golden images:
      4. Deploy new VMs
 
      5. Verify VDA registration in Citrix
-#####  **Disaster recovery (DR( testing:**
+#####  **Disaster recovery (DR) testing:**
 
   * Annually: Conduct a full DR exercise
 
@@ -2083,7 +2083,7 @@ Before any production change:
 
 When contacting MacStadium support, please provide the following information:
 
-  * You Account ID
+  * Your Account ID
 
   * Affected host IPs or VM names
 
@@ -2102,7 +2102,7 @@ When contacting MacStadium support, please provide the following information:
 
   * Access via Citrix Cloud Console → Support
 
-  * Include: You Customer ID, Machine Catalog name, applicable error messages
+  * Include: Your Customer ID, Machine Catalog name, applicable error messages
 
 
 
