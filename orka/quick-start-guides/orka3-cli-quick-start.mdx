@@ -258,7 +258,7 @@ Changing a running VM's configuration or file system does not affect its base im
 To create changes that stick and appear on future deployments, you can push your changes to an OCI-compatible registry, commit your changes to the base image, or save the changes as a new image.
 
 <Note>
-For Apple Silicon clusters, **pushing to an OCI registry** (such as Harbor, available within your cluster) is the recommended approach. `vm commit` and `vm save` write to NFS local cluster storage, which is being phased out in favor of OCI. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli).
+On Orka 3.5 or later, **pushing to an OCI registry** (such as Harbor, available within your cluster) is the recommended approach for Apple Silicon clusters. `vm commit` and `vm save` write to NFS local cluster storage, which is being phased out in favor of OCI. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli).
 </Note>
 
 > #### **Glossary: Commit changes**

@@ -33,7 +33,7 @@ The cluster knows which nodes have necessary images cached, greatly reducing ima
   * Image Caching allows preemptive copying of an Orka VM image on any cluster node member, to avoid delays caused by network bandwidth when images are pulled from an OCI registry or the cluster NFS datastore.
   * An image is the bits on disk representing a VM that can be used for saving state and sharing modifications.
   * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](https://ghcr.io/macstadium/orka-images/) with user credentials user/pwd: **admin/admin** , have Homebrew package manager installed, orka-vm-tools installed, and have screen sharing enabled and SSH access enabled.
-  * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service). NFS is a legacy storage path. For new clusters, OCI-based storage via Harbor is recommended. See [Migrating NFS images to OCI with Harbor](/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor).
+  * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service). NFS is a legacy storage path. For clusters on Orka 3.5 or later, OCI-based storage via Harbor is recommended. See [Migrating NFS images to OCI with Harbor](/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor).
   * A VM is a virtual runtime on top of the macOS host. The VM runs a guest OS image and macOS supports up to 2 running VMs per cluster node.
   * Sequoia refers to macOS 15 (the latest Sequoia release available from Apple’s servers). macOS 26 Tahoe is also available as a guest OS starting in Orka 3.5.
 
