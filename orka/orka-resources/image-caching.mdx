@@ -10,7 +10,7 @@ zendesk_id: 30115530131355
 
 # About
 
-Orka 3.2 introduces Image Caching. This feature lets you download Orka images ahead of time to any node in the Orka cluster if you have admin privileges. Pre-caching images provides faster and more reliable VM deployments by reducing delays caused by network bandwidth issues. Without Image Caching, automated CI jobs pull new images from the local cluster datastore (NFS mount) or a remote registry during CI runtime, which can cause delays.
+Orka 3.2 introduces Image Caching. This feature lets you download Orka images ahead of time to any node in the Orka cluster if you have admin privileges. Pre-caching images provides faster and more reliable VM deployments by reducing delays caused by network bandwidth issues. Without Image Caching, automated CI jobs pull new images from a remote OCI registry or the local cluster datastore (NFS) during CI runtime, which can cause delays.
 
 # System Requirements
 
@@ -30,17 +30,17 @@ The cluster knows which nodes have necessary images cached, greatly reducing ima
 
 ## Key Concepts
 
-  * Image Caching allows preemptive copying of an Orka VM image on any cluster node member, to avoid delays caused by network bandwidth when images are pulled from the cluster NFS mount or from a public registry cloud service.
+  * Image Caching allows preemptive copying of an Orka VM image on any cluster node member, to avoid delays caused by network bandwidth when images are pulled from an OCI registry or the cluster NFS datastore.
   * An image is the bits on disk representing a VM that can be used for saving state and sharing modifications.
   * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](https://ghcr.io/macstadium/orka-images/) with user credentials user/pwd: **admin/admin** , have Homebrew package manager installed, orka-vm-tools installed, and have screen sharing enabled and SSH access enabled.
-  * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service).
+  * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service). NFS is a legacy storage path. For clusters on Orka 3.5 or later, OCI-based storage via Harbor is recommended. See [Migrating NFS images to OCI with Harbor](/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor).
   * A VM is a virtual runtime on top of the macOS host. The VM runs a guest OS image and macOS supports up to 2 running VMs per cluster node.
   * Sequoia refers to macOS 15 (the latest Sequoia release available from Apple’s servers). macOS 26 Tahoe is also available as a guest OS starting in Orka 3.5.
 
 
 
 <Note>
-Orka Cluster 3.0 and later can deploy a VM from multiple image sources: a cloud image datastore (OCI registry service), Orka’s local cluster registry (Cluster NFS mount), and lastly cached images on a cluster node member. Now in Orka 3.2 release there are three distinct CLI commands to display each type of storage and the images available on that specific datastore.
+Orka Cluster 3.0 and later can deploy a VM from multiple image sources: a cloud image datastore (OCI registry service), cached images on a cluster node member, and Orka’s local cluster registry (NFS, legacy). Now in Orka 3.2 release there are three distinct CLI commands to display each type of storage and the images available on that specific datastore.
 </Note>
 
 # Getting Started
@@ -49,7 +49,7 @@ After the cluster nodes are upgraded to version 3.2, you can access the new Imag
 
   1. Run `orka3 imagecache -h` to see the CLI tree structure: commands, subcommands and options/flags
   2. Run `orka3 remote-image list` to view Orka VM images available on MacStadium's public registry (ghcr.io/macstadium/orka-images/)
-  3. Run `orka3 image list` to view images already downloaded to the cluster local registry (cluster NFS mount)
+  3. Run `orka3 image list` to view images already downloaded to the cluster local registry (NFS, legacy)
   4. Run `orka3 imagecache list` to view images currently stored on Orka Cluster nodes
   5. View the Orka Cluster node names by typing `orka3 node list`
   6. Add a new image to a cluster node `orka3 imagecache add`
