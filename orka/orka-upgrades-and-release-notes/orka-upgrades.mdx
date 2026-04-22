@@ -42,19 +42,15 @@ As part of this upgrade, you might need to [download and install](/orka/orka-ove
 | Image cache (Apple silicon nodes) | The image cache is removed from each node. |
 | Namespaces | Your custom namespaces persist. |
 | RoleBindings | Your custom permissions persist. |
-| Kubernetes Pods and services | Your custom Pods and services persist. |  
-  
-### Patch version upgrades
+| Kubernetes Pods and services | Your custom Pods and services persist. |
 
-Orka patch releases (for example, 3.5.0 → 3.5.2) deliver bug fixes and stability improvements between minor releases. Patch upgrades are zero-downtime and have no negative impact on running workloads or VMs.
+#### Patch version upgrades
+
+Orka patch releases (for example, 3.5.0 → 3.5.2) deliver bug fixes and stability improvements between minor releases. Patch upgrades are zero-downtime — no preparation is required, and running VMs and workflows are not interrupted.
 
 <Note>
 **Adding nodes to your cluster requires the latest patch version.** Orka's Ansible image is released on a rolling basis for each major.minor branch, meaning node add operations use the latest available Ansible image for your release line. If your cluster is on an older patch version, node additions will fail. Request a patch upgrade before submitting a node add request.
 </Note>
-
-#### Preparing for the upgrade
-
-No preparation is required for patch upgrades. Running VMs and workflows are not interrupted.
 
 | Aspect | Notes |
 |--------|-------|
