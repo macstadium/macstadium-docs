@@ -23,3 +23,24 @@ For the latest information about how to work with a Shell executor in Orka, see 
 Custom executors are useful when you need to work with ephemeral executors and automate their management. With a custom executor, an executor is created before the pipeline is run and destroyed after the pipeline is complete.
 
 For the latest information about how to work with a custom executor in Orka, see [Using a GitLab Custom Executor to Run CI/CD Pipelines in Orka](https://github.com/macstadium/orka-integrations/blob/master/GitLab/custom-executor.md).
+
+## Run concurrent builds
+
+By default, the [config template](https://github.com/macstadium/orka-integrations/blob/master/GitLab/template-config.md) sets `concurrent = 1`, which means only one build runs at a time. To run multiple builds simultaneously, update two settings in your `config.toml`:
+
+- `concurrent` (global): the total number of jobs that can run at the same time across all runners.
+- `limit` (per runner, under `[[runners]]`): the maximum number of jobs this specific runner handles concurrently.
+
+Both values should match. For example, to allow 10 concurrent builds:
+
+```toml
+concurrent = 10
+
+[[runners]]
+  name = "orka-runner"
+  executor = "custom"
+  limit = 10
+  ...
+```
+
+See the [GitLab Runner advanced configuration](https://docs.gitlab.com/runner/configuration/advanced-configuration.html) for the full list of options.
