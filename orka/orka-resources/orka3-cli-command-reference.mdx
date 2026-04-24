@@ -483,7 +483,7 @@ Images are used to spin up VMs.
 An 'amd64' architecture indicates an Intel-based image. (Previously denoted by an '.img' extension. Extensions are no longer required as part of an image name.)  
 An 'arm64' extension indicates an Apple silicon-based image. (Previously denoted by an '.orkasi' extension. Extensions are no longer required as part of an image name.)
 
-Remote and local images are accessible from all namespaces.
+Remote and local images are accessible from all namespaces. To target a specific namespace, use `--namespace` or set the `ORKA_DEFAULT_NAMESPACE` environment variable.
 
 If '--output' is not set, prints only the essential information in a table format.  
 You can also print an extended table with error information or JSON.
