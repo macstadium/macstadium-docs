@@ -76,7 +76,7 @@ ciscoasa#write memory
 
   1. Connect to the ASDM using the MacStadium credentials from your IP Plan.
   2. Navigate to Configuration > Firewall > NAT Rules > +Add > Add NAT Rule.  
-![1b26ce5-image.png](/images/attachments/28269995146651.png)
+![ASDM NAT Rules with Add NAT Rule option selected](/images/attachments/28269995146651.png)
   3. Give the Object representing the internal MacStadium host a name (Example-Host-31).
   4. Confirm the Type is set as Host.
   5. In IP address enter the private IP address of the host (consult your IP Plan).
@@ -84,10 +84,10 @@ ciscoasa#write memory
   7. Click Advanced and set the Source Interface to Private-1 and Destination Interface to Outside.
   8. Confirm the Protocol is set to tcp.
   9. Click OK > OK > Apply.  
-![f5f9c6e-image.png](/images/attachments/28269981349147.png)
+![ASDM Add NAT Rule dialog with static NAT and interface settings completed](/images/attachments/28269981349147.png)
   10. Click Save
   11. Click Apply Changes  
-![8a72d90-image.png](/images/attachments/28269995148443.png)
+![ASDM Apply Changes confirmation dialog](/images/attachments/28269995148443.png)
 
 
 
@@ -168,24 +168,24 @@ For external access to your MacStadium hosts, a static NAT must be previously co
   4. Give the object a name.
   5. Confirm its type is set to Host.
   6. Enter the source IP address and optionally a description.  
-![327ed52-image.png](/images/attachments/28269995151259.png)
+![ASDM Add Network Object dialog with source IP address and host type fields](/images/attachments/28269995151259.png)
   7. Click OK.
   8. In the Access Rules section, confirm the Outside interface is selected. If rules are applied to the Outside interface, select the first rule from the top.  
-![189b42f-image.png](/images/attachments/28269995154971.png)
+![ASDM Access Rules with Outside interface selected](/images/attachments/28269995154971.png)
   9. Click +Add and select Add Access Rule.
   10. Confirm the Outside interface is selected, and the Action is set to Permit.
   11. Select the object host (or group) that was just created as the Source.
   12. Select the Private-1-IPs object as the Destination.
   13. In Service type the protocol/ports to be allowed (in this example tcp/https).
   14. Click OK.  
-![4ab3a50-image.png](/images/attachments/28269995156635.png)  
+![ASDM Add Access Rule dialog with Outside interface, source object, and service fields](/images/attachments/28269995156635.png)  
 
 <Note>
   To allow access to a single internal host instead of the entire Private-1 network, reference the object created for that specific host in the Destination field.
 </Note>
 
   15. Make sure the new rule is at the TOP. To move the new rule to the top, select the new rule and click the upper arrow highlighted.
-![2f3cf6b-image.png](/images/attachments/28269981359131.png)
+![ASDM Access Rules list with new rule selected and move-to-top arrow highlighted](/images/attachments/28269981359131.png)
 
   16. Click Apply
   17. Click Save

@@ -313,7 +313,7 @@ Wait for the operation to complete.
 
 
 
-![1462](https://files.readme.io/4534063-7a9f7a8-Screenshot_2022-02-07_at_16_12_18.png)
+![Xcode "Verifying Xcode" dialog causing git operations to hang on an Orka VM](https://files.readme.io/4534063-7a9f7a8-Screenshot_2022-02-07_at_16_12_18.png)
 
   * If your git-related operations are hanging, and nothing happens on an Orka VM, your Xcode is probably stuck in the "Verifying Xcode dialog" state. To ensure this is the case, you can connect to your VM via VNC, start the Xcode application and check if you will get a small window saying "Verifying Xcode".  
 **Workaround:** VNC to the VM and wait for the verification process to complete or execute the following command from the Terminal to disable Xcode verification:

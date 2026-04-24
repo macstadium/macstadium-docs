@@ -11,7 +11,7 @@ zendesk_id: 41318654531099
 Orka Harbor OCI storage comes preconfigured with everything needed to push and pull macOS VM images using the Orka CLI. Users are provided with a **Project Admin** account, giving them full control over project repositories and user management within their assigned project(s).  
 
 
-![HarborArch.png](/images/attachments/41318654507163.png)
+![Harbor OCI storage architecture diagram showing Orka and Harbor integration](/images/attachments/41318654507163.png)
 
 ### Getting Your Credentials
 
@@ -39,7 +39,7 @@ Your Harbor credentials will be provided to you by our support team, and are inc
   3. Click ‘Log in’
 
 
-![HarborLogin.png](/images/attachments/41318628450587.png)
+![Harbor web interface login screen](/images/attachments/41318628450587.png)
 
   1. Enter your username and password
 
@@ -55,12 +55,12 @@ Once logged in, you’ll see the Harbor dashboard, with several key sections:
   * **Projects:** Your assigned project where you can manage repositories. If you require more than one project, please [reach out to our Support team](mailto:support@macstadium.com) for assistance.  
 
 
-![HarborProjects.png](/images/attachments/41318654514203.png)
+![Harbor dashboard showing Projects section](/images/attachments/41318654514203.png)
 
   * **Repositories:** Container image repositories within your project  
 
 
-![HarborRepositories.png](/images/attachments/41318628453275.png)
+![Harbor dashboard showing Repositories section](/images/attachments/41318628453275.png)
 
   * **Users:** Project-level user management (limited to your project scope). To add users, please open a support ticket.
 
@@ -171,7 +171,7 @@ Pushing an OCI image is an async operation. To check the status of the operation
   5. Click ‘DELETE’ to confirm the action
 
 
-![HarborDeletion.png](/images/attachments/41318654520347.png)
+![Harbor repository with image tags selected for deletion](/images/attachments/41318654520347.png)
 
 ### Garbage Collection
 
@@ -200,7 +200,7 @@ orka-engine image push 90gbventurassh.orkasi -u admin -p Harbor12345 0.26s user 
 ```
 If you encounter this error, we recommend logging into your Harbor instance using the instructions above, and verifying that you have not hit your storage quota. This can be viewed in the Harbor web interface, on the right side of the screen.   
   
-![HarborQuota.png](/images/attachments/41318628458139.png)
+![Harbor project settings showing storage quota usage](/images/attachments/41318628458139.png)
 
 If you have hit your quota and need to free up space on your instance urgently, or need to increase your storage limits for any reason, please contact our support team.
 

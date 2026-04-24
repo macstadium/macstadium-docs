@@ -86,7 +86,7 @@ orka3 user get-token
 > 
 > Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
 
-![f3f5e8d-Screenshot_2023-10-10_at_23.37.22.png](/images/attachments/28393224419867.png)
+![Orka UI login page in browser](/images/attachments/28393224419867.png)
 
 ## 4. Create and Deploy Your First VM Instance
 
@@ -108,7 +108,7 @@ orka3 user get-token
 > 
 > A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
 
-![634a6b0-Screenshot_2023-10-10_at_23.42.27.png](/images/attachments/28393197002523.png)
+![Orka UI Nodes page showing available resources](/images/attachments/28393197002523.png)
 
   2. In the sidebar, click **Images**.
 
@@ -151,7 +151,7 @@ When you provide a value for Memory, this overrides Orka and allocates the speci
 > 
 
 
-![0b2dd08-Screenshot_2023-10-10_at_23.55.17.png](/images/attachments/28393224435355.png)
+![Create VM config form with name, image, CPU, and vCPU fields](/images/attachments/28393224435355.png)
 
 This creates a VM (Virtual Machine) config.
 
@@ -175,7 +175,7 @@ This deploys a VM (Virtual Machine) instance from your template.
 
 
 
-![310d27c-Screenshot_2023-10-10_at_23_59_26.jpg](/images/attachments/28393197006875.jpg)
+![Orka UI VMs page listing deployed VM instances with connection info](/images/attachments/28393197006875.jpg)
 
 Note: this screen shows essential and detailed connection information about your VM (Virtual Machine).
 
@@ -193,7 +193,7 @@ Note: this screen shows essential and detailed connection information about your
 
 
 
-![ef0c92e-Screenshot_2023-10-11_at_0_02_21.jpg](/images/attachments/28393224438683.jpg)
+![VM connection popup showing VNC URL and port](/images/attachments/28393224438683.jpg)
 
   2. Launch Apple Screen Sharing on your local machine (In **Finder** , press `Cmd+K`). In the **Connect to Server** dialog, paste the information from the pop-up. (`vnc://10.221.189.13:5903` in the example above).
 
@@ -249,13 +249,13 @@ You can save the changes as a new image to create changes that stick and appear 
 
 
 
-![2919446-save-2.jpg](/images/attachments/28393197010843.jpg)
+![VM More menu with Save as new image option highlighted](/images/attachments/28393197010843.jpg)
 
   2. Provide a name for the new image and click **Save**.
 
 
 
-![028e8d7-save-dialog.png](/images/attachments/28393197013787.png)
+![Save as new image dialog with name input field](/images/attachments/28393197013787.png)
 
 Wait for the operation to complete. It might take a while. There is no progress indicator, but the operation runs in the background. When the operation completes, the dialog closes, and a success notification appears.
 
@@ -281,7 +281,7 @@ When your VM configs and instances have served their purpose, you can remove the
 
 
 
-![af25e3d-delete.jpg](/images/attachments/28393197015195.jpg)
+![VM More menu with Delete option highlighted](/images/attachments/28393197015195.jpg)
 
 When the page refreshes, you should not see any more VM instances. Your VM config is still available on the **VM Configs** page, and you can deploy new instances from it.
 

@@ -54,7 +54,7 @@ This is the general process for creating a Site-to-Site, from the Azure private 
 In Azure, the virtual network gateway represents the Azure side of the Site-to-Site VPN tunnel.
 
   1. In the search box at the top of the screen, type Virtual network gateways then select the respective entry in the filtered search results.  
-![1405fda-image.png](/images/attachments/28300178271259.png)
+![Azure search results with Virtual network gateways entry highlighted](/images/attachments/28300178271259.png)
   2. On the Virtual network gateways screen, click Create. (Or Create virtual network gateway, if this is the first gateway)
   3. Select Subscription
   4. Select Resource group
@@ -79,9 +79,9 @@ In Azure, the virtual network gateway represents the Azure side of the Site-to-S
   18. Check if the virtual network gateway is deployed successfully. 
      * On the Virtual network gateways screen, select the virtual network gateway and click Properties.
      * Verify that the Provisioning state is Succeeded.  
-![79b7416-image.png](/images/attachments/28300162000539.png)
+![Azure virtual network gateway Properties showing Provisioning state Succeeded](/images/attachments/28300162000539.png)
      * Example: Create a virtual network gateway  
-![b1ed847-image.png](/images/attachments/28300178275227.png)
+![Sample Azure virtual network gateway configuration form](/images/attachments/28300178275227.png)
 
 
 
@@ -94,7 +94,7 @@ In Azure, the virtual network gateway represents the Azure side of the Site-to-S
 In Azure, the local network gateway represents the MacStadium side of the Site-to-Site VPN tunnel.
 
   1. In the search box at the top of the screen, type Local network gateways and select the respective entry in the filtered search results. Azure filters results.  
-![d15ca57-image.png](/images/attachments/28300162004635.png)
+![Azure search results with Local network gateways entry highlighted](/images/attachments/28300162004635.png)
   2. On the Local network gateways screen, click + Create.
   3. Provide a Name.
   4. For IP Address, provide the IP address of the public network listed in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan). 
@@ -121,10 +121,10 @@ After the virtual network gateway and a local network gateway are in place, crea
   1. In the search box at the top of the screen, type Virtual network gateways and select the respective entry in the filtered search results. Azure filters results.
   2. On the Local network gateways screen, select the local network gateway created earlier.
   3. From the sidebar menu, select Connections and click + Add.  
-![eafa6fb-image.png](/images/attachments/28300162007963.png)
+![Azure local network gateway Connections panel with Add button](/images/attachments/28300162007963.png)
   4. Provide a Name.
   5. Set the Connection type to Site-to-Site (IPsec).  
-![9cd73fc-image.png](/images/attachments/28300178285851.png)
+![Azure Create Connection form with Site-to-Site IPsec connection type selected](/images/attachments/28300178285851.png)
   6. Select the correct Region and click Next : Settings.
   7. Select the Virtual network gateway and Local network gateway that were previously created.
   8. For Shared key (PSK), provide an IPSec pre-shared key. 
@@ -136,18 +136,18 @@ After the virtual network gateway and a local network gateway are in place, crea
   12. In the Primary Custom BGP Address field, select the APIPA address that were created before.
   13. In IPsec / IKE policy, select Custom
   14. Set IKE Phase 1 and IKE Phase 2 as follows:  
-![b7efb5d-image.png](/images/attachments/28300178288411.png)
+![Azure IPsec IKE policy settings for IKE Phase 1 and Phase 2](/images/attachments/28300178288411.png)
   15. Review the remaining pre-filled setting and click Review + Create.  
-![e6b6166-image.png](/images/attachments/28300162027035.png)  
-![4f1b782-image.png](/images/attachments/28300178298139.png)
+![Azure Create Connection review page before final creation](/images/attachments/28300162027035.png)  
+![Azure VPN connection settings summary before creation](/images/attachments/28300178298139.png)
   16. Click Create at the next step.
   17. Wait for the operation to be completed. 
      * This might take a while. When the deployment is complete, click on Go to resource  
-![e1707e7-image.png](/images/attachments/28300178304923.png)
+![Azure deployment complete screen with Go to resource button](/images/attachments/28300178304923.png)
   18. In the Overview page, select Download configuration:  
-![73bff3c-image.png](/images/attachments/28300162038939.png)
+![Azure VPN connection Overview page with Download configuration option](/images/attachments/28300162038939.png)
   19. In the pop-up window, set Device vendor to Cisco, Device family to ASA (Adaptive Security Appliance) and Firmware version to CiscoASA[9.8+_ONLY]_RouteBased(IKEv2>VTI+BGP) and click on Download configuration.  
-![5086e73-image.png](/images/attachments/28300162047643.png)
+![Download configuration dialog with Cisco ASA and firmware version selected](/images/attachments/28300162047643.png)
 
 
   * The status of the newly created connection is Unknown.
@@ -175,7 +175,7 @@ Without extensive experience with Azure and ASA/ASAv configurations, it is recom
 </Warning>
 
   1. In the VPN configuration script downloaded from Azure, the configuration starts after the section below:  
-![b7754df-image.png](/images/attachments/28300178321819.png)
+![Azure VPN configuration script header section showing where configuration begins](/images/attachments/28300178321819.png)
   2. Find the section where the BGP configuration starts.
   3. Add the MacStadium private network and mask.
 

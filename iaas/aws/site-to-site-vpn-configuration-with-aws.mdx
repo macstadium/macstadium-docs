@@ -122,7 +122,7 @@ For more information about the customer gateway, see Amazon VPC Documentation: C
 </Note>
 
   1. In the VPC service sidebar, locate the Virtual Private Network (VPN) menu and select Customer gateways.  
-![cc3b204-image.png](/images/attachments/28280561568795.png)
+![AWS VPC sidebar with Customer gateways option highlighted](/images/attachments/28280561568795.png)
   2. Click Create Customer Gateway.
   3. Provide a Name. Set a name that is easy to remember.
   4. In BGP ASN, use a private ASN in the range of 64,512–65,534. This is used later as the BGP process number in the MacStadium firewall.
@@ -131,7 +131,7 @@ For more information about the customer gateway, see Amazon VPC Documentation: C
 
 
 
-![3a7c313-image.png](/images/attachments/28280561569691.png)
+![AWS Create Customer Gateway form with BGP ASN and IP address fields](/images/attachments/28280561569691.png)
 
 ## Setting Up Virtual Private Gateway
 
@@ -147,14 +147,14 @@ For more information about the virtual private gateway, see [Amazon VPC Document
   4. Select Amazon default ASN and click Create Virtual Private Gateway.
   5. Connect to the VPN. 
      * After signing up, the [IP Plan](/macstadium/macstadium-overview/ip-plan) is sent. Review that information to configure access to the cloud environment. The recommended method of gaining access is via a Virtual Private Network (VPN), which is both easy to implement and secure.  
-![65f35b0-image.png](/images/attachments/28280561571355.png)
+![AWS VPC sidebar with Virtual Private Gateways option highlighted](/images/attachments/28280561571355.png)
   6. On the Virtual Private Gateways dashboard, right-click the newly created virtual private gateway and select Attach to VPC.  
-![c7e601a-image.png](/images/attachments/28280561573019.png)
+![AWS Virtual Private Gateways dashboard with Attach to VPC right-click option](/images/attachments/28280561573019.png)
   7. Select the VPC to attach the Virtual Private Gateway to and click Attach to VPC.  
-![3df10bf-image.png](/images/attachments/28280561574811.png)
+![AWS Attach to VPC dialog with VPC dropdown and Attach button](/images/attachments/28280561574811.png)
   8. Select the Propagation Enable checkbox.
   9. Click Save.  
-![ebd2e0c-image.png](/images/attachments/28280513704859.png)
+![AWS Route Table Route Propagation tab with Propagate checkbox](/images/attachments/28280513704859.png)
 
 
 
@@ -182,7 +182,7 @@ Route traffic to the internal, private network. By default, this is the Private-
        * For more information about AWS VPN tunnel options, see: [Amazon VPC Documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html).
   8. Do not edit the Tunnel Options section.
   9. Click Create VPN Connection.  
-![089ae6a-image.png](/images/attachments/28280561577499.png)
+![AWS Create VPN Connection form with gateway type and routing settings](/images/attachments/28280561577499.png)
 
 
 
@@ -230,7 +230,7 @@ Amazon has prefilled configurations ready for download, from a variety of vendor
 
 
 
-![4664a5f-image.png](/images/attachments/28294681888539.png)
+![AWS Download Configuration dialog with Cisco Systems vendor and ASA platform selected](/images/attachments/28294681888539.png)
 
 ## Configuration Blanks
 
@@ -349,11 +349,11 @@ Manually enable route propagation for the virtual private gateway.
 For more information about VPN routing, see [Amazon VPC Documentation: Site-To-Site VPN Routing Options](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html).
 
   1. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
-![3f83127-image.png](/images/attachments/28297099978011.png)
+![AWS VPC sidebar with Route Tables option highlighted](/images/attachments/28297099978011.png)
   2. In the list of routing tables, select the main route table for your VPC.
   3. Select Route Propagation. If the virtual private gateway is not listed, then make sure that it is attached to the VPC.
   4. Click Edit route propagation.  
-![8b4497b-image.png](/images/attachments/28297115653403.png)
+![AWS Route Table Route Propagation tab with Edit route propagation button](/images/attachments/28297115653403.png)
 
 
 

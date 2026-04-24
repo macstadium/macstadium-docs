@@ -8,23 +8,23 @@ Windows does not include Virtio drivers by default. These drivers need to be ins
 
 For Windows Server installation, MacStadium highly recommends the use of the Windows Server recipe.
 
-1. Windows requires additional drivers in order to access Private Cloud’s virtualized storage and network hardware. To install a Windows VM manually, select **Machines Dashboard → Virtual Machines.**
+1. Windows requires additional drivers in order to access Private Cloud's virtualized storage and network hardware. To install a Windows VM manually, select **Machines Dashboard → Virtual Machines.**
 
 2. Click **New VM**.
 
-![Screenshot 2024-10-11 at 11.28.47 AM.png](/images/attachments/29998596011931.png)
+![Private Cloud Machines Dashboard with New VM button](/images/attachments/29998596011931.png)
 
 New VM
 
 3. The _Select Type_ tab opens. The left-hand side of the screen contains a list of options (Operating Systems, Services, and so on.) The right-hand side of the screen contains a list of recipes. Select **New VM** and click **Next**.
 
-![Screenshot 2024-10-11 at 11.41.55 AM.png](/images/attachments/29999198633115.png)
+![Private Cloud Select Type tab with New VM option selected](/images/attachments/29999198633115.png)
 
 Next
 
-4. The _Virtual Machine Setting_ tab opens. 
+4. The _Virtual Machine Setting_ tab opens.
 
-![Screenshot 2024-10-11 at 11.43.27 AM.png](/images/attachments/29999198636315.png)Virtual Settings Tab
+![Private Cloud Virtual Machine Settings tab](/images/attachments/29999198636315.png)Virtual Settings Tab
 
 5. In the _VM Recipe Instance_ box, complete the following fields:
 
@@ -37,7 +37,7 @@ Next
 
 
 
-![Screenshot 2024-10-11 at 11.44.35 AM.png](/images/attachments/29999198639003.png)
+![Private Cloud VM Recipe Instance fields with Attach Virtio Drives checkbox checked](/images/attachments/29999198639003.png)
 
 VM Recipe Instance
 
@@ -47,33 +47,33 @@ A Windows Install ISO must be uploaded to Media Images before installation.
 
 6. In the Drives box, make sure the **Create CD-ROM Drive** is set to **Use Local Media Image**. Select an uploaded Windows install ISO.
 
-![Screenshot 2024-10-11 at 11.45.54 AM.png](/images/attachments/30000863608219.png)
+![Private Cloud Drives section with CD-ROM Drive set to Use Local Media Image](/images/attachments/30000863608219.png)
 
 _Drives_
 
 7. In the Network box, set the **NIC Interface** to **Virtio** , and the **Attach Network Interface** to **Internal**.
 
-![Screenshot 2024-10-11 at 12.27.02 PM.png](/images/attachments/30000863612443.png)
+![Private Cloud Network section with NIC Interface set to Virtio and Internal network selected](/images/attachments/30000863612443.png)
 
 Network
 
 8. Click **Submit**.
 
-![Screenshot 2024-10-11 at 12.28.01 PM.png](/images/attachments/30000863615515.png)Virtual Machine Settings
+![Private Cloud Virtual Machine Settings completed and ready to submit](/images/attachments/30000863615515.png)Virtual Machine Settings
 
 9. In the **New VM (Windows)** page, click **Power**.
 
-![Screenshot 2024-10-11 at 12.29.04 PM.png](/images/attachments/30000868142363.png)
+![Private Cloud New VM page with Power button highlighted](/images/attachments/30000868142363.png)
 
 10. In the **Confirmation** box, click Power On.
 
-![Screenshot 2024-10-11 at 12.29.55 PM.png](/images/attachments/30000868145051.png)
+![Private Cloud Power On confirmation dialog](/images/attachments/30000868145051.png)
 
 _Power On_
 
 11. Open the **Console** by clicking the **Console** button.
 
-![Screenshot 2024-10-11 at 12.33.29 PM.png](/images/attachments/30001332886939.png)
+![Private Cloud VM page with Console button highlighted](/images/attachments/30001332886939.png)
 
 _Console Button_
 
@@ -81,112 +81,112 @@ _Console Button_
 
 13. The **Windows** screen opens, click **Next**.
 
-![Screenshot 2024-10-11 at 12.35.52 PM.png](/images/attachments/30001332893339.png)
+![Windows setup language and region screen](/images/attachments/30001332893339.png)
 
 _Windows_
 
 14. Click **Install Now**.
 
-![Screenshot 2024-10-11 at 12.36.53 PM.png](/images/attachments/30001332896539.png)
+![Windows setup screen with Install Now button](/images/attachments/30001332896539.png)
 
 _Install Now_
 
 15. Accept the license terms and click **Next.**
 
-![Screenshot 2024-10-11 at 12.37.45 PM.png](/images/attachments/30001332897691.png)
+![Windows setup license terms screen](/images/attachments/30001332897691.png)
 
 _Advanced_
 
-16. Select **Custom: Install Windows Only (advanced)**.![Screenshot 2024-10-11 at 12.39.09 PM.png](/images/attachments/30001345524891.png)
+16. Select **Custom: Install Windows Only (advanced)**.![Windows setup installation type selection with Custom option](/images/attachments/30001345524891.png)
 
 _Custom_
 
 17. The installation will fail to find any drives. At this point, the virtio storage drivers need to be loaded to continue the install. Click **Load Driver**.
 
-![Screenshot 2024-10-11 at 12.40.40 PM.png](/images/attachments/30001332900635.png)
+![Windows setup Where to install screen with no drives found and Load Driver button](/images/attachments/30001332900635.png)
 
 _Load Driver_
 
 18. Click **OK**.
 
-![Screenshot 2024-10-11 at 12.41.27 PM.png](/images/attachments/30001345532571.png)
+![Windows Load Driver browse dialog](/images/attachments/30001345532571.png)
 
 OK
 
 19. Select the driver for the corresponding Windows version, according to the folder name. For example, the Windows 10 driver is located in E:\amd64\w10\\.
 
-![Screenshot 2024-10-11 at 12.42.11 PM.png](/images/attachments/30001332906139.png)
+![Windows driver selection list showing Virtio SCSI drivers by OS version](/images/attachments/30001332906139.png)
 
 Windows 10 Driver
 
 20. Windows begins to install. Allow the installation to finish. Network connectivity does not work during the install, this is expected, as Windows does not come with Virtio network drivers.
 
-![Screenshot 2024-10-11 at 12.43.48 PM.png](/images/attachments/30001332911515.png)
+![Windows setup installation progress bar](/images/attachments/30001332911515.png)
 
 Installing Windows
 
 21. Once installed, additional drivers need to be installed to allow network connectivity. To do this, open Explorer, and navigate to This PC. A CD drive with Virtio drivers should be accessible.
 
-![Screenshot 2024-10-11 at 12.44.51 PM.png](/images/attachments/30001436932123.png)
+![Windows Explorer showing This PC with Virtio drivers CD drive](/images/attachments/30001436932123.png)
 
 _CD_
 
 22. **Double click** on **virtio-win-gt-x64**.
 
-![Screenshot 2024-10-11 at 12.45.47 PM.png](/images/attachments/30001436934811.png)
+![Windows Explorer with virtio-win-gt-x64 installer file highlighted](/images/attachments/30001436934811.png)
 
 _File Name_
 
 23. When the **Setup Wizard** opens, click **Next**.
 
-![Screenshot 2024-10-11 at 12.46.44 PM.png](/images/attachments/30001436935579.png)
+![Virtio Windows Guest Tools Setup Wizard welcome screen](/images/attachments/30001436935579.png)
 
 _Wizard_
 
 24. Accept the **terms** and click **Next**.
 
-![Screenshot 2024-10-11 at 12.47.44 PM.png](/images/attachments/30001449584283.png)
+![Virtio Windows Guest Tools license terms screen](/images/attachments/30001449584283.png)
 
 _Terms_
 
 25\. Choose all and click **Next**.
 
-_![Screenshot 2024-10-11 at 12.49.07 PM.png](/images/attachments/30001663469979.png)_
+_![Virtio Windows Guest Tools component selection screen with all options selected](/images/attachments/30001663469979.png)_
 
 _Select All_
 
 26. Click **Install** to begin the installation.
 
-![Screenshot 2024-10-11 at 12.50.14 PM.png](/images/attachments/30001663472411.png)
+![Virtio Windows Guest Tools ready to install screen with Install button](/images/attachments/30001663472411.png)
 
 _Install_
 
 27. The progress bar appears.
 
-![Screenshot 2024-10-11 at 12.51.17 PM.png](/images/attachments/30001678656411.png)
+![Virtio Windows Guest Tools installation progress bar](/images/attachments/30001678656411.png)
 
 _Progress Bar_
 
 28. Click **Finish** to complete the Setup Wizard.
 
-![Screenshot 2024-10-11 at 12.52.08 PM.png](/images/attachments/30001678658203.png)
+![Virtio Windows Guest Tools Setup Wizard completion screen with Finish button](/images/attachments/30001678658203.png)
 
 Finish
 
 29. Install **Guest tools** by clicking on the file **virtio-win-guest-tools**. Then accept the **license terms** and click **Install**.
 
-![Screenshot 2024-10-11 at 12.52.54 PM.png](/images/attachments/30001678660635.png)
+![Virtio guest tools installer with Install button](/images/attachments/30001678660635.png)
 
 _Install_
 
 30. The progress bar appears.
 
-![Screenshot 2024-10-11 at 12.53.53 PM.png](/images/attachments/30001678663323.png)
+![Virtio guest tools installation progress bar](/images/attachments/30001678663323.png)
 
 Progress Bar
 
 31. Click **Close** to complete the installation. Windows is now ready for use.
 
-![Screenshot 2024-10-11 at 12.54.41 PM.png](/images/attachments/30001663486235.png)
+![Virtio guest tools installation complete screen with Close button](/images/attachments/30001663486235.png)
 
 _Close_
