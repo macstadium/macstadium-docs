@@ -6,7 +6,7 @@ zendesk_id: 28394315916827
 
 How to get started with your preferred CI/CD integration. Learn how to set it up for the first time and how to get help.
 
-#### **The ultimate quick start**
+#### **The Ultimate Quick Start**
 
 If you want to skip the detailed explanations, just run through these steps on your own:
 
@@ -27,7 +27,7 @@ The Orka CI/CD integrations are most useful if you have:
 
 
 
-## 1. Before you begin
+## 1. Before You Begin
 
   1. Make sure you can access the account for your cluster in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](/macstadium/macstadium-overview/ip-plan) it from the [MacStadium portal](https://portal.macstadium.com/).
@@ -38,7 +38,7 @@ The Orka CI/CD integrations are most useful if you have:
 
 
 
-## 2. Some Orka CI/CD basics
+## 2. Some Orka CI/CD Basics
 
   * CI/CD integrations must target your Orka API URL. If you are using an [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) or an [external custom domain](/orka/networking-with-orka-at-macstadium/external-custom-domains), you must ensure that the CI/CD integration can resolve the domain.
 
@@ -69,11 +69,11 @@ A running VM that persists between the iterations of your CI/CD pipeline. This V
 
 A new VM that spins up and lives for the duration of the CI/CD pipeline iteration. After the iteration is complete, the VM is destroyed.
 
-## 3. Pick your CI/CD integration
+## 3. Pick Your CI/CD Integration
 
 Go to [Orka Tools & Integrations](/orka/orka-overview/tools-integrations) and review the latest list of available integrations. Pick the one you want to use and navigate to its detailed setup instructions (usually available in the respective repo or official integration page).
 
-## 4. Create a service account and get a token
+## 4. Create a Service Account and Get a Token
 
 Orka clusters now require authentication via Single Sign-On or via service account token.
 
@@ -92,7 +92,7 @@ Grab the token from the output of `orka3 sa token` and store it as a secret in y
 
 These commands create a service account in the `orka-default` namespace and obtain a valid token for it. If you need your CI/CD integration to be able to work in additional namespaces, you need to create the service account in the respective namespace or [configure the respective role bindings](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).
 
-## 5. Create the template for your permanent or ephemeral agent
+## 5. Create the Template for Your Permanent or Ephemeral Agent
 
   1. Check if there are any VM configs on your environment.
 
@@ -157,7 +157,7 @@ A deployed instance of a VM config. VMs take up resources from your nodes and re
 
 If you're using another image as your starting point or if you are installing your OS from ISO, you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to connect to the VM via VNC. You can then enable SSH and Screen Sharing connectivity in the OS.
 
-## 6. Complete the CI/CD setup
+## 6. Complete the CI/CD Setup
 
 Revisit the setup instructions for your preferred Orka CI/CD integration. Fill in any configuration fields as needed.
 
@@ -167,7 +167,7 @@ Note that you might need to provide the SSH credentials for the VM.
 
 By default, the `sonoma-90gb-orka3-arm` image is configured with an `admin/admin` set of credentials.
 
-## Next steps
+## Next Steps
 
 Pick your integration and follow the guide for your CI/CD platform:
 

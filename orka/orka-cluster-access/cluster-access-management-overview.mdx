@@ -6,7 +6,7 @@ zendesk_id: 28328584628379
 
 Starting with Orka 3.0, Orka uses Single Sign-On (SSO) and Kubernetes role-based access control (RBAC) for user management. Users log in with their MacStadium Customer Portal credentials. What they can do depends on the role assigned to their account.
 
-## How roles work
+## How Roles Work
 
 There are two places where roles exist — the Customer Portal and the Orka cluster — and they map to each other.
 
@@ -22,7 +22,7 @@ There are two places where roles exist — the Customer Portal and the Orka clus
 - Tech Portal users → **Technical** cluster role
 - **Service accounts** — cluster-only accounts for CI/CD integrations. Not tied to a Portal account.
 
-## Role-based access matrix
+## Role-Based Access Matrix
 
 Within the Customer Portal, the Admin, Tech, and Billing roles have the following capabilities:
 
@@ -57,20 +57,20 @@ Within the Orka cluster:
 | Manage ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
 | List and pull remote ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
 
-## Common admin workflows
+## Common Admin Workflows
 
-### Adding a user to the cluster
+### Adding a User to the Cluster
 
 1. In the MacStadium Customer Portal, an account Admin invites the user and sets their role (Admin or Tech).
 2. The user accepts the invite and sets their credentials.
 3. The user logs in to the Orka cluster with their Portal credentials.
 
-### Adding a service account for CI/CD
+### Adding a Service Account for CI/CD
 
 1. A cluster administrator creates the service account in the target namespace.
 2. If the service account needs access to additional namespaces, the administrator configures the appropriate role bindings.
 
-### Isolating resources with namespaces
+### Isolating Resources with Namespaces
 
 Administrators can create namespaces to dedicate resources to specific teams or workflows.
 
@@ -78,13 +78,13 @@ Administrators can create namespaces to dedicate resources to specific teams or 
 2. Assign nodes to the namespace. (Nodes cannot be shared across namespaces.)
 3. Add users or service accounts as subjects to the namespace's role binding.
 
-### Modifying or revoking access
+### Modifying or Revoking Access
 
 - To change a user's role or disable them: edit or disable their account in the MacStadium Customer Portal.
 - To revoke a service account's access: delete the service account in the Orka cluster.
 - To add or remove namespace access: update the relevant role bindings in the cluster.
 
-## Key terms
+## Key Terms
 
 | Term | Where | Definition |
 |------|--------|------------|

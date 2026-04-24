@@ -6,7 +6,7 @@ zendesk_id: 44332879842587
 
 Completing validation and testing verifies that your Citrix + Orka VDI environment functions correctly before it is deployed to production. This typically consists of testing end-to-end user connectivity, VM lifecycle operations, establishing a performance baseline, and troubleshooting procedures.
 
-#### Testing prerequisites
+#### Testing Prerequisites
 
 Before beginning the testing and validation process, ensure:
 
@@ -29,7 +29,7 @@ Before beginning the testing and validation process, ensure:
 
 * Proper NAT/firewall configuration for VDA communication
 ```
-#### End-to-end connectivity test via Citrix Workspace
+#### End-to-End Connectivity Test via Citrix Workspace
 
 This test validates the complete user journey from authentication to desktop usage.
 
@@ -66,7 +66,7 @@ This test validates the complete user journey from authentication to desktop usa
 
   * Workspace URL incorrect: Confirm workspace URL matches Citrix Cloud tenant
 ```
-#### Desktop visibility testing in Citrix Workspace
+#### Desktop Visibility Testing in Citrix Workspace
 
   1. Navigate to the ‘Desktops’ tab in Citrix Workspace
 
@@ -89,7 +89,7 @@ This test validates the complete user journey from authentication to desktop usa
 
     1. Update the desktop display name in Delivery Group settings
 ```
-#### Session launch testing in Citrix Workspace
+#### Session Launch Testing in Citrix Workspace
 
   1. Click on desktop to launch
 
@@ -118,7 +118,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 
 
-#### Desktop functionality testing in Citrix Workspace
+#### Desktop Functionality Testing in Citrix Workspace
 
 ##### Display and resolution
 
@@ -159,7 +159,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 **Expected result:** All inputs are responsive, applications launch normally with no lag or stuttering
 
-#### Peripheral and feature testing in Citrix Workspace
+#### Peripheral and Feature Testing in Citrix Workspace
 
 ##### Clipboard functionality
 
@@ -235,7 +235,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 
 
-#### Session management in Citrix Workspace
+#### Session Management in Citrix Workspace
 
 ##### Disconnect and reconnect
 
@@ -283,7 +283,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 **Expected result:** Sessions connect/disconnect cleanly, state is preserved, no hung sessions
 
-#### Network resilience testing in Citrix Workspace
+#### Network Resilience Testing in Citrix Workspace
 
 ##### Network interruption
 
@@ -309,7 +309,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 **Expected result:** Session survives brief interruptions, and adapts to bandwidth changes
 
-#### Multi-user testing in Citrix Workspace
+#### Multi-User Testing in Citrix Workspace
 
   1. Have multiple users connect simultaneously if testing with pooled (random assignment) desktops
 
@@ -326,7 +326,7 @@ This test validates the complete user journey from authentication to desktop usa
 
 **Expected result:** Multiple users can connect simultaneously without issues
 
-#### Documenting test results
+#### Documenting Test Results
 
 You may wish to record your test results for future reference or auditing/compliance needs. Things of note to include are:
 
@@ -345,7 +345,7 @@ You may wish to record your test results for future reference or auditing/compli
 
 
 
-#### VM lifecycle validation
+#### VM Lifecycle Validation
 
 To properly validate the VM lifecycle works as expected through Ansible automation, you will want to consider testing this in its entirety. The complete VM lifecycle is as follows: `Deploy → Start → Stop → Restart → Backup → Recreate → Delete`  
   
@@ -410,7 +410,7 @@ You will want to confirm the VM has been deleted from MacStadium VDI, the VM has
 
 
 
-#### Performance and latency baselines
+#### Performance and Latency Baselines
 
 Establishing performance baselines helps identify potential points of service degradation, and helps validate that your MacStadium VDI environment meets user expectations. Having a baseline established also provides a reference point for troubleshooting, provides capacity planning data for scaling considerations, provides user experience metrics to measure service quality, and allows for regressions to be detected when adverse changes may occur.
 
@@ -457,7 +457,7 @@ Some metrics to consider measuring are:
  4. What is the average network bandwidth per session?
 ```
 
-#### Android Virtual Device validation
+#### Android Virtual Device Validation
 
 If your deployment includes Android Virtual Devices, validate the AVD setup before production use.
 

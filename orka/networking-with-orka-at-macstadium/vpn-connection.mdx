@@ -4,7 +4,7 @@ description: "Connect to your Orka cluster's Cisco ASAv via VPN with OpenConnect
 zendesk_id: 28329406438683
 ---
 
-## Before you begin
+## Before You Begin
 
   * The server address from Step 1: VPN in the [IP Plan](/macstadium/macstadium-overview/ip-plan).
   * The username and password from Step 1: VPN in the IP Plan. 
@@ -22,13 +22,13 @@ Your Orka cluster sits behind its dedicated Cisco ASAv firewall. You need to be 
 
 MacStadium has pre-configured the firewall and has enabled VPN access. All you need to do is run a VPN client and provide the server address and credentials for the connection.
 
-## (Open-source option) OpenConnect
+## (Open-Source Option) OpenConnect
 
 #### **Why OpenConnect?**
 
 If you are a pre-dominantly CLI user, you might want to use [OpenConnect](https://www.infradead.org/openconnect/index.html) \- an open-source VPN client available from the command line.
 
-### Download and install OpenConnect
+### Download and Install OpenConnect
 
   * If you have Homebrew on your system, you can run `brew install openconnect` from your command line.
   * If you're running on Windows, you can [download](https://www.infradead.org/openconnect/download.html) and [build](https://www.infradead.org/openconnect/building.html) the OpenConnect package yourself or you can use Cisco AnyConnect instead.
@@ -66,7 +66,7 @@ At any time press Ctrl+C on the command line.
 
 Cisco firewalls are designed to work with the [Cisco AnyConnect Secure Mobility Client](https://www.cisco.com/c/en/us/support/security/anyconnect-secure-mobility-client/tsd-products-support-series-home.html) as a VPN client. If you prefer a GUI VPN client or you're running on Windows, you might want to use Cisco AnyConnect.
 
-### Download and install Cisco AnyConnect
+### Download and Install Cisco AnyConnect
 
   1. In your browser, navigate to the server address from Step 1: VPN of your [IP Plan](/macstadium/macstadium-overview/ip-plan). You might need to use https://.
   2. Ignore the certificate warning and proceed to the address.

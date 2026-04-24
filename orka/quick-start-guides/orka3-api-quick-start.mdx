@@ -33,7 +33,7 @@ The Orka3 API will be most useful to:
 
 
 
-## Before you begin
+## Before You Begin
 
   1. Make sure you can access the account for your cluster in the MacStadium Customer Portal. See [Cluster Access Management: Overview](/orka/orka-cluster-access/cluster-access-management-overview).
   2. Get your VPN connection information from your IP Plan. You can [download](/macstadium/macstadium-overview/ip-plan) it from the [MacStadium portal](https://portal.macstadium.com/).
@@ -43,14 +43,14 @@ The Orka3 API will be most useful to:
 
 
 
-## Some Orka3 API basics
+## Some Orka3 API Basics
 
   * You need to target your Orka API URL in your API calls.
   * You need to provide the `Authorization: Bearer <TOKEN>` header in your API calls.
 
 
 
-### What's your Orka API URL?
+### What's Your Orka API URL?
 
 You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 
@@ -69,7 +69,7 @@ Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://
 
 <Warning>All sample API calls from this point use generic placeholder values. Replace the Orka API URL, token, and any other placeholders with values from your environment. Sample responses are piped through a JSON formatter — yours may look different.</Warning>
 
-## Get a token from the Orka3 CLI
+## Get a Token from the Orka3 CLI
 
 For all API calls, you need to provide the `Authorization: Bearer <TOKEN>` header. The Orka3 API currently does not let you log in from it directly and obtain a token. You will need to obtain your token from the Orka3 CLI.
 
@@ -89,7 +89,7 @@ You now need to get your Orka authentication token from your `~/.kube/config`:
 ```bash
 orka3 user get-token
 ```
-## Deploy your first VM instance
+## Deploy Your First VM Instance
 
 Starting with Orka 3.0.0, you can use the built-in Swagger UI to execute API calls directly against your cluster.
 
@@ -317,7 +317,7 @@ curl -X 'GET' \
 -H 'accept: application/json' \
 -H 'Authorization: Bearer <TOKEN>'
 ```
-## Experience your VM instance
+## Experience Your VM Instance
 
   1. Look at the last output of `GET /namespaces/orka-default/vms` again. Get that IP and `screenshare` port.
   2. Launch Apple Screen Sharing on your local machine. In **Connect To:** , type `vnc://<VM-IP>:<Screenshare-port>`.
@@ -361,7 +361,7 @@ If your cluster is not running the latest Orka version, download and install an 
 
 
 
-## Preserve the image changes
+## Preserve the Image Changes
 
 Changing a running VM's configuration or file system does not affect its base image. As soon as you delete the VM, your changes will be lost, and you will need to recreate them manually on other VMs.
 
@@ -454,7 +454,7 @@ curl -X 'POST' \
 
 
 
-## Time to say goodbye
+## Time to Say Goodbye
 
 When your VM instances have served their purpose, you can `delete` them.
 
@@ -483,7 +483,7 @@ curl -X 'GET' \
 -H 'Authorization: Bearer <TOKEN>'
 ```
 
-## Next steps
+## Next Steps
 
 - [CLI Quick Start](/orka/quick-start-guides/orka3-cli-quick-start): manage VMs interactively with the Orka3 CLI
 - [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start): automate VM deployment in your build pipeline

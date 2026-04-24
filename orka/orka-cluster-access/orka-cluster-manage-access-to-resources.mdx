@@ -14,14 +14,14 @@ The resources within a namespace are completely isolated from one another and ca
 
 By managing namespaces and the subjects of role bindings, administrators can isolate and dedicate resources to specific users or emulate the concept of teams in the cluster. For example, an administrator might create a namespace dedicated to a team and then add the users belonging to this team to the namespace role binding. Or an administrator might create a namespace dedicated exclusively to CI/CD and limit its access only to service accounts.
 
-## Before you begin
+## Before You Begin
 
   1. Connect to your cluster via VPN. See [here](/orka/networking-with-orka-at-macstadium/vpn-connection).
   2. [Log in](/orka/orka-cluster-access/orka-cluster-access-the-cluster) as an administrator.
 
 
 
-## Create a namespace
+## Create a Namespace
 
 You can create regular namespaces where you can deploy and run Orka VMs, or you can create a sandboxed namespace where you can deploy and run only Kubernetes custom pods.
 
@@ -84,7 +84,7 @@ Your namespace name must meet the following requirements:
 
 
 
-## Grant access to the namespace
+## Grant Access to the Namespace
 
 You can dedicate a pool of resources to one or more users or service accounts by assigning them to a specific namespace.
 
@@ -141,7 +141,7 @@ You can dedicate a pool of resources to one or more users or service accounts by
      ]  
      }'
 ```
-## Dedicate resources to the namespace
+## Dedicate Resources to the Namespace
 
 The resources within a namespace are completely isolated and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role binding.
 
@@ -170,7 +170,7 @@ curl -X 'POST' \
 ```
 There must be no running VMs on the node.
 
-## Revoke access to a specific namespace
+## Revoke Access to a Specific Namespace
 
 If needed, you can revoke the access of a user or a service account to a namespace. You need to remove the respective subjects from the respective role binding.
 
@@ -227,7 +227,7 @@ If needed, you can revoke the access of a user or a service account to a namespa
      ]  
      }'
 ```
-## Remove resources from a namespace
+## Remove Resources from a Namespace
 
 If needed, you can move unused resources (nodes) across namespaces.
 

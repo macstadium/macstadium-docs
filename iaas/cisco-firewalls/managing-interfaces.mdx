@@ -14,7 +14,7 @@ The Misc tab on the IP Plan contains specific instructions and links for downloa
 
 Once behind the firewall via VPN, access the environment either via ASDM or by Secure Shell (SSH).
 
-## ASDM data sheet
+## ASDM Data Sheet
 
 The ASDM data sheet can be [found here](https://www.cisco.com/c/en/us/products/security/asa-5500-series-next-generation-firewalls/data_sheet_c78-345385.html).
 
@@ -48,7 +48,7 @@ To access the CLI, first connect via your VPN. Then SSH to the IP address of the
 
 [Cisco ASA 5500 Series Command Reference, 8.2](https://www.cisco.com/c/en/us/td/docs/security/asa/asa84/configuration/guide/asa_84_cli_config.html)
 
-## Connecting to another public cloud
+## Connecting to Another Public Cloud
 
 ### Site to Site VPN
 
@@ -91,7 +91,7 @@ Port forwarding to VMs must be statically defined on the firewall.
 
 You can create custom rules for your firewall as if it was in your own environment. Rules can be configured in ASDM via **Configuration > Firewall > Access Rules**.
 
-## Best practices
+## Best Practices
 
   * Keep in mind that rules are processed in order.
   * Only create rules on the outside interface, and leave others saying “any.”
@@ -107,7 +107,7 @@ If DHCP is integral to your solution, you can use a VM on your network to contro
 
 ## Configuring the Cisco IOS DHCP Server
 
-### DHCP relay
+### DHCP Relay
 
 DHCP Relay permits DHCP clients and servers to be placed on numerous networks. The DHCP relay agent will respond to a broadcasted “discover” request and reply to the relay server. It sends the offer back to the DHCP device and sends it back to the original requester.
 

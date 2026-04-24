@@ -348,7 +348,7 @@ If Rendezvous connections fail:
 
 
 
-### Deploy Citrix VDA inside VMs
+### Deploy Citrix VDA Inside VMs
 
 Citrix VDA installation enables macOS VMs to register with Citrix Cloud and deliver desktop sessions to end users. Deployment can be performed manually for small environments or automated via Ansible for scale.
 
@@ -561,7 +561,7 @@ Look for successful registration messages:
 
 
 
-### Common registration issues
+### Common Registration Issues
 
 **Enrollment token problems:**
 
@@ -609,7 +609,7 @@ Look for successful registration messages:
 
 **Troubleshooting commands**
 
-##### Check VDA service status:
+##### Check VDA Service Status
 
 ```bash
 ansible mac_vms -i inventory.ini \
@@ -617,7 +617,7 @@ ansible mac_vms -i inventory.ini \
   -a "sudo launchctl list | grep citrix"
 ```
 
-##### Restart VDA service:
+##### Restart VDA Service
 
 ```bash
 ansible mac_vms -i inventory.ini \
@@ -625,7 +625,7 @@ ansible mac_vms -i inventory.ini \
   -a "sudo launchctl kickstart -k system/com.citrix.vda"
 ```
 
-##### View VDA logs:
+##### View VDA Logs
 
 ```bash
 ansible mac_vms -i inventory.ini \
@@ -633,7 +633,7 @@ ansible mac_vms -i inventory.ini \
   -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
 ```
 
-##### Test Citrix Cloud connectivity:
+##### Test Citrix Cloud Connectivity
 
 ```bash
 ansible mac_vms -i inventory.ini \

@@ -6,7 +6,7 @@ zendesk_id: 28312073382299
 
 If you encounter any issues during or after the configuration of your site-to-site VPN connection between AWS and MacStadium, check this list of common issues and troubleshooting instructions.
 
-## Errors during the Cisco ASA/ASAv configuration
+## Errors During the Cisco ASA/ASAv Configuration
 
 Sometimes, the command line interface might return errors about the crypto isakmp policy block of commands.
 
@@ -28,11 +28,11 @@ The command-line interface returns `ERROR: unable to find interface "outside"`.
 
 
 
-## The tunnel is UP but there's no traffic between AWS and MacStadium
+## The Tunnel is UP but There's No Traffic Between AWS and MacStadium
 
 If Amazon shows that one tunnel is UP but there's no traffic between AWS and your MacStadium private cloud, it might be because of some common mistakes when preparing the configuration file. Check for the following:
 
-### AWS checks
+### AWS Checks
 
 All checks in this section are performed in the AWS Management Console.
 
@@ -65,7 +65,7 @@ For more information about route tables in Amazon, see [Amazon VPC Documentation
 
 
 
-### Cisco ASA/ASAv checks
+### Cisco ASA/ASAv Checks
 
 All checks in this section are performed against the site-to-site VPN configuration file downloaded from Amazon. For more information, see [AWS VPN Config for Cisco ASA/ASAv.](/iaas/aws/aws-vpn-config-for-cisco-asaasav)
 
@@ -94,7 +94,7 @@ You can find the networking information for this network in Appendix A of your [
 
 
 
-## There's traffic from AWS to MacStadium but you cannot access AWS from MacStadium
+## There's Traffic from AWS to MacStadium but You Cannot Access AWS from MacStadium
 
 Sometimes, you might be able to establish an SSH connection from AWS to MacStadium but you might not be able to see or access AWS from MacStadium.
 
@@ -104,7 +104,7 @@ For information about how to enable inbound traffic, see [Amazon VPC Documentati
 
 ## Troubleshooting
 
-### Cleaning up the ASA/ASAv configuration
+### Cleaning Up the ASA/ASAv Configuration
 
 Sometimes, you might need to clean up the Cisco ASA/ASAv configuration and start over.
 
@@ -145,10 +145,10 @@ no object network obj-amzn
 | `<outside_access_in>` | The unique name of the access control list created with the configuration file in the Amazon configuration file. | `outside_access_in` |
 | `<private_lan>` | The name of the internal, private network of your MacStadium private cloud. By default, this is the Private-1 network. You can find the networking information for this network in Appendix A of your IP Plan. | `Private-1` |
 | `<outside_interface>` | The name of the outside interface of your Cisco ASA/ASAv device. By default, this is the Outside network. You can find the networking information for this network in Appendix A of your IP Plan. | `Outside` |
-## More troubleshooting by Amazon
+## More Troubleshooting by Amazon
 
 For more detailed troubleshooting instructions, [see Amazon VPC Documentation: Troubleshooting Cisco ASA Customer Gateway Connectivity](https://docs.aws.amazon.com/vpc/latest/adminguide/Cisco_ASA_Troubleshooting.html).
 
-## More troubleshooting by Cisco
+## More Troubleshooting by Cisco
 
 For more detailed troubleshooting instructions, see [Cisco Documentation: IPsec Troubleshooting](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/5409-ipsec-debug-00.html).

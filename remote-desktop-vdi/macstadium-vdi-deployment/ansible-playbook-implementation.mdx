@@ -44,13 +44,13 @@ ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image
 # Execute deployment
 ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image=<your-image>"
 ```
-#### Delete a single VM 
+#### Delete a Single VM 
     
     
 ```
 ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
 ```
-#### Delete a VM by name
+#### Delete a VM by Name
     
     
 ```
@@ -166,7 +166,7 @@ Registers an installed Citrix VDA with a Delivery Controller using an enrollment
 ansible-playbook -i inventory register_citrix_vda.yml -e "vm_name=<vm_name>" -e "vm_username=<admin_username>" -e "vm_password=<admin_password>" -e "enrollment_token=<enrollment_token>"
 ```
 
-### Playbook customization for your environment
+### Playbook Customization for Your Environment
 
 The Ansible playbook examples referenced throughout this document will require additional customization to match your infrastructure and organizational requirements.  
   
@@ -184,7 +184,7 @@ max_vms_per_host: 2
 
 Before deploying to production, validate all playbook operations in a test environment.
 
-#### Test sequence:
+#### Test Sequence
 
   1. Test connectivity
 

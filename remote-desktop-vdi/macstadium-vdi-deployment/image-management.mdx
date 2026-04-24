@@ -6,11 +6,11 @@ zendesk_id: 44332794850971
 
 Image management is critical for maintaining a scalable MacStadium VDI environment. This section covers creating a golden image with the Citrix VDA pre-installed, automating image builds, distributing images across hosts, and implementing version control practices for long-term maintenance.
 
-## Creating a golden image with Citrix VDA
+## Creating a Golden Image with Citrix VDA
 
 Golden images serve as templates for rapid VM deployment. A well-crafted golden image contains the base OS, Citrix VDA, and any additional software your users need, all pre-configured and ready to deploy. VMs that are deployed from a golden image are ready for immediate use, with no additional setup required.
 
-### Golden image creation workflow
+### Golden Image Creation Workflow
 
 #### Create a VM Image
     
@@ -46,7 +46,7 @@ ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_
 # Step 2: Deploy a replacement VM from the new image version 
 ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-golden:v2.0"
 ```
-## Cache management
+## Cache Management
 
 ### Cache a VM Image
     
@@ -56,7 +56,7 @@ ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.exam
 ```
 Note: `pull_image.yml` automatically caches the image on all hosts in the inventory.
 
-## Version control best practices
+## Version Control Best Practices
 
   1. Monitor image cache status
 

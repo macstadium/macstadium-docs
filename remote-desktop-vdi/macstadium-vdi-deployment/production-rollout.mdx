@@ -8,13 +8,13 @@ A production rollout transitions your MacStadium VDI environment from testing to
 
 Before transitioning to production, you will want to ensure that you have completed environment testing, golden images have been tested and are ready for deployment, troubleshooting procedures have been documented, your operations and support teams have been trained on daily support tasks, and relevant escalation procedures have been defined.
 
-### User assignment and access policies
+### User Assignment and Access Policies
 
 Configures how users access desktops and what permissions they have within the MacStadium VDI environment.
 
-#### User assignment strategies
+#### User Assignment Strategies
 
-##### Dedicated (static) assignment:
+##### Dedicated (Static) Assignment
 
   * Each user is assigned to a specific VM permanently
 
@@ -27,7 +27,7 @@ Configures how users access desktops and what permissions they have within the M
 
 
 
-##### Pooled (random) assignment:
+##### Pooled (Random) Assignment
 
   * Users get any available VM from pool
 
@@ -40,7 +40,7 @@ Configures how users access desktops and what permissions they have within the M
 
 
 
-##### Configuring user assignment in Citrix Cloud
+##### Configuring User Assignment in Citrix Cloud
 
   * Navigate to **Citrix Cloud Console → Web Studio → Delivery Groups**
 
@@ -62,7 +62,7 @@ Configures how users access desktops and what permissions they have within the M
 
 * Add individual users for testing
 ```
-##### Example assignment strategy
+##### Example Assignment Strategy
 
   * Delivery group: Finance-Standard-VDI
 
@@ -88,9 +88,9 @@ Configures how users access desktops and what permissions they have within the M
 
 
 
-### Access policies
+### Access Policies
 
-#### Network access control:
+#### Network Access Control
 
   * Defines where users can connect from (internal network, remote, mobile)
 
@@ -101,7 +101,7 @@ Configures how users access desktops and what permissions they have within the M
 
 
 
-#### Session policies:
+#### Session Policies
 
 Configure session policies in Citrix Cloud → Policies → Session Settings
 
@@ -116,7 +116,7 @@ Configure session policies in Citrix Cloud → Policies → Session Settings
 
 
 
-#### Feature restrictions:
+#### Feature Restrictions
 
 Configure HDX policies to enable/disable features as needed.
 
@@ -133,7 +133,7 @@ Configure HDX policies to enable/disable features as needed.
 
 
 
-#### Example policy matrix:
+#### Example Policy Matrix
 
   * Finance team
 
@@ -157,7 +157,7 @@ Configure HDX policies to enable/disable features as needed.
 
 * USB: Enabled (specific devices only)
 ```
-#### User communication:
+#### User Communication
 
 Before production rollout, communicate to users:
 
@@ -295,7 +295,7 @@ You may also consider centralizing logs for additional troubleshooting in some c
 
 Additionally, you can choose to ship your logs to a central logging system (e.g. Splunk, CloudWatch) for further research and analysis if deemed appropriate by your organization’s existing data policies and procedures.
 
-### Backup and recovery procedures
+### Backup and Recovery Procedures
 
 Implementing backup strategies protects against data loss, VM corruption, and infrastructure failures.
 
@@ -347,7 +347,7 @@ Citrix configuration:
 
 
 
-### Image backup examples  
+### Image Backup Examples  
   
 Deploy new VMs from the backup image version using cron scheduling:
 
@@ -413,7 +413,7 @@ When scheduling quarterly disaster planning, consider the following tests:
 
 
 
-#### Backup process checklist:
+#### Backup Process Checklist
 
   * Implement VM configuration backup
 
@@ -436,11 +436,11 @@ When scheduling quarterly disaster planning, consider the following tests:
 
 
 
-#### Scale considerations
+#### Scale Considerations
 
 As your company grows and your needs evolve, you will want to plan for onboarding additional users to your MacStadium VDI instance. When undertaking capacity planning, it is important to ensure that you document your infrastructure’s current state.
 
-##### Example ‘State of current infrastructure’:
+##### Example ‘State of Current Infrastructure’
 
 Infrastructure:
 
@@ -479,7 +479,7 @@ User base:
 
 Growth projection requires accurately estimating future needs.
 
-##### Three month growth projection:
+##### Three Month Growth Projection
 
   * User growth: +30 users (80 total)
 
@@ -492,7 +492,7 @@ Growth projection requires accurately estimating future needs.
 
 
 
-##### Six month growth projection:
+##### Six Month Growth Projection
 
   * User growth: +50 users (100 total)
 
@@ -505,7 +505,7 @@ Growth projection requires accurately estimating future needs.
 
 
 
-##### Twelve month growth projection:
+##### Twelve Month Growth Projection
 
   * User growth: +100 users (150 total)
 
