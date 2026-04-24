@@ -57,9 +57,39 @@ MacStadium VDI supports any Apple Silicon Mac that meets the following specifica
 - 10GB Ethernet (recommended)
 - macOS 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe)
 
-**Capacity planning:** Reserve at least 2GB RAM and 20GB of disk space for the host OS and Orka Engine. Each Citrix VDA VM typically requires 4-8GB RAM. Higher-spec hardware improves individual VM performance and supports larger VM disk images.
-
 **Apple licensing limitation:** Each physical Mac can run a maximum of two concurrent macOS VMs due to Apple's EULA restrictions. To deploy additional VMs, provision additional physical Mac hosts.
+
+### Capacity planning
+
+The 2-VM-per-host ceiling is the constraint that shapes every MacStadium VDI deployment. Here's how to size from it.
+
+**Resource overhead per host:**
+- Host OS and Orka Engine: ~2GB RAM, ~20GB disk
+- Each Citrix VDA VM: 4-8GB RAM (8GB recommended for development workloads)
+- Usable RAM per host after overhead: total RAM minus 2GB
+
+**Hosts needed by user count:**
+
+| Concurrent users | Hosts needed | Notes |
+|---|---|---|
+| 10 | 5 | Minimum viable pilot |
+| 25 | 13 | |
+| 50 | 25 | |
+| 100 | 50 | |
+
+This assumes one VM per concurrent user. For **dedicated (persistent) deployments**, size for your total user count, not just peak concurrency — each user holds a VM whether or not they're logged in. For **pooled (non-persistent) deployments**, size for your expected peak concurrency, typically 60-80% of total users.
+
+**RAM guidance by deployment type:**
+
+| Workload | RAM per VM | Recommended host spec |
+|---|---|---|
+| Standard office / browser-based | 4GB | 16GB host RAM |
+| Developer / Xcode / compilation | 8GB | 32GB+ host RAM |
+| Heavy creative / ML inference | 8-16GB | 64GB+ host RAM (Mac Studio) |
+
+<Note>
+  Start conservative. MacStadium hosted deployments can add nodes without re-architecting — it's easier to add hosts than to right-size VM RAM after users are in production.
+</Note>
 
 **MacStadium hosted:** Select any bare metal Mac configuration meeting the above requirements from [Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
 
