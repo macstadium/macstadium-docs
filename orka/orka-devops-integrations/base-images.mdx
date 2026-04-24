@@ -1,35 +1,9 @@
 ---
-title: "Managing Orka base images for VM deployment"
-description: "List, pull, generate, upload, and update Orka base images. Covers local cluster images and OCI-compatible images from public or private container registries."
+title: "Base Images"
+description: "Manage Orka base images with the orka3 CLI. Covers listing, copying, and deleting images, creating images from VMs, and working with OCI registry images."
 zendesk_id: 28332123227803
 ---
 
-<Note>
-This page covers base image workflows using the legacy `orka` CLI (Orka 2.x). If you are on Orka 3.5 or later, the recommended image storage path is OCI via Harbor. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli) and [Migrating NFS Images to OCI with Harbor](/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor).
-</Note>
+For image management commands (`orka3 image list`, `orka3 image copy`, `orka3 image delete`, `orka3 vm save`, `orka3 vm commit`), see the [CLI Command Reference](/orka/orka-resources/orka3-cli-command-reference).
 
-How to list, pull, generate, upload, and update base images with the Orka CLI.  
-  
-This page discusses base image workflows in the Orka CLI. For more information about workflows with the Orka API, see [Orka API Reference: Images](https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest#c311a394-6be6-4e8c-8b9b-b7185df6563e).
-
-On this page, you will learn how to:
-
-  * List the available base images.
-  * Add base images to the local Orka storage by generating, uploading or pulling files.
-  * Download a base image from Orka storage to your local machine.
-  * Use VMs to expand and enrich your collection of base images.
-
-
-
-#### **Quick command summary**
-    
-    
-```
-orka image [list / list-remote / upload / download / pull / generate]  
-orka image [commit / save]
-```
-#### **Apple ARM-based Nodes Support**
-
-Orka 2.0 introduces Apple ARM-based nodes support which adds a new type of images. To deploy a VM on an Apple ARM-based node, you need to use any of the Apple Silicon images which have extension .orkasi and are marked as Apple Silicon in the image list. Supported operations for Apple Silicon images are: list, list-remote, pull, commit, save.
-
-Read more about Apple ARM-based Support to see which commands and options are supported for VMs deployed on Apple ARM-based nodes.
+For working with OCI registry images, see [OCI Images](/orka/oci-images/oci-images-overview).
