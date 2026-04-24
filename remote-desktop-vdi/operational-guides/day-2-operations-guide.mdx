@@ -270,7 +270,7 @@ Confirm that your VMs are now running only on the remaining hosts.
 
 
 
-Once an MacStadium VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
+Once a MacStadium VDI host is empty and removed from your inventory, notify MacStadium support to remove the node from your private cloud.   
   
 Estimated timeline: This may take between 4-8 hours depending on your VM count and migration complexity.
 
@@ -471,7 +471,7 @@ _Run this command once for each additional VM, using a unique `vm_name` each tim
 
 #### Onboarding New Users
 
-Scenario:**** A new employee needs access to a MacOS desktop.
+**Scenario:** A new employee needs access to a macOS desktop.
 
 For pooled desktops:
 
@@ -524,7 +524,7 @@ Follow the same process as listed above, but ensure you deploy exactly as many V
 
 #### Reassigning Desktops
 
-Scenario: A user moves to different department and needs different applications.
+Scenario: A user moves to a different department and needs different applications.
 
 For pooled desktops:
 
@@ -537,7 +537,7 @@ For pooled desktops:
 
 
 
-No VM changes are needed; as the user automatically gets a different desktop.
+No VM changes are needed, as the user automatically gets a different desktop.
 
 For dedicated desktops:
 
@@ -687,7 +687,7 @@ tmutil localsnapshot
 
 
 
-Note:**** This approach is not automated in MacStadium VDI. You'll need to build custom tooling or manual procedures.
+**Note:** This approach is not automated in MacStadium VDI. You'll need to build custom tooling or manual procedures.
 
 Approach 3: Third-party backup tools
 
@@ -794,7 +794,7 @@ Users may experience:
 
 Expected RTO (Recovery Time Objective): 2-4 hours depending on your VM count and image sizes.
 
-Expected RPO (Recovery Point Objective):**** This depends on your golden image replication frequency.   
+**Expected RPO (Recovery Point Objective):** This depends on your golden image replication frequency.   
   
 With real-time registry replication: Recovery in minutes.   
 With daily image backups: Expect up to 24 hours of configuration changes will be lost.
@@ -837,7 +837,7 @@ Start the affected VM:
 ```
 If using third-party backup tools, follow your vendor's restore procedures to restore specific files or a full VM.  
   
-Best practice:**** Train users that local VM storage is not backed up. Enforce policies requiring all important user data to be stored on network drives, cloud storage, or source control systems.
+**Best practice:** Train users that local VM storage is not backed up. Enforce policies requiring all important user data to be stored on network drives, cloud storage, or source control systems.
 
 
 
@@ -2071,9 +2071,9 @@ Availability
 
 Performance
 
-  * Login time: Target < 30 seconds from desktop launch to usable desktop
+  * Login time: Target &lt; 30 seconds from desktop launch to usable desktop
 
-  * Session latency: Target < 100ms round-trip time
+  * Session latency: Target &lt; 100ms round-trip time
 
   * Frame rate: Target 30 FPS for typical office workloads
 
@@ -2447,8 +2447,8 @@ ansible-playbook -i inventory <playbook> --check
 
 **Vendor** |  **Purpose** |  **Contact Method** |  **SLA**  
 ---|---|---|---  
-MacStadium | Host hardware, Orka Engine, network | [support@macstadium.com](mailto:support@macstadium.com) | [support@macstadium.com](mailto:support@macstadium.com) | 1 business day response  
-Citrix Support | Citrix Cloud, VDA, licensing | [Citrix Support](http://support.citrix.com/) | 1-800-424-8749 | Varies by license tier  
+MacStadium | Host hardware, Orka Engine, network | [support@macstadium.com](mailto:support@macstadium.com) | 1 business day response  
+Citrix Support | Citrix Cloud, VDA, licensing | [Citrix Support](http://support.citrix.com/) (1-800-424-8749) | Varies by license tier  
   
 ###  **When to contact each vendor:**
 
@@ -2482,7 +2482,7 @@ Citrix Support | Citrix Cloud, VDA, licensing | [Citrix Support](http://support.
 
 ##### Security:
 
-  * VMs are patched monthly (e.g., MacOS updates)
+  * VMs are patched monthly (e.g., macOS updates)
 
   * The installed Citrix VDA is the current version (or within 2 releases)
 

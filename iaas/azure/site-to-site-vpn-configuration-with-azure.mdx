@@ -166,7 +166,7 @@ For more information, see Azure Documentation: [Filter inbound Internet traffic 
 To proceed with the MacStadium side of the configuration, see Azure [VPN Config for Cisco ASA/ASAv](/iaas/azure/azure-vpn-config-for-cisco-asaasav).
 </Note>
 
-After creating the Site-to Site VPN connection, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud. Make sure to downloaded the VPN configuration template from Azure.
+After creating the Site-to-Site VPN connection, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud. Make sure to download the VPN configuration template from Azure.
 
 ## Configuration Template
 
@@ -200,7 +200,7 @@ Without extensive experience with Azure and ASA/ASAv configurations, it is recom
 ```
      * Find the MacStadium Private Network by checking that section in Appendix A of the IP Plan.
      * Make sure the name of the interface being used for the VPN connection is Outside as this is the name of the interface in the script downloaded from Azure. If there is a different interface name for the VPN, then make sure to replace all sections where the Outside interface is referenced in the script by the actual interface name being used.
-     * <Warning>Ignore the section, STATIC ROUTING SETUP FOR AZURE, and do not configure any static routes, as BGP will be used instead.</Warning>
+     * **Warning:** Ignore the section, STATIC ROUTING SETUP FOR AZURE, and do not configure any static routes, as BGP will be used instead.
   4. Access the firewall through SSH using the credentials available in the IP Plan.
   5. Paste the ASA configuration script and confirm all commands were accepted.
   6. Use the following commands to confirm if the VPN has been successfully established:

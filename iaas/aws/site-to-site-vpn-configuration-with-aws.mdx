@@ -18,7 +18,7 @@ The goal of this documentation is to update the Site-To-Site VPN configuration w
 
 ## Creating Stable IPSec Site-to-Site VPN
 
-  1. Check the software version and model ( of the Cisco ASA/ASAv device of the MacStadium cloud.
+  1. Check the software version and model of the Cisco ASA/ASAv device of the MacStadium cloud.
   2. Configure the private cloud to connect to your MacStadium cloud. One or more of the following must be configured: 
      * Provide the public endpoint of the MacStadium cloud. 
        * This is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
@@ -72,7 +72,7 @@ To establish a stable and persistent connection, between the entire private clou
        * Provide the public endpoint of the MacStadium cloud. 
          * Usually, this is the public network IP listed for the FW1-Outside network in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
        * Enable routing between the private cloud and the internal private network of the MacStadium cloud (by, default the Private-1 network). 
-         * Usually, this is the private network host and range listed in Appendix A of the IP Plan (.).
+         * Usually, this is the private network host and range listed in Appendix A of the IP Plan.
          * Enable inbound traffic to the private cloud.
   3. Set up the Cisco ASA/ASAv device of the MacStadium cloud. 
      * You might need to configure one or more of the following rules: 
@@ -87,7 +87,7 @@ To establish a stable and persistent connection, between the entire private clou
 
 
 <Note>
-These settings must be are based on the Cisco ASA/ASAv software and model (.). For more information about how to configure each aspect of your Cisco firewall, see [Cisco Documentation: Configuration Guides](https://www.cisco.com/c/en/us/support/security/asa-5500-series-next-generation-firewalls/products-installation-and-configuration-guides-list.html).
+These settings must be based on the Cisco ASA/ASAv software and model. For more information about how to configure each aspect of your Cisco firewall, see [Cisco Documentation: Configuration Guides](https://www.cisco.com/c/en/us/support/security/asa-5500-series-next-generation-firewalls/products-installation-and-configuration-guides-list.html).
 </Note>
 
 ## Networking Setup AWS
@@ -200,9 +200,9 @@ For more information, see Amazon VPC Documentation: Security Groups for Your VPC
 Proceed with the [AWS VPN configuration for Cisco.](/iaas/aws/aws-vpn-config-for-cisco-asaasav)
 </Note>
 
-After creating theSite-To-Site VPN connection in Amazon, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud.
+After creating the Site-To-Site VPN connection in Amazon, configure the Cisco firewall to recognize the connection and let traffic into the MacStadium private cloud.
 
-Amazon provides a prefilled configuration file with very detailed instructions. Download the b configuration file and provide any missing information (indicated by placeholders). Then feed the configuration into the Cisco ASA/ASAv to complete the Site-To-Site VPN setup.
+Amazon provides a prefilled configuration file with very detailed instructions. Download the configuration file and provide any missing information (indicated by placeholders). Then feed the configuration into the Cisco ASA/ASAv to complete the Site-To-Site VPN setup.
 
   1. Download the configuration from Amazon
   2. Fill in the configuration blank
@@ -351,7 +351,7 @@ For more information about VPN routing, see [Amazon VPC Documentation: Site-To-S
   1. In the VPC service sidebar, locate the Virtual Private Cloud menu and select Route Tables.  
 ![AWS VPC sidebar with Route Tables option highlighted](/images/attachments/28297099978011.png)
   2. In the list of routing tables, select the main route table for your VPC.
-  3. Select Route Propagation. If the virtual private gateway is not listed, the make sure that it is attached to the VPC.
+  3. Select Route Propagation. If the virtual private gateway is not listed, then make sure that it is attached to the VPC.
   4. Click Edit route propagation.  
 ![AWS Route Table Route Propagation tab with Edit route propagation button](/images/attachments/28297115653403.png)
 
@@ -369,7 +369,7 @@ If Homebrew is enabled, then run `brew install openconnect` from the command lin
 
 For Windows users, download ([build](https://www.infradead.org/openconnect/download.html)) the [OpenConnect package or use Cisco AnyConnect](/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn).
 
-### Why OpenConnect?
+### Cisco AnyConnect alternative
 
 Cisco firewalls are designed to work with the [Cisco AnyConnect Secure Mobility Client ](https://www.cisco.com/c/en/us/support/security/anyconnect-secure-mobility-client/series.html)as a VPN client. Users who prefer a GUI VPN client or prefer running on Windows, use Cisco AnyConnect.
 
@@ -402,6 +402,6 @@ Cisco firewalls are designed to work with the [Cisco AnyConnect Secure Mobility 
   4. Once installation has completed: 
      * Select Settings
      * Uncheck “Block connections to untrusted servers,” as the Cisco ASA appliance by default will be using a self signed certificate.
-  5. From the main screen, enter the IP Address provided in theIP Plan.
+  5. From the main screen, enter the IP Address provided in the IP Plan.
   6. Click connect.
   7. Enter your username and password to confirm the connection.
