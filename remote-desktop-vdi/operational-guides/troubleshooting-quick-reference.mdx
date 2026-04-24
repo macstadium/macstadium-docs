@@ -108,7 +108,7 @@ Boot disk missing | Logs show disk not found | Delete VM and redeploy from scrat
 
 ### Symptom: Wrong Number of VMs Deployed
 
-What you see:**** Requested 10 VMs but only 7 deployed, or deployment stopped partway through
+**What you see:** Requested 10 VMs but only 7 deployed, or deployment stopped partway through
 
 Quick diagnostic:
 
@@ -256,7 +256,7 @@ Most common fix: Verify that the VM can resolve the Cloud Connector hostname or 
 
 ### Symptom: VMs Register But Users Can't Connect
 
-What you see:**** Citrix Console shows VMs are "Registered" but users get connection errors
+**What you see:** Citrix Console shows VMs are "Registered" but users get connection errors
 
 Quick diagnostic:
 
@@ -408,7 +408,7 @@ _Run this command once for each additional VM, using a unique `vm_name` each tim
   2. Verify configuration files  
   
 `cat cluster.yml` should have: `vm_network_mode: bridge`  
-`cat nodes.yml` __should have:__`osx_node_vm_network_interface: <interface>`
+`cat nodes.yml` should have: `osx_node_vm_network_interface: <interface>`
 
   3. Reapply the host configuration: `ansible-playbook -i dev/inventory configure-hosts.yml`
 
@@ -615,7 +615,7 @@ Likely causes and solutions:
 Registry authentication failed | Curl returns 401 error | Verify push credentials; check permissions  
 Registry out of storage | Push fails with storage error | Expand registry storage; clean old images  
 Registry quota exceeded | Error mentions quota | Increase quota or clean up images  
-Insufficient host disk space | Can't create/prepare image locally for push | ree space on host; delete unused VMs using `delete.yml` or `vm.yml`  
+Insufficient host disk space | Can't create/prepare image locally for push | Free space on host; delete unused VMs using `delete.yml` or `vm.yml`  
 Source VM not stopped | Image creation requires stopped VM | Stop source VM before running `create_image.yml` playbook  
 Insecure registry without flag | TLS/cert error | Add `-e "insecure_push=true"` if appropriate  
 Network timeout during push | Push times out | Check network; try again during off-hours  
@@ -682,7 +682,7 @@ Most common fix: Images were pulled at different times, with registry updates be
 
 Symptom: Desktop Feels Sluggish for Users
 
-What you see**:** Users report slow response, lag, choppy mouse movement, etc.
+**What you see:** Users report slow response, lag, choppy mouse movement, etc.
 
 Quick diagnostic:
 
@@ -724,7 +724,7 @@ Quick diagnostic:
 
   1. Check the user's network bandwidth
 
-  2. Ask the user to run: [](https://speedtest.net/)[Speedtest by Ookla - The Global Broadband Speed Test](https://speedtest.net/)
+  2. Ask the user to run: [Speedtest by Ookla - The Global Broadband Speed Test](https://speedtest.net/)
 
 ```
  1. &lt;5 Mbps indicates the user is experiencing low bandwidth issues
@@ -976,7 +976,7 @@ Quick diagnostic:
 ```
  1. Does SSO login work if the user enters their credentials manually?
 ```
-  4. Check the user's SSO/company omain login
+  4. Check the user's SSO/company domain login
 
 ```
  1. Are they logged in with the correct SSO/company domain account?
@@ -997,7 +997,7 @@ Most common fix: SSO is not enabled in Citrix Workspace. Enable SSO in the user'
 
 ### Symptom: Can't Access Citrix Cloud Admin Console
 
-What you see**:** Admins can't log into Citrix Cloud Console to manage environment(s)
+**What you see:** Admins can't log into Citrix Cloud Console to manage environment(s)
 
 Quick diagnostic:
 
@@ -1016,8 +1016,8 @@ Quick diagnostic:
 Browser cache/cookies issue | Login works in incognito/private mode | Clear browser cookies and cache; restart browser; try again  
 MFA/2FA device failure | Error occurs during two-factor authentication step | Re-register MFA device in account settings; use backup codes if available  
 Account locked after failed attempts | Multiple failed login attempts triggered lock | Contact Citrix support to unlock; wait for auto-unlock period (usually 30 min)  
-Citrix Cloud service outage | Status page shows service issues | Check [status.cloud.com](http://status.cloud.com/ "http://status.cloud.com"); wait for Citrix to resolve; monitor status updates  
-Network blocking Citrix Cloud | Can't reach [cloud.com](http://cloud.com/ "http://cloud.com") domains | Check firewall/proxy; verify outbound HTTPS allowed; try different network  
+Citrix Cloud service outage | Status page shows service issues | Check [status.cloud.com](http://status.cloud.com/); wait for Citrix to resolve; monitor status updates  
+Network blocking Citrix Cloud | Can't reach [cloud.com](http://cloud.com/) domains | Check firewall/proxy; verify outbound HTTPS allowed; try different network  
 Browser version incompatible | Using old/unsupported browser version | Update to current Chrome, Firefox, Edge, or Safari version  
 Admin permissions revoked | Account no longer has admin role | Contact Citrix Cloud organization admin; verify role assignments  
 Session timeout | Logged out due to inactivity | Log back in; adjust session timeout settings if available  
@@ -1100,12 +1100,12 @@ Quick diagnostic:
 `ssh admin@<host-ip> `  
 `sudo ls /var/orka`
 
-  2. Check Ansible inventory   
-`sudo settings cat dev/inventory | grep ansible_become`
+  2. Check Ansible inventory settings:   
+`cat dev/inventory | grep ansible_become`
 
   3. Run the playbook with verbose output `ansible-playbook -i dev/inventory <playbook> -vvv`
 
-  4. 4\. Check if a specific task is failing, and/or look at which task in the playbook fails
+  4. Check if a specific task is failing, and/or look at which task in the playbook fails
 
 
 
