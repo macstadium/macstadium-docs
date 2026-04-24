@@ -173,6 +173,10 @@ ansible-playbook site.yml
 
 To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins).
 
+<Note>
+`orka3 vm push` requires an Orka API token. On-prem deployments often use certificate-based kubeconfig authentication, which is not sufficient for `vm push`. Before pushing VM images, authenticate with `orka3 login` or `orka3 user set-token`. An `Unauthorized` error from `vm push` indicates a missing Orka API token, not an OCI registry authentication issue.
+</Note>
+
 Currently, the service is exposed as `ClusterIP` service called `orka-apiserver` in the default namespace.
 
 One way to expose the service is to use something like [MetalLB](https://metallb.io/) to expose the service as LoadBalancer so it can be reached from outside the cluster.

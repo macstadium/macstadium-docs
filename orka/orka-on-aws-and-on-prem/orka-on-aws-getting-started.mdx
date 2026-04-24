@@ -290,6 +290,10 @@ You will need to have the following for use with ECR:
 
 ### ECR Authentication
 
+<Note>
+If you plan to use `orka3 vm push` to push VM images to ECR, note that `vm push` requires an Orka API token in addition to ECR credentials. A kubeconfig obtained via certificate-based or IAM-based authentication is not sufficient on its own. Run `orka3 login` or `orka3 user set-token` before using `vm push`. An `Unauthorized` error from `vm push` indicates a missing Orka API token, not an ECR authentication issue.
+</Note>
+
 You can get credentials for use with a private ECR registry with the aws CLI as follows:
     
     
