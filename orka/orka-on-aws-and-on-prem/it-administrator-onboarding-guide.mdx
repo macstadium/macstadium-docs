@@ -76,7 +76,7 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * Max VMs per host: Typically two, due to Apple licensing restrictions
 
-  * Bridged networking: VMs recieve IPs directly from your network (no NAT needed)
+  * Bridged networking: VMs receive IPs directly from your network (no NAT needed)
 
 
 
@@ -134,7 +134,7 @@ Verify Ansible access:
   
 `ansible hosts -i dev/inventory -m ping`
 
-`ansible --version` __(v2.12 or later recommended)
+`ansible --version` (v2.12 or later recommended)
 
 #### Credentials stored in Ansible:
 
@@ -162,7 +162,7 @@ Verify Ansible access:
 
 Citrix Cloud Console is the web-based management control plane for Citrix DaaS.
 
-Access URL: [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com")  
+Access URL: [https://citrix.cloud.com](https://citrix.cloud.com/)  
 Login: Your Citrix Cloud administrator credentials
 
 #### Key sections:
@@ -267,7 +267,7 @@ An OCI registry is a container registry for storing your organization’s golden
 
 ## Citrix Cloud Console Navigation
 
-After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com"):
+After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/):
 
   1. Hamburger menu: Navigate between services
 
@@ -430,7 +430,7 @@ Having this information documented and updated regularly helps with capacity pla
 
 ### Provisioning a new desktop
 
-You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following perquisites have been met before proceeding:
+You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following prerequisites have been met before proceeding:
 
   * The user account exists in your identity provider (Azure AD, Okta, etc.)
 
@@ -445,7 +445,7 @@ You will need to refer to this workflow when a user requests access to a macOS v
 
   1. Select the appropriate golden image. Determine this based on the user’s department/role/access needs:  
   
-`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all avaliable images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
+`ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all available images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
   
 If the golden image isn’t cached, run:  
 `ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"`  
@@ -518,7 +518,7 @@ No action is needed if the user has already been assigned to a Delivery Group. T
 \- Desktop should appear: “Mac OS Finance Desktop” (or configured display name)  
 \- User clicks desktop → session launches successfully   
   
-The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisoning workflow has completed, the user will now have access to their macOS virtual desktop.
+The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisioning workflow has completed, the user will now have access to their macOS virtual desktop.
 
 
 
@@ -570,7 +570,7 @@ The `create_image.yml` playbook automates the following:
 
 
 
-To prepare the configuration steps, you will need to nagivate to the `/scripts` directory in your project:  
+To prepare the configuration steps, you will need to navigate to the `/scripts` directory in your project:  
   
 `cd ~/ansible-citrix-orka/scripts `  
 `ls -la`  
@@ -613,7 +613,13 @@ Important notes:
 
 
 Next, you’ll want to run the `create_image` playbook:  
-`ansible-playbook -i dev/inventory create_image.yml \ -e "vm_image=`[](http://ghcr.io/macstadium/orka-images/sonoma:latest)[GitHub](http://ghcr.io/macstadium/orka-images/sonoma:latest)` \ remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry_username={{ vault_registry_username }} \ registry_password={{ vault_registry_password }}"`
+```bash
+ansible-playbook -i dev/inventory create_image.yml \
+  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest \
+  remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \
+  registry_username={{ vault_registry_username }} \
+  registry_password={{ vault_registry_password }}"
+```
 
 What happens when running this playbook:
 
@@ -1260,7 +1266,7 @@ Expected: Service running with PID
 
      * Verify that the token is not expired
 
-     * If the token is expired: Generate new a enrollment token, update Ansible Vault, and redeploy the VM
+     * If the token is expired: Generate a new enrollment token, update Ansible Vault, and redeploy the VM
   3. Check the Citrix VDA logs:
 
 
@@ -1886,7 +1892,7 @@ Golden images:
      4. Deploy new VMs
 
      5. Verify VDA registration in Citrix
-#####  **Disaster recovery (DR( testing:**
+#####  **Disaster recovery (DR) testing:**
 
   * Annually: Conduct a full DR exercise
 
@@ -2037,27 +2043,27 @@ Before any production change:
 
   * Orka Documentation and Support: [support@macstadium.com](mailto:support@macstadium.com)
 
-  * Bare Metal Mac Options: [](https://www.macstadium.com/bare-metal-mac)[Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
+  * Bare Metal Mac Options: [Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)
 
 
 
 
 #####  **Citrix**
 
-  * VDA for macOS Documentation: [](https://docs.citrix.com/en-us/mac-vda)[Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
+  * VDA for macOS Documentation: [Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda)
 
-  * System Requirements: [](https://docs.citrix.com/en-us/mac-vda/system-requirements)[System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements)
+  * System Requirements: [System Requirements | Citrix Virtual Delivery Agent for macOS](https://docs.citrix.com/en-us/mac-vda/system-requirements)
 
-  * Citrix Cloud Console: [https://citrix.cloud.com](https://citrix.cloud.com/ "https://citrix.cloud.com")
+  * Citrix Cloud Console: [https://citrix.cloud.com](https://citrix.cloud.com/)
 
-  * Citrix Support: [](https://support.citrix.com/)[Loading...](https://support.citrix.com/)
+  * Citrix Support: [Citrix Support](https://support.citrix.com/)
 
 
 
 
 #####  **Ansible:**
 
-  * Ansible Documentation: [](https://docs.ansible.com/)[Ansible Community | Ansible documentation](https://docs.ansible.com/)
+  * Ansible Documentation: [Ansible Community | Ansible documentation](https://docs.ansible.com/)
 
   * Ansible Vault Guide: [https://docs.ansible.com/ansible/latest/user_guide/vault.html](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
 
@@ -2070,7 +2076,7 @@ Before any production change:
 
   * Portal: [support@macstadium.com](mailto:support@macstadium.com)
 
-  * Email: [support@macstadium.com](mailto:support@macstadium.com "mailto:support@macstadium.com")
+  * Email: [support@macstadium.com](mailto:support@macstadium.com)
 
   * Phone: Available in support portal
 
@@ -2083,7 +2089,7 @@ Before any production change:
 
 When contacting MacStadium support, please provide the following information:
 
-  * You Account ID
+  * Your Account ID
 
   * Affected host IPs or VM names
 
@@ -2098,17 +2104,17 @@ When contacting MacStadium support, please provide the following information:
 
 #####  **Citrix Support:**
 
-  * Portal: [](https://support.citrix.com/)[Loading...](https://support.citrix.com/)
+  * Portal: [Citrix Support](https://support.citrix.com/)
 
   * Access via Citrix Cloud Console → Support
 
-  * Include: You Customer ID, Machine Catalog name, applicable error messages
+  * Include: Your Customer ID, Machine Catalog name, applicable error messages
 
 
 
 
 ####  **Citrix community forums:**
 
-  * Citrix Discussions: [https://discussions.citrix.com](https://discussions.citrix.com/ "https://discussions.citrix.com")
+  * Citrix Discussions: [https://discussions.citrix.com](https://discussions.citrix.com/)
 
-  * Citrix Community: [](https://community.citrix.com/)[Deploying Strong Network in Azure Kubernetes](https://community.citrix.com/)
+  * Citrix Community: [Citrix Community](https://community.citrix.com/)

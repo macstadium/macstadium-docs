@@ -101,7 +101,7 @@ New Orka 3.4.0 CLI commands for setting VM display width, height, and DPI
 
 Deploy a VM running MacOS Sequoia 15.4.1 with a display width of 2560x1600px and 320px display DPI (HiDPI):`orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:15.4.1 --display-width 2560 --display-height 1600 --display-dpi 320`
 
-Deploy a VM running the latest version of Mac OS Sequoia (15.5) with a display width of 1920x1080px and a display DPI of 90px:`orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest-display-width 1920 --display-height 1080 --display-dpi 90`
+Deploy a VM running the latest version of Mac OS Sequoia (15.5) with a display width of 1920x1080px and a display DPI of 90px:`orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest --display-width 1920 --display-height 1080 --display-dpi 90`
 
 After the VM is successfully created, the display settings specified in the CLI will be reflected in the VM’s display as was specified by the user:
 
@@ -179,6 +179,6 @@ VMs created from an IPSW now have a default display resolution of 1920x1080x96 p
 
 ### Bug fixes
 
-This release addresses the [known issue](Orka 3.3 Release Notes ) in Orka 3.3.0 involving virtualization and unique machine identifiers. Unique machine ID/UUID configuration is now behind a feature flag. Customers who need unique machine IDs for their Orka environment should [raise a support ticket](https://docs.macstadium.com/docs/ticketing-and-support-1) with MacStadium to control this behavior for their cluster.
+This release addresses the [known issue](/orka/orka-upgrades-and-release-notes/orka-33-release-notes) in Orka 3.3.0 involving virtualization and unique machine identifiers. Unique machine ID/UUID configuration is now behind a feature flag. Customers who need unique machine IDs for their Orka environment should [raise a support ticket](https://docs.macstadium.com/docs/ticketing-and-support-1) with MacStadium to control this behavior for their cluster.
 
 Orka no longer sends cookies when interacting with OCI registries

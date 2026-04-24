@@ -121,7 +121,7 @@ This implementation doesn’t have a dedicated playbook. To refresh VMs with a n
     
     
 ```
-ansible-playbook -i inventory vm.yml "vm_name=citrix-vda-abc123" -e "desired_state=absent"
+ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-abc123" -e "desired_state=absent"
 ```
 **VM recreation playbook workflow:**
 

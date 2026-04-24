@@ -18,7 +18,7 @@ If you want to skip the detailed explanations, just run through these steps on y
   10. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
   11. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
   12. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
-  13. `orka3 vm commit <VM_NAME>` or `orka3 vm save <VM_NAME>`
+  13. `orka3 vm push <VM_NAME> <IMAGE:TAG>` (Apple Silicon, recommended) or `orka3 vm commit <VM_NAME>` / `orka3 vm save <VM_NAME>` (writes to NFS local storage)
   14. `orka3 vm deploy --image <IMAGE_NAME> -y` (use the name of the newly saved image or the original image, if you committed the changes to it).
   15. Run Apple Screen Sharing and connect to the newly deployed VM. Use the connection information printed by `orka3 vm deploy`. Verify that your changes are there.
   16. `orka3 vm delete -v <NAME>`
@@ -208,7 +208,7 @@ orka3 vm list
 ```
 You should now see your VM in the list.
 
-For more detailed output, you can run `orka vm list --output wide`. In addition to the name, IP, and connection ports of the VM, it also shows its architecture, base image, and CPU and memory configuration. Note that even though `Screenshare` and `SSH` are always listed and configured for every VM; you won't be able to use them unless the respective connection type is enabled in macOS. This behavior is a security limitation of the OS.
+For more detailed output, you can run `orka3 vm list --output wide`. In addition to the name, IP, and connection ports of the VM, it also shows its architecture, base image, and CPU and memory configuration. Note that even though `Screenshare` and `SSH` are always listed and configured for every VM; you won't be able to use them unless the respective connection type is enabled in macOS. This behavior is a security limitation of the OS.
 
 **In a pool of many VMs, are you looking for that special one?**
 
@@ -255,7 +255,11 @@ If your cluster and CLI are not running the latest Orka version, download and in
 
 Changing a running VM's configuration or file system does not affect its base image. As soon as you delete the VM, your changes will be lost, and you will need to recreate them manually on other VMs.
 
-To create changes that stick and appear on future deployments, you can commit your changes to the base image, save the changes as a new image, or push your changes to an OCI-compatible registry.
+To create changes that stick and appear on future deployments, you can push your changes to an OCI-compatible registry, commit your changes to the base image, or save the changes as a new image.
+
+<Note>
+On Orka 3.5 or later, **pushing to an OCI registry** (such as Harbor, available within your cluster) is the recommended approach for Apple Silicon clusters. `vm commit` and `vm save` write to NFS local cluster storage, which is being phased out in favor of OCI. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli).
+</Note>
 
 > #### **Glossary: Commit changes**
 > 
