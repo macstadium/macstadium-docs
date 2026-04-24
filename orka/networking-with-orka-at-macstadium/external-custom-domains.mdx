@@ -48,25 +48,22 @@ Before you begin, you must have your own certificate and private key file that m
 Next, you need to upload the custom TLS certificate and private key to your cluster.
 
   1. Connect to your cluster via [VPN](/orka/networking-with-orka-at-macstadium/vpn-connection).
-  2. Make sure you have an [Orka license key](/macstadium/macstadium-overview/ip-plan) and an Orka token.
-  3. Send the following POST request to /resources/cert/set.
+  2. Make sure you are authenticated with your cluster. Run `orka3 login` if you haven't already, or use a service account token.
+  3. Send the following POST request to /api/v1/upload/cert.
 
 
     
     
 ```
-curl -X POST 'http://<orka-api-url>/resources/cert/set' \  
+curl -X POST '<ORKA_API_URL>/api/v1/upload/cert' \  
 --header 'Content-Type: multipart/form-data' \  
---header 'Authorization: Bearer <token>' \  
---header 'orka-licensekey: <license key>' \  
+--header 'Authorization: Bearer <TOKEN>' \  
 --form 'certPath=@<full-path-to-the-certificate>' \  
 --form 'keyPath=@<full-path-to-the-private-key>'
 ```
-Replace `<orka-api-ip>` with 10.221.188.20 or 10.221.188.100.
+Replace `<ORKA_API_URL>` with your Orka API URL (for example, `http://10.221.188.20`).
 
-Replace `<token>` with your Orka token.
-
-Replace `<license-key>` with your actual Orka license key.
+Replace `<TOKEN>` with your Orka API token.
 
 Replace `<full-path-to-the-certificate>` and `<full-path-to-the-private-key>` with the full paths to the certificate and the private key on your local machine.
 
@@ -182,7 +179,7 @@ Due to Node.js limitations, the Orka CLI can work only with valid TLS certificat
 Finally, you need to target your external custom domain with your Orka tools. Note that you need to use https with your custom TLS domain.
 
   * For the Orka API, change your API requests to target `https://<custom-domain>`.
-  * For the Orka CLI, run orka config and set `https://<custom-domain>` for URL. Note that you can use only valid TLS certificates issued by a limited number of certificate authorities.
+  * For the Orka3 CLI, run `orka3 config set --api-url https://<custom-domain>`. Note that you can use only valid TLS certificates issued by a limited number of certificate authorities.
   * For the Orka Web UI, open `https://<custom-domain>` in your browser.
   * For CI/CD integrations, switch to `https://<custom-domain>` in the respective plugin configuration.
 
