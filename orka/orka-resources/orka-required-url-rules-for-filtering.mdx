@@ -1,6 +1,6 @@
 ---
 title: "Orka Required URL Rules for Filtering"
-description: "Orka Cluster was designed with minimal internet access to increase security, however, users must set up some restricted internet access. This document."
+description: "Required URL allowlist rules for Orka Cluster. Covers client-side and LAN-side rulesets tested on Cisco Firepower for customers who filter outbound traffic."
 zendesk_id: 39459868610203
 ---
 
@@ -116,7 +116,7 @@ Permit Orka Network |  |  | HTTPS | charts.jetstack.io | Administration Requirem
 Permit Orka Network |  |  | HTTPS | fedoraproject.org | Administration Requirement for Container images  
 Permit Orka Network |  |  | HTTPS | edge.kernel.org | Administration Requirement for Container images  
 Permit Orka Network |  |  | HTTPS | files.pythonhosted.org | Administration Requirement for python dependencies  
-Permit Orka Network |  |  | HTTPS | gchr.io | Administration Requirement for Container and Client images  
+Permit Orka Network |  |  | HTTPS | ghcr.io | Administration Requirement for Container and Client images  
 Permit Orka Network |  |  | Github |  | Client and Admin Requirement for OCI  
 Permit Orka Network |  |  | HTTPS | quay.io | Administration Requirement for Container and Client images  
 Permit Orka Network |  |  | HTTPS | packages.cloud.google.com | Administration Requirement for Container images  

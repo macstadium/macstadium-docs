@@ -170,7 +170,6 @@
               "orka/orka-devops-integrations/gitlab",
               "orka/orka-devops-integrations/buildkite",
               "orka/orka-devops-integrations/teamcity",
-              "orka/orka-devops-integrations/drone",
               "orka/orka-devops-integrations/packer",
               "orka/orka-devops-integrations/claude-code"
             ]
@@ -1453,7 +1452,7 @@
     },
     {
       "source": "/hc/en-us/articles/28211636270491-Mac-Mini-Comparison-Chart",
-      "destination": "/iaas/bare-metal-macs/mac-mini-comparison-chart",
+      "destination": "/iaas/bare-metal-macs/bare-metal-hosts",
       "permanent": true
     },
     {
@@ -1600,6 +1599,210 @@
       "source": "/hc/en-us/articles/28244765690395-Network-Firewalls-Cloud-Connect-VPN",
       "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn",
       "permanent": true
+    },
+    {
+      "source": "/docs/mac-host-types-pro-mini-imac-pro",
+      "destination": "/iaas/bare-metal-macs/bare-metal-hosts"
+    },
+    {
+      "source": "/docs/bare-metal-mac-benchmarks",
+      "destination": "/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks"
+    },
+    {
+      "source": "/docs/reboot-your-mac",
+      "destination": "/iaas/iaas-faqs/reboot-your-mac"
+    },
+    {
+      "source": "/docs/change-vpn-password",
+      "destination": "/iaas/cisco-firewalls/changing-the-vpn-firewall-password"
+    },
+    {
+      "source": "/docs/privacy-policy",
+      "destination": "/macstadium/legal-and-compliance/acceptable-use-policy"
+    },
+    {
+      "source": "/docs/billing-master-accounts",
+      "destination": "/macstadium/billing/billing-master-accounts"
+    },
+    {
+      "source": "/docs/enter-recovery-mode-andor-disable-sip-on-a-macos-vm",
+      "destination": "/iaas/x86-vms-private-cloud-vms/vm-creation-and-os-installation"
+    },
+    {
+      "source": "/docs/orka-third-party-code-for-v13",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/virtualization-types",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/vmware-2",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/choosing-your-initial-cloud",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/setup-macstadium-end",
+      "destination": "/macstadium/macstadium-overview/macstadium-overview"
+    },
+    {
+      "source": "/docs/accessing-and-updating-vmware-tools-in-your-vmware-cloud",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/install-windows-11-on-your-macstadium-vmware-private-cloud",
+      "destination": "/iaas/x86-vms-private-cloud-vms/windows-2022-installation"
+    },
+    {
+      "source": "/docs/vmware-cloud-accounts",
+      "destination": "/macstadium/account-management-and-saml/first-time-sso-login-to-macstadium-portal"
+    },
+    {
+      "source": "/docs/devops-orka",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/enterprise-accounts",
+      "destination": "/macstadium/account-management-and-saml/first-time-sso-login-to-macstadium-portal"
+    },
+    {
+      "source": "/docs/two-factor-authentication",
+      "destination": "/macstadium/account-management-and-saml/two-factor-authentication-2fa"
+    },
+    {
+      "source": "/docs/vsphere-67-update",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/activate-anka-flow-on-your-devices",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/vmware-datastore-management",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/firewall-overview",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-overview"
+    },
+    {
+      "source": "/docs/customer-firewall-appliance-policy",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-configuration"
+    },
+    {
+      "source": "/docs/security-2",
+      "destination": "/macstadium/legal-and-compliance/security"
+    },
+    {
+      "source": "/docs/vmware-security-advisories",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/docs/which-location-should-i-choose",
+      "destination": "/iaas/iaas-overview/data-center-locations"
+    },
+    {
+      "source": "/docs/configuration-cisco-ipsec-vpn-in-windows-using-shrew-vpn-client",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-cloud-connect-vpn"
+    },
+    {
+      "source": "/docs/gcp-troubleshooting",
+      "destination": "/iaas/google-cloud-platform/gcp-troubleshooting"
+    },
+    {
+      "source": "/docs/getting-started-with-anka",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/why-macstadium",
+      "destination": "/macstadium/macstadium-overview/macstadium-overview"
+    },
+    {
+      "source": "/docs/macstadium-sub-processors",
+      "destination": "/macstadium/legal-and-compliance/security"
+    },
+    {
+      "source": "/docs/networking-1",
+      "destination": "/iaas/networking/networking-overview"
+    },
+    {
+      "source": "/docs/aws-network-troubleshooting",
+      "destination": "/iaas/aws/aws-troubleshooting"
+    },
+    {
+      "source": "/docs/orka-at-jenkinsworld",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/docs/billing-legal",
+      "destination": "/macstadium/legal-and-compliance/master-services-agreement"
+    },
+    {
+      "source": "/docs/single-mac-mini-subscriptions",
+      "destination": "/iaas/bare-metal-macs/bare-metal-hosts"
+    },
+    {
+      "source": "/docs/azure-networking-troubleshooting",
+      "destination": "/iaas/azure/azure-troubleshooting"
+    },
+    {
+      "source": "/docs/2018-mac-mini-deactivation-process",
+      "destination": "/iaas/bare-metal-macs/2018-mac-mini-deactivation-process"
+    },
+    {
+      "source": "/docs/enable-saml-single-sign-on-with-okta",
+      "destination": "/macstadium/account-management-and-saml/enable-saml-sso-with-okta"
+    },
+    {
+      "source": "/docs/remote-hands-service",
+      "destination": "/macstadium/support/remote-hands-service"
+    },
+    {
+      "source": "/docs/upgrading-your-vmware-cloud",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/v1.0/docs/billing-legal",
+      "destination": "/macstadium/legal-and-compliance/master-services-agreement"
+    },
+    {
+      "source": "/v1.0/docs/install-osx-build-tools",
+      "destination": "/iaas/bare-metal-macs/common-tools"
+    },
+    {
+      "source": "/v1.0/docs/ansible",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+    },
+    {
+      "source": "/edit/ansible",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+    },
+    {
+      "source": "/edit/private-cloud",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/edit/linked-vs-instant-clones",
+      "destination": "/iaas/iaas-overview/infrastructure-as-a-service-iaas"
+    },
+    {
+      "source": "/edit/create-tickets-in-slack",
+      "destination": "/macstadium/support/creating-slack-tickets"
+    },
+    {
+      "source": "/edit/getting-started-2",
+      "destination": "/orka/quick-start-guides/orka3-cli-quick-start"
+    },
+    {
+      "source": "/edit/accounts-billing",
+      "destination": "/macstadium/billing/accessing-invoices"
+    },
+    {
+      "source": "/edit/connecting-to-your-cloud-instance",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access"
     }
   ]
 }

@@ -33,7 +33,7 @@ Classic and HA VPN connections in GCP require a Cloud VPN Tunnel and a Cloud VPN
 
 To create a new VPN Gateway, complete the following steps:
 
-  1. If the VPNs are not created yet, the click CREATE VPN CONNECTION.
+  1. If the VPNs are not created yet, then click CREATE VPN CONNECTION.
   2. If one or more of the VPNs are created, then click +VPN SETUP WIZARD.
   3. Select Classic VPN or High-availability (HA) VPN.
   4. Click Continue.
@@ -117,14 +117,14 @@ Scroll right and click on CONFIGURE BGP SESSION at the first VPN tunnel.
   4. Repeat steps 2 and 3 to configure the BGP settings of the second VPN tunnel. Notice that the same Peer ASN should be used.
   5. Click SAVE BGP CONFIGURATION.
   6. In the Summary and reminder page, click on DOWNLOAD CONFIGURATION.
-  7. For Vendor select Cisco. For Platform, at the time of writing, Firepower is the only options available. On Software, confirm that >= ASA 9.13(1)2 is selected and click on DOWNLOAD.
+  7. For Vendor select Cisco. For Platform, at the time of writing, Firepower is the only option available. On Software, confirm that >= ASA 9.13(1)2 is selected and click on DOWNLOAD.
   8. Next click OK.
 
 
 
 After the creation is complete, the VPN tunnel status is: No incoming packets.
 
-The following images shows a sample configuration for the HA VPN gateway and tunnel.
+The following image shows a sample configuration for the HA VPN gateway and tunnel.
 
 ![30bd8a1-image.png](/images/attachments/28301508316443.png)
 
@@ -224,8 +224,8 @@ Manually replace the placeholders in the configuration template with the values 
 ![002bb6e-image.png](/images/attachments/28302550950555.png)
      * `{ macstadium_public_ip }`
        * This is the IP address of the public network of the MacStadium private cloud. By default, this is FW1-Outside. Information about the public network is located in Appendix B of the IP Plan.  
-`{ macstadium_network_name } Commented [FM20]: New image, highlight CLOUD VPN GATEWAYS, VPC network and Region Commented [FM21]: New image, highlight CLOUD VPN`
-       * GATEWAYS and the IP address field. This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Information about the public network is located in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
+`{ macstadium_network_name }`
+       * This is the name of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1. Information about the public network is located in Appendix B of the [IP Plan](/macstadium/macstadium-overview/ip-plan).
      * `{ macstadium_network_address }`
        * This is the Subnet ID of the private network in MacStadium that needs to be accessed by GCP. By default, this is Private-1 Subnet ID. Information about the public network is located in Appendix B of the IP Plan
      * `{ macstadium_network_mask }`
