@@ -48,20 +48,14 @@ Configures how users access desktops and what permissions they have within the M
 
   * Configure assignment type:
 
-```
-* Static: "Assign to specific user" to map users to specific VMs
+    * Static: "Assign to specific user" to map users to specific VMs
+    * Pooled: "Assign randomly" means users get the next available VM
 
-* Pooled: "Assign randomly" means users get the next available VM
-```
   * Add users or groups:
 
-```
-* Assign Active Directory security groups
-
-* Assign Azure AD groups
-
-* Add individual users for testing
-```
+    * Assign Active Directory security groups
+    * Assign Azure AD groups
+    * Add individual users for testing
 ##### Example Assignment Strategy
 
   * Delivery group: Finance-Standard-VDI
@@ -137,26 +131,17 @@ Configure HDX policies to enable/disable features as needed.
 
   * Finance team
 
-```
-* Clipboard: Enabled (unidirectional, client to VM only)
+    * Clipboard: Enabled (unidirectional, client to VM only)
+    * File transfer: Disabled
+    * Printing: Enabled
+    * USB: Disabled
 
-* File transfer: Disabled
-
-* Printing: Enabled
-
-* USB: Disabled
-```
   * Engineering team
 
-```
-* Clipboard: Bidirectional
-
-* File transfer: Enabled
-
-* Printing: Enabled
-
-* USB: Enabled (specific devices only)
-```
+    * Clipboard: Bidirectional
+    * File transfer: Enabled
+    * Printing: Enabled
+    * USB: Enabled (specific devices only)
 #### User Communication
 
 Before production rollout, communicate to users:
@@ -249,35 +234,23 @@ You will also want to clearly define an alerting strategy with your team. As an 
 
   * Critical alerts (requiring immediate response)
 
-```
-* VDA registration drops below a certain percentage of expected count
+    * VDA registration drops below a certain percentage of expected count
+    * All VMs in a Delivery Group are “Unavailable”
+    * Orka host disk space is >90% full
+    * Orka Engine service has crashed
 
-* All VMs in a Delivery Group are “Unavailable”
-
-* Orka host disk space is >90% full
-
-* Orka Engine service has crashed
-```
   * Warning alerts (respond within 1-3 hours)
 
-```
-* Session launch failures over a certain percentage within 15 minutes
+    * Session launch failures over a certain percentage within 15 minutes
+    * Host CPU sustained at >80% for 10+ minutes
+    * Disk space is >75% full
+    * VM deployments are failing
 
-* Host CPU sustained at >80% for 10+ minutes
-
-* Disk space is >75% full
-
-* VM deployments are failing
-```
   * Informational alerts (review daily/as needed)
 
-```
-* Session launch time exceeds baseline by 50%
-
-* Network latency increases
-
-* Users log out without proper shutdown
-```
+    * Session launch time exceeds baseline by 50%
+    * Network latency increases
+    * Users log out without proper shutdown
 You will want to discuss with your team how you wish to structure your alerting tools and dashboards. This includes email or Slack/Teams notifications, PagerDuty or similar services for critical outage alerts, custom scripts, AI agents, or Ansible playbooks that send notifications to system administrators on failures.
 
 Dashboard configuration is helpful for teams to visualize the current availability and uptime of the service. This may consist of certain attributes such as the total number of deployed VMs vs. available machines, current active sessions, session launch success rates, host resource utilization, recent alerts or incidents, and capacity utilization. Tools such as Grafana, Datadog, or Citrix Director can be used to create visualizations and dashboards.

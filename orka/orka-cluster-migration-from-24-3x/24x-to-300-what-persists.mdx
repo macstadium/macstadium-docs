@@ -20,24 +20,12 @@ Environment feature | Does it persist after the migration? | Details | Do I need
 Self-signed or custom TLS certificates for access via custom domains and HTTPs | ✅ | All self-signed or custom TLS certificates are retained. | No.  
 Sandboxed nodes | ❌ | All sandboxed nodes are returned to their original state. | Re-create your sandboxing with [custom namespaces](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources#create-a-namespace) with the `--enable-custom-pods` setting.  
 Node dedication (grouping) | ❌ | All user and node grouping is removed. | Re-create node dedication with [custom namespaces](/orka/orka-cluster-access/orka-cluster-manage-access-to-resources).  
-Users | ❗️ | Orka 3.0 introduces a new way to manage users and log in to your cluster.  
-  
-All existing users are retained, and you can still use them to log in with earlier versions of the Orka CLI or the Orka CI/CD integrations. | Configure user access to the cluster. See [here](/orka/orka-cluster-access/cluster-access-management-overview).  
-Deployed VMs | ❌ | All deployed VMs are removed. | Re-create any VMs you might want to use or re-deploy them from the migrated VM configurations.  
-  
-Some settings, such as custom ports and metadata, are available only during deployment and are not retained in the VM configuration.  
-VM configurations | ✅ | All VM configurations are migrated to the new format.  
-  
-VM configurations with attached disk no longer have an attached disk. | Clean up any VM configurations that you no longer need.  
-Node affinity for VMs (tagging) | ❗️ | All existing VM configurations retain their tag settings.  
-  
-All nodes lose their applied tags. | Re-apply the missing node tags.  
-Images (locally stored on the cluster) | ✅ | All images are migrated to the new format and naming convention.  
-  
-The old name is retained in the `Description` field. | Manually update the Orka VM Tools on all Apple silicon-based images and commit the changes.  
+Users | ❗️ | Orka 3.0 introduces a new way to manage users and log in to your cluster.<br/><br/>All existing users are retained, and you can still use them to log in with earlier versions of the Orka CLI or the Orka CI/CD integrations. | Configure user access to the cluster. See [here](/orka/orka-cluster-access/cluster-access-management-overview).  
+Deployed VMs | ❌ | All deployed VMs are removed.<br/><br/>Some settings, such as custom ports and metadata, are available only during deployment and are not retained in the VM configuration. | Re-create any VMs you might want to use or re-deploy them from the migrated VM configurations.  
+VM configurations | ✅ | All VM configurations are migrated to the new format.<br/><br/>VM configurations with attached disk no longer have an attached disk. | Clean up any VM configurations that you no longer need.  
+Node affinity for VMs (tagging) | ❗️ | All existing VM configurations retain their tag settings.<br/><br/>All nodes lose their applied tags. | Re-apply the missing node tags.  
+Images (locally stored on the cluster) | ✅ | All images are migrated to the new format and naming convention.<br/><br/>The old name is retained in the `Description` field. | Manually update the Orka VM Tools on all Apple silicon-based images and commit the changes.  
 Images (cached on each Apple silicon node) | ❌ | The image cache is removed from each node. | Existing Apple silicon-based images should be saved or committed to take advantage of the new "thin-provisioned" format, and then cached per-node on VM deployment.  
-ISOs (locally stored on the cluster) | ✅ | All ISOs are migrated to the new format and naming convention.  
-  
-The old name is retained in the `Description` field. | No.  
+ISOs (locally stored on the cluster) | ✅ | All ISOs are migrated to the new format and naming convention.<br/><br/>The old name is retained in the `Description` field. | No.  
 Remote images | ✅ | All remote images are migrated to the new format and naming convention. | No.  
 Remote ISOs | ✅ | All remote ISOs are migrated to the new format and naming convention. | No.

@@ -321,19 +321,14 @@ Placeholder Example | Description | More Information | Example
      * Define the Access list with the source and destination networks: access-list `<acl-state-bypass>` extended permit ip
        * `<local_subnet>` `<local_subnet_mask>` `<vpc_subnet>` `<vpc_subnet_mask>`
 
-```
- * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection: 
-   * class-map <cm-state-bypass>
-
- * Enter the match parameter command to specify the traffic of interest within the class map: 
-   * match access-list <acl-state-bypass>
-
- * Enter the policy-map name command to assign the actions to be taken in regards to the specified class map traffic: 
-   * policy-map <pm-state-bypass> class <cm-state-bypass> set connection advanced-options tcp-state-bypass
-
- * Enter the service-policy command in global configuration mode to activate the policy map on the targeted interface: 
-   * service-policy <pm-state-bypass> interface <private_interface>
-```
+     * Create the Class Map to identify the traffic for which you want to disable stateful Firewall inspection:
+       * `class-map <cm-state-bypass>`
+     * Enter the match parameter command to specify the traffic of interest within the class map:
+       * `match access-list <acl-state-bypass>`
+     * Enter the policy-map name command to assign the actions to be taken in regards to the specified class map traffic:
+       * `policy-map <pm-state-bypass> class <cm-state-bypass> set connection advanced-options tcp-state-bypass`
+     * Enter the service-policy command in global configuration mode to activate the policy map on the targeted interface:
+       * `service-policy <pm-state-bypass> interface <private_interface>`
   8. Save changes
 
 
