@@ -96,7 +96,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
      1. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive.
      2. To set up the cluster, follow the AWS guidelines for [EKS Auto Mode](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-automode.html) or the [EKS QuickStart](https://docs.aws.amazon.com/eks/latest/userguide/quickstart.html).
   2. **Recommendations** :
-     1. Choose the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
+     1. Select the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
   3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** This ARN is required by MacStadium to access the Orka service images.

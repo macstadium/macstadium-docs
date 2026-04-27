@@ -87,10 +87,10 @@ Creating an HA VPN on GCP is a three-step process as follows:
   2. For Network, select the GCP network that needs to be able to access MacStadium.
   3. Select Region.
   4. Click CREATE & CONTINUE Add VPN tunnels.
-  5. In the VPN Tunnels section, make sure On-prem or Non Google Cloud is selected and click on Peer VPN gateway name > CREATE NEW PEER VPN GATEWAY.
+  5. In the VPN Tunnels section, make sure On-prem or Non Google Cloud is selected and click Peer VPN gateway name > CREATE NEW PEER VPN GATEWAY.
   6. Provide a Name for the VPN Gateway and confirm that two interfaces is selected at the next section.
   7. For both Interface 0 IP address and Interface 1 IP address fields, provide the IP address of the public network listed in Appendix B of the IP Plan. By default, this is the FW1-Outside network. Click CREATE.
-  8. In the Routing options section, click on Cloud Router > Create new router.
+  8. In the Routing options section, click Cloud Router > Create new router.
   9. Provide a Name and Description.
   10. In Google ASN, provide any private ASN number (64512 - 65534, 4200000000 - 4294967294).
   11. Keep the other options with the default values and click CREATE.
@@ -109,15 +109,15 @@ Creating an HA VPN on GCP is a three-step process as follows:
 
 ## Configure BGP Sessions
 
-Scroll right and click on CONFIGURE BGP SESSION at the first VPN tunnel.
+Scroll right and click CONFIGURE BGP SESSION at the first VPN tunnel.
 
   1. Provide a Name and the Peer ASN. This is also the ASN you will use to configure BGP on your MacStadium Firewall. You can choose any private ASN (64512 - 65534, 4200000000 - 4294967294) but it must be different from the ASN assigned to the Cloud Router configured on the previous step.
   2. Keep the default values for all other options and click SAVE AND CONTINUE.
-  3. Scroll right and click on CONFIGURE BGP SESSION at the second VPN tunnel.
+  3. Scroll right and click CONFIGURE BGP SESSION at the second VPN tunnel.
   4. Repeat steps 2 and 3 to configure the BGP settings of the second VPN tunnel. Notice that the same Peer ASN should be used.
   5. Click SAVE BGP CONFIGURATION.
-  6. In the Summary and reminder page, click on DOWNLOAD CONFIGURATION.
-  7. For Vendor select Cisco. For Platform, at the time of writing, Firepower is the only option available. On Software, confirm that >= ASA 9.13(1)2 is selected and click on DOWNLOAD.
+  6. In the Summary and reminder page, click DOWNLOAD CONFIGURATION.
+  7. For Vendor select Cisco. For Platform, at the time of writing, Firepower is the only option available. On Software, confirm that >= ASA 9.13(1)2 is selected and click DOWNLOAD.
   8. Next click OK.
 
 
@@ -255,7 +255,7 @@ Manually replace the placeholders in the configuration template with the values 
  * `{ gcp_bgp_asn }`
 ```
   14. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
-  15. Locate the VPN tunnels used by your GCP-MacStadium VPN, click on the Actions button and select View.  
+  15. Locate the VPN tunnels used by your GCP-MacStadium VPN, click the Actions button and select View.  
 ![GCP Cloud VPN Tunnels list with Actions button and View option](/images/attachments/28302601464219.png)
   16. Use the value of the Cloud Router ASN field. Both tunnels should have the same value for this parameter.  
 ![GCP VPN tunnel detail showing Cloud Router ASN field](/images/attachments/28302601474715.png)  
@@ -264,7 +264,7 @@ Manually replace the placeholders in the configuration template with the values 
  * `{ macstadium_bgp_asn }`
 ```
   17. In the VPN Hybrid Connectivity service page, select Cloud VPN Tunnels.
-  18. Locate the VPN tunnels used by the GCP-MacStadium VPN, and click on Actions.
+  18. Locate the VPN tunnels used by the GCP-MacStadium VPN, and click Actions.
   19. Select View.  
 ![GCP Cloud VPN Tunnels list with Actions button and View option](/images/attachments/28302601480475.png)
   20. Use the value of the Cloud Router ASN field. Both tunnels should have the same value for this parameter.  
