@@ -6,7 +6,7 @@ zendesk_id: 28230867289883
 
 The **My Cloud** page in the MacStadium Portal is where you see the networking and access details for your environment — VPN credentials, network ranges, firewall public IPs, and the IP assignments for your servers.
 
-> My Cloud replaces the IP Plan spreadsheet that MacStadium previously distributed. Other MacStadium docs still refer to this information as "your IP Plan"; it now lives in My Cloud.
+> My Cloud replaces the IP Plan spreadsheet that was previously distributed. Other MacStadium docs may still refer to this information as "your IP Plan"; this is now under My Cloud.
 
 ## Open My Cloud
 
@@ -21,10 +21,23 @@ My Cloud groups your environment by data center. For each data center you'll see
 - **Public Servers** — servers reachable on the public internet, with their public IPs and hostnames.
 - **Firewalls** — each dedicated firewall has its own section, containing:
   - **IP Allocation** — the networks behind the firewall, with subnet (CIDR), range, mask, and gateway.
-  - **Credentials** — VPN username and password for [connecting to the environment](/orka/networking-with-orka-at-macstadium/vpn-connection). Select **Show** to reveal, then copy.
+  - **Credentials** — username and password for [connecting to the environment via VPN](/orka/networking-with-orka-at-macstadium/vpn-connection), and (where provisioned) for **Harbor OCI Storage** and **Private Cloud**. Select **Show** to reveal, then copy.
   - **Host Assignments** — servers assigned to each network, with their private IPs and (where applicable) public NAT IPs.
 
 The firewall's public IP is the address you use as the VPN server address and as the on-prem peer when configuring a site-to-site VPN tunnel — see the setup guides for [AWS](/orka/networking-with-orka-at-macstadium/aws-orka-connections), [GCP](/orka/networking-with-orka-at-macstadium/gcp-orka-connections), or [Azure](/iaas/azure/site-to-site-vpn-configuration-with-azure).
+
+## Working with servers
+
+Whether you're looking under **Public Servers** or under a network's **Host Assignments**, each server shows the same information and shortcuts.
+
+For every server you'll see its name, hardware type (for example, M2.M or M2.L), service ID, current status (such as **Active** or **Pending**), and IP address. If the server has more than one IP, you can expand the entry to see the rest.
+
+You can also:
+
+- **Launch VNC** to open a remote screen-sharing session to the server.
+- **Copy SSH Address** to grab a ready-to-paste `ssh` command for the server.
+- **Copy** the server's name, service ID, or IP with a single select.
+- **Select the server's name** to open its full details, including any credentials for that server.
 
 ## Field reference
 
