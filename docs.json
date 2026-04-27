@@ -256,7 +256,6 @@
           {
             "group": "On AWS and On-Prem",
             "pages": [
-              "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
               "orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
               "orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws",
               "orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started",
@@ -293,6 +292,7 @@
           {
             "group": "MacStadium VDI",
             "pages": [
+              "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
               "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
               "remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
               "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
