@@ -74,7 +74,6 @@
             "pages": [
               "macstadium/billing/vendor-management",
               "macstadium/billing/accessing-invoices",
-              "macstadium/billing/billing-master-accounts",
               "macstadium/billing/credit-card-declined",
               "macstadium/billing/canceling-a-macstadium-subscription"
             ]
@@ -828,7 +827,7 @@
     },
     {
       "source": "/hc/en-us/articles/28248305179291-Billing-Master-Accounts",
-      "destination": "/macstadium/billing/billing-master-accounts",
+      "destination": "/macstadium/billing/accessing-invoices",
       "permanent": true
     },
     {
@@ -1623,7 +1622,7 @@
     },
     {
       "source": "/docs/billing-master-accounts",
-      "destination": "/macstadium/billing/billing-master-accounts"
+      "destination": "/macstadium/billing/accessing-invoices"
     },
     {
       "source": "/docs/enter-recovery-mode-andor-disable-sip-on-a-macos-vm",
