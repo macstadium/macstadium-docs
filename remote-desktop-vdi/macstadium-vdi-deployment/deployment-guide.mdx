@@ -452,28 +452,30 @@ After logging in, navigate to **Key Store** and edit the Mac Hosts SSH key. Repl
 
 ### 7.5  Available Task Templates
 
-The following templates are pre-configured and ready to use in the Orka Engine Orchestration project. Each template prompts for required inputs when you click Run.
+The following templates are pre-configured and ready to use in the Orka Engine Orchestration project. Templates are organized by category. Each template prompts for required inputs when you click Run.
 
-| Template                         | Playbook                   | Survey Variables                                                                                                           |
-| -------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Deploy VMs                       | `deploy.yml`               | `vm_name`, `vm_image`                                                                                                      |
-| Delete VMs                       | `delete.yml`               | `vm_name`                                                                                                                  |
-| Manage VM                        | `vm.yml`                   | `vm_name`, `desired_state` (`running`, `stopped`, `absent`)                                                                |
-| List VMs                         | `list.yml`                 | `vm_name` (optional)                                                                                                       |
-| Pull Image                       | `pull_image.yml`           | `remote_image_name`                                                                                                        |
-| Install Engine                   | `install_engine.yml`       | `orka_license_key`, `engine_url`                                                                                           |
-| Create Image                     | `create_image.yml`         | `remote_image_name`, `vm_image`                                                                                            |
-| Push Image                       | `push_image.yml`           | `vm_name`, `oci_url`                                                                                                       |
-| Provision User to VM             | `provision_user.yml`       | `vm_name`, `new_username`, `new_user_password`                                                                             |
-| Install Citrix VDA               | `install_citrix_vda.yml`   | `vm_name`                                                                                                                  |
-| Register Citrix VDA              | `register_citrix_vda.yml`  | `vm_name`, `enrollment_token`                                                                                              |
-| Install Android SDK              | `install_android_sdk.yml`  | `install_android_sdk_force` (optional)                                                                                     |
-| Install Android SDK Components   | `sdkmanager_install.yml`   | `platform`, `image_types` (optional)                                                                                       |
-| Uninstall Android SDK Components | `sdkmanager_uninstall.yml` | `platform`                                                                                                                 |
-| Create Android Virtual Device    | `deploy_avd.yml`           | `vm_name`, `platform` (optional), `image_type` (optional)                                                                  |
-| List Android Virtual Devices     | `list_avds.yml`            | `vm_name` (optional)                                                                                                       |
-| Delete Android Virtual Device    | `delete_avd.yml`           | `vm_name`, `avd_index`                                                                                                     |
-| Manage Android Virtual Device    | `avd.yml`                  | `vm_name`, `desired_state` (`running`, `stopped`, `absent`), `avd_index` (optional), `cpu` (optional), `memory` (optional) |
+| Template | Playbook | Survey Variables |
+| --- | --- | --- |
+| VM: Deploy VM | `deploy.yml` | `vm_name`, `vm_image` |
+| VM: Delete VM | `delete.yml` | `vm_name` |
+| VM: Manage VM | `vm.yml` | `vm_name`, `desired_state` (`running`, `stopped`, `absent`) |
+| VM: List VMs | `list.yml` | `vm_name` (optional) |
+| VM: Provision User to VM | `provision_user.yml` | `vm_name`, `new_username`, `new_user_password` |
+| Images: Pull Image | `pull_image.yml` | `remote_image_name` |
+| Images: Create Image | `create_image.yml` | `remote_image_name`, `vm_image` |
+| Images: Push Image | `push_image.yml` | `vm_name`, `oci_url` |
+| Images: List Images | `list_images.yml` | `vm_name` (optional) |
+| Images: Delete Image | `delete_image.yml` | `vm_name` |
+| Engine: Install Engine | `install_engine.yml` | `orka_license_key`, `engine_url` |
+| Android: Install Android SDK | `install_android_sdk.yml` | `install_android_sdk_force` (optional) |
+| Android: Install SDK Components | `sdkmanager_install.yml` | `platform`, `image_types` (optional) |
+| Android: Uninstall SDK Components | `sdkmanager_uninstall.yml` | `platform` |
+| Android: Deploy AVD | `deploy_avd.yml` | `vm_name`, `platform` (optional), `image_type` (optional) |
+| Android: List AVDs | `list_avds.yml` | `vm_name` (optional) |
+| Android: Delete AVD | `delete_avd.yml` | `vm_name`, `avd_index` |
+| Android: Manage AVD | `avd.yml` | `vm_name`, `desired_state` (`running`, `stopped`, `absent`), `avd_index` (optional), `cpu` (optional), `memory` (optional) |
+| Citrix: Install Citrix VDA | `install_citrix_vda.yml` | `vm_name` |
+| Citrix: Register Citrix VDA | `register_citrix_vda.yml` | `vm_name`, `enrollment_token` |
 
 ### 7.6  Stop Semaphore
 
