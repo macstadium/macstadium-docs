@@ -6,7 +6,7 @@ description: "How Orka services behave during a Kubernetes cluster upgrade, and 
 Orka does not change how you upgrade Kubernetes. Follow the standard upgrade practices for your Kubernetes provider. This page explains how Orka services are affected during an upgrade and what you can do to minimize disruption.
 
 <Note>
-Orka 3.6 is validated against Kubernetes 1.35 on both on-prem and AWS EKS. Running VMs are not affected by a Kubernetes upgrade — Mac nodes are not part of the upgrade process and do not restart.
+Orka 3.6 is validated against Kubernetes 1.35 on both on-prem and AWS EKS. Running VMs are not affected by a Kubernetes upgrade. Mac nodes are not part of the upgrade process and do not restart.
 </Note>
 
 ## Service behavior during an upgrade
@@ -16,7 +16,7 @@ The standard Kubernetes node upgrade process cordons and drains each node, evict
 | Service | Replicas (default) | Impact if down |
 |---|---|---|
 | API Server | 1 | API calls fail. Most integrations retry automatically, so downtime is often not noticeable. The `orka3` CLI continues working for all commands except `login` and `vm push`. |
-| Operator | 1 | Changes to Orka resources are not processed — VMs do not get scheduled or deleted. When the Operator comes back up, all queued changes are processed. No data is lost. |
+| Operator | 1 | Changes to Orka resources are not processed: VMs do not get scheduled or deleted. When the Operator comes back up, all queued changes are processed. No data is lost. |
 | Webhooks | 3 | No requests pass while down. |
 | Virtual Kubelet | Runs on each Mac host | The node cannot manage VMs. After a period of time the node is marked Not Ready by Kubernetes. |
 
@@ -28,7 +28,7 @@ The Virtual Kubelet does not need to be upgraded as part of a Kubernetes upgrade
 
 ### Operator leader election
 
-The Operator uses a leader election model — only one pod is active at a time. If the active Operator pod is evicted during an upgrade, leader election takes up to 15 seconds. During this window, VM deployments may be slower but will not error.
+The Operator uses a leader election model: only one pod is active at a time. If the active Operator pod is evicted during an upgrade, leader election takes up to 15 seconds. During this window, VM deployments may be slower but will not error.
 
 ## Minimizing disruption
 
