@@ -42,8 +42,27 @@ As part of this upgrade, you might need to [download and install](/orka/orka-ove
 | Image cache (Apple silicon nodes) | The image cache is removed from each node. |
 | Namespaces | Your custom namespaces persist. |
 | RoleBindings | Your custom permissions persist. |
-| Kubernetes Pods and services | Your custom Pods and services persist. |  
-  
+| Kubernetes Pods and services | Your custom Pods and services persist. |
+
+#### Patch version upgrades
+
+Orka patch releases (for example, 3.5.0 → 3.5.2) deliver bug fixes and stability improvements between minor releases. Patch upgrades are zero-downtime — no preparation is required, and running VMs and workflows are not interrupted.
+
+<Note>
+**Adding nodes to your cluster requires the latest patch version.** If your cluster is on an older patch version, node additions will fail. Request a patch upgrade before submitting a node add request.
+</Note>
+
+| Aspect | Notes |
+|--------|-------|
+| Maintenance window | None required. Patch upgrades are zero-downtime. |
+| Access to the environment | Uninterrupted throughout the upgrade. |
+| Orka users | Persist. |
+| Service Accounts | Persist. Tokens do not need to be regenerated. |
+| VMs and VM configs | Persist. Running VMs are not affected. |
+| Images and ISOs | Persist. |
+| Image cache (Apple silicon nodes) | Persists. |
+| Namespaces and RoleBindings | Persist. |
+
 ### Virtualization and orchestration layer upgrades (Kubernetes, Docker, or Linux)
 
 Occasionally, the Orka team upgrades the components of the virtualization and orchestration layer to a newer version. The version in Orka might run a few versions behind the latest and greatest release to ensure that the virtualization layer and orchestration layer are stable and bug-free.
