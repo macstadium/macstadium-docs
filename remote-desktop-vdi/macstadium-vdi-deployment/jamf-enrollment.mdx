@@ -15,6 +15,8 @@ On modern macOS (10.13 and later), Jamf's User-Initiated Enrollment installs an 
 
 What you can do is get it down to a single click. The recommended approach below kicks off enrollment automatically at first boot and puts a System Settings notification in front of the user asking them to approve the MDM profile. That's as hands-off as Apple allows on an unsupervised device.
 
+The unsupervised state has implications beyond first-time enrollment — a user with local admin rights can also *remove* the MDM profile after it's installed. See [Security Considerations](#security-considerations) before deploying to environments where MDM persistence is a compliance requirement.
+
 ---
 
 ## How It Works
@@ -273,6 +275,29 @@ In Jamf Pro, go to **Computers > Search Computers** and search for the VM by hos
 
 **The image contains credentials.** The enrollment script has your Jamf server URL and invitation code baked in. Apply the same access controls to this image that you'd use for any artifact holding credentials.
 
-**Supervision isn't available for VMs.** Apple doesn't support ABM registration for virtual machines, which means Orka desktops can't be supervised. MDM features that require supervision (remote lock, certain profile payloads, kernel extension management on older macOS) won't work. Standard policy and profile management is fine.
+**Supervision isn't available for VMs.** Apple doesn't support ABM registration for virtual machines, which means Orka desktops can't be supervised. MDM features that require supervision (remote lock, certain profile payloads, kernel extension management on older macOS) won't work. Standard policy and profile management is fine. The lack of supervision also means the MDM profile can be removed by a user with local admin rights — see [Security Considerations](#security-considerations) for the risk and recommended controls.
 
 **If enrollment isn't triggering,** check `/var/log/jamf-enroll.log`. The most common causes are the VM not having network access when the daemon first runs, an expired invitation code, or an MDM profile already present in the image before sealing.
+
+---
+
+## Security Considerations
+
+Because Orka VMs can't be supervised through Apple Business Manager, the MDM profile installed by Jamf is an *unsupervised* profile. That has security implications worth understanding before rolling this out broadly.
+
+**A user with local admin rights can remove the MDM profile.** On an unsupervised Mac, anyone with admin access can open System Settings > General > Device Management, select the management profile, and click Remove Management. macOS does not block this on unsupervised devices — it's the same path the user would use to leave any voluntarily-installed MDM. Once the profile is removed, the VM is no longer managed by Jamf, configuration profiles stop applying, and policies won't run until the device is re-enrolled.
+
+**The LaunchDaemon provides partial recovery, not prevention.** The `com.yourcompany.jamf-enroll` LaunchDaemon is configured with a `StartInterval` of 300 seconds, so it re-runs every five minutes and checks enrollment state. If the MDM profile has been removed, the daemon is expected to detect that the device is no longer enrolled and reinitiate the enrollment workflow. Two caveats:
+
+- There is a **gap window** — typically up to five minutes — between profile removal and the next daemon run, during which the VM is unmanaged.
+- Reinstalling the MDM profile on an unsupervised device still requires user approval. The daemon can re-create the Jamf computer record and reinstall the management framework on its own, but the actual MDM profile install is gated on the user clicking through System Settings the same way they did at first enrollment. A user who removed the profile on purpose can simply ignore the re-enrollment prompt.
+
+**Restrict local admin if MDM persistence is a compliance requirement.** The most effective control is to not give the end user admin rights on the VM. Without admin, the user cannot remove a profile from System Settings, and the most common removal vectors (`profiles remove`, MDM payload deletion via UI) require elevation. Standard-user accounts on the VM, with admin held by a separate provisioning identity, close most of this gap.
+
+**Monitor for unenrollment in Jamf.** Even with admin restrictions in place, you should treat lost MDM enrollment as an event worth alerting on. A common pattern:
+
+- Create a smart group with the criterion `MDM Profile Removed` is `Yes`, or `Last Inventory Update` older than your expected check-in interval.
+- Configure a webhook, email notification, or policy that fires on smart group membership change so admins are notified rather than discovering unenrolled VMs at audit time.
+- For high-assurance environments, pair this with a Jamf policy that runs the enrollment script on a tighter cadence than the on-VM LaunchDaemon, scoped to recently-unenrolled hosts.
+
+**Treat the golden image and invitation code as secrets.** The image already contains the Jamf server URL and invitation code (this is also called out in [A Few Things Worth Knowing](#a-few-things-worth-knowing)). A user who extracts the invitation code from a running VM can enroll arbitrary devices into your Jamf instance until that invitation expires or is revoked. Rotate invitation codes on a defined schedule and re-seal the image, especially after personnel changes on the team that has VM access.
