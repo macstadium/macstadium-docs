@@ -102,13 +102,9 @@ You will want to review your Ansible logs weekly to help you spot trends before 
 
   1. Provision physical Mac hardware with MacStadium
 
-```
- * Contact MacStadium support to add nodes to your private cloud
-
- * Request a host in same subnet as your existing infrastructure
-
- * Install MacStadium VDI on your new Mac host machine(s)
-```
+     * Contact MacStadium support to add nodes to your private cloud
+     * Request a host in same subnet as your existing infrastructure
+     * Install MacStadium VDI on your new Mac host machine(s)
   2. Add host to Ansible inventory
 
 
@@ -231,17 +227,11 @@ You will want to note all VM names running on the host you're removing.
   
 If users have local data that must be preserved:
 
-```
- 1. Notify users 48 hours in advance
-
- 2. Have your users back up critical data to their network drives
-
- 3. Take VM snapshots
-
- 4. Delete VMs from the old host and redeploy them on the remaining hosts
-
- 5. Restore your user data from existing backups  
-```
+1. Notify users 48 hours in advance
+2. Have your users back up critical data to their network drives
+3. Take VM snapshots
+4. Delete VMs from the old host and redeploy them on the remaining hosts
+5. Restore your user data from existing backups
 Most environments avoid this by enforcing network storage policies where user data is never stored locally on VMs.  
 
 
@@ -411,11 +401,9 @@ Example: Updating Xcode
 Note: Keep a CHANGELOG.MD file to show what's included in each image version. You can use image tags to track this:
     
     
-```
 - `registry.example.com/citrix-vda/dev-tools:v1.0` - Xcode 14.3, Sonoma 14.0
 - `registry.example.com/citrix-vda/dev-tools:v1.1` - Xcode 15.0, Sonoma 14.1
 - `registry.example.com/citrix-vda/dev-tools:v1.2` - Xcode 15.2, Sonoma 14.3
-```
 You will want to store your CHANGELOG.MD file in your project’s git repository alongside your Ansible playbooks.
 
 #### Citrix VDA Updates
@@ -432,13 +420,9 @@ Update Process:
 
   3. Install the new VDA version:
 
-```
- * Copy the VDA installer to the VM
-
- * Run the VDA installer (this may require uninstalling the old version first)
-
- * Reboot the VM
-```
+     * Copy the VDA installer to the VM
+     * Run the VDA installer (this may require uninstalling the old version first)
+     * Reboot the VM
   4. Verify VDA registration and HDX functionality works as expected
 
   5. Create a new golden image with the updated Citrix VDA version
@@ -1555,13 +1539,9 @@ Apply different Citrix policies per tenant:
 
   2. Create policies with appropriate settings for each tenant:
 
-```
- * Finance: Restrictive (no clipboard, no file transfer)
-
- * Engineering: Open (full access, USB devices)
-
- * Marketing: Medium (clipboard only, no USB)
-```
+     * Finance: Restrictive (no clipboard, no file transfer)
+     * Engineering: Open (full access, USB devices)
+     * Marketing: Medium (clipboard only, no USB)
   3. Filter policies by Delivery Group name
 
 
@@ -1875,58 +1855,39 @@ Test checklist for new golden images:
 
   1. Deployment test
 
-```
- * Deploy a single VM from the new image
+     * Deploy a single VM from the new image
+     * Verify the VM boots within 3 minutes
+     * Verify the VM gets network connectivity
 
- * Verify the VM boots within 3 minutes
-
- * Verify the VM gets network connectivity
-```
   2. VDA registration test
 
-```
- * Check System Preferences → Citrix VDA shows "Registered"
+     * Check System Preferences → Citrix VDA shows "Registered"
+     * Verify that the VM appears in Citrix Cloud Console as "Available"
 
- * Verify that the VM appears in Citrix Cloud Console as "Available"
-```
   3. User connectivity test
 
-```
- * Assign a test user to the VM
+     * Assign a test user to the VM
+     * Launch desktop from Citrix Workspace
+     * Verify successful connection
 
- * Launch desktop from Citrix Workspace
-
- * Verify successful connection
-```
   4. HDX feature test
 
-```
- * Test clipboard copy/paste
+     * Test clipboard copy/paste
+     * Test file transfer (if enabled)
+     * Test printing (if enabled)
+     * Test application launching
 
- * Test file transfer (if enabled)
-
- * Test printing (if enabled)
-
- * Test application launching
-```
   5. Application functionality test
 
-```
- * Launch each business-critical application
+     * Launch each business-critical application
+     * Perform a basic workflow in each app
+     * Check for any error messages or crashes
 
- * Perform a basic workflow in each app
-
- * Check for any error messages or crashes
-```
   6. Performance test
 
-```
- * Measure login time (should be < 30 seconds)
-
- * Check CPU/memory usage at idle
-
- * Check responsiveness during typical tasks
-```
+     * Measure login time (should be &lt; 30 seconds)
+     * Check CPU/memory usage at idle
+     * Check responsiveness during typical tasks
 Document results:
 
 Image: [registry.example.com/citrix-vda/sonoma-finance:v2.2](http://registry.example.com/citrix-vda/sonoma-finance:v2.2)  
@@ -1988,16 +1949,12 @@ If a policy change causes user complaints:
 
   1. Revert the policy in Citrix Cloud Console
 
-```
- * Policies → Select problematic policy → Edit → Restore previous settings
-```
+     * Policies → Select problematic policy → Edit → Restore previous settings
+
   2. Force policy refresh (if immediate)
 
-```
- * Users log out and log back in
-
- * Or wait for automatic policy refresh (30 minutes)
-```
+     * Users log out and log back in
+     * Or wait for automatic policy refresh (30 minutes)
 Time to rollback: 5-10 minutes
 
 Keep rollback plans simple and actionable. Don't write complex procedures you won't remember under pressure.
@@ -2147,32 +2104,23 @@ Optimization opportunities:
 
   1. Right-size VMs
 
-```
- * Are all users using high-spec VMs when they only need basic?
+     * Are all users using high-spec VMs when they only need basic?
+     * Review resource allocation quarterly
 
- * Review resource allocation quarterly
-```
   2. Eliminate unused capacity
 
-```
- * Do you have VMs deployed that aren't assigned to users?
+     * Do you have VMs deployed that aren't assigned to users?
+     * Scale down during off-peak periods
 
- * Scale down during off-peak periods
-```
   3. Image efficiency
 
-```
- * Are you storing unnecessary applications in golden images?
+     * Are you storing unnecessary applications in golden images?
+     * Can you consolidate multiple images into one?
 
- * Can you consolidate multiple images into one?
-```
   4. Licensing optimization
 
-```
- * Are you paying for Citrix licenses for inactive users?
-
- * Review user access quarterly and remove inactive accounts
-```
+     * Are you paying for Citrix licenses for inactive users?
+     * Review user access quarterly and remove inactive accounts
 Track cost trends:
 
 Compare month-over-month:

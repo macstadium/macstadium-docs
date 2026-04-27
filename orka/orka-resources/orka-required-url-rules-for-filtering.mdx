@@ -48,21 +48,11 @@ Source | Destination | Protocol and Port # | Applications | URLs | Descriptions
 ---|---|---|---|---|---  
 Permit Client | Public DNS server |  | DNS |  | DNS Resolution  
 Permit Client | Public DNS server |  | DNS over HTTPS |  | DNS Resolution  
-Permit Client |  |  | HTTP  
-HTTPS |  [http://idp.macstadium.com](http://idp.macstadium.com/)  
-sso.macstadium.com | Single sign-on requirement  
-Permit Client | API Controllers  
-10.221.188.19  
-10.221.188.20 | HTTP  
-TCP 6443 |  |  | .19 requires TCP/6443 - Ku. LB  
-.20 requires HTTP - ORKA API  
-Permit Client | 10.221.188.22 |  | HTTPS |  | Traefik - a reverse proxy  
-Use case: if customer is using HTTPS to access ORKA  
-Permit Client | 10.221.188.31 through 10.221.189.254 | TCP 5900-5912  
-TCP 5999-6011  
-TCP 8822-8834 |  |  | Reserved ports for interacting with created VMs  
-Permit Client | 10.221.188.0/23 |  | ICMP  
-SSH |  | Ask/Requirement for ORKA Support during troubleshooting sessions  
+Permit Client |  |  | HTTP<br/>HTTPS | [http://idp.macstadium.com](http://idp.macstadium.com/)<br/>sso.macstadium.com | Single sign-on requirement  
+Permit Client | API Controllers<br/>10.221.188.19<br/>10.221.188.20 | HTTP<br/>TCP 6443 |  |  | .19 requires TCP/6443 - Ku. LB<br/>.20 requires HTTP - ORKA API  
+Permit Client | 10.221.188.22 |  | HTTPS |  | Traefik - a reverse proxy<br/>Use case: if customer is using HTTPS to access ORKA  
+Permit Client | 10.221.188.31 through 10.221.189.254 | TCP 5900-5912<br/>TCP 5999-6011<br/>TCP 8822-8834 |  |  | Reserved ports for interacting with created VMs  
+Permit Client | 10.221.188.0/23 |  | ICMP<br/>SSH |  | Ask/Requirement for ORKA Support during troubleshooting sessions  
 **Deny Client** | ANY |  |  |  | A catch all deny rule if traffic doesn't match the above  
   
 ### LAN-Side Ruleset
@@ -72,20 +62,11 @@ Source | Destination | Protocol and Port # | Applications | URLs | Descriptions
 Permit Orka Network | ANY |  | NTP |  | Client and Administration requirement for DNS and NTP services  
 Permit Orka Network | ANY |  | DNS |  | Client and Administration requirement for DNS and NTP services  
 Permit Orka Network | ANY |  | DNS over HTTPS |  | Client and Administration requirement for DNS and NTP services  
-Permit Orka Network | 207.254.1.172  
-207.254.72.172  
-208.83.0.22  
-199.19.85.74 | TCP 2049 |  |  | NFS needed for Remote ISO shares. Set per market; where client download ISO files from MacStadium:  
-ATL - 207.254.1.172,  
-LSV - 207.254.72.172,  
-DUB - 208.83.0.22,  
-SJC - 199.19.85.74  
+Permit Orka Network | 207.254.1.172<br/>207.254.72.172<br/>208.83.0.22<br/>199.19.85.74 | TCP 2049 |  |  | NFS needed for Remote ISO shares. Set per market; where client download ISO files from MacStadium:<br/>ATL - 207.254.1.172,<br/>LSV - 207.254.72.172,<br/>DUB - 208.83.0.22,<br/>SJC - 199.19.85.74  
 Permit Orka Network |  |  | HTTP | mirror.math.princeton.edu | FCOS Linux Internal Packages: for the environment during the provisioning process; where dependencies are pulled - administration purposes; not client usage  
 Permit Orka Network |  |  | HTTPS | hooks.slack.com | Action Runner (typically 10.221.188.10) to update Slack - administration purposes; not needed for client use  
 Permit Orka Network |  |  | HTTPS | us-west2-docker.pkg.dev | Needed for Administrative purpose; in case POD needs to repull image; for client; if they are deploying Intel VMs then this rule is needed.  
-Permit Orka Network |  |  | HTTPS  
-Web Applications  
-SSL Client | production.cloudflare.docker.com | Requirement for Docker certificates  
+Permit Orka Network |  |  | HTTPS<br/>Web Applications<br/>SSL Client | production.cloudflare.docker.com | Requirement for Docker certificates  
 Permit Orka Network |  |  | HTTPS | hub.docker.com | Administration rule requirement: Requirement for Docker Container Images  
 Permit Orka Network |  |  |  | k8s.gcr.io | Administration rule requirement; Requirement for K8S Container Images  
 Permit Orka Network |  | TCP 10259  

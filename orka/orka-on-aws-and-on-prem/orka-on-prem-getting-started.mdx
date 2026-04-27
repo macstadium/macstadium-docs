@@ -335,20 +335,16 @@ Logs can be exposed on Mac workers installing a `promtail` service, allowing the
 
 What | Resource | Accessing | Purpose  
 ---|---|---|---  
-Virtual Kubelet Logs | Mac Node | Via promtail:  
-`/usr/local/virtual-kubelet/vk.log` | Interactions between k8s and worker node for managing virtualization.  
-Orka VM Logs | Mac Node | Via promtail:  
-`/Users/administrator/.local/state/virtual-kubelet/vm-logs/*` | Logs pertaining to the lifecycle of a specific VM  
+Virtual Kubelet Logs | Mac Node | Via promtail: `/usr/local/virtual-kubelet/vk.log` | Interactions between k8s and worker node for managing virtualization.  
+Orka VM Logs | Mac Node | Via promtail: `/Users/administrator/.local/state/virtual-kubelet/vm-logs/*` | Logs pertaining to the lifecycle of a specific VM  
 Pod Logs | k8s | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
   
 #### Orka v3.4+ Log Sources
 
 What | Resource | Accessing | Purpose  
 ---|---|---|---  
-Virtual Kubelet Logs | Mac Node | Via promtail:  
-`/var/log/virtual-kubelet/vk.log` | Interactions between k8s and worker node for managing virtualization.  
-Orka VM Logs | Mac Node | Via promtail:  
-`/opt/orka/logs/vm/` | Logs pertaining to the lifecycle of a specific VM  
+Virtual Kubelet Logs | Mac Node | Via promtail: `/var/log/virtual-kubelet/vk.log` | Interactions between k8s and worker node for managing virtualization.  
+Orka VM Logs | Mac Node | Via promtail: `/opt/orka/logs/vm/` | Logs pertaining to the lifecycle of a specific VM  
 Orka Engine Logs | Engine Node | `/opt/orka/logs/com.macstadium.orka-engine.server.managed.log` | Logs pertaining to Orka Engine  
 Pod Logs | k8s | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
   
