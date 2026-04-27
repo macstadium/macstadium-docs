@@ -1,117 +1,210 @@
 ---
 title: "Customer Environment Tips"
-description: "Best practices for Citrix VDI on MacStadium: FileVault policy, Apple Business Manager enrollment, network configuration, and common pitfalls to avoid."
+description: "Best practices for deploying Citrix HDX and HP Anyware PCoIP on MacStadium: MDM enrollment, permissions, networking, and performance tuning."
+keywords: ["citrix", "hdx", "pcoip", "hp anyware", "teradici", "vdi", "mdm", "jamf", "intune", "kandji"]
 zendesk_id: 40640583440539
 ---
 
-This guide outlines best practices and common pitfalls to avoid when deploying and managing Citrix VDI on MacStadium infrastructure. Following these recommendations will help ensure a secure, stable, and high-performance user experience.
+## Overview
+
+These are recommended best practices for deploying Citrix HDX and HP Anyware PCoIP on MacStadium infrastructure. This document provides generalized guidance on MDM enrollment, permissions, networking, and performance tuning.
+
+---
 
 ## Security and Encryption
 
-### DO
+Disable FileVault unless your security policy requires it. If a machine with FileVault enabled powers down, a MacStadium Data Center Technician must intervene locally before it can be accessed remotely. If encryption is required, coordinate with MacStadium to set up secure restart scripts that automate reboots and recovery before enabling it.
 
-  * Disable **FileVault** unless required by policy. If FileVault is enabled and the machine powers down, MacStadium Data Center Technicians (DCT) must manually intervene to decrypt the drive.
-  * If encryption is required, coordinate with MacStadium to implement **secure restart scripts** that automate reboots and recovery.
-  * Use **Apple Business Manager (ABM)** for automated enrollment and enforcement of enterprise security baselines.
+Use an MDM solution (Jamf Pro, Kandji, or Intune) to enforce your security baseline. See [MDM Policies and Permissions](#mdm-policies-and-permissions) for VDI-specific configuration.
 
+---
 
+## MDM Enrollment for VMs
 
-### DON’T
+Apple Business Manager (ABM) Automated Device Enrollment is not available for virtual machines. Apple identifies VM hardware identifiers as virtual and blocks auto-enrollment. This cannot be worked around.
 
-  * Rely solely on the Secure Enclave for recovery. Remote unlock may not be feasible without hands-on access.
-  * Allow unmanaged users to enable FileVault without central IT approval.
+The standard approach is user-initiated enrollment scripted into your golden image. A LaunchDaemon runs at first boot to install the management framework. A LaunchAgent runs at login to prompt the user to approve the MDM profile. That approval is a macOS requirement on unsupervised devices.
 
+MacStadium's tested and supported enrollment process for VMs at scale uses Jamf Pro. For a full walkthrough, see [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment). The LaunchDaemon/LaunchAgent pattern is the same for Intune and Kandji, but MacStadium is still validating and developing optimized guidance for those platforms.
+
+A few things to get right before sealing the image:
+
+- Set enrollment tokens to expire on a schedule aligned to your image rotation cycle.
+- Verify enrollment on a test VM before promoting to production: `profiles status -type enrollment` should return `MDM enrollment: Yes`.
+- Do not seal the image with an MDM profile or management framework already present.
+
+For image build and versioning guidance, see [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management).
+
+---
+
+## MDM Policies and Permissions
+
+Configure and test these before sealing your golden image. Some permissions cannot be pre-approved via MDM, so they need to be granted manually on a clean VM before the image is sealed.
+
+### Privacy Preferences (PPPC / TCC)
+
+| Permission | Citrix HDX | HP Anyware PCoIP | MDM pre-approvable? |
+|---|---|---|---|
+| Accessibility | Required | Required | Yes |
+| Screen Recording | Required | Required | No — grant manually before sealing |
+| Microphone | Optional (audio redirect) | Optional | No — user-controlled |
+| Camera | Optional (webcam redirect) | Optional | No — user-controlled |
+
+**Bundle IDs for PPPC profiles:**
+
+| Application | Bundle ID | Team ID |
+|---|---|---|
+| Citrix Workspace / VDA | `com.citrix.ctxism` | `S272Y5R93J` |
+| HP Anyware Client | `com.teradici.swiftclient` | Not published by HP |
+| HP Anyware User Agent | `com.teradici.pcoip-user-agent` | Not published by HP |
+
+HP does not document Team ID information for HP Anyware. To generate a code requirement string for use in a PPPC payload, run this against the installed host agent:
+
+```bash
+# Locate the agent
+mdfind "kMDItemCFBundleIdentifier == 'com.teradici.pcoip-user-agent'"
+
+# Generate the code requirement string
+codesign -dr - /path/to/PCoIPAgent.app
+```
+
+Paste the `designated =>` line from the output into the Code Requirement field of your MDM's PPPC payload.
+
+### System Extensions (Citrix only)
+
+Citrix VDA installs system extensions for camera and USB redirection. Pre-approve these to prevent user-facing prompts.
+
+| Extension | Bundle ID | Type | Team ID |
+|---|---|---|---|
+| Camera extension | `com.citrix.mvda.vdacfg.cameraextension` | System extension | `S272Y5R93J` |
+| USB redirection | `com.citrix.kext.gusb` | Kernel extension | `S272Y5R93J` |
+
+On macOS 15 (Sequoia), admin users can remove system extensions via System Settings. Jamf Pro 11.9.1+ and Kandji 3.x both support marking extensions as non-removable.
+
+Citrix also installs background services under `/Library/LaunchAgents` and `/Library/LaunchDaemons`. On Ventura and later, users see a "Background Items Added" notification on first login. This is expected. Do not suppress or disable these services.
+
+### MDM Platform Notes
+
+| Platform | PPPC | System Extensions | Notes |
+|---|---|---|---|
+| Jamf Pro | Privacy Preferences Policy Control payload | System Extensions payload (Team ID `S272Y5R93J`) | MacStadium's tested and supported platform for VM enrollment at scale. For HP Anyware, generate the code requirement string with `codesign -dr -` and paste it manually. See the [Jamf Enrollment guide](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment). |
+| Microsoft Intune | Custom Configuration Profile (macOS XML) | Endpoint Security > macOS System Extensions | Deploy HP Anyware or Citrix Workspace as a macOS DMG app via the Apps blade. Optimized VM enrollment guidance for Intune is in development. |
+| Kandji | Privacy Preferences Library Item | System Extensions Library Item (Team ID `S272Y5R93J`) | 3.x supports non-removable extensions on macOS 15. Optimized VM enrollment guidance for Kandji is in development. |
+
+---
 
 ## Networking and Connectivity
 
-### DO
+Disable packet inspection and SSL interception on VDI session traffic. Both HDX and PCoIP are sensitive to latency added by middleboxes. Route sessions as directly as possible and avoid unnecessary proxy hops.
 
-  * Configure **firewall rules and VPNs** to allow Citrix traffic. Ensure required ports (TCP/UDP 1494, 2598, 443, and HDX adaptive ports) are open.
-  * Whitelist trusted Citrix and MacStadium service endpoints.
-  * Disable packet inspection or SSL interception on Citrix HDX sessions where possible to improve performance.
-  * Provide users with **backup access methods** (e.g., VNC or MacStadium-provided remote tools) in case the Citrix VDI session becomes inaccessible.
+**Required ports:**
 
+| Protocol | Citrix HDX | HP Anyware PCoIP |
+|---|---|---|
+| Primary session | TCP/UDP 1494, 2598 | UDP 4172 |
+| Session fallback | — | TCP 4172 |
+| Broker / licensing | TCP 443 | TCP 443, 60443 |
+| EDT (performance) | UDP 1494, 2598 | — |
 
+Enable EDT (UDP 1494/2598) for Citrix where possible. It provides noticeably better performance over variable-quality connections compared to TCP-only transport.
 
-### DON’T
+**Bandwidth planning per concurrent user:**
 
-  * Route sessions through unnecessary **network hops** or proxy chains. Each jump increases latency and lowers session quality.
-  * Overlook bandwidth planning:
-    * Coding / general productivity: ~2–3 Mbps per user
-    * Graphic design: ~5–10 Mbps per user
-    * Video editing / high-performance: ~15–25 Mbps per user
+| Workload type | Recommended |
+|---|---|
+| General productivity / coding | 2-3 Mbps |
+| Design / graphics | 5-10 Mbps |
+| Video editing / high-performance | 15-25 Mbps |
 
+Maintain a secondary administrative access path (VNC or MacStadium remote console) independent of your VDI session for recovery scenarios.
 
-## User Experience Tuning
+---
 
-### DO
+## Performance Tuning
 
-  * Disable **desktop animations and transparency effects** on macOS to improve responsiveness over HDX.
-  * Configure Citrix Workspace client per Citrix guidelines ([Citrix Docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)).
-  * Disable lock screen timers to prevent session loss if a user is disconnected.
-  * Optimize power settings by disabling Wi-Fi power saving and ensuring stable NIC performance.
+### macOS Settings (both protocols)
 
+Disable desktop animations and transparency effects before sealing your image: **System Settings > Accessibility > Display > Reduce Motion** and **Reduce Transparency**. Disable screen saver, hot corners, and idle timers:
 
+```bash
+sudo pmset -a sleep 0 disksleep 0 displaysleep 0
+```
 
-### DON’T
+MacStadium hosts use wired Ethernet. If any nodes in your cluster are on Wi-Fi, disable Wi-Fi power saving to prevent the NIC from dropping into a low-power state during active sessions.
 
-  * Leave defaults enabled that cause session interruptions (screen savers, hot corners, or lock timers).
-  * Forget to test client tuning across different OS versions and hardware configurations.
+### Protocol-Specific Tuning
 
+| Setting | Citrix HDX | HP Anyware PCoIP |
+|---|---|---|
+| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles — see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, frame rate — configured via plist (see below) |
+| Config location | Citrix Workspace settings | `/Library/Preferences/com.teradici.pcoip-agent.plist` |
+| Applies to | VDA | Graphics Agent and Standard Agent |
+
+**HP Anyware plist directives** (set before sealing, or push via MDM config profile):
+
+```bash
+# Bandwidth ceiling in kbps (default: 900000 — effectively uncapped)
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.max_link_rate -int 25000
+
+# Image quality floor/ceiling, 0-100 (defaults: 40 / 80)
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.minimum_image_quality -int 40
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.maximum_initial_image_quality -int 80
+
+# Frame rate ceiling in fps (default: 30)
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.maximum_frame_rate -int 30
+
+# Audio bandwidth ceiling in kbps (default: 512)
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.audio_bandwidth_limit -int 256
+
+# MTU size in bytes (default: 1200)
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.mtu_size -int 1200
+
+# Build-to-lossless: 0 = off (default), 1 = on
+# Sharpens to pixel-perfect during idle; useful for design review, increases bandwidth
+sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.enable_build_to_lossless -int 0
+```
+
+Changes take effect after the PCoIP agent service restarts or the VM reboots.
+
+---
 
 ## Management and Policy
 
-### DO
+Define MDM policies before sealing your golden image. A baseline for Orka VDI:
 
-  * Define **MDM policies** clearly:
-    * **Must be enabled** : Automated enrollment, system integrity protection, screen sharing off, disable end-user restart/shutdown buttons.
-    * **Should be enabled** : Password complexity, firewall on, Gatekeeper enabled, software update enforcement.
-    * **Cannot be enabled** : User lockout policies that require local hands-on recovery.
+| Category | Policies |
+|---|---|
+| Must be enabled | Remote management, System Integrity Protection, disable end-user restart and shutdown |
+| Should be enabled | Password complexity, software firewall, Gatekeeper, software update enforcement |
+| Avoid | User lockout policies requiring local physical recovery; FileVault without a MacStadium-coordinated recovery plan |
 
+Do not apply aggressive idle timeout or auto-sleep policies that conflict with active session stability. See [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management) for incorporating MDM configuration into your image build pipeline.
 
-
-### DON’T
-
-  * Allow end users to bypass MDM profiles or disable supervision.
-  * Apply policies that conflict with Citrix session stability (e.g., auto-sleep or aggressive idle timeouts).
-
-
+---
 
 ## Backup and Recovery
 
-### DO
+Keep machines in an always-on or wake-on-network state. Maintain a secondary administrative connection (VNC or MacStadium secure console) that does not depend on your VDI session. Enable Time Machine or equivalent backup on a schedule that meets your retention requirements. VDI sessions are not a substitute for enterprise backup.
 
-  * Maintain secondary connection paths such as VNC or MacStadium secure console for administrative recovery.
-  * Ensure power management policies keep machines in a **“always on” or “wake on network access”** state.
-  * Enable backups using the macOS Time Machine utility on a schedule that meets your needs and corporate policies.
-
-
-
-### DON’T
-
-  * Rely solely on user-initiated restarts or shutdowns—disable those options at the MDM level.
-  * Forget to back up user data; Citrix and MacStadium sessions are not substitutes for enterprise backup solutions.
-
-
-
-## Automated Enrollment and Scalability
-
-### DO
-
-  * Use **Apple Business Manager (ABM)** \+ MDM for zero-touch enrollment of macOS instances.
-  * Automate provisioning of new Citrix VDA-enabled macOS workloads through Orka or bare-metal orchestration (see [MacStadium Docs](https://docs.macstadium.com)).
-
-
-
-### DON’T
-
-  * Attempt to manually configure large numbers of machines without ABM integration—this is error-prone and hard to scale.  
-
-
-
+---
 
 ## Quick Reference
 
-  * **Apple Security Guide:** [Apple Platform Security](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf)
-  * **Citrix Workspace App for Mac:** [Citrix Docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)
-  * **MacStadium Documentation:** [MacStadium Docs](https://docs.macstadium.com)
+| | Citrix HDX | HP Anyware PCoIP |
+|---|---|---|
+| Session ports | TCP/UDP 1494, 2598; TCP 443 | UDP/TCP 4172; TCP 443, 60443 |
+| Main bundle ID | `com.citrix.ctxism` | `com.teradici.swiftclient` |
+| System extensions | Camera kext, USB kext | None |
+| Accessibility (MDM) | Pre-approvable | Pre-approvable |
+| Screen Recording (MDM) | Grant manually before sealing | Grant manually before sealing |
+| MDM enrollment | User-initiated only | User-initiated only |
+| Agent variants | VDA | Graphics Agent, Standard Agent |
+| Agent config | Citrix Workspace settings | `/Library/Preferences/com.teradici.pcoip-agent.plist` |
+
+**Related:**
+
+- [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment)
+- [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management)
+- [Citrix Workspace App for Mac](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)
+- [HP Anyware Documentation](https://anyware.hp.com/web-help/pcoip_client/mac/24.03/)
+- [Apple Platform Security Guide](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf)
