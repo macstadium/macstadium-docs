@@ -24,11 +24,8 @@ Before beginning the testing and validation process, ensure:
 
   * Network configuration:
 
-```
-* VMs deployed with bridged networking OR
-
-* Proper NAT/firewall configuration for VDA communication
-```
+    * VMs deployed with bridged networking OR
+    * Proper NAT/firewall configuration for VDA communication
 #### End-to-End Connectivity Test via Citrix Workspace
 
 This test validates the complete user journey from authentication to desktop usage.
@@ -55,17 +52,13 @@ This test validates the complete user journey from authentication to desktop usa
 
   * Verify multi-factor authentication (if enabled)
 
-```
-* Expected result: Successful authentication, workspace dashboard loads
+**Expected result:** Successful authentication, workspace dashboard loads
 
-* Common issues:
+**Common issues:**
 
-  * Authentication fails: Verify user exists in identity provider and is assigned to the correct Delivery Group
-
-  * MFA problems: Check MFA configuration in Citrix Cloud
-
-  * Workspace URL incorrect: Confirm workspace URL matches Citrix Cloud tenant
-```
+* Authentication fails: Verify user exists in identity provider and is assigned to the correct Delivery Group
+* MFA problems: Check MFA configuration in Citrix Cloud
+* Workspace URL incorrect: Confirm workspace URL matches Citrix Cloud tenant
 #### Desktop Visibility Testing in Citrix Workspace
 
   1. Navigate to the ‘Desktops’ tab in Citrix Workspace
@@ -76,19 +69,15 @@ This test validates the complete user journey from authentication to desktop usa
 **Expected result:** Desktop(s) visible with correct name from Delivery Group  
 **Common issues:**
 
-```
- 1. No desktops appear:
+1. No desktops appear:
 
-    1. Check user assignment in the Delivery Group
+   1. Check user assignment in the Delivery Group
+   2. Verify VMs are registered in Citrix Cloud Console
+   3. Confirm VMs are in an “Available” state (not “In Use” or “Unregistered”)
 
-    2. Verify VMs are registered in Citrix Cloud Console
+2. Wrong desktop name
 
-    3. Confirm VMs are in an “Available” state (not “In Use” or “Unregistered”)
-
- 2. Wrong desktop name
-
-    1. Update the desktop display name in Delivery Group settings
-```
+   1. Update the desktop display name in Delivery Group settings
 #### Session Launch Testing in Citrix Workspace
 
   1. Click the desktop to launch
@@ -165,13 +154,9 @@ This test validates the complete user journey from authentication to desktop usa
 
   1. Test Clipboard (Copy/Paste) functionality
 
-```
- 1. Copy text from client device → paste into VM
-
- 2. Copy text from VM → paste into client device
-
- 3. Test the ability to copy/paste formatted text, images, and files
-```
+     1. Copy text from client device → paste into VM
+     2. Copy text from VM → paste into client device
+     3. Test the ability to copy/paste formatted text, images, and files
 ##### File transfers
 
   1. Drag a file from the client to the VM desktop
@@ -427,35 +412,24 @@ Some metrics to consider measuring are:
      - To establish a baseline, test from multiple client locations such as office, remote, or mobile. An example target: &lt;15 seconds for Rendezvous, &lt;10 seconds for a direct connection.
   3. HDX session quality
 
-```
- 1. Record the average framerate during normal desktop use
+     1. Record the average framerate during normal desktop use
+     2. If there is input lag from keyboard/mouse to on-screen updates, how long does it take to resolve? Does the behavior persist upon restart?
+     3. How long does it take to launch an application within a desktop session?
+     4. Is video playback quality acceptable?
 
- 2. If there is input lag from keyboard/mouse to on-screen updates, how long does it take to resolve? Does the behavior persist upon restart?
-
- 3. How long does it take to launch an application within a desktop session?
-
- 4. Is video playback quality acceptable?
-```
   4. Network latency
 
-```
- 1. What is the round-trip time from client to VM?
+     1. What is the round-trip time from client to VM?
 
-    1. You can measure this using `ping` or HDX diagnostics
+        1. You can measure this using `ping` or HDX diagnostics
+        2. Test network latency under various conditions and configurations
 
-    2. Test network latency under various conditions and configurations
-```
   5. Resource utilization
 
-```
- 1. What is the host CPU usage when VMs are running?
-
- 2. What is the average memory consumption per VM?
-
- 3. What disk I/O patterns are observed?
-
- 4. What is the average network bandwidth per session?
-```
+     1. What is the host CPU usage when VMs are running?
+     2. What is the average memory consumption per VM?
+     3. What disk I/O patterns are observed?
+     4. What is the average network bandwidth per session?
 
 #### Android Virtual Device Validation
 
