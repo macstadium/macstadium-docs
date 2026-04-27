@@ -24,6 +24,10 @@ Custom executors are useful when you need to work with ephemeral executors and a
 
 For the latest information about how to work with a custom executor in Orka, see [Using a GitLab Custom Executor to Run CI/CD Pipelines in Orka](https://github.com/macstadium/orka-integrations/blob/master/GitLab/custom-executor.md).
 
+<Note>
+Cache restoration and artifact downloading require the `gitlab-runner` binary to be present inside the Orka VM. If your pipeline logs show "Missing gitlab-runner. Extracting cache is disabled." or "Missing gitlab-runner. Artifacts downloading is disabled.", install the `gitlab-runner` binary in your base image before creating your VM config.
+</Note>
+
 ## Run concurrent builds
 
 By default, the [config template](https://github.com/macstadium/orka-integrations/blob/master/GitLab/template-config.md) sets `concurrent = 1`, which means only one build runs at a time. To run multiple builds simultaneously, update two settings in your `config.toml`:
