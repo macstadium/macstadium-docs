@@ -1,0 +1,97 @@
+---
+title: "Kubernetes upgrade guide"
+description: "How Orka services behave during a Kubernetes cluster upgrade, and how to minimize disruption. Validated against Kubernetes 1.35."
+---
+
+Orka does not change how you upgrade Kubernetes. Follow the standard upgrade practices for your Kubernetes provider. This page explains how Orka services are affected during an upgrade and what you can do to minimize disruption.
+
+<Note>
+Orka 3.6 is validated against Kubernetes 1.35 on both on-prem and AWS EKS. Running VMs are not affected by a Kubernetes upgrade — Mac nodes are not part of the upgrade process and do not restart.
+</Note>
+
+## Service behavior during an upgrade
+
+The standard Kubernetes node upgrade process cordons and drains each node, evicting pods and rescheduling them to available nodes. Services with a single replica may experience brief downtime during this window.
+
+| Service | Replicas (default) | Impact if down |
+|---|---|---|
+| API Server | 1 | API calls fail. Most integrations retry automatically, so downtime is often not noticeable. The `orka3` CLI continues working for all commands except `login` and `vm push`. |
+| Operator | 1 | Changes to Orka resources are not processed — VMs do not get scheduled or deleted. When the Operator comes back up, all queued changes are processed. No data is lost. |
+| Webhooks | 3 | No requests pass while down. |
+| Virtual Kubelet | Runs on each Mac host | The node cannot manage VMs. After a period of time the node is marked Not Ready by Kubernetes. |
+
+**Running VMs are not affected** by downtime of any of these services.
+
+### Virtual Kubelet
+
+The Virtual Kubelet does not need to be upgraded as part of a Kubernetes upgrade. It is forward-compatible with new Kubernetes versions and MacStadium will notify you if an upgrade is ever required.
+
+### Operator leader election
+
+The Operator uses a leader election model — only one pod is active at a time. If the active Operator pod is evicted during an upgrade, leader election takes up to 15 seconds. During this window, VM deployments may be slower but will not error.
+
+## Minimizing disruption
+
+If you need the Orka API Server and Operator to remain available throughout the upgrade:
+
+1. Increase the replica count for the API Server and Operator deployments.
+2. Add a PodDisruptionBudget for the API Server, Operator, and Webhooks to ensure at least one healthy pod remains during node drain.
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: orka-apiserver-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: orka-apiserver
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: orka-operator-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: orka-operator
+```
+
+<Warning>
+If you use a PodDisruptionBudget, you must have at least 2 replicas for that deployment. A PDB with `minAvailable: 1` on a single-replica deployment will prevent Kubernetes from evicting the pod, blocking the upgrade.
+</Warning>
+
+## Post-upgrade verification
+
+After completing the upgrade, verify that the Orka environment is fully operational.
+
+**Nodes are ready:**
+```bash
+kubectl get nodes
+# or
+orka3 node list
+```
+All nodes should be present and in Ready state.
+
+**Orka services are running:**
+```bash
+kubectl get pods
+```
+Verify that `orka-apiserver`, `orka-operator`, `orka-webhook`, and `cert-manager` pods are running.
+
+**VM deployment works:**
+```bash
+orka3 vm deploy --image <image>
+```
+
+**API is reachable:**
+```bash
+curl <api-endpoint>/api/v1/cluster-info
+```
+Expect a `200` response.
+
+## Support
+
+If you have questions or require assistance, please [contact our support team](mailto:support@macstadium.com).
