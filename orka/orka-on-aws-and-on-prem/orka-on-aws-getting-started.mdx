@@ -129,7 +129,7 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
         3. Compute - EC2
         4. Environment type - Linux Container
         5. Image registry - Other registry
-           1. Under External registry URL, enter **ghcr.io/macstadium/orka-ansible-aws:<version_tag>** where **<version_tag>** is the Orka version.
+           1. Under External registry URL, enter `ghcr.io/macstadium/orka-ansible-aws:<version_tag>` where `<version_tag>` is the Orka version.
   3. Allow AWS to create the CodeBuild role for you.
      1. Note down the name of the role, as you will need to modify it later.
   4. (Optional) Set VPC, Subnets and security group to be used by CodeBuild. This is only needed if the EKS access is set to private. To do that:
