@@ -28,6 +28,8 @@ git config --global alias.new '!git checkout -b'
 
 Then `git new my-branch-name` creates and switches to a new branch.
 
+**Branch naming:** Avoid the `docs/` prefix — Mintlify skips preview deployments for branches matching that pattern. Use `fix/`, `add/`, `update/`, etc.
+
 ## Local preview
 
 Install the Mintlify CLI:
