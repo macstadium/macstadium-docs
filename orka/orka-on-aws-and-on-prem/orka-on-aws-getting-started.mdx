@@ -28,7 +28,7 @@ Key elements in the architecture include:
 ## Considerations for Deployment in AWS
 
   * EKS Deployment
-    * Orka must be deployed in a dedicated EKS cluster running v1.33. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive. We will use a set of Ansible scripts (a common deployment method we follow, independent of the deployment location). For AWS, we will provide an image with the required playbooks & roles. It will be flexible and easy to parameterize, customize, and troubleshoot in case something goes wrong.
+    * Orka must be deployed in a dedicated EKS cluster running v1.35. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive. We will use a set of Ansible scripts (a common deployment method we follow, independent of the deployment location). For AWS, we will provide an image with the required playbooks & roles. It will be flexible and easy to parameterize, customize, and troubleshoot in case something goes wrong.
   * Storage
     * We recommend using ECR or alternative OCI repositories for image storage.
   * Mac EC2
@@ -69,7 +69,7 @@ export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
 
 We recommend that you deploy the Orka services to a distinct VPC and implement your networking via VPC peering. This will allow the necessary networking to interact with VMs and the control plane. Within the VPC, the following are ports that should be exposed for different services.
 
-  * EKS running v.1.33
+  * EKS running v.1.35
     * Orka Operator: TCP 8080 (metrics), TCP 8081 (health check), TCP 443 (webhook), Linux worker nodes should be accessible from within the cluster on any port. Does not require Internet access.
     * Orka OIDC Provider: TCP 443. Requires connectivity to the authentication provider.
   * EC2 Mac Nodes
@@ -79,7 +79,8 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 ## Install Overview
 
-  1. **Talk to your MacStadium Account Team about your Orka on AWS install.** MacStadium will create an internal service ID for you, and **will provide you with the details you need to connect to our Public ECR repo**.
+  1. **Talk to your MacStadium Account Team about your Orka on AWS install.
+     1. Provide MacStadium with your AWS account ID and region to be used. This is needed so that the Orka AMI can be shared with your account.
   2. Follow the installation steps below for the EKS Cluster and the CodeBuild role.
      1. **Take note of the EKS Node IAM role and the CodeBuild role ARN, and share the 2 ARNs with your MacStadium Account Team**
   3. MacStadium provides customers with an OIDC Client ID to use during CodeBuild execution and with AMI details so they can install Orka software onto EC2 Mac.
@@ -92,7 +93,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 ## EKS Install Steps
 
-  1. Orka must be deployed in a dedicated EKS cluster for running v1.33.
+  1. Orka must be deployed in a dedicated EKS cluster for running v1.35.
      1. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive.
      2. To set up the cluster, follow the AWS guidelines for [EKS Auto Mode](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-automode.html) or the [EKS QuickStart](https://docs.aws.amazon.com/eks/latest/userguide/quickstart.html).
   2. **Recommendations** :
@@ -105,13 +106,12 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
         1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
      2. Use EKS API for Cluster authentication mode.
         1. This is the [newest authentication mode for EKS](https://aws.amazon.com/blogs/containers/a-deep-dive-into-simplified-amazon-eks-access-management-controls/), replacing the old aws-auth config map.
-  5. Orka Cluster installs itself into EKS using Ansible scripts. This may change in the future, but for the time being, you will need to supply MacStadium Support team with an ARN for the role that has permission to pull an image containing the required Ansible playbooks and roles to install Orka Cluster into EKS.
-     1. **Once you provide the ARN, MacStadium support will provide access to the image that contains the ECR Repository URI and an OIDC Client ID**
+  5. Orka Cluster installs itself into EKS using Ansible scripts.
+     1. **MacStadium support will provide an OIDC Client ID**
      2. Additional considerations
-        1. The Ansible runner must use the credentials of the role provided to MacStadium to pull the Ansible image.
-        2. The Ansible runner must have connectivity to the cluster API.
-        3. The Ansible runner must have Cluster Admin privileges to set up the cluster.
-        4. MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns.
+        1. The Ansible runner must have connectivity to the cluster API.
+        2. The Ansible runner must have Cluster Admin privileges to set up the cluster.
+        3. MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns.
 
 
 
@@ -128,9 +128,8 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
         2. Environment image - custom type
         3. Compute - EC2
         4. Environment type - Linux Container
-        5. Image registry - Amazon ECR
-        6. ECR account - other ECR account
-           1. Under Amazon ECR repository URI, enter the image provided by MacStadium.
+        5. Image registry - Other registry
+           1. Under External registry URL, enter **ghcr.io/macstadium/orka-ansible-aws:<version_tag>** where **<version_tag>** is the Orka version.
   3. Allow AWS to create the CodeBuild role for you.
      1. Note down the name of the role, as you will need to modify it later.
   4. (Optional) Set VPC, Subnets and security group to be used by CodeBuild. This is only needed if the EKS access is set to private. To do that:
@@ -151,10 +150,8 @@ Where:
 `{kube_oidc_client_id}` - the OIDC client ID provided by MacStadium
 
   6. Save the configuration.
-  7. Next, Configure CodeBuild to access the Ansible image provided by MacStadium and to manage the EKS cluster:
-     1. Access the Ansible image provided by MacStadium.
-        1. **Provide the ARN of the CodeBuild role configured in the previous step to MacStadium to allow access.**
-     2. Manage the EKS cluster. To enable CodeBuild to manage the EKS cluster, complete the following steps:
+  7. Next, Configure CodeBuild to manage the EKS cluster:
+     1. Manage the EKS cluster. To enable CodeBuild to manage the EKS cluster, complete the following steps:
         1. The IAM Role needs a policy to manage EKS. To do this:  
 Navigate to the IAM role.  
 Attach a policy (managed or inline) with:

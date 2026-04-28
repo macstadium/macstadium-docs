@@ -8,16 +8,16 @@ With Orka On-Prem, you can now effortlessly integrate macOS development and macO
 
 # How does Orka On-Prem work?
 
-The diagram below illustrates the architecture of an Orka Cluster On-Prem, detailing how it integrates with Kubernetes 1.33, Mac compute hosts, and OCI Registries for image storage.
+The diagram below illustrates the architecture of an Orka Cluster On-Prem, detailing how it integrates with Kubernetes 1.35, Mac compute hosts, and OCI Registries for image storage.
 
 ![Orka On-Prem architecture diagram showing Kubernetes, Mac nodes, and OCI registry](/images/attachments/44003753966363.png)
 
-The Kubernetes 1.33 Cluster provides a runtime for the Orka Cluster Services. The Mac hosts are set up with Orka Engine (VM Runtime), which provides a stable runtime for virtual machines. VMs are deployed to the host using an OCI image, which can be fetched from any OCI registry, such as Artifactory, GitHub Container Repo (GHCR), or Amazon ECR. The use of OCI images enables sub-minute deployment of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac without Orka VMs. CI tools will integrate via the Orka API installed into Kubernetes, or the CLI or API it exposes to orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
+The Kubernetes 1.35 Cluster provides a runtime for the Orka Cluster Services. The Mac hosts are set up with Orka Engine (VM Runtime), which provides a stable runtime for virtual machines. VMs are deployed to the host using an OCI image, which can be fetched from any OCI registry, such as Artifactory, GitHub Container Repo (GHCR), or Amazon ECR. The use of OCI images enables sub-minute deployment of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac without Orka VMs. CI tools will integrate via the Orka API installed into Kubernetes, or the CLI or API it exposes to orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
 
 Key elements in the architecture include:
 
   * A private network configuration for Orka.
-  * A dedicated Kubernetes 1.33 cluster, which runs Orka Cluster Services for orchestration and automation.
+  * A dedicated Kubernetes 1.35 cluster, which runs Orka Cluster Services for orchestration and automation.
   * Mac Nodes to be used for compute, usually on-prem.
   * An OCI Registry such as Artifactory, GitHub Container Registry, Docker Registry, AWS ECR, or others..
   * A load balancer for Orka Users to interact with the Orka Services on Kubernetes via CLI, API, or CI tools.
@@ -34,7 +34,7 @@ You might experience issues if your Orka VMs need to access services that are in
 
 ## Kubernetes Requirements and Initial Steps
 
-Orka requires a dedicated Kubernetes 1.33 cluster to run.
+Orka requires a dedicated Kubernetes 1.35 cluster to run.
 
   * Orka requires a dedicated cluster because it limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is generally more restrictive.
 
@@ -94,49 +94,21 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 4. Receive license key via email (Est. 24 hour turnaround time)
 
-5. Activate the license: ``orka-engine license set --key YOUR_KEY``
-
-Download Orka Engine directly at: [https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)
-
 ### Installing the Orka Cluster Services
 
 MacStadium distributes the Service Images needed to install Orka Cluster On Prem via AWS. As a result, the easiest way to perform an installation is to use some credentials that the MacStadium Support team will provide to gain access to the Ansible image with runners that are used to install.
 
 You will need an environment with outbound internet access to connect to AWS and download the installer (Ansible image). Ideally, this environment can also connect to the Kubernetes API and have admin access to the Kubernetes Cluster. If not, make sure to move the downloaded Ansible image to an environment with the appropriate connectivity and access.
 
-  1. Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html) in an environment that has outbound access to the internet to connect to AWS and download the installers. Ideally, the same environment will be used to connect to the Kubernetes API and have admin access to the Kubernetes Cluster. If not make sure to move the downloaded Ansible image to an environment that has the appropriate connectivity.
+1. Ensure the Ansible runner is set up correctly:
+  1. The Ansible runner must have connectivity to the cluster API.
+  2. The Ansible runner must have Cluster Admin privileges to set up the cluster (i.e. a kube config with admin privileges)
 
-   1. Create or update the `~/.aws/config` file to contain the default and runner profile information that can be filled in with additional key and ARN info provided by the MacStadium Support team. The profile runner will be used to pull the Ansible image in the next step. More details about the AWS CLI profiles can be found in their [documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
+2. On the host create a file called `cluster.yml`. This file will contain Ansible variables needed for the Orka setup. Add the following content:
 
-```
-[profile runner-credentials]
-aws_access_key_id= # Provided by MacStadium
-aws_secret_access_key= # Provided by MacStadium
-
-[profile runner]
-role_arn= # Provided by MacStadium
-source_profile = runner-credentials
-role_session_name = ansible-runner-session
-```
-  2. Next, download the Ansible image. Ensure the Ansible runner is set up correctly:
-     1. The Ansible runner must have connectivity to the cluster API.
-     2. The Ansible runner must have Cluster Admin privileges to set up the cluster (i.e. a kube config with admin privileges
-  3. Authenticate to ECR so you can pull the Ansible image provided by MacStadium
-         
-```
-     aws ecr get-login-password --region us-east-1 --profile runner | docker login --username AWS --password-stdin 519920272850.dkr.ecr.us-east-1.amazonaws.com
-```
-where `<profile_name>` is the name of the profile you defined.
-
-  4. On the host create a file called `cluster.yml`. This file will contain Ansible variables needed for the Orka setup. Add the following content:
-         
 ```
      k8s_api_address: # The address to the K8s API of your cluster. Must start with the protocol (https:// or http://)
      kube_oidc_client_id: # Provided by MacStadium
-     aws_access_key_id: # Provided by MacStadium
-     aws_secret_access_key: # Provided by MacStadium
-     add_ecr_registry_role_arn: # Provided by MacStadium
-     aws_s3_access_role_arn: # Provided by MacStadium
      orka_engine_license_key: # Provided by MacStadium
                                                                                                 
      ## Optionally - Configure tolerations and selectors
@@ -150,22 +122,16 @@ where `<profile_name>` is the name of the profile you defined.
      # orka_node_selector: |
      #   node-role.kubernetes.io/control-plane: ""
 ```
-  5. Run the Ansible container:
+3. Run the Ansible container:
 
-
-    
-    
 ```
-docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
+docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml ghcr.io/macstadium/orka-ansible-onprem:<version_tag> bash
 ```
-where `<kube_config_location>` is the location of the kube config file on the host. Typically `~/.kube/config`. And `cluster.yml` is the file created in the previous step.
+where `<kube_config_location>` is the location of the kube config file on the host. Typically `~/.kube/config`. `cluster.yml` is the file created in the previous step. And `version_tag` is the Orka version you are installing (i.e 3.6.0).
 
-  6. Make sure you are in the `/ansible` directory
-  7. You can now run the Ansible playbook:
+4. Make sure you are in the `/ansible` directory
+5. You can now run the Ansible playbook:
 
-
-    
-    
 ```
 ansible-playbook site.yml
 ```
@@ -238,9 +204,9 @@ To set up the Mac Nodes:
     
     
 ```
-docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml -v ./nodes.yml:/ansible/group_vars/arm-nodes/nodes.yml -v ./hosts:/ansible/hosts -v <mac_ssh_key_location>:/root/.ssh/id_rsa 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash
+docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml -v ./nodes.yml:/ansible/group_vars/arm-nodes/nodes.yml -v ./hosts:/ansible/hosts -v <mac_ssh_key_location>:/root/.ssh/id_rsa ghcr.io/macstadium/orka-ansible-onprem:<version_tag> bash
 ```
-where `<mac_ssh_key_location>` is the location of the SSH key used to connect to the Mac nodes.
+where `<mac_ssh_key_location>` is the location of the SSH key used to connect to the Mac nodes. And `version_tag` is the Orka version you are installing (i.e 3.6.0).
 
   5. Ensure you are in the `/ansible` directory
   6. Run the configuration playbook:
@@ -293,8 +259,7 @@ To use the MacStadium provided functionality you need to:
   3. Run the container
          
 ```
-     docker run -it -v `<kube_config_location>`:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml 519920272850.dkr.ecr.us-east-1.amazonaws.com/orka-ansible-onprem:3.5.0 bash  
-```
+     docker run -it -v `<kube_config_location>`:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml ghcr.io/macstadium/orka-ansible-onprem:<version_tag> bash
   4. Run the backup playbook inside the `/ansible` folder
          
 ```
