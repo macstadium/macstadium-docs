@@ -273,6 +273,13 @@
             ]
           },
           {
+            "group": "Upgrade Guides",
+            "pages": [
+              "orka/orka-upgrades-and-release-notes/orka-upgrades",
+              "orka/orka-upgrades-and-release-notes/kubernetes-upgrade-guide"
+            ]
+          },
+          {
             "group": "Release Notes",
             "pages": [
               "orka/orka-upgrades-and-release-notes/orka-35-release-notes",
@@ -280,8 +287,7 @@
               "orka/orka-upgrades-and-release-notes/orka-33-release-notes",
               "orka/orka-upgrades-and-release-notes/orka-32-release-notes",
               "orka/orka-upgrades-and-release-notes/orka-31-release-notes",
-              "orka/orka-upgrades-and-release-notes/orka-30-release-notes",
-              "orka/orka-upgrades-and-release-notes/orka-upgrades"
+              "orka/orka-upgrades-and-release-notes/orka-30-release-notes"
             ]
           }
         ]
