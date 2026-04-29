@@ -124,6 +124,7 @@
             "group": "Cluster Access",
             "pages": [
               "orka/orka-cluster-access/cluster-access-management-overview",
+              "orka/orka-cluster-access/orka-authentication-and-rbac",
               "orka/orka-cluster-access/understanding-orka-credentials",
               "orka/orka-cluster-access/customer-portal-manage-account-users",
               "orka/orka-cluster-access/orka-cluster-access-the-cluster",
