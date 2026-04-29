@@ -8,31 +8,29 @@ zendesk_id: 41316947194139
   **Requires Orka 3.5.0 or later.** If you're on an earlier version, see the [release notes](/orka/orka-upgrades-and-release-notes/orka-upgrades) for your version before proceeding.
 </Note>
 
-Bridged networking allows Orka VMs running Orka 3.5.0 to connect directly to a physical network as a native device, receiving their own IP address from the network’s DHCP server. This enables direct communication with other network devices and services without the use of NAT, and is configurable automatically using Orka alongside your existing DHCP server.
+Bridged networking allows Orka VMs running Orka 3.5.0 to connect directly to a physical network as a native device, receiving their own IP address from the network's DHCP server. This enables direct communication with other network devices and services without the use of NAT, and is configurable automatically using Orka alongside your existing DHCP server.
 
 ## Getting Started
 
-To set up bridge networking in your Orka on-prem cluster, you will need to set the following variables in your host’s `cluster.yml` file:
+To set up bridge networking in your Orka on-prem cluster, you will need to set the following variables in your host's `cluster.yml` file:
 
   1. `vm_network_mode: bridge`
 
-```
- 1. This is used to specify the network mode to your Orka services, and is added to your `cluster.yml` file. For instructions on how to set up this file, please refer to the [Orka On-Prem: Getting Started documentation](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started).
-```
+     This is used to specify the network mode to your Orka services, and is added to your `cluster.yml` file. For instructions on how to set up this file, please refer to the [Orka On-Prem: Getting Started documentation](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started).
+
   2. `osx_node_vm_network_interface: <host-interface>`
 
-```
- 1. `host_interface` is the interface on the host that the DHCP server is accessible on
+     - `host_interface` is the interface on the host that the DHCP server is accessible on
+     - If the host interface is the same on every host, you can set this in the `nodes.yml` file
+     - If the host interface differs between hosts, this can be set per host in the hosts file
 
- 2. If the host interface is the same on every host, you can set this in the `nodes.yml` file
+**Example:**
 
- 3. If the host interface differs between hosts, this can be set per host in the hosts file
 ```
-**Example:**  
-  
-`[arm-nodes]`  
-`10.221.188.30 osx_node_vm_network_interface=vlan0`  
-`10.221.188.31 osx_node_vm_network_interface=vlan1`
+[arm-nodes]
+10.221.188.30 osx_node_vm_network_interface=vlan0
+10.221.188.31 osx_node_vm_network_interface=vlan1
+```
 
 
 
@@ -40,8 +38,8 @@ To set up bridge networking in your Orka on-prem cluster, you will need to set t
 ### VNC Access
 
 When bridge mode is active, you will see a deploy output similar to the following example:
-    
-    
+
+
 ```
 NAME IP SSH VNC SCREENSHARE STATUS
 vm-2gdws 10.221.190.85 22 6000 5900 Running

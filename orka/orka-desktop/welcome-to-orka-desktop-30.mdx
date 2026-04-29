@@ -4,7 +4,7 @@ description: "Free macOS virtualization for individual workstations. Build and t
 zendesk_id: 28396626048667
 ---
 
-# Orka Desktop by MacStadium
+## Orka Desktop by MacStadium
 
 **Orka Desktop** is a free, no-obligation virtualization tool designed for individual macOS workstations. These workstations can be a local MacBook, a hosted Mac mini or Studio by MacStadium, AWS, or an on-premises solution. Once deployed, **Orka Desktop** lets you create a seamless workflow for running the same image on any device. You can build and test an image locally, then upload it to the cloud. This is much easier than needing bespoke technologies and individual processes to test, share, and configure virtualized images.
 
@@ -52,7 +52,7 @@ The Open Container Initiative (OCI) is an open governance structure for the expr
 
 You can deploy a VM using a compatible image from a private or public registry, and store images in your own registry.
 
-# Installation and Set Up in 3 Easy Steps
+## Installation and Set Up in 3 Easy Steps
 
 **Orka Desktop** has a clear and intuitive GUI, which makes it easy transition to using Orka in the cloud. It provides information about your system, available images, and VMs.
 
@@ -69,15 +69,15 @@ You can deploy a VM using a compatible image from a private or public registry, 
 
 <Note>
   - IPSW (Apple Software/Firmware) is a file format used in macOS firmware for devices equipped with Apple silicon.
-  - There is also the option to pull the latest IPSW directly from Apple’s servers, which is detailed in the Other IPSW Options section.
+  - There is also the option to pull the latest IPSW directly from Apple's servers, which is detailed in the Other IPSW Options section.
 </Note>
 
 
 ## Downloading Orka Desktop
 
-  * MacStadium website: https://www.macstadium.com/
-  * MacStadium GitHub repo: https://github.com/macstadium/orka-desktop/releases
-  * Brew package manager: brew install orka-desktop
+  * MacStadium website: [macstadium.com](https://www.macstadium.com/)
+  * MacStadium GitHub repo: [macstadium/orka-desktop](https://github.com/macstadium/orka-desktop/releases)
+  * Brew package manager: `brew install orka-desktop`
 
 ![Orka Desktop main interface showing system information and VM list](/images/attachments/28396594761627.png)  
 
@@ -114,8 +114,12 @@ _Other (to select from an existing IPSW file)_
 
   6. If you do not have a local IPSW file to use for the new VM, select Download Latest to get the latest files from Apple.  
 ![IPSW dropdown with Download Latest option highlighted](/images/attachments/28396625948571.png)  
-__Download Latest (to get the latest files from Apple)  
-**NOTE** : Selecting the Download Latest dropdown opens a confirmation box.__
+
+_Download Latest (to get the latest files from Apple)_
+
+<Note>
+  Selecting the Download Latest dropdown opens a confirmation box.
+</Note>
   7. Use the stepped sliders to manually adjust the number of CPUs, and the amount of Memory and Storage that you want to allocate to the VM.  
 ![VM resource sliders for CPU count, memory, and storage allocation](/images/attachments/28396594776475.png)  
 
@@ -139,10 +143,14 @@ _Image Data Location_
   2. Open the Orka Desktop tool and the _System Information_ screen displays.
   3. Click + **Create New VM**![Create New VM button in Orka Desktop](/images/attachments/28396594781339.png)
   4. When the new Virtual Machine dialog box opens, select **Pull from an Image** ; then use the **Name** field to name the VM.  
-![New VM dialog with Pull from an Image option selected](/images/attachments/28396594783131.png)_Pull from an Image  
-_**NOTES**
-     * In this example, the new VM is called New VM Pulled From Image, and at the same time, that name appears on the left-hand side of the screen, under the list of available Virtual Machines.
-     * The VM is now in a pending installation state.
+![New VM dialog with Pull from an Image option selected](/images/attachments/28396594783131.png)
+
+_Pull from an Image_
+
+<Note>
+  - In this example, the new VM is called New VM Pulled From Image, and at the same time, that name appears on the left-hand side of the screen, under the list of available Virtual Machines.
+  - The VM is now in a pending installation state.
+</Note>
   5. Complete all fields with the required information.
   6. Use the stepped sliders to manually adjust the number of CPUs, and the amount of Memory and Storage that you want to allocate to the VM.
   7. Use the Display Resolution drop own to set the resolution of the screen when running Console into the image.  
@@ -153,7 +161,7 @@ _**NOTES**
 
 ![Configuration warning message for exceeded recommended VM resource limits](/images/attachments/28396594788763.png)
 
-Configuration Warnings
+### Configuration Warnings
 
 When adding CPU Count and Memory Size, the Orka Desktop application displays a warning message if the recommended sizes are exceeded.
 
@@ -179,7 +187,9 @@ _Memory Size Warning_
 
 _VM Starting_
 
-**NOTE** : Starting a VM for the first time may take several minutes.
+<Note>
+  Starting a VM for the first time may take several minutes.
+</Note>
 
 <Note>
   - This VM might be configured to run a different version of macOS from your host, so you can test the same software in two different environments. Note that you can only use OSs in VMs that are more recent than the OS running on the host.
