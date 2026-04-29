@@ -146,17 +146,12 @@ curl -X 'GET' \
 ```
 
 This API call provides an overview of your nodes. It shows the actual IP, the state, and the available resources on each node.
-**Glossary: Node**
 
-A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads.
+<Note>
+**Node:** A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads. A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
 
-A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
-
-**Glossary: Namespace**
-
-A way to isolate and dedicate resources to users and teams within the cluster.
-
-The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+**Namespace:** A way to isolate and dedicate resources to users and teams within the cluster. The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+</Note>
 
   2. Check if there are any VMs on your environment.
 
@@ -192,11 +187,9 @@ curl -X 'GET' \
 ```
 You will likely see a `sonoma-90gb-orka3-arm` item in the response. It is a fully installed and configured macOS Sonoma image with a 90GB disk size. It also has an admin user configured and SSH and Apple Screen Sharing access enabled.
 
-Glossary: Image
-
-A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs.
-
-(Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+<Note>
+**Image:** A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs. (Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+</Note>
 
   4. Deploying a VM is as simple as just specifying a base image. Run:
 
@@ -301,9 +294,9 @@ The API now returns information about your running VM.
 
 The `GET /resources/vm/list` call is powerful. It shows a lot of system information for the VM, along with its IP, and several connection ports. Note that even though `Screenshare` and `SSH` are always listed and configured for every VM, you won't be able to use them unless the respective connection type is enabled in the macOS as well. This behavior is a security limitation of the OS.
 
-**In a pool of many VMs, are you looking for that special one?**
-
-When you have a lot of VMs, the response of `GET /resources/vm/list` might become too crowded to use efficiently. Run `GET /namespaces/orka-default/vms/<VM_NAME>` instead and get the system information for a single VM.
+<Note>
+When you have a lot of VMs, the response of `GET /resources/vm/list` can become too crowded to use efficiently. Run `GET /namespaces/orka-default/vms/<VM_NAME>` instead to get system information for a single VM.
+</Note>
 
   6. Check your nodes to see how many resources are now in use.
 
@@ -367,21 +360,13 @@ Changing a running VM's configuration or file system does not affect its base im
 
 To create changes that stick and appear on future deployments, you can commit your changes to the base image, save the changes as a new image, or push your changes to an OCI-compatible registry.
 
-**Glossary: Commit changes**
+<Note>
+**Commit:** Modifies the original base image of the respective VM instance. With this operation, you apply the current state of a VM instance over the base image of its VM config. Newly deployed instances will launch in the same state as your current VM. This operation restarts the VM.
 
-`Commit` modifies the original base image of the respective VM instance. With this operation, you apply the current state of a VM instance over the base image of its VM config. This way, newly deployed instances will launch in the same state as your current VM.
+**Save:** Creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image. This operation restarts the VM.
 
-This operation restarts the VM.
-
-**Glossary: Save changes**
-
-`Save` creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image.
-
-This operation restarts the VM.
-
-**Glossary: Push changes**
-
-`Push` your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image.
+**Push:** Pushes your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image.
+</Note>
 
 Return to the command line on your local machine and run the following command. You can get the `<VM_NAME>` from the `GET /namespaces/orka-default/vms` output you ran earlier.
 
