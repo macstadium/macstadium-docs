@@ -4,48 +4,45 @@ description: "Orka3 CLI image commands: list, pull, push, and manage macOS image
 zendesk_id: 42514516825883
 ---
 
-## Understanding Orka images  
-  
+## Understanding Orka images
+
 Images are used to spin up VMs in Orka. An image contains the macOS operating system, applications, and any configurations you've set up.
 
-**Image Architecture Types**
+**Image architecture types**
 
-  * **amd64 architecture** \- Intel-based images (previously denoted by an `.img` extension)
-  * **arm64 architecture** \- Apple silicon-based images (previously denoted by an `.orkasi` extension)
+  * **amd64 architecture** - Intel-based images (previously denoted by an `.img` extension)
+  * **arm64 architecture** - Apple Silicon-based images (previously denoted by an `.orkasi` extension)
 
+<Note>Extensions are no longer required as part of an image name. The architecture is determined automatically.</Note>
 
-
-**Note:** Extensions are no longer required as part of an image name. The architecture is determined automatically.
-
-**Image Accessibility**
+**Image accessibility**
 
 Local images are accessible from all namespaces in your Orka cluster.
 
 ## Local image commands
 
-**orka3 image list**
+### orka3 image list
 
 List the locally stored images in your Orka cluster. (Note, you may not have any images until you run `imagecache` or a `vm deploy` command)
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 image list [IMAGE_NAME_1 [IMAGE_NAME_2 ...]] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help            Display help for list
 -o, --output string   (Optional) Output format: table (default)|wide|json
 ```
+
 If `--output` is not set, prints only essential information in a table format. Use `wide` for additional error information or `json` for JSON output.
 
 **Examples:**
-    
-    
-```
+
+```bash
 # List the images stored locally in your Orka cluster
 orka3 image list
 
@@ -64,154 +61,152 @@ orka3 image list --output wide
 # Show additional error information for a specific image
 orka3 image list 90gbventurassh.orkasi --output wide
 ```
-**orka3 image copy**
+
+### orka3 image copy
 
 Copy the specified image and set a new name for the copy.
 
-**Image Name Requirements:**
+**Image name requirements:**
 
   * Does not exceed 63 characters including the file extension (if set)
   * Consists of lowercase alphanumeric characters, dashes (-) or periods (.)
   * Must be unique to the cluster
 
-
-
 By default, this operation also copies the description of the source image. You can explicitly change the description during this operation.
 
-**Note:** Copying an image is an async operation. To check the status: `orka3 image list IMAGE_COPY_NAME`
+<Note>Copying an image is an async operation. To check the status: `orka3 image list IMAGE_COPY_NAME`</Note>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 image copy IMAGE_NAME IMAGE_COPY_NAME [--description 'DESCRIPTION'] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -d, --description string   (Optional) Custom description for the copy
 -h, --help                 Display help for copy
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Copy an image
 orka3 image copy 90gbventurassh.orkasi 90gbventurassh-copy.orkasi
 
 # Copy an image with a custom description
 orka3 image copy 90gbventurassh.orkasi 90gbventurassh-copy.orkasi --description 'user@company.com copied this image'
 ```
-**orka3 image generate**
+
+### orka3 image generate
 
 (Intel-only) Generate a new empty image with the specified size. Use an empty image to perform a fresh macOS install from ISO.
 
 Generated images are always created as amd64 images (Intel-based images) and are accessible from all namespaces.
 
-**Note:** Generating an image is an async operation. To check the status: `orka3 image list GENERATED_IMAGE_NAME`
+<Note>Generating an image is an async operation. To check the status: `orka3 image list GENERATED_IMAGE_NAME`</Note>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 image generate IMAGE_NAME SIZE [--description 'DESCRIPTION'] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -d, --description string   (Optional) Custom description for the generated image
 -h, --help                 Display help for generate
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Generate an empty 120GB image
 orka3 image generate 120gbemptyimage 120G
 
 # Generate an empty 120GB image with a custom description
 orka3 image generate 120gbemptyimage 120G --description 'user@company.com created this empty image'
 ```
-**orka3 image set-description**
+
+### orka3 image set-description
 
 Set a custom description for the specified image. This can be helpful to identify the owner of the image, where it originated from, or how it is used across workflows.
 
 <Warning>This operation overrides the existing description and cannot be undone.</Warning>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 image set-description IMAGE_NAME DESCRIPTION [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help   Display help for set-description
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Set a custom description for an image
 orka3 image set-description 90gbventurassh.orkasi 'user@company.com set this description'
 ```
-**orka3 image delete**
+
+### orka3 image delete
 
 Delete the specified locally stored images.
 
 <Warning>This operation cannot be undone. VMs or VM configurations that use this image are affected and might stop working as expected.</Warning>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 image delete IMAGE_NAME [IMAGE_NAME_2 ...] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help   Display help for delete
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Delete an image from your Orka cluster
 orka3 image delete 90gbventurassh.orkasi
 
 # Delete multiple images
 orka3 image delete 90gbventurassh.orkasi 90gbventurassh.img
 ```
+
 ## Image cache commands
 
 Manage images stored on Orka cluster nodes. By adding images to a node before deployment of a VM using that base image, you can manage and control the delay caused by remote or even local cluster storage image pulls, providing consistent deployment times.
 
-**Note:** Image cache operations are only supported for Apple Silicon nodes. The alias for `imagecache` is `ic`.
+<Note>Image cache operations are only supported for Apple Silicon nodes. The alias for `imagecache` is `ic`.</Note>
 
-**orka3 imagecache add**
+### orka3 imagecache add
 
 Cache the specified image on the specified node(s). Add an image to one, a select number, or all cluster node namespace members or members of a tagged node group.
 
 The image must be pulled in the cluster before caching it on the node(s), unless it is an OCI image. For OCI images, make sure you have the necessary credentials to pull the OCI image.
 
-**Note:** Caching an image is an async operation. To check the status: `orka3 imagecache info IMAGE_NAME`
+<Note>Caching an image is an async operation. To check the status: `orka3 imagecache info IMAGE_NAME`</Note>
 
 The `--nodes`, `--tags`, and `--all` flags are mutually exclusive.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 imagecache add IMAGE_NAME [--namespace CURRENT_NAMESPACE] {--nodes | --tags | --all} [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 --all                    Cache the image on all nodes in the current namespace
 -h, --help               Display help for add
@@ -219,10 +214,10 @@ orka3 imagecache add IMAGE_NAME [--namespace CURRENT_NAMESPACE] {--nodes | --tag
 --tags string            The node tag(s) by which to filter nodes
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Cache an image on a specific node
 orka3 imagecache add ghcr.io/macstadium/orka-images/sequoia:latest --nodes mini-arm-10
 
@@ -238,28 +233,28 @@ orka3 imagecache add ghcr.io/macstadium/orka-images/sequoia:latest --tags my-tag
 # Cache an image on a node in a specific namespace
 orka3 imagecache add ghcr.io/macstadium/orka-images/sequoia:latest --nodes mini-arm-10 --namespace my-namespace
 ```
-**orka3 imagecache info**
+
+### orka3 imagecache info
 
 Display the caching status of an image across nodes. Use this to verify if images are available for deployment ("ready" status) or if the caching operation is still active ("caching" status).
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 imagecache info IMAGE_NAME [--namespace CURRENT_NAMESPACE] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help               Display help for info
 -o, --output string      (Optional) Output format: table (default)|wide|json
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Display the caching status of an image
 orka3 imagecache info sonoma-90gb-orka3-arm
 
@@ -269,28 +264,28 @@ orka3 imagecache info ghcr.io/macstadium/orka-images/sonoma
 # Display the caching status of an OCI image with a specific tag
 orka3 imagecache info ghcr.io/macstadium/orka-images/sonoma:14.0
 ```
-**orka3 imagecache list**
+
+### orka3 imagecache list
 
 List cached images across nodes. Provides information about cached images such as image tag (OCI repo pulled images only), the image-id (a unique identifier from manifest), the sparse size of the image, and the number of nodes the image is cached on.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 imagecache list [IMAGE_NAME_1 IMAGE_NAME_2 ...] [--namespace CURRENT_NAMESPACE] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help               Display help for list
 -o, --output string      (Optional) Output format: table (default)|wide|json
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # List all cached images on all nodes
 orka3 imagecache list
 
@@ -309,24 +304,24 @@ orka3 imagecache list sonoma-90gb-orka3-arm ghcr.io/macstadium/orka-images/sonom
 # List all cached images as JSON
 orka3 imagecache list --output json
 ```
-## Remote Images (Deprecated)
+
+## Remote images (deprecated)
 
 <Warning>This functionality will be removed in future releases. MacStadium recommends using OCI registries for image storage and management. The `orka3 imagecache` command should be used as a replacement to load images into the cluster.</Warning>
 
-**orka3 remote-image list**
+### orka3 remote-image list
 
 List the available images in the remote repository or look for specific images in the remote repository.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 remote-image list [IMAGE_NAME_1 [IMAGE_NAME_2 ...]] [--output wide|json] [flags]
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # List available remote images
 orka3 remote-image list
 
@@ -336,22 +331,22 @@ orka3 remote-image list 90gbventurassh.img
 # Check if multiple specific images exist remotely
 orka3 remote-image list 90gbventurassh.img 90gbventurassh.orkasi
 ```
-**orka3 remote-image pull**
+
+### orka3 remote-image pull
 
 Copy an image from the remote repository and store it locally in the Orka cluster. You can keep the original name or set a new name in the local cluster storage.
 
-**Note:** Pulling a remote image is an async operation. To check the status: `orka3 image list PULLED_IMAGE_NAME`
+<Note>Pulling a remote image is an async operation. To check the status: `orka3 image list PULLED_IMAGE_NAME`</Note>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 remote-image pull REMOTE_IMAGE_NAME [NEW_LOCAL_IMAGE] [--description 'DESCRIPTION'] [flags]
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Pull an image from the remote repository
 orka3 remote-image pull 90gbventurassh.orkasi
 

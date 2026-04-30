@@ -8,47 +8,42 @@ zendesk_id: 42514990363419
 
 Orka nodes are the physical Mac hardware in your cluster that provide compute resources for running VMs. Each node can host multiple VMs based on its available CPU, memory, and storage resources.
 
-**Node Types:**
+**Node types:**
 
   * **Intel nodes (amd64):** Mac Pro, Mac mini (Intel), iMac Pro
   * **Apple Silicon nodes (arm64):** Mac mini (M1/M2/M3), Mac Studio
 
-
-
-**Key Concepts:**
+**Key concepts:**
 
   * **Namespaces:** Nodes belong to a namespace and provide resources only to VMs in that namespace
-  * **Node Affinity:** Tags can be applied to nodes to control which nodes VMs are deployed to
-  * **Resource Management:** Nodes have limited CPU, memory, and storage that is shared among VMs
-
-
+  * **Node affinity:** Tags can be applied to nodes to control which nodes VMs are deployed to
+  * **Resource management:** Nodes have limited CPU, memory, and storage that is shared among VMs
 
 If `--namespace` is not set, node commands operate in the `orka-default` namespace.
 
-## Listing Nodes
+## Listing nodes
 
-**orka3 node list**
+### orka3 node list
 
 Show basic or extended information about Orka nodes. Based on the specified output, the command returns information ranging from available resources and status to node IP and architecture.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 node list [NODE_NAME_1 [NODE_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help               Display help for list
 -o, --output string      (Optional) Output format: table (default)|wide|json
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # List all Orka nodes in the 'orka-default' namespace
 orka3 node list
 
@@ -76,50 +71,48 @@ orka3 node list mini-1 mini-2 --output wide
 # Print information in JSON format
 orka3 node list --output json
 ```
-## Node Tagging for Affinity
+
+## Node tagging for affinity
 
 Node affinity indicates that the tagged node is preferred for the deployment of VMs with the same tag. Orka first attempts to deploy on any nodes with the respective tag, before moving to the remaining nodes in the environment.
 
 Orka attempts to deploy on other nodes only if the VM setting to require a tag is `no`.
 
-**Admin Only:** Node tagging and untagging require administrative privileges.
+**Admin only:** Node tagging and untagging require administrative privileges.
 
-**orka3 node tag**
+### orka3 node tag
 
 Tag the specified Orka node for targeted VM deployment (set node affinity).
 
-**Tag Requirements:**
+**Tag requirements:**
 
   * Does not exceed 63 characters
   * Consists of alphanumeric characters, dashes (-), underscores (_), or periods (.)
   * Begins and ends with an alphanumeric character
   * Set only one tag at a time (run the command separately for each tag)
 
-
-
 To list the tags applied to a node, run:
-    
-    
-```
+
+```bash
 orka3 node list NAME [--namespace NAMESPACE] --output wide
 ```
+
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 node tag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help               Display help for tag
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Tag a node in the 'orka-default' namespace
 orka3 node tag mini-1 jenkins
 
@@ -129,27 +122,27 @@ orka3 node tag mini-1 --namespace orka-test jenkins
 # Check if the tag was applied as expected
 orka3 node list mini-1 --output wide
 ```
-**orka3 node untag**
+
+### orka3 node untag
 
 Untag the specified Orka node for targeted VM deployment (remove node affinity). Remove only one tag at a time (run the command separately for each tag).
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 node untag NODE_NAME TAG [--namespace TARGET_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help               Display help for untag
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Remove a tag from a node
 orka3 node untag mini-1 my-tag
 
@@ -159,33 +152,33 @@ orka3 node untag mini-1 --namespace orka-test my-tag
 # Check if the tag was removed as expected
 orka3 node list mini-1 --output wide
 ```
+
 ## Moving nodes between namespaces
 
-**orka3 node namespace**
+### orka3 node namespace
 
 Move Orka nodes across namespaces. This is also known as node dedication.
 
-**Admin Only:** Moving nodes between namespaces requires administrative privileges.
+**Admin only:** Moving nodes between namespaces requires administrative privileges.
 
 After creating a new namespace, move one or more nodes to the namespace to provide it with computational resources.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 node namespace NODE [--namespace CURRENT_NAMESPACE] TARGET_NAMESPACE [flags]
 ```
+
 **Options:**
-    
-    
+
 ```
 -h, --help               Display help for namespace
 -n, --namespace string   (Optional) Current namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Move a node from 'orka-default' to 'orka-test'
 orka3 node namespace mini-1 orka-test
 
