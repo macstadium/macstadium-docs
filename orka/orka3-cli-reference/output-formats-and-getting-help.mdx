@@ -10,8 +10,7 @@ zendesk_id: 42515256825499
 
 Every command in the Orka CLI has built-in help documentation that you can access using the `--help` or `-h` flag.
 
-
-```
+```bash
 # Get help for the main command
 orka3 --help
 
@@ -24,6 +23,7 @@ orka3 vm deploy --help
 # Get help for configuration commands
 orka3 config --help
 ```
+
 ### Command Structure
 
 The help output for each command typically includes:
@@ -34,20 +34,17 @@ The help output for each command typically includes:
   * **Examples:** Common usage examples
   * **Sub-commands:** Related commands (if applicable)
 
-
-
 ### Finding Commands
 
 Start with the main help to browse available command groups:
 
-
-```
+```bash
 orka3 --help
 ```
+
 Then drill down into specific command groups:
 
-
-```
+```bash
 # View all VM-related commands
 orka3 vm --help
 
@@ -57,7 +54,8 @@ orka3 image --help
 # View all node-related commands
 orka3 node --help
 ```
-## Understanding output formats
+
+## Understanding Output Formats
 
 Many Orka CLI commands support multiple output formats to suit different use cases.
 
@@ -71,8 +69,7 @@ Format | Flag | Description | Best For
 
 ### Using Output Formats
 
-
-```
+```bash
 # Default table output
 orka3 vm list
 
@@ -85,6 +82,7 @@ orka3 vm list --output json
 # Short form
 orka3 vm list -o json
 ```
+
 ### Commands Supporting Output Formats
 
 The following command groups support the `--output` flag:
@@ -101,14 +99,11 @@ The following command groups support the `--output` flag:
   * `orka3 rolebinding list-subjects`
   * `orka3 registrycredential list`
 
-
-
 ### Working with JSON Output
 
 JSON output is particularly useful for automation and scripting. You can use tools like `jq` to parse and filter the results:
 
-
-```
+```bash
 # Get all VM names
 orka3 vm list -o json | jq -r '.items[].name'
 
@@ -121,12 +116,12 @@ orka3 vm list -o json | jq '.items | length'
 # Get node IPs
 orka3 node list -o json | jq -r '.items[].ip'
 ```
-## Common help patterns
+
+## Common Help Patterns
 
 ### Discovering Available Commands
 
-
-```
+```bash
 # List all main command groups
 orka3 --help
 
@@ -136,10 +131,10 @@ orka3 vm --help
 # List all image commands
 orka3 image --help
 ```
+
 ### Understanding Flags
 
-
-```
+```bash
 # See all flags for a command
 orka3 vm deploy --help
 
@@ -149,12 +144,12 @@ orka3 vm list --help | grep namespace
 # See output format options
 orka3 node list --help | grep output
 ```
+
 ### Finding Examples
 
 Most command help includes an "Examples" section with common use cases:
 
-
-```
+```bash
 # View examples for VM deployment
 orka3 vm deploy --help
 
@@ -164,6 +159,7 @@ orka3 image copy --help
 # View examples for namespace management
 orka3 namespace create --help
 ```
+
 ## Quick Tips
 
 ### Command Aliases

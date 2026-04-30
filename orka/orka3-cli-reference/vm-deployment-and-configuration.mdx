@@ -10,7 +10,7 @@ VM configurations (templates) allow you to define reusable settings for deployin
 
 The shorthand alias for `vm-config` is `vmc`.
 
-**orka3 vm-config create**
+### orka3 vm-config create
 
 Create a VM configuration (template) with the specified settings. The required minimum configuration consists of a base image to use.
 
@@ -21,18 +21,15 @@ Create a VM configuration (template) with the specified settings. The required m
   * Starts with an alphabetic character and ends with an alphanumeric character
   * Must be unique to the cluster
 
-
-
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm-config create VM_CONFIGURATION_NAME [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -c, --cpu int                (Optional) Number of CPU cores for the VM (default 3)
 --disable-net-boost          (Optional) (Intel-only) Disables network performance boost
 --disable-vnc                (Optional) Disable VNC (ensure SSH/Screen Sharing is enabled)
@@ -46,10 +43,10 @@ orka3 vm-config create VM_CONFIGURATION_NAME [flags]
 --tag string                 (Optional) Node affinity tag
 --tag-required               (Optional) Require tagged nodes for deployment
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Create a template for an Intel-based VM
 orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --cpu 6
 
@@ -80,27 +77,27 @@ orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --gpu=true --disab
 # Create a template with disabled VNC
 orka3 vmc create medium-ventura-vm --image 90gbventurassh.img --disable-vnc
 ```
-**orka3 vm-config list**
+
+### orka3 vm-config list
 
 Show basic or extended information about the available VM configurations. You can list all available configurations or show information about one or more specified VM configurations.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm-config list [VM_CONFIGURATION_1 [VM_CONFIGURATION_2 ...]] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help            Display help for list
 -o, --output string   (Optional) Output format: table (default)|wide|json
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # List basic information about available VM configurations
 orka3 vmc list
 
@@ -119,35 +116,36 @@ orka3 vmc list small-monterey small-ventura
 # Return output as JSON
 orka3 vmc list --output json
 ```
-**orka3 vm-config delete**
+
+### orka3 vm-config delete
 
 Delete the specified VM configurations (templates).
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm-config delete VM_CONFIGURATION_NAME [VM_CONFIGURATION_NAME_2 ...] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help   Display help for delete
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Delete a VM configuration
 orka3 vmc delete small-ventura-arm-vm
 
 # Delete multiple VM configurations
 orka3 vmc delete medium-ventura-vm medium-ventura-arm-vm
 ```
+
 ## Deploying VMs
 
-**orka3 vm deploy**
+### orka3 vm deploy
 
 Deploy a VM with the specified configuration. The minimum required configuration consists of an image and a number of CPU cores to assign to the VM.
 
@@ -157,8 +155,6 @@ Deploy a VM with the specified configuration. The minimum required configuration
   * **When VM_NAME is provided:** Orka attempts to create the VM using the provided name (must be unique)
   * **When both VM_NAME and --generate-name are provided:** Orka generates a unique name based on VM_NAME with a unique suffix
 
-
-
 **VM Name Requirements (when provided):**
 
   * Does not exceed 63 characters (including any generated suffix)
@@ -166,21 +162,18 @@ Deploy a VM with the specified configuration. The minimum required configuration
   * Starts with an alphabetic character and ends with an alphanumeric character
   * Must be unique to the namespace
 
-
-
 **Note:** Some settings are Intel-only (amd64 architecture) and some settings might be mutually exclusive.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm deploy [VM_NAME] --image IMAGE_NAME [flags]
 orka3 vm deploy [VM_NAME] --config VM_CONFIGURATION_NAME [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 --config string              (Optional) VM template name
 -c, --cpu int                (Optional) Number of CPU cores
 --disable-net-boost          (Optional) (Intel-only) Disable network boost
@@ -202,10 +195,10 @@ orka3 vm deploy [VM_NAME] --config VM_CONFIGURATION_NAME [flags]
 --timeout int                (Optional) Deployment timeout in minutes (default 10)
 -n, --namespace string       (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples - Basic Deployments:**
-    
-    
-```
+
+```bash
 # Deploy a VM from a local Orka image
 orka3 vm deploy -i 90gbventurassh.orkasi
 
@@ -227,10 +220,10 @@ orka3 vm deploy -i 90gbventurassh.orkasi --output wide
 # Deploy with custom timeout
 orka3 vm deploy -i 90gbventurassh.orkasi --timeout 1
 ```
+
 **Examples - Targeted Deployments:**
-    
-    
-```
+
+```bash
 # Deploy on a selected node
 orka3 vm deploy -i 90gbventurassh.orkasi --node mini-arm-14
 
@@ -249,10 +242,10 @@ orka3 vm deploy -i 90gbventurassh.orkasi --tag jenkins-builds --tag-required=tru
 # Deploy using the most-allocated scheduler
 orka3 vm deploy -i 90gbventurassh.orkasi --scheduler most-allocated
 ```
+
 **Examples - Advanced Deployments:**
-    
-    
-```
+
+```bash
 # Deploy with disabled VNC
 orka3 vm deploy -i 90gbventurassh.img --disable-vnc
 
@@ -262,10 +255,10 @@ orka3 vm deploy -i 90gbventurassh.img --metadata 'foo=1,baz=https://example.com'
 # Deploy with custom port mapping
 orka3 vm deploy -i 90gbventurassh.img --ports 9000:4000,9001:4001
 ```
+
 **Examples - Intel-Only Deployments:**
-    
-    
-```
+
+```bash
 # Deploy with ISO for fresh macOS install
 orka3 vm deploy -i emptydisk.img --iso ventura.iso
 
@@ -278,10 +271,10 @@ orka3 vm deploy -i 90gbventurassh.img --gpu=true --disable-vnc
 # Deploy with disabled network boost
 orka3 vm deploy -i 90gbmontereyssh.img --disable-net-boost
 ```
+
 **Examples - VM Configuration Deployments:**
-    
-    
-```
+
+```bash
 # Deploy from existing VM config with random name
 orka3 vm deploy --config small-ventura-config
 
@@ -291,32 +284,32 @@ orka3 vm deploy small-ventura-vm --config small-ventura-config
 # Deploy from VM config and override CPU and memory
 orka3 vm deploy --config small-ventura-config -c 6 --memory 16
 ```
+
 ## Listing VMs
 
-**orka3 vm list**
+### orka3 vm list
 
 Show basic or extended information about the specified VM(s).
 
 <Warning>Stopped or suspended VMs appear as 'Running' when listed. Do not rely on the displayed status to confirm a VM is active before scheduling work against it.</Warning>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm list [VM_NAME_1 [VM_NAME_2 ...]] [--namespace TARGET_NAMESPACE] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for list
 -o, --output string      (Optional) Output format: table (default)|wide|json
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # List all VMs in the 'orka-default' namespace
 orka3 vm list
 
@@ -341,31 +334,31 @@ orka3 vm list small-ventura-vm small-monterey-vm
 # Print information in JSON format
 orka3 vm list --output json
 ```
+
 ## Deleting VMs
 
-**orka3 vm delete**
+### orka3 vm delete
 
 Delete the specified VMs. This frees up the respective resources and ports on the respective Orka node.
 
-**🚧 CAUTION:** This operation cannot be undone. You will not be able to restore any unsaved or uncommitted data from the VM.
+<Warning>This operation cannot be undone. You will not be able to restore any unsaved or uncommitted data from the VM.</Warning>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm delete VM_NAME [VM_NAME_2 ...] [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for delete
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Delete a VM from the 'orka-default' namespace
 orka3 vm delete small-ventura-vm
 
