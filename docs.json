@@ -213,7 +213,6 @@
           {
             "group": "Resources",
             "pages": [
-              "orka/orka-resources/orka3-cli-command-reference",
               "orka/orka-resources/working-with-vm-metadata",
               "orka/orka-resources/image-caching",
               "orka/orka-resources/shared-vm-storage",
@@ -706,7 +705,12 @@
     },
     {
       "source": "/hc/en-us/articles/28398136435867-Orka3-CLI-Command-Reference",
-      "destination": "/orka/orka-resources/orka3-cli-command-reference",
+      "destination": "/orka/orka3-cli-reference/orka3-cli-overview-configuration",
+      "permanent": true
+    },
+    {
+      "source": "/orka/orka-resources/orka3-cli-command-reference",
+      "destination": "/orka/orka3-cli-reference/orka3-cli-overview-configuration",
       "permanent": true
     },
     {
