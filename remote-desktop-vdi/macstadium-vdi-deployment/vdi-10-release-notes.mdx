@@ -1,0 +1,93 @@
+---
+title: "MacStadium VDI 1.0 Release Notes"
+description: "Release notes for MacStadium VDI 1.0, the initial production release of MacStadium's virtual desktop platform."
+---
+
+<Note>MacStadium VDI is a separate product from Orka Cluster. These release notes cover VDI-specific features only. They do not apply to standard Orka cluster deployments.</Note>
+
+## MacStadium VDI 1.0
+
+### Release summary
+
+MacStadium VDI 1.0 is the initial production release of MacStadium's virtual desktop platform. This release delivers a Semaphore-based management UI, automated Citrix VDA provisioning, OCI image support, Android Virtual Device capabilities, and a full set of VM lifecycle management tools.
+
+### Requirements
+
+* Valid MacStadium VDI license
+* Apple Silicon Mac nodes (Intel is not supported)
+* macOS 13 (Ventura), 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe) on host nodes
+* Ansible control node with `sshpass` installed and `Docker` installed
+* Each physical Mac supports a maximum of two concurrent macOS VMs (Apple EULA)
+
+**For Citrix deployments:**
+
+* Active Citrix DaaS or CVAD subscription
+* Citrix Workspace app 2402 or later
+* Network configured per Citrix VDA requirements
+
+## New features
+
+### Semaphore UI for VDI management
+
+MacStadium VDI ships with a MacStadium-branded Semaphore instance (an open-source Ansible GUI) that runs via Docker Compose. The Semaphore UI is distributed as a prebuilt Docker image maintained by MacStadium, so end users do not need to build it themselves. It comes with all task templates pre-loaded, so IT administrators can manage VDI deployments through a web interface without invoking Ansible directly. After initial setup, operators only need to update SSH credentials in the key store.
+
+Available task templates cover the full VM lifecycle: deploy, list, manage VM state (`running`, `stopped`, `absent`), delete, create and push images, pull images, install the [Orka Engine](https://github.com/macstadium/orka-engine-orchestration), Citrix VDA installation and enrollment, and Android AVD management.
+
+**Prerequisites:** Docker and [uv](https://docs.astral.sh/uv/) must be installed.
+
+### Automated Citrix VDA installation and enrollment
+
+Citrix VDA installation and registration are fully automated via Ansible playbooks. The provisioning flow handles VDA agent download, TCC permission setup (required for remote access on macOS), and enrollment against a Citrix Cloud token, all without manual steps on the VM. A SIP-disabled base image is required for TCC automation (for example, `ghcr.io/macstadium/orka-images/sequoia:latest-no-sip`).
+
+### OCI image support
+
+VDI deployments can push and pull VM images to and from OCI registries, including private registries with rotating credentials (ECR supported). When deploying a VM, you can specify whether the image is public or private; private images trigger automatic registry authentication before the pull. This brings VDI image management in line with standard Orka OCI storage workflows.
+
+### VM provisioning and management
+
+* Deployments accept RAM, CPU, and network interface as parameters, giving operators direct control over VM resource allocation and networking configuration (including bridge networking) at deploy time.
+* VM IP addresses are displayed in both deploy and list outputs, eliminating the need to look up IPs separately after provisioning.
+* `provision_user.yml` creates macOS admin user accounts on running VMs via SSH. It is available as the **VM: Provision User to VM** task template in Semaphore, or can be run directly via Ansible.
+* Image `list` and `delete` operations are available as Semaphore tasks.
+* VMs can be managed and deleted by name prefix, making bulk operations across groups of VMs simpler.
+
+### Android Virtual Device support
+
+MacStadium VDI supports running Android Virtual Devices (AVDs) alongside macOS desktop sessions. Android emulators cannot run inside a macOS VM due to Apple Virtualization Framework limitations that prevent nested virtualization. Orka's solution runs the emulator directly on the physical host node and sets up a `socat` relay. Once an AVD is provisioned, the system outputs an IP address and port that you use to connect from your macOS VM session:
+
+```
+adb connect <ip>:<port>
+```
+
+This lets you develop and test Android apps from your virtualized Mac desktop without configuring the relay infrastructure yourself.
+
+AVDs are provisioned and managed via Ansible playbooks. The following playbooks are available:
+
+* **Setup:** `install_android_sdk.yml` installs Homebrew, the Android SDK, and supporting tools on the host node. `sdkmanager_install.yml` installs additional SDK platforms and system images. `list_avd_profiles.yml` lists available device profiles before creating an AVD.
+* **Lifecycle:** Deploy and create AVDs scoped to specific VMs (`deploy_avd.yml`), list running AVDs (`list_avds.yml`), and delete a specific AVD (`delete_avd.yml`).
+* **State management:** `avd.yml` manages ongoing AVD state via a `desired_state` parameter: `running`, `stopped`, or `absent`.
+
+#### VM configuration requirements
+
+macOS VMs that connect to AVDs must have `scrcpy` and `adb` installed. The simplest installation path is Homebrew:
+
+```bash
+brew install scrcpy android-platform-tools
+```
+
+These tools can also be baked into a golden image so every provisioned VM has them available out of the box.
+
+#### Prerequisites
+
+* MacStadium VDI deployed and operational
+* Contact [MacStadium support](mailto:support@macstadium.com) to enable AVD provisioning for your environment
+
+For full setup and architecture details, see [Android Virtual Devices](/remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices).
+
+## Notes
+
+**First-boot behavior on macOS Tahoe:** When deploying a macOS Tahoe VM for the first time with a fresh machine ID, the VM will prompt for Apple ID sign-in and FileVault setup before reaching the desktop. This is expected behavior. A fresh machine ID gives each VM a unique serial number, which is required for MDM enrollment and allows users to sign in with their Apple ID. This prompt appears on first boot only and does not recur across stop/start cycles.
+
+## Support
+
+If you have questions or require assistance, please [contact our support team](mailto:support@macstadium.com).
