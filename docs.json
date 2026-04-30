@@ -322,12 +322,6 @@
             ]
           },
           {
-            "group": "Release Notes",
-            "pages": [
-              "remote-desktop-vdi/macstadium-vdi-deployment/vdi-10-release-notes"
-            ]
-          },
-          {
             "group": "MacStadium Bare Metal with Citrix",
             "pages": [
               "remote-desktop-vdi/macstadium-bare-metal-with-citrix/citrix-macos-vda-on-macstadium"
@@ -353,6 +347,12 @@
               "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh",
               "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-windows",
               "remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect"
+            ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "remote-desktop-vdi/macstadium-vdi-deployment/vdi-10-release-notes"
             ]
           }
         ]
