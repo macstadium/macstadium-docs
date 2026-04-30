@@ -87,7 +87,7 @@ Several improvements reduce the operational footprint and permission requirement
 * Fixed: VM image push retries fail intermittently
 * Fixed: VK kubeconfig creation fails for on-prem deployments
 * Fixed: `orka3 vm save` fails when the cluster uses OCI image storage
-* Fixed: Updated the Kubernetes API TCP ingress route to use the built-in `kubernetes` service following the kube-vip migration, replacing the previous metallb-dependent configuration. If you manage your own Orka deployment and use public NAT IPs, apply the update by running:
+* Fixed: Updated the Kubernetes API TCP ingress route to use the built-in `kubernetes` service. If you manage your own Orka deployment and use public NAT IPs, apply the update by running:
 
 ```bash
 ansible-playbook -i hosts kubernetes.yml -e "k8s_reverse_proxy_enable=true" --tags k8s-reverse-proxy
