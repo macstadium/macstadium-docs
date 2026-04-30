@@ -6,7 +6,7 @@ zendesk_id: 42514937795739
 
 ## Saving Images
 
-**orka3 vm save**
+### orka3 vm save
 
 Save a new image from a running VM. This saves the file system and the state of the OS, including any running applications. You can preserve the original image and deploy new VMs with the applied changes from the new image.
 
@@ -16,28 +16,25 @@ Save a new image from a running VM. This saves the file system and the state of 
   * Consists of lowercase alphanumeric characters, dashes (-) or periods (.)
   * Must be unique to the cluster
 
-
-
 **Note:** Saving a new image is an async operation. To check the status: `orka3 image list NEW_IMAGE_NAME`. This operation does not affect the original image of the VM. This operation restarts the VM.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm save VM_NAME NEW_IMAGE_NAME [--description 'DESCRIPTION'] [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -d, --description string   (Optional) Custom description for the new image
 -h, --help                 Display help for save
 -n, --namespace string     (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Save a new image from a running VM
 orka3 vm save medium-ventura-vm 120gbmodifiedventura
 
@@ -47,7 +44,8 @@ orka3 vm save medium-ventura-vm 120gbmodifiedventura --namespace orka-test
 # Save a new image with a custom description
 orka3 vm save medium-ventura-vm 120gbmodifiedventura --description 'user@company.com saved this image'
 ```
-**orka3 vm commit**
+
+### orka3 vm commit
 
 Update an existing image from a running VM. Take the changes from the specified deployed VM and commit them back to its respective base image. For Intel-based VMs, the image must not be in use by any other VMs.
 
@@ -56,23 +54,22 @@ This operation applies any file system changes and the state of the OS, includin
 **Note:** Committing changes to an existing image is an async operation. To check the status: `orka3 image list IMAGE_NAME`. This operation restarts the VM.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm commit VM_NAME [--description 'DESCRIPTION'] [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -d, --description string   (Optional) New description for the original image
 -h, --help                 Display help for commit
 -n, --namespace string     (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Commit changes to the original image
 orka3 vm commit small-ventura-vm
 
@@ -82,9 +79,10 @@ orka3 vm commit small-ventura-vm --namespace orka-test
 # Commit changes and set a new description for the image
 orka3 vm commit small-ventura-vm --description 'user@company.com updated this image'
 ```
+
 ## Pushing to OCI Registries
 
-**orka3 vm push**
+### orka3 vm push
 
 (Apple silicon-only) The state of a running VM is saved on the host and pushed to an OCI-compatible registry.
 
@@ -95,64 +93,62 @@ The provided image must be in the following format: `server.com/repository/image
   * Registry credentials must exist in the same namespace as the VM
   * This is an async operation. To check the status: `orka3 vm get-push-status JOB_NAME`
 
-
-
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm push VM_NAME IMAGE[:TAG] [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for push
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Push an image to GitHub Packages from a running VM
 orka3 vm push vm-5rjn4 ghcr.io/myorg/orka-images/base:latest
 
 # Push from a VM in a specific namespace
 orka3 vm push vm-fxwj5 ghcr.io/myorg/orka-images/base:latest --namespace orka-test
 ```
-**orka3 vm get-push-status**
+
+### orka3 vm get-push-status
 
 (Apple silicon-only) View the status of an image being pushed to an OCI-compatible registry. The status is viewable for one (1) hour after finishing, after which point the underlying job is cleaned up.
 
 If a job name is not provided, the status of all current image push operations is shown. The job name is initially shown when the image push operation is started.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm get-push-status [JOB_NAME] [--namespace CURRENT_VM_NAMESPACE] [--output wide|json] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for get-push-status
 -o, --output string      (Optional) Output format: table (default)|wide|json
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # View the status of all images being pushed
 orka3 vm get-push-status
 
 # View the status for a specific image by job name
 orka3 vm get-push-status vm-push-qxjjf
 ```
+
 ## Resizing VM Disks
 
-**orka3 vm resize**
+### orka3 vm resize
 
 Resize the disk of a running VM; but only increase the size of the disk.
 
@@ -161,36 +157,33 @@ Resize the disk of a running VM; but only increase the size of the disk.
   * **For Apple silicon-based VMs (arm64):** Nothing is needed after the command completes
   * **For Intel-based VMs (amd64):** Provide SSH access credentials for Orka to complete the resize and repartition automatically. If not provided, it must be completed manually
 
-
-
 For Intel-based VMs, you can save or commit the modified image manually:
-    
-    
-```
+
+```bash
 orka3 vm save VM_NAME NEW_IMAGE_NAME
 orka3 vm commit VM_NAME
 ```
+
 Resize always assumes working in GB. This operation restarts the VM.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm resize VM_NAME NEW_DISK_SIZE [--user SSH_USER] [--password SSH_PASSWORD] [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for resize
 -p, --password string    (Optional) (Intel-only) SSH password for automatic repartition
 -u, --user string        (Optional) (Intel-only) SSH user for automatic repartition
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Resize a VM disk to 100GB
 orka3 vm resize small-ventura-vm 100
 
@@ -200,121 +193,122 @@ orka3 vm resize my-vm 100 --namespace orka-test
 # (Intel-only) Resize with automatic repartition
 orka3 vm resize small-intel-vm 100 --user admin --password admin
 ```
+
 ## Power Operations (Intel Only)
 
 **Note:** Power operations are only available for Intel-based VMs. Stopped or suspended VMs appear as 'Running' when listed with `orka3 vm list`.
 
-**orka3 vm start**
+### orka3 vm start
 
 Power ON a stopped VM. The `orka3 vm stop` and `orka3 vm start` sequence acts as a VM reboot.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm start VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for start
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Power ON a stopped VM
 orka3 vm start small-ventura-vm
 
 # Power ON a VM in a specific namespace
 orka3 vm start small-ventura-vm --namespace orka-test
 ```
-**orka3 vm stop**
+
+### orka3 vm stop
 
 Power OFF a running VM. The `orka3 vm stop` and `orka3 vm start` sequence acts as a VM reboot.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm stop VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for stop
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Power OFF a running VM
 orka3 vm stop small-ventura-vm
 
 # Power OFF a VM in a specific namespace
 orka3 vm stop small-ventura-vm --namespace orka-test
 ```
-**orka3 vm suspend**
+
+### orka3 vm suspend
 
 Suspend a running VM. This operation freezes all running processes on the VM, without turning it off. The `orka3 vm suspend` and `orka3 vm resume` sequence acts as putting the VM on hold then resuming it.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm suspend VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for suspend
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Suspend a running VM
 orka3 vm suspend small-ventura-vm
 
 # Suspend a VM in a specific namespace
 orka3 vm suspend small-ventura-vm --namespace orka-test
 ```
-**orka3 vm resume**
+
+### orka3 vm resume
 
 Resume a suspended VM. This operation resumes all suspended processes on the VM, without turning it on.
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm resume VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for resume
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Resume a suspended VM
 orka3 vm resume small-ventura-vm
 
 # Resume a VM in a specific namespace
 orka3 vm resume small-ventura-vm --namespace orka-test
 ```
+
 ## Reverting VMs (Intel Only)
 
-**orka3 vm revert**
+### orka3 vm revert
 
 (Intel-only) Revert a VM to the latest state of its image. This operation restarts the VM.
 
@@ -323,22 +317,21 @@ orka3 vm resume small-ventura-vm --namespace orka-test
 </Warning>
 
 **Syntax:**
-    
-    
-```
+
+```bash
 orka3 vm revert VM_NAME [--namespace CURRENT_VM_NAMESPACE] [flags]
 ```
+
 **Options:**
-    
-    
-```
+
+```bash
 -h, --help               Display help for revert
 -n, --namespace string   (Optional) Namespace scope (default "orka-default")
 ```
+
 **Examples:**
-    
-    
-```
+
+```bash
 # Revert a VM to its original image state
 orka3 vm revert small-ventura-vm
 
