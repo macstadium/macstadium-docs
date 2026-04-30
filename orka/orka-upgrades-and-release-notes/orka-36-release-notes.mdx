@@ -1,0 +1,98 @@
+---
+title: "Orka 3.6 Release Notes"
+description: "Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions."
+---
+
+**IMPORTANT**
+
+Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools run matching versions. For example, the respective available 3.x versions.
+
+**Upgrading to 3.6.0 requires Orka 3.5.x.** Contact [MacStadium support](mailto:support@macstadium.com) if you need a staged upgrade.
+
+**Some maintenance operations, such as adding Mac compute nodes, require the latest patch version** (the .z in x.y.z). Patch upgrades are zero-downtime, include the latest bug fixes, and can be requested through [MacStadium support](mailto:support@macstadium.com).
+
+## Orka 3.6.0
+
+### Release summary
+
+Orka 3.6.0 introduces the Orka Upgrade Service: a Kubernetes-native update mechanism that enables MacStadium to deliver cluster upgrades to your environment. This release validates Orka against Kubernetes 1.35 on both on-prem and EKS, and adds configurable VM network isolation policies for Apple silicon nodes. Orka artifacts are now distributed publicly via CloudFront, eliminating the need for AWS credentials to pull binaries and images. The release also includes Jenkins and Packer plugin updates, GitHub Actions integration improvements, and automated Orka VM Tools updates.
+
+## New features
+
+### Orka Upgrade Service
+
+Orka 3.6.0 ships the Orka Upgrade Service: a Kubernetes-native update mechanism that allows MacStadium to push Orka cluster upgrades to your environment. This initial release establishes the upgrade infrastructure. Future releases will expose available update versions to cluster administrators and allow them to control deployment timing.
+
+#### Upgrade Service version visibility
+
+`orka3 version` now includes the Upgrade Service operator version. `kubectl get orkanodes -o wide` shows the Upgrade Service agent version alongside each node.
+
+### Kubernetes 1.35 support
+
+Orka 3.6 is validated against Kubernetes 1.35 on both on-prem deployments and AWS EKS. EKS customers can upgrade their clusters on schedule without risk of breaking Orka.
+
+A few things worth knowing during a Kubernetes upgrade:
+
+* Running VMs are not affected. Mac nodes are not part of the Kubernetes upgrade and do not restart.
+* The Virtual Kubelet does not need to be upgraded and is forward-compatible with new Kubernetes versions.
+* The API Server, Operator, and Webhooks may have brief downtime during node cordon/drain. Most `orka3` CLI commands continue working during this window; only `login` and `vm push` require the API server. If the Operator pod is evicted during an upgrade, leader election takes up to 15 seconds. During this window VM deployments may be slower, but will not error.
+
+### VM network isolation
+
+<Note>This feature is available on Apple silicon nodes only.</Note>
+
+Orka 3.6.0 introduces configurable VM network isolation policies for Apple silicon nodes. MacStadium can configure explicit allow and deny rules by CIDR block, restricting which networks a VM can reach without changes to your broader network infrastructure. This is particularly useful in multi-tenant environments and for customers with security requirements around VM-level network segmentation.
+
+By default, VMs on MacStadium-hosted clusters have access to the storage network blocked. All other traffic, including internet access and VM-to-VM communication on the same node, is allowed unless explicitly restricted.
+
+Policy changes apply to VMs deployed after the change. VMs already running are not affected.
+
+To configure network isolation policies for your cluster, contact [MacStadium support](mailto:support@macstadium.com).
+
+### Automated Orka VM Tools updates
+
+Orka VM Tools are now automatically updated in MacStadium's base images on GitHub Container Registry (GHCR) with each Orka release. Images pulled from the [orka-images GHCR repo](https://github.com/macstadium/orka-images) now ship with the current VM Tools version automatically, without requiring manual installation.
+
+## Improvements
+
+### AWS and on-prem deployments
+
+Several improvements reduce the operational footprint and permission requirements for AWS and on-prem deployments:
+
+* Orka no longer installs its own cert-manager if one is already present in the cluster. You can skip the bundled installation and use your existing cert-manager instead, eliminating version and configuration conflicts.
+* The permissions required for Orka to run have been scoped to least-privilege: separate, minimal credential sets are now defined for Orka configuration, the Virtual Kubelet, ECR access, and backup operations.
+* Webhook footprint has been reduced: the Pod webhook, ISO and image webhooks, and rolebinding webhook have been removed from AWS and on-prem installations.
+
+### Integrations
+
+* **Jenkins OCI image support:** The [Orka Jenkins plugin](https://github.com/jenkinsci/macstadium-orka-plugin) now supports OCI images. Previously the plugin only allowed selecting images from NFS storage; you can now specify an OCI image directly.
+* **Packer plugin bridge networking:** The [Orka Packer plugin](https://github.com/macstadium/packer-plugin-macstadium-orka) now supports bridge networking, which was introduced in Orka 3.5 but was not supported in the plugin until this release.
+* **GitHub Actions runner metrics:** The [Orka GitHub Actions integration](https://github.com/macstadium/orka-github-actions-integration) now exposes an optional Prometheus metrics endpoint for runner scale set statistics. When enabled, the endpoint publishes labeled metrics per scale set with a configurable polling interval. The endpoint is opt-in and disabled by default.
+* **GitHub Actions integration reliability:** The Orka GitHub Actions runner now includes improved VM cleanup logic, an orphaned VM watcher that automatically removes VMs with no active runner, and expanded logging for better job observability.
+
+### Platform
+
+* **ECDSA SSH key support:** The Orka API now accepts ECDSA keys when uploading certificates. Previously only RSA keys were supported.
+* **Prometheus metrics on port 443 with TLS:** The Orka Prometheus data collector is now exposed on port 443 with TLS, unblocking use in environments that require all monitoring traffic to run over a secure port.
+* **Object storage for cluster config backups:** Orka cluster configuration backups are now stored via object storage instead of NFS, improving backup reliability and decoupling them from NFS availability.
+* **Improved VM start error diagnostics:** VM start failures during concurrent operations that previously produced empty error messages now surface actionable diagnostic information, including VZErrorDomain errors and configuration issues.
+* **Public artifact distribution via CloudFront:** Orka binaries and container images are now distributed publicly via CloudFront. AWS and on-prem deployments no longer require AWS credentials to pull Orka artifacts.
+* `orka3 version` reports Upgrade Service versions: The CLI now includes Upgrade Service operator and agent versions in version output.
+* Improved error message reporting from the Orka Engine for VM start failures.
+
+## Bug fixes
+
+* Fixed: Operator fails to configure Intel VMs
+* Fixed: Calico network plugin setup fails on Orka 3.5 clusters
+* Fixed: VM image push retries fail intermittently
+* Fixed: VK kubeconfig creation fails for on-prem deployments
+* Fixed: `orka3 vm save` fails when the cluster uses OCI image storage
+* Fixed: Updated the Kubernetes API TCP ingress route to use the built-in `kubernetes` service. If you manage your own Orka deployment and use public NAT IPs, apply the update by running:
+
+```bash
+ansible-playbook -i hosts kubernetes.yml -e "k8s_reverse_proxy_enable=true" --tags k8s-reverse-proxy
+```
+
+## Support
+
+If you have questions or require assistance, please [contact our support team](mailto:support@macstadium.com).

@@ -282,6 +282,7 @@
           {
             "group": "Release Notes",
             "pages": [
+              "orka/orka-upgrades-and-release-notes/orka-36-release-notes",
               "orka/orka-upgrades-and-release-notes/orka-35-release-notes",
               "orka/orka-upgrades-and-release-notes/orka-34-release-notes",
               "orka/orka-upgrades-and-release-notes/orka-33-release-notes",
@@ -346,6 +347,12 @@
               "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-ssh",
               "remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-windows",
               "remote-desktop-vdi/cloud-access-legacy/setup-vpn-using-cisco-anyconnect"
+            ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "remote-desktop-vdi/macstadium-vdi-deployment/vdi-10-release-notes"
             ]
           }
         ]
@@ -527,7 +534,7 @@
     },
     {
       "source": "/changelog",
-      "destination": "/orka/orka-upgrades-and-release-notes/orka-35-release-notes"
+      "destination": "/orka/orka-upgrades-and-release-notes/orka-36-release-notes"
     },
     {
       "source": "/docs/support",
