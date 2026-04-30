@@ -6,9 +6,9 @@ zendesk_id: 28328584628379
 
 Starting with Orka 3.0, Orka uses Single Sign-On (SSO) and Kubernetes role-based access control (RBAC) for user management. Users log in with their MacStadium Customer Portal credentials. What they can do depends on the role assigned to their account.
 
-## How Roles Work
+## How roles work
 
-There are two places where roles exist — the Customer Portal and the Orka cluster — and they map to each other.
+Roles exist in two places: the Customer Portal and the Orka cluster. They map to each other based on the role assigned in the Portal.
 
 **Customer Portal roles:**
 
@@ -18,11 +18,11 @@ There are two places where roles exist — the Customer Portal and the Orka clus
 
 **Orka cluster roles:**
 
-- Admin Portal users → **Administrator** cluster role
-- Tech Portal users → **Technical** cluster role
-- **Service accounts** — cluster-only accounts for CI/CD integrations. Not tied to a Portal account.
+- Admin Portal users get the **Administrator** cluster role.
+- Tech Portal users get the **Technical** cluster role.
+- **Service accounts** are cluster-only accounts for CI/CD integrations. They are not tied to a Portal account.
 
-## Role-Based Access Matrix
+## Role-based access matrix
 
 Within the Customer Portal, the Admin, Tech, and Billing roles have the following capabilities:
 
@@ -57,20 +57,22 @@ Within the Orka cluster:
 | Manage ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
 | List and pull remote ISOs | ✅ | ✅ | ❌ | ✅ | ✅ |
 
-## Common Admin Workflows
+## Common admin workflows
 
-### Adding a User to the Cluster
+These are the most frequent access management tasks an Orka cluster administrator performs.
+
+### Adding a user to the cluster
 
 1. In the MacStadium Customer Portal, an account Admin invites the user and sets their role (Admin or Tech).
 2. The user accepts the invite and sets their credentials.
 3. The user logs in to the Orka cluster with their Portal credentials.
 
-### Adding a Service Account for CI/CD
+### Adding a service account for CI/CD
 
 1. A cluster administrator creates the service account in the target namespace.
 2. If the service account needs access to additional namespaces, the administrator configures the appropriate role bindings.
 
-### Isolating Resources with Namespaces
+### Isolating resources with namespaces
 
 Administrators can create namespaces to dedicate resources to specific teams or workflows.
 
@@ -78,13 +80,13 @@ Administrators can create namespaces to dedicate resources to specific teams or 
 2. Assign nodes to the namespace. (Nodes cannot be shared across namespaces.)
 3. Add users or service accounts as subjects to the namespace's role binding.
 
-### Modifying or Revoking Access
+### Modifying or revoking access
 
 - To change a user's role or disable them: edit or disable their account in the MacStadium Customer Portal.
 - To revoke a service account's access: delete the service account in the Orka cluster.
 - To add or remove namespace access: update the relevant role bindings in the cluster.
 
-## Key Terms
+## Key terms
 
 | Term | Where | Definition |
 |------|--------|------------|
@@ -93,5 +95,5 @@ Administrators can create namespaces to dedicate resources to specific teams or 
 | Cluster user | Orka cluster | A Portal account user who has logged in to the cluster. Maps to Administrator or Technical based on their Portal role. |
 | Service account | Orka cluster | A cluster-only account for CI/CD integrations. Not linked to a Portal account; tokens are valid for 1 year by default. |
 | Namespace | Orka cluster | Isolates resources (VMs, images, nodes) from other namespaces. Users and service accounts need explicit role binding access to each namespace. |
-| Role | Orka cluster | A Kubernetes RBAC role — Administrator or Technical. Created automatically when a namespace is created. |
+| Role | Orka cluster | A Kubernetes RBAC role: Administrator or Technical. Created automatically when a namespace is created. |
 | Role binding | Orka cluster | Links cluster users or service accounts to a namespace. Admins manage role binding subjects manually. |

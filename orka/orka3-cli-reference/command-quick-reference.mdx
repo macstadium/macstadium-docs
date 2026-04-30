@@ -4,9 +4,9 @@ description: "Quick-reference tables for all Orka3 CLI commands: configuration, 
 zendesk_id: 42515134370459
 ---
 
-## All Commands by Category
+## All commands by category
 
-**Configuration & Setup**
+### Configuration and setup
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ zendesk_id: 42515134370459
 | `orka3 completion` | Generate shell autocompletion | |
 | `orka3 version` | Print CLI version | |
 
-**Authentication**
+### Authentication
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ zendesk_id: 42515134370459
 | `orka3 user get-token` | Print authentication token | |
 | `orka3 user set-token` | Log in with token | |
 
-**Image Management**
+### Image management
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -38,7 +38,7 @@ zendesk_id: 42515134370459
 | `orka3 imagecache info` | View image caching status | `ic` |
 | `orka3 imagecache list` | List cached images | `ic` |
 
-**ISO Management (Intel Only)**
+### ISO management (Intel only)
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ zendesk_id: 42515134370459
 | `orka3 iso delete` | Delete ISOs | |
 | `orka3 iso set-description` | Set ISO description | |
 
-**VM Operations**
+### VM operations
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -65,7 +65,7 @@ zendesk_id: 42515134370459
 | `orka3 vm resume` | (Intel-only) Resume VM | |
 | `orka3 vm revert` | (Intel-only) Revert VM to image | |
 
-**VM Configuration Templates**
+### VM configuration templates
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ zendesk_id: 42515134370459
 | `orka3 vm-config list` | List VM configurations | `vmc` |
 | `orka3 vm-config delete` | Delete VM configurations | `vmc` |
 
-**Infrastructure Management (Admin)**
+### Infrastructure management (admin)
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ zendesk_id: 42515134370459
 | `orka3 namespace list` | (Admin) List namespaces | |
 | `orka3 namespace delete` | (Admin) Delete namespace | |
 
-**Access Control (Admin)**
+### Access control (admin)
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -97,7 +97,7 @@ zendesk_id: 42515134370459
 | `orka3 rolebinding list-subjects` | (Admin) List namespace access | `rb` |
 | `orka3 rolebinding remove-subject` | (Admin) Revoke namespace access | `rb` |
 
-**OCI Registry Integration (Admin)**
+### OCI registry integration (admin)
 
 | Command | Description | Alias |
 | --- | --- | --- |
@@ -105,9 +105,9 @@ zendesk_id: 42515134370459
 | `orka3 registrycredential list` | (Admin) List registry credentials | `regcred` |
 | `orka3 registrycredential remove` | (Admin) Remove registry credentials | `regcred` |
 
-## Common Flags & Options
+## Common flags and options
 
-**Global Flags**
+### Global flags
 
 | Flag | Description |
 | --- | --- |
@@ -115,7 +115,7 @@ zendesk_id: 42515134370459
 | `-n, --namespace` | Specify namespace (default: orka-default) |
 | `-o, --output` | Output format: table (default), wide, or json |
 
-**VM Deployment Flags**
+### VM deployment flags
 
 | Flag | Description |
 | --- | --- |
@@ -126,11 +126,11 @@ zendesk_id: 42515134370459
 | `--tag` | Node affinity tag |
 | `--tag-required` | Require tagged nodes |
 | `--config` | VM configuration template |
-| `--generate-name` | Generate unique name with suffix |  
-  
-## Architecture-Specific Commands
+| `--generate-name` | Generate unique name with suffix |
 
-**Intel Only (amd64)**
+## Architecture-specific commands
+
+### Intel only (amd64)
 
   * `orka3 image generate` - Generate empty images
   * `orka3 iso` commands - Manage ISOs
@@ -142,20 +142,16 @@ zendesk_id: 42515134370459
   * `--system-serial` flag - Custom serial number
   * `--disable-net-boost` flag - Disable network boost
 
-
-
-**Apple Silicon Only (arm64)**
+### Apple Silicon only (arm64)
 
   * `orka3 vm push` - Push to OCI registry
   * `orka3 vm get-push-status` - Check push status
   * `orka3 imagecache` commands - Image caching on nodes
   * OCI image support - Deploy from OCI registries
 
+## Deprecated commands
 
-
-## Deprecated Commands
-
-**Note:** The following commands are deprecated and will be removed in future releases. Use OCI registries and `orka3 imagecache` instead.
+The following commands are deprecated and will be removed in future releases. Use OCI registries and `orka3 imagecache` instead.
 
   * `orka3 remote-image list`
   * `orka3 remote-image pull`
