@@ -11,34 +11,19 @@ Orka Cluster was designed with minimal internet access to increase security, how
 These rulesets permit the minimum amount of traffic required for Orka functionality.
 
 <Note>
-  * Orka Cluster customers must manage these URLs to support Orka Cluster functionality.
-  * This only applies to customers who have security requirements that filter URLs - either from the MacStadium side or through tunneling traffic to another firewall.
-  * Traffic: Client-Side vs LAN-Side Rulesets.
+  Orka Cluster customers must manage these URLs to support Orka Cluster functionality. This only applies to customers who have security requirements that filter URLs, either from the MacStadium side or through tunneling traffic to another firewall. The rulesets below cover two traffic categories: Client-Side and LAN-Side.
 </Note>
-
-
 
 ## Overview
 
 The ruleset are divided into two sections:
 
-  * Client-Side Traffic
+- **Client-Side Traffic:** Any traffic whose destination is the Orka API controller, the Orka physical hosts, the Orka virtual machines, and the single sign-on (SSO).
+- **LAN-Side Traffic:** Any traffic originating from the Orka network that exists behind the firewall.
 
-
-
-The client-side traffic is any traffic whose destination is the ORKA API controller, the ORKA physical hosts, the ORKA virtual machines, and the single sign-on (SSO).
-
-  * URL LAN-Side Traffic
-
-
-
-The LAN-side traffic is any traffic originating from the ORKA network that exist behind the firewall.
-
-**Note**
-
-  * The document assumes that the Orka network is on 10.221.188.x.
-
-
+<Note>
+  The document assumes that the Orka network is on `10.221.188.x`.
+</Note>
 
 ## Rulesets
 
@@ -54,7 +39,7 @@ Permit Client | 10.221.188.22 |  | HTTPS |  | Traefik - a reverse proxy<br/>Use 
 Permit Client | 10.221.188.31 through 10.221.189.254 | TCP 5900-5912<br/>TCP 5999-6011<br/>TCP 8822-8834 |  |  | Reserved ports for interacting with created VMs  
 Permit Client | 10.221.188.0/23 |  | ICMP<br/>SSH |  | Ask/Requirement for ORKA Support during troubleshooting sessions  
 **Deny Client** | ANY |  |  |  | A catch all deny rule if traffic doesn't match the above  
-  
+
 ### LAN-Side Ruleset
 
 Source | Destination | Protocol and Port # | Applications | URLs | Descriptions  
@@ -69,14 +54,10 @@ Permit Orka Network |  |  | HTTPS | us-west2-docker.pkg.dev | Needed for Adminis
 Permit Orka Network |  |  | HTTPS<br/>Web Applications<br/>SSL Client | production.cloudflare.docker.com | Requirement for Docker certificates  
 Permit Orka Network |  |  | HTTPS | hub.docker.com | Administration rule requirement: Requirement for Docker Container Images  
 Permit Orka Network |  |  |  | k8s.gcr.io | Administration rule requirement; Requirement for K8S Container Images  
-Permit Orka Network |  | TCP 10259  
-TCP 2379  
-TCP 2380  
-TCP 6443 |  | registry.k8s.io | Administration traffic; client use not necessary: review rules  
+Permit Orka Network |  | TCP 10259<br/>TCP 2379<br/>TCP 2380<br/>TCP 6443 |  | registry.k8s.io | Administration traffic; client use not necessary: review rules  
 Permit Orka Network |  |  | HTTPS | pkgs.k8s.io | Administration Stacks requirement  
 Permit Orka Network |  |  | HTTPS | k8s.io | catch-all for the URL  
-Permit Orka Network |  |  | HTTP  
-HTTPS | get.helm.sh | Administration Requirement for K8 Stack  
+Permit Orka Network |  |  | HTTP<br/>HTTPS | get.helm.sh | Administration Requirement for K8 Stack  
 Permit Orka Network |  |  | HTTPS | projectcalico.org | Administration Requirement for K8 Stack  
 Permit Orka Network |  |  | HTTPS | updates.cdn-apple.com | Client and Administration requirement - especially based on VMs OS  
 Permit Orka Network |  |  | HTTPS | configuration.apple.com | Client and Administration requirement - especially based on VMs OS  
