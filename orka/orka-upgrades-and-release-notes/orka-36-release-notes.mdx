@@ -15,7 +15,7 @@ Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools 
 
 ### Release summary
 
-Orka 3.6.0 introduces the Orka Upgrade Service: a Kubernetes-native update mechanism that enables MacStadium to deliver cluster upgrades to your environment. This release validates Orka against Kubernetes 1.35 on both on-prem and EKS, and adds configurable VM network isolation policies for Apple Silicon nodes. Orka artifacts are now distributed publicly via CloudFront, eliminating the need for AWS credentials to pull binaries and images. The release also includes Jenkins and Packer plugin updates, GitHub Actions integration improvements, and automated Orka VM Tools updates.
+Orka 3.6.0 introduces the Orka Upgrade Service: a Kubernetes-native update mechanism that enables MacStadium to deliver cluster upgrades to your environment. This release validates Orka against Kubernetes 1.35 on both on-prem and EKS, and adds configurable VM network isolation policies for Apple silicon nodes. Orka artifacts are now distributed publicly via CloudFront, eliminating the need for AWS credentials to pull binaries and images. The release also includes Jenkins and Packer plugin updates, GitHub Actions integration improvements, and automated Orka VM Tools updates.
 
 ## New features
 
@@ -39,9 +39,9 @@ A few things worth knowing during a Kubernetes upgrade:
 
 ### VM network isolation
 
-<Note>This feature is available on Apple Silicon nodes only.</Note>
+<Note>This feature is available on Apple silicon nodes only.</Note>
 
-Orka 3.6.0 introduces configurable VM network isolation policies for Apple Silicon nodes. MacStadium can configure explicit allow and deny rules by CIDR block, restricting which networks a VM can reach without changes to your broader network infrastructure. This is particularly useful in multi-tenant environments and for customers with security requirements around VM-level network segmentation.
+Orka 3.6.0 introduces configurable VM network isolation policies for Apple silicon nodes. MacStadium can configure explicit allow and deny rules by CIDR block, restricting which networks a VM can reach without changes to your broader network infrastructure. This is particularly useful in multi-tenant environments and for customers with security requirements around VM-level network segmentation.
 
 By default, VMs on MacStadium-hosted clusters have access to the storage network blocked. All other traffic, including internet access and VM-to-VM communication on the same node, is allowed unless explicitly restricted.
 
