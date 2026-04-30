@@ -10,7 +10,7 @@ Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools 
 
 ## Orka 3.5.2
 
-## Release summary
+### Release summary
 
 Orka 3.5.2 delivers enhanced storage management capabilities, streamlined CLI workflows, and significant reliability improvements across the platform. This release introduces native shared attached disk configuration, eliminating manual storage provisioning steps for VM deployments. The Orka CLI now uses intelligent namespace resolution by leveraging your available `orka` kubeconfig context. Additionally, Orka 3.5.2 includes critical stability enhancements for OCI image operations, macOS Tahoe and Sequoia compatibility fixes, and improved operator behavior in multi-namespace environments.
 
@@ -158,8 +158,9 @@ kubectl config set-context orka --namespace=orka-default
 
   * Reduced noise and fixed behavior in non-default namespaces
 
-  - Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
-  - The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
+  * Orka no longer tries to process unsupported ECR refresh jobs when new namespaces are created
+  * The image caching state is updated correctly when caching an already-cached image after a node moves to a different namespace
+
 ## Bug fixes
 
   * macOS Tahoe 26.0 compatibility fixes for image deletion, copying, and tagging
@@ -174,54 +175,55 @@ kubectl config set-context orka --namespace=orka-default
 
 ## Orka 3.5.1
 
-## Release summary
+### Release summary
 
 The Orka v3.5.1 hotfix addresses five issues affecting ARM nodes, Orka operator, and the Orka CLI. All fixes can be deployed with zero downtime.
 
-## Fixed issues
+### Fixed issues
 
-### NAT Networking on M4 Pro
+#### NAT Networking on M4 Pro
 
 Issue: Sporadic connectivity failures where VMs using NAT networking on M4 Pro nodes cannot reach the internet or LAN.
 
 Fix: Added automatic detection and self-healing for NAT networking issues. If self-healing fails, the VM deployment will fail and the VM will be deleted. Note that most common integrations (e.g., Jenkins) will then simply re-deploy the VM.
 
-### Node Resource Display in Custom Namespaces
+#### Node Resource Display in Custom Namespaces
 
 Issue: `orka3 node list -o wide` incorrectly showed resource usage for nodes in non-default namespaces. This issue was cosmetic only, and had no impact on scheduling VMs.
 
 Fix: Corrected resource reporting logic to accurately display usage across all namespaces.
 
-### Image Caching in Custom Namespaces
+#### Image Caching in Custom Namespaces
 
 Issue: `orka3 ic add` silently failed when caching images to nodes in custom namespaces.
 
 Fix: Image caching now works correctly across all namespaces. You will need to re-cache any previously failed images after applying this hotfix.
 
-### Service Account Permissions Loss
+#### Service Account Permissions Loss
 
 Issue: Service accounts lost RBAC permissions during Ansible maintenance operations, breaking automated workflows.
 
 Fix: Modified maintenance playbooks to preserve service account role bindings. Note: If you are running a previous version of Orka and are experiencing this issue, you can verify service account permissions and manually restore if needed using `orka3 rb add-subject`.
 
-### SSO Login JWT Decoding
+#### SSO Login JWT Decoding
 
 Issue: `orka3 login` with SSO failed for certain identity providers with the error "invalid ID token: illegal base64 data".
 
 Fix: Enhanced JWT token decoding to support a wider range of identity provider token formats. Update to the latest Orka CLI version and test SSO login.
 
-## Deployment
+### Deployment
 
 The Orka v3.5.1 hotfix patch is a zero-downtime deployment. Note that Orka clusters must be at least on Orka v3.4+ / k8s v1.33 to be upgraded to v3.5.1.
 
-## Support
+### Support
 
-If you have questions or require assistance, please [contact our support team.](mailto:support@macstadium.com)  
-Orka 3.5.0
+If you have questions or require assistance, please [contact our support team.](mailto:support@macstadium.com)
+
+## Orka 3.5.0
 
 We are excited to announce the latest Orka release, which brings with it significant networking enhancements, expanded guest OS support, and improved storage capabilities. Orka 3.5.0 also includes various bug fixes, improvements to performance optimization, and stability enhancements. 
 
-### New Features
+## New Features
 
 ### Bridged networking support:
 
@@ -279,7 +281,7 @@ Orka 3.5.0 introduces Harbor OCI storage as an alternative to NFS storage in Ork
 
 For technical requirements, please visit: [https://](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[support.](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[macstadium.](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[com/hc/en-us/](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[a](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[r](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[t](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[ic](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[l](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[e](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[s](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[/41318654531099-U](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[si](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[ng-H](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[a](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[rbor-OCI-Storag](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[e](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[-](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[wi](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[th-the-Or](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[k](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)[a-CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli)
 
-### Improvements
+## Improvements
 
   * VM shared storage is now **disabled** by default for new Orka deployments. If you are a new Orka customer and require shared storage for your VMs, please open a support ticket to opt-in and enable this feature in your cluster. Existing Orka deployments are not impacted by this change, and will retain the previous setting (enabled).
 
@@ -296,7 +298,7 @@ For technical requirements, please visit: [https://](/orka/oci-images/using-harb
 
 
 
-### Bug fixes
+## Bug fixes
 
   * Orphan VM logic has been updated to include removing stopped VMs automatically
 
@@ -307,6 +309,6 @@ For technical requirements, please visit: [https://](/orka/oci-images/using-harb
 
 
 
-### Known Issues
+## Known Issues
 
   * VM data loss during upgrade: Upgrading from Orka 3.4 to Orka 3.5 will result in VM loss. Ensure you save/backup all virtual machines before proceeding with the upgrade, then redeploy them afterward.
