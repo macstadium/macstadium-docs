@@ -54,16 +54,18 @@ The Orka3 API will be most useful to:
 
 You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overview/ip-plan):
 
-  * For clusters deployed before Orka 2.1, it's the `.100` address for your `Private-1` network (usually, `10.221.188.100`), prefixed with `http`. For example: `http://10.221.188.100`.
-  * For clusters deployed with Orka 2.1 or later, it's the `.20` address for your `Private-1` network (usually `10.221.188.20`), prefixed with `http`. For example: `http://10.221.188.20`.
+  * It's the `.20` address for your `Private-1` network (usually `10.221.188.20`), prefixed with `http`. For example: `http://10.221.188.20`.
   * You can also use `https://<orka-domain>` and `https://<custom-domain>` (if configured). To get the [Orka domain](/orka/networking-with-orka-at-macstadium/built-in-orka-domains) for your Orka cluster, [contact MacStadium support](https://portal.macstadium.com/login). To use an external custom domain, see [here](/orka/networking-with-orka-at-macstadium/external-custom-domains).
 
 
 
-Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
+You can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
 
   * The Orka3 API is a RESTful API and conforms to enterprise industry standards.
-  * The complete API reference is available [here](https://macstadium.github.io/orka-api-docs/).
+
+<Tip>
+The full API reference, including all endpoints, request bodies, and response schemas, is at [macstadium.github.io/orka-api-docs](https://macstadium.github.io/orka-api-docs/). Use it alongside this quick start to explore operations not covered here.
+</Tip>
 
 
 
@@ -91,7 +93,7 @@ orka3 user get-token
 ```
 ## Deploy Your First VM Instance
 
-Starting with Orka 3.0.0, you can use the built-in Swagger UI to execute API calls directly against your cluster.
+You can use the built-in Swagger UI to execute API calls directly against your cluster.
 
 In your browser, navigate to `<ORKA_API_URL>/api/v1/swagger`, click **Authorize** , and type `Bearer <TOKEN>`. For every call that you want to run, just click **Try it out** and fill the required details.
 
@@ -146,17 +148,12 @@ curl -X 'GET' \
 ```
 
 This API call provides an overview of your nodes. It shows the actual IP, the state, and the available resources on each node.
-**Glossary: Node**
 
-A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads.
+<Note>
+**Node:** A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads. A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
 
-A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
-
-**Glossary: Namespace**
-
-A way to isolate and dedicate resources to users and teams within the cluster.
-
-The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+**Namespace:** A way to isolate and dedicate resources to users and teams within the cluster. The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
+</Note>
 
   2. Check if there are any VMs on your environment.
 
@@ -192,11 +189,9 @@ curl -X 'GET' \
 ```
 You will likely see a `sonoma-90gb-orka3-arm` item in the response. It is a fully installed and configured macOS Sonoma image with a 90GB disk size. It also has an admin user configured and SSH and Apple Screen Sharing access enabled.
 
-Glossary: Image
-
-A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs.
-
-(Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+<Note>
+**Image:** A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs. (Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+</Note>
 
   4. Deploying a VM is as simple as just specifying a base image. Run:
 
@@ -233,7 +228,7 @@ The bare minimum required argument is `image`.
 
 Orka creates a simple VM with the specified image and 3 CPU, and assigns a randomly generated name to it.
 
-Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
+You can also deploy VMs using images from OCI-compatible registries.
 
 You can also deploy directly from MacStadium's public OCI registry.
 
@@ -299,11 +294,11 @@ curl -X 'GET' \
 ```
 The API now returns information about your running VM.
 
-The `GET /resources/vm/list` call is powerful. It shows a lot of system information for the VM, along with its IP, and several connection ports. Note that even though `Screenshare` and `SSH` are always listed and configured for every VM, you won't be able to use them unless the respective connection type is enabled in the macOS as well. This behavior is a security limitation of the OS.
+The `GET /api/v1/namespaces/orka-default/vms` call shows system information for your VMs, including IP and connection ports. Note that even though `screenshare` and `ssh` ports are always listed, you won't be able to use them unless the respective connection type is enabled in macOS. This is a security limitation of the OS.
 
-**In a pool of many VMs, are you looking for that special one?**
-
-When you have a lot of VMs, the response of `GET /resources/vm/list` might become too crowded to use efficiently. Run `GET /namespaces/orka-default/vms/<VM_NAME>` instead and get the system information for a single VM.
+<Note>
+When you have a lot of VMs, the response of `GET /resources/vm/list` can become too crowded to use efficiently. Run `GET /namespaces/orka-default/vms/<VM_NAME>` instead to get system information for a single VM.
+</Note>
 
   6. Check your nodes to see how many resources are now in use.
 
@@ -338,7 +333,7 @@ If you're using another image as your starting point or if you are installing yo
 
   3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password one more time - when Apple connects to the VM.
 
-  4. On the VM, launch **System Preferences** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
+  4. On the VM, launch **System Settings** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
 
   5. (Optional) Inside the VM, launch the Terminal application and run the following command.
 
@@ -367,21 +362,13 @@ Changing a running VM's configuration or file system does not affect its base im
 
 To create changes that stick and appear on future deployments, you can commit your changes to the base image, save the changes as a new image, or push your changes to an OCI-compatible registry.
 
-**Glossary: Commit changes**
+<Note>
+**Commit:** Modifies the original base image of the respective VM instance. With this operation, you apply the current state of a VM instance over the base image of its VM config. Newly deployed instances will launch in the same state as your current VM. This operation restarts the VM.
 
-`Commit` modifies the original base image of the respective VM instance. With this operation, you apply the current state of a VM instance over the base image of its VM config. This way, newly deployed instances will launch in the same state as your current VM.
+**Save:** Creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image. This operation restarts the VM.
 
-This operation restarts the VM.
-
-**Glossary: Save changes**
-
-`Save` creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image.
-
-This operation restarts the VM.
-
-**Glossary: Push changes**
-
-`Push` your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image.
+**Push:** Pushes your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image.
+</Note>
 
 Return to the command line on your local machine and run the following command. You can get the `<VM_NAME>` from the `GET /namespaces/orka-default/vms` output you ran earlier.
 
