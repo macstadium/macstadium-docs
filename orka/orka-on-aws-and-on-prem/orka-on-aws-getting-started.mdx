@@ -35,7 +35,7 @@ Key elements in the architecture include:
     * We will provide an AMI based on an official AWS macOS base image that includes our tooling (Virtual Kubelet, Orka Engine) and a bootstrap script that accepts the EKS parameters to connect as an Orka worker node.
     * We have a new AMI available that supports the external NVMe disk available with M4 instances. Per the [official Amazon docs](https://aws.amazon.com/ec2/instance-types/mac/): "Amazon EC2 M4 Mac instances come with a new 2TB instance store volume per EC2 Mac Dedicated Host, providing low latency storage for improved caching and build/test performance."
 
-The new AMI is compatible with Orka 3.5 and all EC2 Apple Silicon Mac instance types (M1, M2, M4)
+The new AMI is compatible with Orka 3.5 and later, and all EC2 Apple Silicon Mac instance types (M1, M2, M4).
 
 By default:
 
