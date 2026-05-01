@@ -6,7 +6,7 @@ zendesk_id: 39570388988059
 
 Orka is an orchestration and virtualization layer for Mac build infrastructures based on Kubernetes and OCI technology. Orka lets you orchestrate macOS in a cloud environment using Kubernetes on genuine Apple hardware.
 
-With Orka (also referred to as Orka Cluster) on AWS, you can now effortlessly integrate macOS development and macOS CI/CD into your AWS workflows and environments.
+With Orka (also referred to as Orka Cluster) on AWS, you can integrate macOS development and macOS CI/CD directly into your AWS workflows and environments.
 
 ## How does Orka on AWS work?
 
@@ -35,7 +35,7 @@ Key elements in the architecture include:
     * We will provide an AMI based on an official AWS macOS base image that includes our tooling (Virtual Kubelet, Orka Engine) and a bootstrap script that accepts the EKS parameters to connect as an Orka worker node.
     * We have a new AMI available that supports the external NVMe disk available with M4 instances. Per the [official Amazon docs](https://aws.amazon.com/ec2/instance-types/mac/): "Amazon EC2 M4 Mac instances come with a new 2TB instance store volume per EC2 Mac Dedicated Host, providing low latency storage for improved caching and build/test performance."
 
-The new AMI is compatible with Orka 3.5 and all EC2 Apple Silicon Mac instance types (M1, M2, M4)
+The new AMI is compatible with Orka 3.5 and later, and all EC2 Apple Silicon Mac instance types (M1, M2, M4).
 
 By default:
 
@@ -69,7 +69,7 @@ export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
 
 We recommend that you deploy the Orka services to a distinct VPC and implement your networking via VPC peering. This will allow the necessary networking to interact with VMs and the control plane. Within the VPC, the following are ports that should be exposed for different services.
 
-  * EKS running v.1.35
+  * EKS running v1.35
     * Orka Operator: TCP 8080 (metrics), TCP 8081 (health check), TCP 443 (webhook), Linux worker nodes should be accessible from within the cluster on any port. Does not require Internet access.
     * Orka OIDC Provider: TCP 443. Requires connectivity to the authentication provider.
   * EC2 Mac Nodes
@@ -79,7 +79,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 ## Install Overview
 
-  1. **Talk to your MacStadium Account Team about your Orka on AWS install.
+  1. **Talk to your MacStadium Account Team about your Orka on AWS install.**
      1. Provide MacStadium with your AWS account ID and region to be used. This is needed so that the Orka AMI can be shared with your account.
   2. Follow the installation steps below for the EKS Cluster and the CodeBuild role.
      1. **Take note of the EKS Node IAM role and the CodeBuild role ARN, and share the 2 ARNs with your MacStadium Account Team**
@@ -212,9 +212,9 @@ Before deploying a Mac EC2 instance, ensure that an IAM role exists meeting the 
 
 ### IAM Policies
 
-The instance must have an IAM role with the __AmazonEKSWorkerNodePolicy__ attached. This is required for the node to authenticate to the EKS cluster.  
-  
-We also recommend the __AmazonSSMManagedInstanceCore__ policy so the instance can be accessed by SSM for troubleshooting.
+The instance must have an IAM role with the `AmazonEKSWorkerNodePolicy` attached. This is required for the node to authenticate to the EKS cluster.
+
+We also recommend the `AmazonSSMManagedInstanceCore` policy so the instance can be accessed by SSM for troubleshooting.
 
 ### EKS Access Policies
 
@@ -258,9 +258,9 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 4. Receive license key via email (Est. 24 hour turnaround time)
 
-5. Activate: ``orka-engine license set --key YOUR_KEY``
+5. Activate: `orka-engine license set --key YOUR_KEY`
 
-You can also download Orka Engine directly at: [https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg](https://distribution.macstadium.com/orka-engine/official/3.5.2/orka-engine.pkg)
+You can also download Orka Engine directly from MacStadium. Contact your account representative for the current installer link.
 
 ### Bootstrap Script
 
@@ -288,7 +288,7 @@ You will need to have the following for use with ECR:
 ### ECR Authentication
 
 <Note>
-If you plan to use `orka3 vm push` with ECR, run `orka3 login` or `orka3 user set-token` first — `vm push` requires an Orka API token in addition to ECR credentials.
+If you plan to use `orka3 vm push` with ECR, run `orka3 login` or `orka3 user set-token` first. The `vm push` command requires an Orka API token in addition to ECR credentials.
 </Note>
 
 IAM-based or certificate-based kubeconfig authentication is not sufficient for `vm push` on its own. An `Unauthorized` error from `vm push` in this context indicates a missing Orka API token, not an ECR authentication issue.
@@ -312,7 +312,7 @@ You can then configure the credentials for the Orka cluster using the token:
 aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --password-stdin https://<aws-account-number>.dkr.ecr.<region>.amazonaws.com
 ```
 <Note>
-  The token is scoped for image push/pull operations based on the IAM policies configured for the calling entity — whichever user or role calls the `aws ecr get-login-password` command.
+  The token is scoped for image push/pull operations based on the IAM policies configured for the calling entity: whichever user or role calls the `aws ecr get-login-password` command.
 </Note>
 
 <Note>
