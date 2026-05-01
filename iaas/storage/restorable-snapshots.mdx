@@ -6,7 +6,7 @@ zendesk_id: 43967899182619
 
 ## Snapshots
 
-A snapshot is a restorable point-in-time __picture__ of a VM or Private Cloud storage. Snapshots can be used to revert either individual virtual machines, or an entire Private Cloud instance back to the snapshotted state. Snapshots can be run either as part of a schedule or on-demand.
+A snapshot is a restorable point-in-time copy of a VM or Private Cloud storage. Snapshots can be used to revert either individual virtual machines, or an entire Private Cloud instance back to the snapshotted state. Snapshots can be run either as part of a schedule or on-demand.
 
 Snapshots are particularly useful in the event of a misconfigured environment, as restoring from a cloud snapshot can revert the entire environment to its previous state.
 
@@ -14,9 +14,10 @@ There are two types of snapshots:
 
   * **Cloud Snapshot**: a snapshot of an entire Private Cloud instance.
   * **VM Snapshot**: a snapshot of an individual Virtual Machine.
+
 ### Snapshot Profiles
 
-Snapshots are created by using __snapshot profiles__. Once a snapshot profile is set up, it can be set to automatically snapshot machines on a regular basis according to stored schedules. The retention period, frequency, and machines snapshotted are all configurable. A snapshot profile can be assigned to an entire Private Cloud, an individual VM, or a NAS volume.
+Snapshots are created by using snapshot profiles. Once a snapshot profile is set up, it can be set to automatically snapshot machines on a regular basis according to stored schedules. The retention period, frequency, and machines snapshotted are all configurable. A snapshot profile can be assigned to an entire Private Cloud, an individual VM, or a NAS volume.
 
 Private Cloud includes multiple default snapshot profiles that can be used out of the box or modified as needed. You can also create new snapshot profiles from scratch.
 
@@ -42,11 +43,12 @@ Default profiles are readily available and can be modified if needed. The follow
 
      * Daily (at 6pm) snapshots retained for 3 days
 
-  * **\*Cloud Snapshots (Suggested default profile for entire-system snapshots)**
+  * **Cloud Snapshots** (suggested default profile for entire-system snapshots)
 
      * Hourly for 3 hours
      * Daily (at midnight) snapshots retained for 3 days
      * Daily (at noon) snapshots retained for 1 day
+
 Any of the default profiles can be modified to meet individual needs or requirements.
 
 ### Using a Default Snapshot Profile
@@ -90,14 +92,14 @@ The default SOX snapshot profile has 4 periods:
 There is a **+ Add Period** button, which can be used to add more snapshots. For example, a user might want an hourly snapshot or a 6-hour snapshot. The retention time can also be set.
 </Note>
 
-  6. In this example, click the **\+ Add Period** to modify the existing default snapshot profile. The **Snapshot Profile Period** screen opens.
+  5. In this example, click **\+ Add Period** to modify the existing default snapshot profile. The **Snapshot Profile Period** screen opens.
 
 
 ![Private Cloud Snapshot Profile Period form with frequency and retention fields](/images/attachments/43967899165467.png)
 
 In this example, an hourly snapshot profile is created and the retention period is 3 days. This means every hour a snapshot is taken, and then it is kept for 3 days, causing 72 snapshots to be stored.
 
-  7. Click **Submit** to create the new snapshot profile.
+  6. Click **Submit** to create the new snapshot profile.
 
 
 
@@ -107,13 +109,9 @@ In this example, an hourly snapshot profile is created and the retention period 
 This snapshot profile now has the following snapshots:
 
   * Hourly
-
   * Daily
-
   * Weekly
-
   * Monthly
-
   * Yearly
 
 
@@ -125,9 +123,9 @@ For new users who do not have any snapshot profiles assigned, MacStadium recomme
 
 ### Cloud Snapshots
 
-The Cloud Snapshot profile determines the schedule used for creating snapshots of the __entire__ system. MacStadium recommends setting a Cloud Snapshot profile for most Private Cloud instances.
+The Cloud Snapshot profile determines the schedule used for creating snapshots of the entire system. MacStadium recommends setting a Cloud Snapshot profile for most Private Cloud instances.
 
-Scheduled Cloud Snapshots are disabled by default. To enable cloud snapshots, a profile must be selected by navigating to **System → Cloud Snapshots** , and select the snapshot profile to use.
+Scheduled Cloud Snapshots are disabled by default. To enable cloud snapshots, navigate to **System → Cloud Snapshots** and select the snapshot profile to use.
 
 If a Cloud Level Snapshot is configured, individual VM snapshots may not be needed. Cloud Snapshots include every VM and volume in a Private Cloud instance, and are taken in addition to VM snapshots.
 
@@ -145,9 +143,11 @@ If a Cloud Level Snapshot is configured, individual VM snapshots may not be need
 
 
 
-![Private Cloud Cloud Snapshots list page](/images/attachments/43967899167387.png)![Private Cloud Cloud Snapshots page showing no profile selected](/images/attachments/43967884636955.png)
+![Private Cloud Cloud Snapshots list page](/images/attachments/43967899167387.png)
 
-  3. Click **Select Snapshot Profile** from the left menu
+![Private Cloud Cloud Snapshots page showing no profile selected](/images/attachments/43967884636955.png)
+
+  3. Click **Select Snapshot Profile** from the left menu.
 
 
 
@@ -175,57 +175,47 @@ Once a Cloud Snapshot has been created, it can be viewed by clicking **Snapshot 
   2. Select **Cloud Snapshots**.
 
   3. Select **New** from the left menu.
+
 ![Private Cloud Cloud Snapshots left menu with New option](/images/attachments/43967899173019.png)
 
-  4. The Cloud Snapshot screen opens
+  4. Fill in the form:
 
-
-
-  * Enter a  __**Name**__ (required) for the snapshot.
-
-  * Enter a  __**Description**__ (optional).
-
-  * In the  __**Expires**__ field, Select/Enter a date and time for expiration.
-
-
-
-
-In the Expiration Type field, __Never Expire__ can be selected, however, this can cause the snapshot to consume substantial amounts of storage. It is not recommended to use the Never Expire option unless absolutely necessary.
+     * **Name** (required): enter a name for the snapshot.
+     * **Description** (optional): enter a description.
+     * **Expires**: select a date and time for expiration.
+     * **Expiration Type**: you can select **Never Expire**, but this is not recommended. Snapshots without an expiration can consume substantial amounts of storage.
 
 ![Private Cloud New Cloud Snapshot form with Name, Description, and Expires fields](/images/attachments/43967899176219.png)
 
-  5. The  __**Private**__ checkbox is selected by default. This option pertains to multitenancy, and can be ignored in the majority of cases.
+  5. The **Private** checkbox is selected by default. This option pertains to multitenancy and can be ignored in most cases.
 
   6. Click **Submit**.
-
-
-
 
 ### Managing Profiles for Scheduled Snapshots
 
 These profiles pertain to any snapshot that uses them.
 
-  1. From the main dashboard, click **System** from the left menu
+  1. From the main dashboard, click **System** from the left menu.
 
 
 ![Private Cloud main dashboard with System option in left menu](/images/attachments/43967884639643.png)
 
-  2. Click **Snapshot Profiles** from the left menu
+  2. Click **Snapshot Profiles** from the left menu.
 
 
 ![Private Cloud System menu with Snapshot Profiles option highlighted](/images/attachments/43967884640155.png)
 
-  3. Click the desired snapshot profile
+  3. Click the desired snapshot profile.
 
 
 ![Private Cloud Snapshot Profiles list with a profile row highlighted](/images/attachments/43967899177627.png)
 
-  4. Click **View**
+  4. Click **View**.
 
 
 ![Private Cloud Snapshot Profile dashboard showing periods and edit options](/images/attachments/43967884641179.png)
 
-The dashboard for the selected profile opens
+The dashboard for the selected profile opens.
 
   * To add periods to the profile click the **+Add Period** link. (A snapshot profile can contain multiple periods.)
 
