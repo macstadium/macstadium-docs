@@ -6,9 +6,9 @@ zendesk_id: 28333357279387
 
 (Admin-only) How to manage the access to your cluster resources with namespaces and role bindings.
 
-Orka 3.0 introduces the concept of namespaces - a way to isolate and dedicate resources to users and teams within the cluster. This concept replaces the earlier versions of node dedication (also known as "grouping").
+Orka uses namespaces to isolate and dedicate resources to users and teams within the cluster. This replaces the earlier node dedication model (also known as "grouping").
 
-Orka 3.0 relies on RBAC for user access management. Both roles and role bindings are created and maintained automatically by Orka. Cluster administrators can manually add subjects to the role binding for a namespace, which grants the respective users and service accounts access to the namespace. All cluster administrators have access to all namespaces.
+Orka relies on RBAC for user access management. Both roles and role bindings are created and maintained automatically by Orka. Cluster administrators can manually add subjects to the role binding for a namespace, which grants the respective users and service accounts access to the namespace. All cluster administrators have access to all namespaces.
 
 The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
 
@@ -35,50 +35,48 @@ You can create regular namespaces where you can deploy and run Orka VMs, or you 
 
 
 #### **Orka CLI**
-    
-    
-```
-orka3 namespace create <NAMESPACE_NAME>  
+
+```bash
+orka3 namespace create <NAMESPACE_NAME>
 ```
 
 Or, if you want to create a sandboxed namespace:
 
-```
+```bash
 orka3 namespace create <NAMESPACE_NAME> --enable-custom-pods
 ```
 #### **Orka API**
-    
-    
-```
-curl -X 'POST' \  
-'http://<ORKA_API_IP>/api/v1/namespaces' \  
--H 'accept: application/json' \  
--H 'Authorization: Bearer <TOKEN>' \  
--H 'Content-Type: application/json' \  
--d '{  
-"enableCustomPods": false,  
-"name": "<NAMESPACE_NAME>"  
+
+```bash
+curl -X 'POST' \
+'http://<ORKA_API_IP>/api/v1/namespaces' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"enableCustomPods": false,
+"name": "<NAMESPACE_NAME>"
 }'
 ```
 
 Or, if you want to create a sandboxed namespace:
 
-```
-curl -X 'POST' \  
-'http://<ORKA_API_IP>/api/v1/namespaces' \  
--H 'accept: application/json' \  
--H 'Authorization: Bearer <TOKEN>' \  
--H 'Content-Type: application/json' \  
--d '{  
-"enableCustomPods": true,  
-"name": "<NAMESPACE_NAME>"  
+```bash
+curl -X 'POST' \
+'http://<ORKA_API_IP>/api/v1/namespaces' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"enableCustomPods": true,
+"name": "<NAMESPACE_NAME>"
 }'
 ```
 Your namespace name must meet the following requirements:
 
-  * Begins with the orka- prefix.
+  * Begins with the `orka-` prefix.
   * Does not exceed 63 characters (including the prefix).
-  * Consists of lowercase alphanumeric characters or dashes (-).
+  * Consists of lowercase alphanumeric characters or dashes (`-`).
   * The string ends with an alphanumeric character.
   * The name is unique to the cluster.
 
@@ -91,55 +89,55 @@ You can dedicate a pool of resources to one or more users or service accounts by
   1. To add one or more users, run the following command:
 
 #### **Orka CLI**
-         
-```
-     orka3 rb add-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]  
-       
-     OR  
-       
-     orka3 rb add-subject --user user_1@company.com,user_2@company.com [--namespace <TARGET_NAMESPACE>]
+
+```bash
+# Add a single user
+orka3 rb add-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]
+
+# Add multiple users
+orka3 rb add-subject --user user_1@company.com,user_2@company.com [--namespace <TARGET_NAMESPACE>]
 ```
 #### **Orka API**
-         
-```
-     curl -X 'POST' \  
-     'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
-     -H 'accept: application/json' \  
-     -H 'Authorization: Bearer <TOKEN>' \  
-     -H 'Content-Type: application/json' \  
-     -d '{  
-     "users": [  
-     "user@company.com"  
-     ]  
-     }'
+
+```bash
+curl -X 'POST' \
+'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"users": [
+"user@company.com"
+]
+}'
 ```
   2. To add one or more service accounts, run the following command:
 
 #### **Orka CLI**
-         
-```
-     orka3 rb add-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]  
-       
-     OR  
-       
-     orka3 rb add-subject --serviceaccount <SA_NAMESPACE_2>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
+
+```bash
+# Add a single service account
+orka3 rb add-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]
+
+# Add multiple service accounts
+orka3 rb add-subject --serviceaccount <SA_NAMESPACE_1>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
 ```
 #### **Orka API**
-         
-```
-     curl -X 'POST' \  
-     'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
-     -H 'accept: application/json' \  
-     -H 'Authorization: Bearer <TOKEN>' \  
-     -H 'Content-Type: application/json' \  
-     -d '{  
-     "serviceaccounts": [  
-     {  
-     "name": "<SERVICE_ACCOUNT_NAME>",  
-     "namespace": "<SERVICE_ACCOUNT_NAMESPACE>"  
-     }  
-     ]  
-     }'
+
+```bash
+curl -X 'POST' \
+'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"serviceaccounts": [
+{
+"name": "<SERVICE_ACCOUNT_NAME>",
+"namespace": "<SERVICE_ACCOUNT_NAMESPACE>"
+}
+]
+}'
 ```
 ## Dedicate Resources to the Namespace
 
@@ -150,20 +148,18 @@ Formerly, this feature was known as node dedication and was achieved with node a
 Run the following command:
 
 #### **Orka CLI**
-    
-    
-```
+
+```bash
 orka3 node namespace <NODE_NAME> [--namespace <CURRENT_NAMESPACE>] <TARGET_NAMESPACE>
 ```
 #### **Orka API**
-    
-    
-```
-curl -X 'POST' \  
-'http://<ORKA_API_IP>/api/v1/namespaces/<CURRENT_NAMESPACE>/nodes/<NODE_NAME>/namespace' \  
--H 'accept: application/json' \  
--H 'Authorization: <TOKEN>' \  
--H 'Content-Type: application/json' \  
+
+```bash
+curl -X 'POST' \
+'http://<ORKA_API_IP>/api/v1/namespaces/<CURRENT_NAMESPACE>/nodes/<NODE_NAME>/namespace' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
 -d '{
 "namespace": "<TARGET_NAMESPACE>"
 }'
@@ -178,54 +174,54 @@ If needed, you can revoke the access of a user or a service account to a namespa
 
 #### **Orka CLI**
 
-```
-     orka3 rb remove-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]
-       
-     OR  
-       
-     orka3 rb remove-subject --user user_1@company.com,user_2@company.com [--namespace <TARGET_NAMESPACE>]
+```bash
+# Remove a single user
+orka3 rb remove-subject --user user@company.com [--namespace <TARGET_NAMESPACE>]
+
+# Remove multiple users
+orka3 rb remove-subject --user user_1@company.com,user_2@company.com [--namespace <TARGET_NAMESPACE>]
 ```
 #### **Orka API**
-         
-```
-     curl -X 'DELETE' \  
-     'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
-     -H 'accept: application/json' \  
-     -H 'Authorization: Bearer <TOKEN>' \  
-     -H 'Content-Type: application/json' \  
-     -d '{  
-     "users": [  
-     "user@company.com"  
-     ]  
-     }'
+
+```bash
+curl -X 'DELETE' \
+'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/remove' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"users": [
+"user@company.com"
+]
+}'
 ```
   2. To remove one or more service accounts, run the following command:
 
-**Orka CLI**
+#### **Orka CLI**
 
-```
-     orka3 rb remove-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]
+```bash
+# Remove a single service account
+orka3 rb remove-subject --serviceaccount <SA_NAMESPACE>:<SA_NAME> [--namespace <TARGET_NAMESPACE>]
 
-     OR
-
-     orka3 rb remove-subject --serviceaccount <SA_NAMESPACE_2>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
+# Remove multiple service accounts
+orka3 rb remove-subject --serviceaccount <SA_NAMESPACE_1>:<SA_NAME_1>,<SA_NAMESPACE_2>:<SA_NAME_2> [--namespace <TARGET_NAMESPACE>]
 ```
 #### **Orka API**
-         
-```
-     curl -X 'DELETE' \  
-     'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/add' \  
-     -H 'accept: application/json' \  
-     -H 'Authorization: Bearer <TOKEN>' \  
-     -H 'Content-Type: application/json' \  
-     -d '{  
-     "serviceaccounts": [  
-     {  
-     "name": "<SERVICE_ACCOUNT_NAME>",  
-     "namespace": "<SERVICE_ACCOUNT_NAMESPACE>"  
-     }  
-     ]  
-     }'
+
+```bash
+curl -X 'DELETE' \
+'http://<ORKA_API_IP>/api/v1/namespaces/<TARGET_NAMESPACE>/rolebindings/orka-dev/subjects/remove' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"serviceaccounts": [
+{
+"name": "<SERVICE_ACCOUNT_NAME>",
+"namespace": "<SERVICE_ACCOUNT_NAMESPACE>"
+}
+]
+}'
 ```
 ## Remove Resources from a Namespace
 
@@ -235,20 +231,20 @@ If needed, you can move unused resources (nodes) across namespaces.
   2. Run the following command:  
 
 
-**Orka CLI**
-         
-```
-     orka3 node namespace <NODE_NAME> [--namespace <CURRENT_NAMESPACE>] <TARGET_NAMESPACE>
+#### **Orka CLI**
+
+```bash
+orka3 node namespace <NODE_NAME> [--namespace <CURRENT_NAMESPACE>] <TARGET_NAMESPACE>
 ```
 #### **Orka API**
-         
-```
-     curl -X 'POST' \  
-     'http://<ORKA_API_IP>/api/v1/namespaces/<CURRENT_NAMESPACE>/nodes/<NODE_NAME>/namespace' \  
-     -H 'accept: application/json' \  
-     -H 'Authorization: <TOKEN>' \  
-     -H 'Content-Type: application/json' \  
-     -d '{  
-     "namespace": "<TARGET_NAMESPACE>"  
-     }'
+
+```bash
+curl -X 'POST' \
+'http://<ORKA_API_IP>/api/v1/namespaces/<CURRENT_NAMESPACE>/nodes/<NODE_NAME>/namespace' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <TOKEN>' \
+-H 'Content-Type: application/json' \
+-d '{
+"namespace": "<TARGET_NAMESPACE>"
+}'
 ```
