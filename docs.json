@@ -485,6 +485,10 @@
       "destination": "/"
     },
     {
+      "source": "/iaas/bare-metal-macs/mac-mini-comparison-chart",
+      "destination": "/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks"
+    },
+    {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
       "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture"
     },
