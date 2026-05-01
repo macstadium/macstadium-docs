@@ -484,6 +484,74 @@
       "destination": "/"
     },
     {
+      "source": "/docs/vnc-clients",
+      "destination": "/iaas/bare-metal-macs/vnc-clients"
+    },
+    {
+      "source": "/docs/checking-the-firewall-version",
+      "destination": "/iaas/cisco-firewalls/checking-the-firewall-version"
+    },
+    {
+      "source": "/docs/backup-and-restore-firewall-config-using-asdm",
+      "destination": "/iaas/cisco-firewalls/backup-and-restore-firewall-config-using-asdm"
+    },
+    {
+      "source": "/docs/logging-into-cisco-firewall",
+      "destination": "/iaas/cisco-firewalls/logging-into-cisco-firewall"
+    },
+    {
+      "source": "/docs/firewall-configuration",
+      "destination": "/iaas/cisco-firewalls/network-firewalls-configuration"
+    },
+    {
+      "source": "/docs/allowing-specific-ips-to-access-macstadium-via-internet",
+      "destination": "/iaas/cisco-firewalls/allowing-specific-ips-to-access-macstadium-via-internet"
+    },
+    {
+      "source": "/docs/service-level-agreement",
+      "destination": "/macstadium/legal-and-compliance/service-level-agreement"
+    },
+    {
+      "source": "/docs/saml-sso",
+      "destination": "/macstadium/account-management-and-saml/saml-sso"
+    },
+    {
+      "source": "/docs/site-to-site-vpn-configuration-with-gcp",
+      "destination": "/iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp"
+    },
+    {
+      "source": "/docs/site-to-site-vpn-configuration-with-azure",
+      "destination": "/iaas/azure/site-to-site-vpn-configuration-with-azure"
+    },
+    {
+      "source": "/docs/azure-preparing-the-vpn-configuration-for-input-into-cisco-asaasav",
+      "destination": "/iaas/azure/azure-vpn-config-for-cisco-asaasav"
+    },
+    {
+      "source": "/docs/cloud-access",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/cloud-access"
+    },
+    {
+      "source": "/docs/cloud-access-troubleshooting",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting"
+    },
+    {
+      "source": "/docs/connect-to-your-cloud-vpn",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/connect-to-your-cloud-via-vpn"
+    },
+    {
+      "source": "/docs/connecting-to-your-cloud-instance",
+      "destination": "/remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access"
+    },
+    {
+      "source": "/docs/connecting-to-a-mac-mini",
+      "destination": "/iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time"
+    },
+    {
+      "source": "/iaas/bare-metal-macs/mac-mini-comparison-chart",
+      "destination": "/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks"
+    },
+    {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",
       "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture"
     },
