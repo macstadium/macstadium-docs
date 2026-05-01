@@ -8,9 +8,9 @@ How to create VMs on Apple silicon-based nodes (also: Apple ARM-based nodes). Fe
 
 ## Overview
 
-Starting with Orka 2.0, it is now possible to deploy an Orka cluster of Apple silicon-based nodes (also: Apple ARM-based nodes) and run your CI/CD workflows there. The Apple silicon-based nodes can also be added to an existing cluster with Intel-based nodes. Then, it will have both Intel- and Apple silicon-based nodes. A prerequisite for that is to upgrade to Orka 2.0 before adding the new Apple silicon-based nodes.
+Orka supports clusters of Apple silicon-based nodes (also: Apple ARM-based nodes) for running CI/CD workflows. Apple silicon-based nodes can be added to an existing cluster alongside Intel-based nodes, giving you a mixed Intel and Apple silicon cluster.
 
-Orka 2.0 allows performing all the basic VM operations that are needed to run your CI/CD workflows on Apple silicon-based nodes. This includes deploy, delete and list VMs as well as connecting to a VM via SSH or Screenshare.
+Supported VM operations on Apple silicon-based nodes include deploy, delete, and list, as well as connecting to a VM via SSH or Screenshare.
 
 VMs deployed on Apple silicon-based nodes use Apple Silicon images. A VM is deployed on an Apple silicon-based or Intel-based node depending on the chosen image. VMs based on Intel images (with the amd64 type) are deployed on Intel nodes and VMs based on Apple Silicon images (with the arm64 type) are deployed on Apple silicon-based nodes.
 
@@ -18,7 +18,7 @@ VMs deployed on Apple silicon-based nodes use Apple Silicon images. A VM is depl
 
 #### **Deployment on Apple silicon-based nodes**
 
-When a VM is deployed on an Apple silicon-based node and this is the first time the image is used on the node, the deployment takes longer - about 4 minutes. Further deployments of VMs using the same image on the same node happen almost immediately and take about 5 seconds.
+When a VM is deployed on an Apple silicon-based node and this is the first time the image is used on that node, the deployment takes longer, about 4 minutes. Further deployments of VMs using the same image on the same node happen almost immediately and take about 5 seconds.
 
 <Tip>
 To keep deployment times fast, you might want to make sure you deploy a VM on all nodes every time you create a new image. Keep in mind though, that images are cached on the nodes. If you try to deploy a VM from an image that is not cached and there is not enough space on the node, the oldest cached image(s) will be deleted to free space for the new one.
@@ -119,11 +119,10 @@ With VMs based on Apple Silicon images, GPU Passthrough comes out of the box. Th
 You can deploy up to 2 VMs per Apple silicon-based node.
 </Warning>
 
-  1. The Apple silicon-based Support includes all the features needed to run your CI/CD workflows on Apple silicon-based nodes. Below is a full list of the ones that are still not there and will be considered in future versions of Orka:
+  1. The following operations are not yet supported on Apple silicon-based nodes:
 
-
-  * VMs - stop, start, suspend, resume
-  * Images - download, upload
+  * VMs: stop, start, suspend, resume
+  * Images: download, upload
 
 
 
@@ -141,7 +140,7 @@ Below is a list of the ones that are not applicable to Apple silicon-based VMs:
 
   4. VM revert is not supported due to limitations of the Apple Virtualization Framework.
 
-  5. Starting with Orka 2.4.0, shared VM storage was **deprecated** for Apple silicon-based VMs running macOS Monterey and was **removed** in Orka 2.5.0. To use shared VM storage on Orka 2.5.0 and later, upgrade your Apple Silicon-based Monterey VMs to macOS Ventura, or switch to Intel-based Monterey VMs.
+  5. Shared VM storage on Apple silicon-based nodes requires macOS Sequoia or later.
 
   6. After you resize an Apple silicon-based VM and attempt to upgrade to a newer macOS version, the upgrade might fail or you might experience other issues with your VM. This is a limitation of the Apple Virtualization framework and applies to all macOS versions.
 **Workaround:** Upgrade the macOS image before resizing. If you have already resized, deploy a fresh VM from an unresized image and upgrade from there.
