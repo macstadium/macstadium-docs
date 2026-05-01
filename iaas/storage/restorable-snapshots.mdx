@@ -109,13 +109,9 @@ In this example, an hourly snapshot profile is created and the retention period 
 This snapshot profile now has the following snapshots:
 
   * Hourly
-
   * Daily
-
   * Weekly
-
   * Monthly
-
   * Yearly
 
 
@@ -147,7 +143,9 @@ If a Cloud Level Snapshot is configured, individual VM snapshots may not be need
 
 
 
-![Private Cloud Cloud Snapshots list page](/images/attachments/43967899167387.png)![Private Cloud Cloud Snapshots page showing no profile selected](/images/attachments/43967884636955.png)
+![Private Cloud Cloud Snapshots list page](/images/attachments/43967899167387.png)
+
+![Private Cloud Cloud Snapshots page showing no profile selected](/images/attachments/43967884636955.png)
 
   3. Click **Select Snapshot Profile** from the left menu.
 
@@ -177,31 +175,21 @@ Once a Cloud Snapshot has been created, it can be viewed by clicking **Snapshot 
   2. Select **Cloud Snapshots**.
 
   3. Select **New** from the left menu.
+
 ![Private Cloud Cloud Snapshots left menu with New option](/images/attachments/43967899173019.png)
 
-  4. The Cloud Snapshot screen opens.
+  4. Fill in the form:
 
-
-
-  * Enter a **Name** (required) for the snapshot.
-
-  * Enter a **Description** (optional).
-
-  * In the **Expires** field, select a date and time for expiration.
-
-
-
-
-In the **Expiration Type** field, **Never Expire** can be selected, however, this can cause the snapshot to consume substantial amounts of storage. It is not recommended to use the Never Expire option unless absolutely necessary.
+     * **Name** (required): enter a name for the snapshot.
+     * **Description** (optional): enter a description.
+     * **Expires**: select a date and time for expiration.
+     * **Expiration Type**: you can select **Never Expire**, but this is not recommended. Snapshots without an expiration can consume substantial amounts of storage.
 
 ![Private Cloud New Cloud Snapshot form with Name, Description, and Expires fields](/images/attachments/43967899176219.png)
 
-  5. The **Private** checkbox is selected by default. This option pertains to multitenancy, and can be ignored in the majority of cases.
+  5. The **Private** checkbox is selected by default. This option pertains to multitenancy and can be ignored in most cases.
 
   6. Click **Submit**.
-
-
-
 
 ### Managing Profiles for Scheduled Snapshots
 
