@@ -1,13 +1,13 @@
 ---
 title: "Android Virtual Devices"
-description: "Run Android emulators natively on Apple Silicon host nodes alongside MacStadium VDI macOS desktops, with automatic ADB connectivity to your VM."
+description: "Run Android emulators natively on Apple silicon host nodes alongside MacStadium VDI macOS desktops, with automatic ADB connectivity to your VM."
 ---
 
 Mobile developers using MacStadium VDI often need Android emulator access alongside their macOS desktop for testing, debugging, or running Android apps in parallel with their Citrix-managed session.
 
 Android emulators cannot run inside a macOS virtual machine. The Apple Virtualization Framework does not support nested virtualization, so the emulator has no access to the hardware hypervisor it requires. Running an emulator inside a VM is not a supported path.
 
-MacStadium VDI solves this by running the Android emulator natively on the Apple Silicon host node, on the same physical machine as your macOS VM. An ADB relay is automatically configured between the host-side emulator and your VM, so your desktop session can reach the Android device over ADB without manual network setup or a third-party emulator service.
+MacStadium VDI solves this by running the Android emulator natively on the Apple silicon host node, on the same physical machine as your macOS VM. An ADB relay is automatically configured between the host-side emulator and your VM, so your desktop session can reach the Android device over ADB without manual network setup or a third-party emulator service.
 
 ## Prerequisites
 

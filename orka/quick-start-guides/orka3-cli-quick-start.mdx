@@ -18,7 +18,7 @@ If you want to skip the detailed explanations, just run through these steps on y
   10. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
   11. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
   12. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
-  13. `orka3 vm push <VM_NAME> <IMAGE:TAG>` (Apple Silicon, recommended) or `orka3 vm commit <VM_NAME>` / `orka3 vm save <VM_NAME>` (writes to NFS local storage)
+  13. `orka3 vm push <VM_NAME> <IMAGE:TAG>` (Apple silicon, recommended) or `orka3 vm commit <VM_NAME>` / `orka3 vm save <VM_NAME>` (writes to NFS local storage)
   14. `orka3 vm deploy --image <IMAGE_NAME> -y` (use the name of the newly saved image or the original image, if you committed the changes to it).
   15. Run Apple Screen Sharing and connect to the newly deployed VM. Use the connection information printed by `orka3 vm deploy`. Verify that your changes are there.
   16. `orka3 vm delete -v <NAME>`
@@ -258,7 +258,7 @@ Changing a running VM's configuration or file system does not affect its base im
 To create changes that stick and appear on future deployments, you can push your changes to an OCI-compatible registry, commit your changes to the base image, or save the changes as a new image.
 
 <Note>
-On Orka 3.5 or later, **pushing to an OCI registry** (such as Harbor, available within your cluster) is the recommended approach for Apple Silicon clusters. `vm commit` and `vm save` write to NFS local cluster storage, which is being phased out in favor of OCI. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli).
+On Orka 3.5 or later, **pushing to an OCI registry** (such as Harbor, available within your cluster) is the recommended approach for Apple silicon clusters. `vm commit` and `vm save` write to NFS local cluster storage, which is being phased out in favor of OCI. See [Using Harbor OCI Storage with the Orka CLI](/orka/oci-images/using-harbor-oci-storage-with-the-orka-cli).
 </Note>
 
 > #### **Glossary: Commit changes**
@@ -350,5 +350,5 @@ orka3 vm list
 Now that you've deployed and managed your first VM, you're ready to integrate Orka with your CI/CD pipeline:
 
 - [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start): set up a service account, create a VM template, and connect Orka to your build system
-- [Orka VM Tools](/orka/orka-resources/vm-tools): install Orka VM Tools on Apple Silicon VMs to enable shared storage and other features
+- [Orka VM Tools](/orka/orka-resources/vm-tools): install Orka VM Tools on Apple silicon VMs to enable shared storage and other features
 - [Tools and Integrations](/orka/orka-overview/tools-integrations): browse all available Orka CLI versions and CI/CD integrations
