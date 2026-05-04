@@ -385,5 +385,5 @@ Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x v
 
 macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the [Apple Virtualization documentation](https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines). Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
 
-  1. After setting up your EC2 Mac, you will need to setup a login keychain on the host OS before running the Sequoia OS Orka VM image.
+  1. After setting up your EC2 Mac, you will need to set up a login keychain on the host OS before running the Sequoia OS Orka VM image.
   2. MacStadium will supply a Sequoia OCI image that is upgraded from a Sonoma image rather than created from a Sequoia IPSW on Sequoia host. This will run without the Apple ID functionality in guest.
