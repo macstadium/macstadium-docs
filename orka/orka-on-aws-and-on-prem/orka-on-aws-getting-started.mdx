@@ -35,7 +35,7 @@ Key elements in the architecture include:
     * We will provide an AMI based on an official AWS macOS base image that includes our tooling (Virtual Kubelet, Orka Engine) and a bootstrap script that accepts the EKS parameters to connect as an Orka worker node.
     * We have a new AMI available that supports the external NVMe disk available with M4 instances. Per the [official Amazon docs](https://aws.amazon.com/ec2/instance-types/mac/): "Amazon EC2 M4 Mac instances come with a new 2TB instance store volume per EC2 Mac Dedicated Host, providing low latency storage for improved caching and build/test performance."
 
-The new AMI is compatible with Orka 3.5 and later, and all EC2 Apple Silicon Mac instance types (M1, M2, M4).
+The new AMI is compatible with Orka 3.5 and later, and all EC2 Apple silicon Mac instance types (M1, M2, M4).
 
 By default:
 
@@ -53,7 +53,7 @@ export ENABLE_AUTOLOGIN=false # disable autologin for ec2-user on bootstrap
 /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
 ```
   * Networking
-    * Apple Silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350), enabling the ability to get an IP on a subnet in your VPC.
+    * Apple silicon nodes don’t have a direct tie-in to the traditional k8s networking stack. With Orka, we provide a private network, expose certain ports, and require NATing for access. We do provide modes for network isolation and internet isolation. We provide documentation below for how to expose Orka services outside of the cluster. As of Orka 3.5.0, we also support [bridge networking mode](/orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350), enabling the ability to get an IP on a subnet in your VPC.
   * User Management and Authorization
     * Users need to register at portal.macstadium.com, as all user management is handled through the portal service. A future release will allow customers to use their own OIDC provider or Authentication mechanism.
   * Logging, Monitoring, and Alerting

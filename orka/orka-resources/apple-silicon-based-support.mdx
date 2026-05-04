@@ -1,5 +1,5 @@
 ---
-title: "Apple Silicon-Based Support"
+title: "Apple silicon-Based Support"
 description: "Deploy Orka VMs on Apple silicon nodes (M1/M2/M4). Covers arm64 image types, first-deploy caching, features by Orka version, and limits vs. Intel nodes."
 zendesk_id: 28340672222363
 ---
@@ -12,7 +12,7 @@ Orka supports clusters of Apple silicon-based nodes (also: Apple ARM-based nodes
 
 Supported VM operations on Apple silicon-based nodes include deploy, delete, and list, as well as connecting to a VM via SSH or Screenshare.
 
-VMs deployed on Apple silicon-based nodes use Apple Silicon images. A VM is deployed on an Apple silicon-based or Intel-based node depending on the chosen image. VMs based on Intel images (with the amd64 type) are deployed on Intel nodes and VMs based on Apple Silicon images (with the arm64 type) are deployed on Apple silicon-based nodes.
+VMs deployed on Apple silicon-based nodes use Apple silicon images. A VM is deployed on an Apple silicon-based or Intel-based node depending on the chosen image. VMs based on Intel images (with the amd64 type) are deployed on Intel nodes and VMs based on Apple silicon images (with the arm64 type) are deployed on Apple silicon-based nodes.
 
 ![Orka image list showing arm64 and amd64 image types](/images/attachments/28340672209947.png)
 
@@ -55,7 +55,7 @@ Orka 3.2:
 
   * macOS 15 Sequoia support
   * Scheduled image caching
-  * Apple ID authentication (Apple Silicon hosts running Sequoia only; VM must be created from a Sequoia IPSW)
+  * Apple ID authentication (Apple silicon hosts running Sequoia only; VM must be created from a Sequoia IPSW)
 
 Orka 3.1:
 
@@ -111,7 +111,7 @@ Orka 2.0:
 
 #### **GPU Passthrough and IO Boost**
 
-With VMs based on Apple Silicon images, GPU Passthrough comes out of the box. Therefore, the corresponding option `--gpu` is not applicable to them and will be ignored.
+With VMs based on Apple silicon images, GPU Passthrough comes out of the box. Therefore, the corresponding option `--gpu` is not applicable to them and will be ignored.
 
 ## Limitations
 
@@ -136,7 +136,7 @@ Below is a list of the ones that are not applicable to Apple silicon-based VMs:
 
   2. If you deploy a VM on an Apple silicon-based node and try to log in to your iCloud account you might receive an error 'The action could not be completed'. This is a limitation of the Apple Virtualization Framework. As a workaround, you can download the needed software via a web browser and install it manually.
 
-  3. There are cases reported by customers that some VMs might not be accessed via ScreenShare, but only SSH. Further investigation shows that this is caused by a failed GPU module under the new Apple Silicon architecture. There are also some external bug reports related to the issue [here](https://discuss.bitrise.io/t/known-issue-with-the-m1-open-beta-simulator-gpu-hang/20268) and [here](https://support.bitrise.io/hc/en-us/articles/5362027816093-Known-issue-with-the-M1-open-beta-Simulator-GPU-hang-).
+  3. There are cases reported by customers that some VMs might not be accessed via ScreenShare, but only SSH. Further investigation shows that this is caused by a failed GPU module under the new Apple silicon architecture. There are also some external bug reports related to the issue [here](https://discuss.bitrise.io/t/known-issue-with-the-m1-open-beta-simulator-gpu-hang/20268) and [here](https://support.bitrise.io/hc/en-us/articles/5362027816093-Known-issue-with-the-M1-open-beta-Simulator-GPU-hang-).
 
   4. VM revert is not supported due to limitations of the Apple Virtualization Framework.
 
