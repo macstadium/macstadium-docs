@@ -96,9 +96,7 @@ Orka Engine requires a valid license key to operate. To request a license key:
 
 ### Installing the Orka Cluster Services
 
-MacStadium distributes the Service Images needed to install Orka Cluster On Prem via AWS. As a result, the easiest way to perform an installation is to use some credentials that the MacStadium Support team will provide to gain access to the Ansible image with runners that are used to install.
-
-You will need an environment with outbound internet access to connect to AWS and download the installer (Ansible image). Ideally, this environment can also connect to the Kubernetes API and have admin access to the Kubernetes Cluster. If not, make sure to move the downloaded Ansible image to an environment with the appropriate connectivity and access.
+MacStadium provides the Orka Cluster Services installer as a public container image on GitHub Container Registry (GHCR). You will need an environment with outbound internet access to pull the Ansible image, connectivity to the Kubernetes API, and cluster admin access.
 
 1. Ensure the Ansible runner is set up correctly:
   1. The Ansible runner must have connectivity to the cluster API.
@@ -127,7 +125,7 @@ You will need an environment with outbound internet access to connect to AWS and
 ```
 docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml ghcr.io/macstadium/orka-ansible-onprem:<version_tag> bash
 ```
-where `<kube_config_location>` is the location of the kube config file on the host. Typically `~/.kube/config`. `cluster.yml` is the file created in the previous step. And `version_tag` is the Orka version you are installing (i.e 3.6.0).
+where `<kube_config_location>` is the path to your kubeconfig (typically `~/.kube/config`), `cluster.yml` is the file created in the previous step, and `<version_tag>` is the Orka version you are installing (e.g. `3.6.0`).
 
 4. Make sure you are in the `/ansible` directory
 5. You can now run the Ansible playbook:
@@ -200,20 +198,15 @@ To set up the Mac Nodes:
 ```
   4. Run the same Ansible image that was used to configure the Orka services:
 
-
-    
-    
 ```
 docker run -it -v <kube_config_location>:/root/.kube/config -v ./cluster.yml:/ansible/group_vars/all/cluster.yml -v ./nodes.yml:/ansible/group_vars/arm-nodes/nodes.yml -v ./hosts:/ansible/hosts -v <mac_ssh_key_location>:/root/.ssh/id_rsa ghcr.io/macstadium/orka-ansible-onprem:<version_tag> bash
 ```
-where `<mac_ssh_key_location>` is the location of the SSH key used to connect to the Mac nodes. And `version_tag` is the Orka version you are installing (i.e 3.6.0).
 
-  5. Ensure you are in the `/ansible` directory
+where `<kube_config_location>` is the path to your kubeconfig (typically `~/.kube/config`), `<mac_ssh_key_location>` is the SSH key used to connect to the Mac nodes, and `<version_tag>` is the Orka version (e.g. `3.6.0`).
+
+  5. Ensure you are in the `/ansible` directory.
   6. Run the configuration playbook:
 
-
-    
-    
 ```
 ansible-playbook configure-arm.yml -i hosts --ask-become-pass
 ```

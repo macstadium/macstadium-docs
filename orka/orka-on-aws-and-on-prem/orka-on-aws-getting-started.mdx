@@ -100,7 +100,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
      1. Select the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
-  3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** This ARN is required by MacStadium to access the Orka service images.
+  3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
   4. **Optional:**
      1. Set Cluster endpoint access to “Private” to restrict access to your cluster API from the Internet.
         1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
@@ -117,9 +117,9 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 ### Setup a CodeBuild project to run Orka Installation into the EKS Cluster
 
-MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. You will need to supply MacStadium with the ARN for the role that has permission to pull the image. To set up a CodeBuild project as an Ansible runner:
+MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. To set up a CodeBuild project as an Ansible runner:
 
-  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role, as you will need to share it with MacStadium and modify it later.**
+  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role — you will need to share the ARN with MacStadium and modify the role later.**
   2. Select the following options:
      1. Project type - Default project
      2. Source - no source
@@ -130,9 +130,7 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
         4. Environment type - Linux Container
         5. Image registry - Other registry
            1. Under External registry URL, enter `ghcr.io/macstadium/orka-ansible-aws:<version_tag>` where `<version_tag>` is the Orka version.
-  3. Allow AWS to create the CodeBuild role for you.
-     1. Note down the name of the role, as you will need to modify it later.
-  4. (Optional) Set VPC, Subnets and security group to be used by CodeBuild. This is only needed if the EKS access is set to private. To do that:
+  3. (Optional) Set VPC, Subnets and security group to be used by CodeBuild. This is only needed if the EKS access is set to private. To do that:
      1. Click Additional Configuration
      2. Select the VPC where your cluster is deployed
      3. Select the subnets which EKS uses
