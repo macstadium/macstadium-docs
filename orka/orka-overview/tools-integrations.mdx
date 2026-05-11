@@ -12,7 +12,7 @@ Visit the links below to download a version of the Orka CLI binary that matches 
 
 | Release | Notes | macOS ARM | macOS AMD | Linux | Windows |
 |---------|-------|-----------|-----------|-------|---------|
-| Orka3 CLI v3.6.1 *(Latest)* | [Release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes#orka-361) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/windows/amd64/orka3.exe) |
+| Orka3 CLI v3.6.1 *(Latest)* | [What's new](#orka3-cli-v361) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/windows/amd64/orka3.exe) |
 | Orka3 CLI v3.6.0 | [Release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/windows/amd64/orka3.exe) |
 | Orka3 CLI v3.5.2 | [Release notes](/orka/orka-upgrades-and-release-notes/orka-35-release-notes) | [Download](https://cli-builds-public.s3.amazonaws.com/official/3.5.2/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.amazonaws.com/official/3.5.2/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.2/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.2/orka3/windows/amd64/orka3.exe) |
 | Orka3 CLI v3.5.1 | [Release notes](/orka/orka-upgrades-and-release-notes/orka-35-release-notes) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/windows/amd64/orka3.exe) |
@@ -34,6 +34,10 @@ Complete the installation
 
 
 <Tip>Using Homebrew? Try `brew install orka3`.</Tip>
+
+### Orka3 CLI v3.6.1
+
+**Bug fix:** Fixed an issue where the Orka CLI did not support private NAT IP addresses. Customers whose environments use a private address space for NAT IPs can now connect to their Orka clusters without issue. No configuration changes are required.
 
 ## Orka3 API
 
