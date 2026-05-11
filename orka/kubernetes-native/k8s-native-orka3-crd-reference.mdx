@@ -21,9 +21,7 @@ Field | Type | Description
 `spec` > `memory` | `number` | Memory in GiB. Rounded to the nearest 0.1 GiB. If not specified, will be automatically calculated based on the number of CPU cores.  
 `spec` > `netBoost` | `boolean` | Boolean setting if Network boost is enabled for `VirtualMachineInstances` created from the `VirtualMachineConfig`.  
 `spec` > `nodeName` | `string` | The name of the node where you want the `VirtualMachineInstance` to run. If not specified, the `VirtualMachineInstance` will run on the first available node that matches the criteria (e.g., available CPU and memory, tags, groups, etc.)  
-`spec` > `scheduler` | `string` | The scheduler to use for the deployment of `VirtualMachineInstances` created from the `VirtualMachineConfig`. One of `default`, `most-allocated`.  
-  
-When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNodes` having most of their resources allocated. The default setting keeps used vs free resources balanced between `OrkaNodes`.  
+`spec` > `scheduler` | `string` | The scheduler to use for the deployment of `VirtualMachineInstances` created from the `VirtualMachineConfig`. One of `default`, `most-allocated`. When set to `most-allocated`, `VirtualMachineInstances` are scheduled to `OrkaNodes` having most of their resources allocated. The default setting keeps used vs free resources balanced between `OrkaNodes`.  
 `spec` > `systemSerial` | `string` | A custom serial number for the `VirtualMachineInstances` created from the `VirtualMachineConfig`. The provided serial number must be a valid Mac serial number.  
 `spec` > `tag` | `string` | When specified, `VirtualMachineInstances` created from the `VirtualMachineConfig` will be scheduled for deployment on `OrkaNodes` labeled with the same `Tag`.  
 `spec` > `tagRequired` | `boolean` | Boolean setting if the `Tag` is required. When `true`, `VirtualMachineInstances` will be deployed only on nodes matching the specified `Tag`.  
