@@ -480,6 +480,14 @@
   },
   "redirects": [
     {
+      "source": "/orka/orka-overview/licensing-faq",
+      "destination": "/orka/orka-overview/orka-overview"
+    },
+    {
+      "source": "/mintlify-assets",
+      "destination": "/"
+    },
+    {
       "source": "/docs",
       "destination": "/"
     },
