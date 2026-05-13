@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.3 Release Notes"
-description: "Orka 3.3 release notes: Orka Burst for elastic capacity, UDID generation controls, Kubernetes 1.33, Harbor OCI support, and Jamf MDM fixes."
+description: "Orka 3.3 release notes: Orka Burst for elastic capacity, Hardware UUID generation controls, Kubernetes 1.33, Harbor OCI support, and Jamf MDM fixes."
 zendesk_id: 39592731793691
 ---
 
@@ -49,16 +49,13 @@ If you have any questions or require assistance, please [contact our support tea
 
 ## Improvements and Fixes
 
-Orka 3.3.2 is a patch release that provides a system-level control to determine if VMs have consistent or dynamic UDID generation.
+Orka 3.3.2 is a patch release that provides a system-level control to determine if VMs have consistent or dynamic Hardware UUID generation.
 
-  * Consistent UDID generation is good for use cases that require the same machine identifier for each deployment. This is often the case for code signing or other workflows that expect a specific machine ID.
+  * Consistent Hardware UUID generation is good for use cases that require the same Hardware UUID and serial number for each deployment. This is often the case for code signing or other workflows that expect a specific machine identifier.
 
-  * Dynamic UDID generation is good for use cases that require unique IDs, such as VDI or Remote Desktop Use Cases, where each desktop is assigned to an individual user and may be more long-lived. MDM integration may also depend on having unique (or dynamically generated) UDIDs. 
+  * Dynamic Hardware UUID generation is good for use cases that require unique identifiers, such as VDI or remote desktop use cases where each desktop is assigned to an individual user. MDM integration may also depend on having unique Hardware UUIDs.
 
-
-
-
-The default system behavior is consistent UDIDs. [Contact our support team](https://docs.macstadium.com/docs/support) to make use of Dynamic UDID.
+The default system behavior is consistent Hardware UUIDs. [Contact our support team](/macstadium/support/support) to switch to dynamic Hardware UUID generation.
 
 OCI integration now supports Harbor as a repository.
 
