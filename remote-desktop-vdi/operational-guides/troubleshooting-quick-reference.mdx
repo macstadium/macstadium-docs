@@ -69,7 +69,7 @@ Image doesn’t exist | Pulling image fails with error 404/not found | Check ima
 Registry authentication failed | Image pull fails with authentication error | Verify `registry_username` and `registry_password`  
 Host out of disk space | `df` shows >90% of available space is used on `/var/orka` | Clean up old images; add storage  
 Host out of CPU/memory | Error mentions resource limits | Reduce VMs per host or add hosts  
-Image incompatible with host | Error mentions architecture mismatch | Use ARM images for Apple Silicon hosts  
+Image incompatible with host | Error mentions architecture mismatch | Use ARM images for Apple silicon hosts  
 Network timeout pulling image | Pull times out | Check network connectivity to registry  
 Orka Engine is unresponsive | Commands hang or timeout | Restart Orka Engine; contact MacStadium  
   

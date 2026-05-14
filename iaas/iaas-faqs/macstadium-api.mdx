@@ -8,59 +8,61 @@ Interact with our system programmatically from your own applications
 
 ## How It Works
 
-The API is similar to the [RESTful](https://en.wikipedia.org/wiki/Representational_State_Transfer) architecture, accepting and returning JSON data. Authentication is implemented as HTTP Basic Authentication over SSL (https) and Bearer token (generated from Users page -> Tokens tab). Failed authentication attempts return a 401 unauthorized. 20 failed authentication attempts lock out the requesting IP for 5 minutes (no response).
+The API is similar to the [RESTful](https://en.wikipedia.org/wiki/Representational_State_Transfer) architecture, accepting and returning JSON data. Authentication is implemented as HTTP Basic Authentication over SSL (`https`) and Bearer token (generated from Users page, Tokens tab). Failed authentication attempts return a `401 Unauthorized`. 20 failed authentication attempts lock out the requesting IP for 5 minutes (no response).
 
-The examples below include the [HTML contenteditable attribute](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content) to allow adjustment of credentials and/or IP address prior to copying and pasting elsewhere – e.g., your terminal.
+The examples below include the [HTML contenteditable attribute](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Editable_content) to allow adjustment of credentials and/or IP address prior to copying and pasting elsewhere, e.g., your terminal.
 
 ### List All Servers
 
-URI: https://api.macstadium.com/core/api/servers  
-Request: GET  
-Return: JSON array of array\{id, name, ip, type, location, status, creation date, cancel date} or error string. Servers with multiple IPs will have multiple listings.  
+URI: `https://api.macstadium.com/core/api/servers`  
+Request: `GET`  
+Return: JSON array of `{id, name, ip, type, location, status, creation_date, cancel_date}` or error string. Servers with multiple IPs will have multiple listings.
+
 **Example 1:**
-    
-    
-```
+
+```bash
 curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET -u user:pass https://api.macstadium.com/core/api/servers
 ```
+
 **Example 2:**
-    
-    
-```
+
+```bash
 curl -H "Accept: application/json" -H "Content-Type: application/json" -H 'Authorization: Bearer {token}' -X GET https://api.macstadium.com/core/api/servers
 ```
+
 ### Server Status by ID/IP
 
-URI: `https://api.macstadium.com/core/api/servers/{id or ip_address}`
-Request: GET
-Return: JSON array\{id,name,power, type, location, status, creation date, cancel date} or error string. Power can be ‘On’, ‘Off’, ‘Rebooting’, or ‘Error’.  
+URI: `https://api.macstadium.com/core/api/servers/{id or ip_address}`  
+Request: `GET`  
+Return: JSON array of `{id, name, power, type, location, status, creation_date, cancel_date}` or error string. `power` can be `On`, `Off`, `Rebooting`, or `Error`.
+
 **Example 1:**
-    
-    
-```
+
+```bash
 curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET -u user:pass https://api.macstadium.com/core/api/servers/192.168.1.101
 ```
+
 **Example 2:**
-    
-    
-```
+
+```bash
 curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET -H 'Authorization: Bearer {token}' https://api.macstadium.com/core/api/servers/192.168.1.101
 ```
+
 ### Server Action (Power) by ID/IP
 
 URI: `https://api.macstadium.com/core/api/servers/{id or ip_address}/{action}`  
-Request: GET  
-Params: Action can be ‘On’,’Off’, or ‘Reboot’ (case insensitive).  
-Return: String. ‘True’ on success or an error message.  
+Request: `GET`  
+Params: `action` can be `On`, `Off`, or `Reboot` (case insensitive).  
+Return: String. `True` on success or an error message.
+
 **Example 1:**
-    
-    
-```
+
+```bash
 curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET -u user:pass https://api.macstadium.com/core/api/servers/192.168.1.101/reboot
 ```
+
 **Example 2:**
-    
-    
-```
+
+```bash
 curl -H "Accept: application/json" -H "Content-Type: application/json" -X GET -H 'Authorization: Bearer {token}' https://api.macstadium.com/core/api/servers/192.168.1.101/reboot
 ```

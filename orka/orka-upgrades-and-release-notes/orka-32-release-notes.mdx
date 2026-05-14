@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.2 Release Notes"
-description: "Orka 3.2 release notes: scheduled image caching, Apple ID authentication on Sequoia, Apple Silicon architecture detection, and bug fixes."
+description: "Orka 3.2 release notes: scheduled image caching, Apple ID authentication on Sequoia, Apple silicon architecture detection, and bug fixes."
 zendesk_id: 39572301543323
 ---
 
@@ -22,13 +22,13 @@ Custom users created during authentication now have Orka cluster admin privilege
 
 ### New feature: Apple ID Authentication
 
-Apple ID login is now available to Orka customers running Sequoia host machines on Apple Silicon hardware.
+Apple ID login is now available to Orka customers running Sequoia host machines on Apple silicon hardware.
 
 ### Requirements and Limitations
 
 #### Supported configurations:
 
-  * Host machine: macOS Sequoia on Apple Silicon
+  * Host machine: macOS Sequoia on Apple silicon
 
   * Guest OS (VM): macOS Sequoia updated via IPSW
 
@@ -81,7 +81,7 @@ In corner cases during cache operations, an incorrect/outdated node status is re
 
 ### Improved Orka node architecture detection
 
-To ensure a node type is properly identified in mixed node environments, Intel vs. Apple Silicon (M-series) systems, the system info is checked with the node label to identify architecture type.
+To ensure a node type is properly identified in mixed node environments, Intel vs. Apple silicon (M-series) systems, the system info is checked with the node label to identify architecture type.
 
 ### GitHub Actions Plugin null VM name issue
 
