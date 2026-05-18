@@ -12,7 +12,7 @@ With Orka (also referred to as Orka Cluster) on AWS, you can integrate macOS dev
 
 The diagram below illustrates the architecture of an Orka Cluster on AWS, detailing how it integrates with Amazon EC2 Mac instances, Amazon EKS (Elastic Kubernetes Service), and Amazon ECR (Elastic Container Registry) within a customer’s AWS account.
 
-![Orka Cluster on AWS architecture diagram showing EC2 Mac, EKS, and ECR integration](/images/attachments/44003706780059.png)  
+![Orka Cluster on AWS architecture diagram showing EC2 Mac, EKS, and ECR integration](/images/attachments/44003706780059.png)
 The EC2 Mac hosts are set up with Orka AMIs, which provide a stable runtime for virtual machines. Each VM is deployed on the host using an OCI image, which can be fetched from Amazon ECR or an external OCI Registry. The use of OCI images enables rapid deployment (within a few minutes) of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac EC2 without Orka VMs. An EKS cluster will integrate with CI tools, CLI, or API, and orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
 
 Key elements in the architecture include:
@@ -73,8 +73,9 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
     * Orka Operator: TCP 8080 (metrics), TCP 8081 (health check), TCP 443 (webhook), Linux worker nodes should be accessible from within the cluster on any port. Does not require Internet access.
     * Orka OIDC Provider: TCP 443. Requires connectivity to the authentication provider.
   * EC2 Mac Nodes
-    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be open to all networks that need access to the VMs: TCP 5900-5912 (Screenshare), TCP 5999-6011 (VNC), and TCP 8822-8834 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
+    * Virtual Kubelet / Orka Engine AMI: Ingress ports can be internal to the cluster network. The customer should allow ingress to all ports within the network. The following ports should be open to all networks that need access to the VMs: TCP 5900-6200 (Screenshare), TCP 5999-6299 (VNC), and TCP 8822-9122 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
 
+> **NOTE**: SSH/Screen Share/VNC ports are globally tracked and allocated. The ranges given above are applicable to each Apple silicon node.
 
 
 ## Install Overview
@@ -136,7 +137,7 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
      3. Select the subnets which EKS uses
      4. Select a security group that has access to the EKS API
   5. In the BuildSpec, add the following commands:
-         
+
 ```
      - aws eks update-kubeconfig --name {cluster_name} --region {region}
      - ansible-playbook /ansible/site.yml -e "k8s_api_address={k8s_api_address}" -e "kube_oidc_client_id={kube_oidc_client_id}"
@@ -150,18 +151,18 @@ Where:
   6. Save the configuration.
   7. Next, Configure CodeBuild to manage the EKS cluster:
      1. Manage the EKS cluster. To enable CodeBuild to manage the EKS cluster, complete the following steps:
-        1. The IAM Role needs a policy to manage EKS. To do this:  
-Navigate to the IAM role.  
+        1. The IAM Role needs a policy to manage EKS. To do this:
+Navigate to the IAM role.
 Attach a policy (managed or inline) with:
            * Action: `eks:*`
            * Resource: The ARN of the EKS cluster to be configured.
-        2. The IAM role must have Cluster Admin permissions. To do this:  
-Navigate to the Cluster and go to the `Access` tab.  
-Click `Create access entry`.  
-Select the ARN of the CodeBuild role with type `Standard`.  
-Click Next.  
-Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope.  
-Click `Add Policy`.  
+        2. The IAM role must have Cluster Admin permissions. To do this:
+Navigate to the Cluster and go to the `Access` tab.
+Click `Create access entry`.
+Select the ARN of the CodeBuild role with type `Standard`.
+Click Next.
+Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope.
+Click `Add Policy`.
 Click `Next → Create`.
   8. Once all permissions are configured, you can run CodeBuild, which will install the Orka services within the cluster.
 
@@ -216,15 +217,15 @@ We also recommend the `AmazonSSMManagedInstanceCore` policy so the instance can 
 
 ### EKS Access Policies
 
-The node IAM role must have EKS Cluster Admin permissions. This is necessary as the Mac node manages nodes and pods inside the cluster. To do this: 
+The node IAM role must have EKS Cluster Admin permissions. This is necessary as the Mac node manages nodes and pods inside the cluster. To do this:
 
-  * Navigate to the Cluster and go to the `Access` tab. 
-  * Click `Create access entry`. 
-  * Select the ARN of the Mac node IAM role with type `Standard`. 
-  * Click Next. 
-  * Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope. 
-  * Click `Add Policy`. 
-  * Click `Next → Create`. 
+  * Navigate to the Cluster and go to the `Access` tab.
+  * Click `Create access entry`.
+  * Select the ARN of the Mac node IAM role with type `Standard`.
+  * Click Next.
+  * Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope.
+  * Click `Add Policy`.
+  * Click `Next → Create`.
 
 
 
@@ -265,9 +266,9 @@ You can also download Orka Engine directly from MacStadium. Contact your account
 The AMI includes a bootstrap script that can be run via [user data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) and accepts the following parameters to connect as an Orka worker node:
 
   * EKS cluster name, EKS cluster VPC region, Orka License Key (provided by MacStadium)
-  * The customer should pass the following as user data when launching an instance:  
+  * The customer should pass the following as user data when launching an instance:
 
-        
+
 ```
     #!/bin/bash
     /usr/local/bin/bootstrap-orka <eks-cluster-name> <vpc-region> <orka-license-key>
@@ -292,20 +293,20 @@ If you plan to use `orka3 vm push` with ECR, run `orka3 login` or `orka3 user se
 IAM-based or certificate-based kubeconfig authentication is not sufficient for `vm push` on its own. An `Unauthorized` error from `vm push` in this context indicates a missing Orka API token, not an ECR authentication issue.
 
 You can get credentials for use with a private ECR registry with the aws CLI as follows:
-    
-    
+
+
 ```
 aws ecr get-login-password --region <region>
 ```
 For a public ECR registry:
-    
-    
+
+
 ```
 aws ecr-public get-login-password --region us-east-1
 ```
 You can then configure the credentials for the Orka cluster using the token:
-    
-    
+
+
 ```
 aws ecr get-login-password --region <region> | orka3 regcred add -u AWS --password-stdin https://<aws-account-number>.dkr.ecr.<region>.amazonaws.com
 ```
@@ -361,12 +362,12 @@ If you prefer to use CloudWatch, you can reference [AWS documentation for consum
 
 #### Key Log Sources
 
-What | Resource | Accessing | Purpose  
----|---|---|---  
-Virtual Kubelet Logs | Mac EC2 Node | Via promtail: `/usr/local/virtual-kubelet/vk.log` | Interactions between EKS and worker node for managing virtualization.  
-Orka VM Logs | Mac EC2 Node | Via promtail: `/Users/administrator/.local/state/virtual-kubelet/vm-logs/*` | Logs pertaining to the lifecycle of a specific VM  
-Pod Logs | EKS | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior  
-  
+What | Resource | Accessing | Purpose
+---|---|---|---
+Virtual Kubelet Logs | Mac EC2 Node | Via promtail: `/usr/local/virtual-kubelet/vk.log` | Interactions between EKS and worker node for managing virtualization.
+Orka VM Logs | Mac EC2 Node | Via promtail: `/Users/administrator/.local/state/virtual-kubelet/vm-logs/*` | Logs pertaining to the lifecycle of a specific VM
+Pod Logs | EKS | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior
+
 #### Key Metrics
 
 A list of metrics covering the following is available: Orka API Server, Orka Operator Metrics.
