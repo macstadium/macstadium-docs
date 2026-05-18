@@ -30,6 +30,10 @@ The Orka VMs use the 192.168.64.0/24 network. This is a virtual network on each 
 
 You might experience issues if your Orka VMs need to access services that are in a network that overlaps with their virtual network.
 
+For the Apple silicon nodes, the following ports should be open to all networks that need access to the VMs: TCP 5900-6200 (Screenshare), TCP 5999-6299 (VNC), and TCP 8822-9122 (SSH). In general, we recommend allowing outbound requests uniformly for forward compatibility.
+
+> **NOTE**: SSH/Screen Share/VNC ports are globally tracked and allocated. The ranges given above are applicable to each Apple silicon node.
+
 # Install Steps
 
 ## Kubernetes Requirements and Initial Steps
@@ -53,8 +57,8 @@ The following assumes you are installing and managing your own Kubernetes cluste
 Orka uses OIDC for user authentication. Make sure to configure the MacStadium OIDC provider in your Kubernetes cluster.
 
 This can be done by setting the following values for your Kubernetes API Server:
-    
-    
+
+
 ```
   --oidc-issuer-url={{ kube_oidc_url }} # Provided by MacStadium
   --oidc-client-id={{ kube_oidc_client_id }} # Provided by MacStadium
@@ -64,8 +68,8 @@ This can be done by setting the following values for your Kubernetes API Server:
   '--oidc-groups-prefix=oidc:'
 ```
 If you are using kubeadm to set up your cluster, you can pass these values as extra args to the apiServer property in the ClusterConfiguration resource:
-    
-    
+
+
 ```
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
@@ -108,15 +112,15 @@ MacStadium provides the Orka Cluster Services installer as a public container im
      k8s_api_address: # The address to the K8s API of your cluster. Must start with the protocol (https:// or http://)
      kube_oidc_client_id: # Provided by MacStadium
      orka_engine_license_key: # Provided by MacStadium
-                                                                                                
+
      ## Optionally - Configure tolerations and selectors
      ## This is needed to get the Orka services deployed on the control plane nodes
-     
+
      # configure_orka_tolerations:
      #   - key: node-role.kubernetes.io/control-plane
      #     effect: NoSchedule
      #     operator: Exists
-     
+
      # orka_node_selector: |
      #   node-role.kubernetes.io/control-plane: ""
 ```
@@ -180,13 +184,13 @@ To set up the Mac Nodes:
 
   1. Ensure the `cluster.yml` file is present and the values are correct
   2. Create a new file called nodes.yml with the following content:
-         
+
 ```
      host_password: # The password of the user setup on the Mac nodes
      ansible_user: # The user setup on the Mac nodes
 ```
   3. Create an inventory file called `hosts` with the following content:
-         
+
 ```
      [arm-nodes]
      # Add the IPs of the nodes that need to be configured
@@ -242,15 +246,15 @@ To use the MacStadium provided functionality you need to:
 
   1. Create an AWS S3 bucket and generate AWS access id and secret access key that provide permissions to write to the bucket
   2. Run the Ansible image provided by MacStadium and mount a backup.yml file with the following content
-         
+
 ```
-     aws_access_key_id_backup: # The creds that allow access to the S3 bucket  
-     aws_secret_access_key_backup: # The creds that allow access to the S3 bucket  
-     service_account: admin-user # You can also provide another service account here. It needs cluster-wide admin permissions  
+     aws_access_key_id_backup: # The creds that allow access to the S3 bucket
+     aws_secret_access_key_backup: # The creds that allow access to the S3 bucket
+     service_account: admin-user # You can also provide another service account here. It needs cluster-wide admin permissions
      s3_backup_path: # path to your s3 bucket. For example s3://my-backup-bucket
 ```
   3. Run the container
-         
+
 ```bash
 docker run -it -v <kube_config_location>:/root/.kube/config -v backup.yml:/ansible/group_vars/all/backup.yml ghcr.io/macstadium/orka-ansible-onprem:<version_tag> bash
 ```
@@ -267,19 +271,19 @@ The recommended way to backup Orka resources is via a CronJob, similar to what M
 The resources you need to backup are:
 
   1. All namespaces with the label orka.macstadium.com/namespace
-         
+
 ```
      kubectl get namespaces -l orka.macstadium.com/namespace=true -o yaml \
         | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.annotations, .items[].metadata.spec, .items[].metadata.generation, .items[].status, .items[].spec)'
 ```
 Note - we are removing some metadata as otherwise restore would fail.
 
-  2. OrkaNodes, VirtualMachineConfigs, ServiceAccounts, Rolebindings from these namespaces  
+  2. OrkaNodes, VirtualMachineConfigs, ServiceAccounts, Rolebindings from these namespaces
 Note - you need to remove some metadata from these resources. To do that, run the following:
-         
+
 ```
-     kubectl get "$resource" -n "$namespace" -o yaml \ 
-        yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)' 
+     kubectl get "$resource" -n "$namespace" -o yaml \
+        yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
 ```
 These resources can be stored in an yml file, which you can archive and store somewhere.
 
@@ -307,7 +311,7 @@ Logs can be exposed on Mac workers installing a `promtail` service, allowing the
 | Orka VM Logs | Mac Node | Via promtail: `/opt/orka/logs/vm/` | Logs pertaining to the lifecycle of a specific VM |
 | Orka Engine Logs | Engine Node | `/opt/orka/logs/com.macstadium.orka-engine.server.managed.log` | Logs pertaining to Orka Engine |
 | Pod Logs | k8s | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior |
-  
+
 #### Key Metrics
 
 A list of metrics covering the following is available: Orka API Server, Orka Operator Metrics.
