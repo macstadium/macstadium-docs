@@ -12,7 +12,7 @@ What to look for when you're experiencing issues with your AWS-Orka VPN tunnel a
 **Workaround:** Ignore the errors. They do not affect the configuration.
 
   * The command line interface returns `ERROR: unable to find interface “outside”`.  
-**Workaround:** Sometimes, the command line interface is case-sensitive and you need to preserve the capitalization of the network configuration as proivded in the [IP Plan](/macstadium/macstadium-overview/ip-plan).  
+**Workaround:** Sometimes, the command line interface is case-sensitive and you need to preserve the capitalization of the network configuration as provided in the [IP Plan](/macstadium/macstadium-overview/ip-plan).  
 1. Clean up the firewall configuration.  
 2. [Rename outside in your configuration file to Outside.](/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file)  
 3. [Re-run the complete configuration in Cisco ASDM-IDM.](/orka/networking-with-orka-at-macstadium/3-aws-orka-side-of-the-vpn-tunnel)
@@ -28,7 +28,7 @@ If Amazon shows that one tunnel is UP but there's no traffic between AWS and you
 
 All checks in this section are performed in the AWS Management Console.
 
-## Verify that your virtual private gateway is attached to the VPC.
+### Verify that your virtual private gateway is attached to the VPC
 
   1. Log in to your AWS Management Console and access your VPC service. In the top right corner of the screen, make sure that you're working in the correct region.
   2. In the VPC service sidebar, locate the **Virtual Private Network** menu and select **Virtual Private Gateways**.
@@ -62,7 +62,7 @@ Verify that the [route tables](https://docs.aws.amazon.com/vpc/latest/userguide/
 
 ![AWS Route Propagation tab showing propagation enabled for virtual private gateway](/images/attachments/28401051229595.png)
 
-## Cisco ASAv checks
+### Cisco ASAv checks
 
 All checks in this section are performed against the [VPN configuration file](/orka/networking-with-orka-at-macstadium/2-aws-vpn-tunnel-configuration-file).
 

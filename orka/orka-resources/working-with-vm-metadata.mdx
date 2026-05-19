@@ -40,7 +40,7 @@ Default metadata key | Description
   * You cannot reset your VM metadata with the `vm revert` operation. This operation does not affect VM metadata.
   * The custom VM metadata applies only to the VM instance for which it was specified.
   * The VM metadata is not protected by authentication or cryptographic methods. It is, however, accessible only from the VM.
-  * The VM metadata is not affected by the `vm start/ stop/ suspend/ resume` operations.
+  * The VM metadata is not affected by the `vm start/stop/suspend/resume` operations.
   * The VM metadata server is not protected by authentication or cryptographic methods.
   * The VM metadata server cannot handle special characters in metadata retrieval requests (for example, space).
 
@@ -52,13 +52,10 @@ Default metadata key | Description
 Do not store sensitive data, such as passwords or long-lived encryption keys, as VM metadata. Although accessible only from within the VM, the VM metadata is **not** protected by authentication or cryptographic methods. Anyone with direct access to the VM, and potentially any software running on the VM, can query and view the metadata.
 </Note>
 
-  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection)
-  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. See the VNC, SSH and Screen Sharing for Orka VMs documentation.
-  3. Send a POST request to `http://<orka-api-url>/api/v1/namespaces/{namespace}/vms` with the `vm_metadata` option in the body of the request. For example: 
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection).
+  2. Make sure you have a VM configuration with enabled VNC, SSH, or Screen Sharing. For connection details, see the [Orka CLI quick start](/orka/quick-start-guides/orka3-cli-quick-start).
+  3. Send a POST request to `http://<orka-api-url>/api/v1/namespaces/{namespace}/vms` with the `vm_metadata` option in the body of the request. For example:
 
-
-    
-    
 ```
 curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{namespace}/vms' \
 --header 'Content-Type: application/json' \
@@ -68,19 +65,17 @@ curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{names
     "vm_metadata": { "items": [{"key": "<MY_METADATA_KEY>", "value": "<MY_METADATA_VALUE>" }] }
 }'
 ```
+
 ## Retrieve VM metadata
 
 To retrieve your VM metadata, you need to query the metadata server. This server is accessible only from within the VM, and is **not** protected by authentication or cryptographic methods. When you request information from the metadata server, your request and the subsequent metadata response never leaves the Orka macOS VM.
 
 The server returns the metadata in a JSON format.
 
-  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection)
+  1. Connect to your cluster via VPN. For more information, see [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection).
   2. Connect to the VM via VNC, SSH, or Screen Sharing.
   3. From within the VM, query the metadata server. This retrieves all the available metadata for the VM.
 
-
-    
-    
 ```
 curl http://169.254.169.254/metadata/
 ```
@@ -88,15 +83,12 @@ The IP address `169.254.169.254` is a [link-local address](https://en.wikipedia.
 
   4. To retrieve a specific VM metadata value for a specific key, pass the following request:
 
-
-    
-    
 ```
 curl http://169.254.169.254/metadata/<DEFAULT_ORKA_KEY>
 curl http://169.254.169.254/metadata/<MY_METADATA_KEY>
 ```
 <Tip>
-**Using special characters in your keys?** Replace special characters in your key names with their correct encoded versions in your request. For example, run `curl 169.254.169.254/metadata/my%20key` instead of `curl 169.254.169.254/metadata/my key`.
+**Using special characters in your keys?** Replace special characters in your key names with their correct encoded versions in your request. For example, run `curl http://169.254.169.254/metadata/my%20key` instead of `curl http://169.254.169.254/metadata/my key`.
 </Tip>
 
 ## Use VM metadata in CI/CD

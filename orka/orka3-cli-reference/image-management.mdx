@@ -1,6 +1,6 @@
 ---
 title: "Image Management via Orka3 CLI"
-description: "Orka3 CLI image commands: list, pull, push, and manage macOS images for Intel and Apple Silicon VMs, including local cluster and OCI registry sources."
+description: "Orka3 CLI image commands: list, pull, push, and manage macOS images for Intel and Apple silicon VMs, including local cluster and OCI registry sources."
 zendesk_id: 42514516825883
 ---
 
@@ -11,7 +11,7 @@ Images are used to spin up VMs in Orka. An image contains the macOS operating sy
 **Image architecture types**
 
   * **amd64 architecture** - Intel-based images (previously denoted by an `.img` extension)
-  * **arm64 architecture** - Apple Silicon-based images (previously denoted by an `.orkasi` extension)
+  * **arm64 architecture** - Apple silicon-based images (previously denoted by an `.orkasi` extension)
 
 <Note>Extensions are no longer required as part of an image name. The architecture is determined automatically.</Note>
 
@@ -187,7 +187,7 @@ orka3 image delete 90gbventurassh.orkasi 90gbventurassh.img
 
 Manage images stored on Orka cluster nodes. By adding images to a node before deployment of a VM using that base image, you can manage and control the delay caused by remote or even local cluster storage image pulls, providing consistent deployment times.
 
-<Note>Image cache operations are only supported for Apple Silicon nodes. The alias for `imagecache` is `ic`.</Note>
+<Note>Image cache operations are only supported for Apple silicon nodes. The alias for `imagecache` is `ic`.</Note>
 
 ### orka3 imagecache add
 
