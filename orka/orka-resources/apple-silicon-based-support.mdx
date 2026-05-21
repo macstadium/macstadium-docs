@@ -116,12 +116,12 @@ With VMs based on Apple silicon images, GPU Passthrough comes out of the box. Th
 ## Limitations
 
 <Warning>
-You can deploy up to 2 VMs per Apple silicon-based node.
+You can deploy up to 2 VMs per Apple silicon-based node. This is an Apple EULA requirement and applies to all Apple silicon hardware generations.
 </Warning>
 
-  1. The following operations are not yet supported on Apple silicon-based nodes:
+  1. The following operations are not supported on Apple silicon-based nodes:
 
-  * VMs: stop, start, suspend, resume
+  * VMs: stop, start, suspend, resume (these are Intel-only operations due to Apple Virtualization Framework limitations)
   * Images: download, upload
 
 
