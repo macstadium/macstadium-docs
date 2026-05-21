@@ -4,29 +4,36 @@ description: "Orka VM Tools are pre-installed guest services required for disk r
 zendesk_id: 28340435787163
 ---
 
-Orka VM Tools is a collection of services that make it possible for Orka to manage more effectively the guests operating systems. Orka VM Tools start when the guest operating system starts and allows the communication between the underlying VM process on the host and the guest operating system.
+Orka VM Tools is a collection of background services that let Orka communicate with the guest operating system on Apple silicon VMs. They start automatically when the guest OS starts, and they enable features that require coordination between the host and the VM.
 
-Orka VM Tools are only compatible with ARM-based guest operating systems with macOS 12 or later versions.
+Orka VM Tools are only compatible with ARM-based guest operating systems running macOS 12 or later.
 
-Orka VM Tools are pre-installed on each ARM-based base image that Orka provides.
+The following Orka features require Orka VM Tools:
 
-The following Orka features require Orka VM Tools in order for them to work as expected:
-
-  * [Shared attached disk](/orka/orka-resources/shared-vm-storage)
-
-
-
-<Note>
-  Make sure to pull the latest ARM base image from the remote before using Orka VM Tools on your virtual machines. Standalone installation of Orka VM Tools (outside of a base image) requires Orka 2.2.0 or later.
-</Note>
-
-[Learn more about pulling an image](/orka/orka3-cli-reference/image-management)
+  * [Disk resize](/orka/orka3-cli-reference/vm-management) — resize the VM's disk without redeploying
+  * [Shared attached disk](/orka/orka-resources/shared-vm-storage) — attach a shared disk to multiple VMs simultaneously
 
 <Warning>Always run the Orka VM Tools version that matches your cluster and other Orka tools and integrations. A version mismatch can cause disk resizing and shared storage failures. For example, if your cluster runs 3.x, your Orka VM Tools should also run 3.x.</Warning>
 
-Orka VM Tools run in the background. They are started automatically as a daemon when the operating system starts. You can control Orka VM Tools process using the following commands:
+## Pre-installed on MacStadium base images
 
-To check if Orka VM Tools are running in your VM:
+Orka VM Tools come pre-installed on all ARM base images that MacStadium provides. When you deploy from a MacStadium image, no separate installation step is needed.
+
+If you're building a custom image from scratch or updating an existing VM, use Homebrew to install or upgrade VM Tools inside the guest:
+
+```bash
+# Install
+brew install orka-vm-tools
+
+# Upgrade to the latest version
+brew upgrade orka-vm-tools
+```
+
+Run `brew upgrade orka-vm-tools` after upgrading your cluster to keep VM Tools in sync with the cluster version.
+
+## Checking VM Tools status
+
+Orka VM Tools run in the background as a daemon. To confirm they are running inside a VM:
 
 ```bash
 sudo launchctl list com.orka.vm.tools
