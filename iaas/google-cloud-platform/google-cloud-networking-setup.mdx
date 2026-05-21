@@ -4,9 +4,11 @@ description: "To establish a stable, persistent connection between a Google Clou
 zendesk_id: 28300901563163
 ---
 
-To establish a stable, persistent connection between a Google Cloud Platform (GCP) private cloud and your MacStadium private cloud, you need to configure a policy-based IPsec site-to-site VPN between the two clouds.
+To establish a stable, persistent connection between a Google Cloud Platform (GCP) private cloud and your MacStadium private cloud, you need to configure an IPsec site-to-site VPN between the two clouds.
 
-Currently, you can create only a classic VPN connection with policy-based routing from GCP to MacStadium. It consists of one tunnel and one interface and does not provide high availability. For more information about this option, see [Google Cloud Documentation: Classic VPN](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn#classic-vpn).
+This guide covers the Classic VPN connection with policy-based routing. It consists of one tunnel and one interface and does not provide high availability. For more information about this option, see [Google Cloud Documentation: Classic VPN](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn#classic-vpn).
+
+For HA VPN with BGP routing and high availability, see [Site-to-Site VPN Configuration with GCP](/iaas/google-cloud-platform/site-to-site-vpn-configuration-with-gcp).
 
 To create a site-to-site VPN from your GCP private cloud to your MacStadium private cloud, you need to go through the following high-level steps:
 
@@ -40,8 +42,6 @@ If you don't have a classic VPN gateway that you want to use, complete the follo
   2. If you have one or more VPNs created, click + VPN SETUP WIZARD.
 
   3. Select Classic VPN and click Continue.
-
-     * The High-availability (HA) VPN is currently not supported as an option. For more information about the available options, see [Google Cloud Documentation: Choosing a VPN option](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn).
 
   4. In the Google Compute Engine VPN gateway section, provide Name and Description.
 
