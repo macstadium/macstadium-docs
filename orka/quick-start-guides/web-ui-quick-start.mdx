@@ -12,7 +12,7 @@ If you want to skip the detailed explanations, just run through these steps on y
   2. Launch the Orka UI in your browser at `<ORKA_API_URL>`.
   3. Go to **Nodes**.
   4. Go to **Images**.
-  5. Go to **VM Configs** and click **Create config** (`sonoma-90gb-orka3-arm` for image, 3 for CPU and vCPU, leave VNC enabled).
+  5. Go to **VM Configs** and click **Create config** (select an available macOS image, 3 for CPU and vCPU, leave VNC enabled).
   6. Click **Deploy Config** and wait for the confirmation.
   7. Go to **VMs** and check the connection information for the instance.
   8. Use Apple Screen Sharing to connect to the VM instance. Example: `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
@@ -114,7 +114,7 @@ orka3 user get-token
 
 
 
-You will likely see a `sonoma-90gb-orka3-arm` item list. This is a fully installed and configured macOS Sonoma image with a 90GB disk size. It also has an admin user configured and SSH and Apple Screen Sharing access enabled.
+You will likely see one or more macOS images listed. MacStadium pre-built images come with an admin user configured and SSH and Apple Screen Sharing access enabled.
 
 > #### **Glossary: Image**
 > 
@@ -132,7 +132,7 @@ If this is your first time using Orka, you will get a blank screen.
 
 
   * **Name:** Set any user-friendly name that will help you recognize the VM.
-  * **Base image:** Set to `sonoma-90gb-orka3-arm`. (Note that the settings in the dialog change based on the selected image type.)
+  * **Base image:** Select an available macOS image from the list. (Note that the settings in the dialog change based on the selected image type.)
   * **CPU** : Set to 3. This is the number of CPUs for the VM (Virtual Machine).
   * **vCPU** : Set to 3. Unless the CPU is 3, it must be half of or the exact number of CPUs. This denotes if hyperthreading is enabled. For example, if the vCPU equals CPU, hyperthreading is enabled.
   * **Memory (G)** : Leave blank. This is the default setting.  
@@ -205,11 +205,11 @@ Note: this screen shows essential and detailed connection information about your
 
 One more thing to remember is that Screen Sharing must already be enabled within your macOS VM (Virtual Machine). This is usually not the case (especially on clean OS installs or after an ISO install (Intel Workloads Only)), and you must enable the setting yourself. This also applies to SSH connectivity as well.
 
-The good news is that `sonoma-90gb-orka3-arm` is already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
+The good news is that MacStadium pre-built images are already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
 
-> ####  **Are you not using the**`**sonoma-90gb-orka3-arm**`**image?**
+> #### **Not using a MacStadium pre-built image?**
 > 
-> If you're using another image as your starting point or if you are installing your OS from ISO (Intel Only), you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to connect to the VM via VNC. You can then enable SSH and Screen Sharing connectivity in the OS.
+> If you're using a custom image as your starting point or installing your OS from ISO (Intel only), you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to connect to the VM via VNC. You can then enable SSH and Screen Sharing connectivity in the OS.
 
   3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password again - when Apple connects to the VM.
   4. On the VM, launch **System Preferences** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
