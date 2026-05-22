@@ -13,7 +13,7 @@ If you want to skip the detailed explanations, just run through these steps on y
   1. Review the list of available integrations at [Orka Tools & Integrations](/orka/orka-overview/tools-integrations) and select the one you want to use.
   2. Create a service account and get a token.
   3. List the available VMs and images.
-  4. Create an SSH-enabled VM config for your workflow with the API.
+  4. Create a VM config for your workflow with the CLI.
   5. Complete the CI/CD integration setup as per its instructions.
 
 
@@ -24,6 +24,11 @@ The Orka CI/CD integrations are most useful if you have:
 
   * Basic Orka knowledge and basic or advanced knowledge about your preferred CI/CD provider
   * Workflows that require automation
+
+Most CI/CD integrations rely on SSH to connect to the VM where your builds run and provide both permanent and ephemeral build agent options.
+
+- **Permanent build agent:** A running VM that persists between pipeline iterations. The VM is never destroyed and the pipeline reuses it on every run.
+- **Ephemeral build agent:** A VM that spins up for the duration of one pipeline run and is destroyed after.
 
 
 
@@ -56,19 +61,6 @@ You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overvie
 
 Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
 
-  * Most CI/CD integrations rely on SSH to connect to the VM where your builds run.
-  * Most CI/CD integrations provide both permanent and ephemeral build agents.
-
-
-
-**Glossary: Permanent build agent**
-
-A running VM that persists between the iterations of your CI/CD pipeline. This VM is never destroyed, and the CI/CD pipeline reuses it on every run.
-
-**Glossary: Ephemeral build agent**
-
-A new VM that spins up and lives for the duration of the CI/CD pipeline iteration. After the iteration is complete, the VM is destroyed.
-
 ## 3. Pick Your CI/CD Integration
 
 Go to [Orka Tools & Integrations](/orka/orka-overview/tools-integrations) and review the latest list of available integrations. Pick the one you want to use and navigate to its detailed setup instructions (usually available in the respective repo or official integration page).
@@ -96,66 +88,31 @@ These commands create a service account in the `orka-default` namespace and obta
 
   1. Check if there are any VM configs on your environment.
 
-
-
-
 ```bash
 orka3 vm-config list
 ```
-  2. List the available base images that you can use to create a VM config.
-
-
-
+  2. List the available base images:
 
 ```bash
 orka3 image list
 ```
-You will likely see a `sonoma-90gb-orka3-arm` item. It is a fully installed and configured Apple silicon-based macOS Sonoma image with a 90GB disk size. It also has an admin user configured, SSH and Apple Screen Sharing access enabled, and Orka VM Tools installed.
-
-**Glossary: Image**
-
-A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs.
-
-(Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
+MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually — you can reference them directly in your VM config.
 
   3. Create your first VM config:
-
-
-
-**Glossary: VM config**
-
-A template for an Orka virtual machine. You can deploy multiple VM instances (VMs) from a single VM config.
-
-**Did you know?**
-
-Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries. 
-
-So, instead of using the `sonoma-90gb-orka3-arm` image, you can use our latest Sonoma image from GitHub packages. 
-
 
 ```bash
 orka3 vmc create <NAME> --image ghcr.io/macstadium/orka-images/sonoma:latest --cpu 4
 ```
-**VM configuration name limitations**
 
-The name you specify under `VM Name` must meet the following requirements:
+<Note>
+**VM config name requirements:** The name must not exceed 50 characters, consist of lowercase alphanumeric characters or dashes (-), start with an alphabetic character, and end with an alphanumeric character. The name must be unique in the cluster.
+</Note>
 
-  * Does not exceed 50 characters
-  * Consists of lowercase alphanumeric characters or dashes (-)
-  * Starts with an alphabetic character and ends with an alphanumeric character
-  * Must be unique to the cluster
+Your CI/CD pipeline will use this VM config to spin up permanent or ephemeral agents. Every agent is a deployed VM instance of a VM config.
 
-
-
-Your CI/CD pipeline will use this SSH-enabled VM config (template) to spin up permanent or ephemeral agents. Every agent is a deployed VM instance of a VM config.
-
-**Glossary: VM instance (VM)**
-
-A deployed instance of a VM config. VMs take up resources from your nodes and require a certain amount of CPU and RAM to run.
-
-**Are you not using the official images?**
-
-If you're using another image as your starting point or if you are installing your OS from ISO, you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to connect to the VM via VNC. You can then enable SSH and Screen Sharing connectivity in the OS.
+<Note>
+If you're using a custom image or installing from ISO, SSH or Screen Sharing may not be enabled by default. In that case, connect via VNC first, then enable them in the OS.
+</Note>
 
 ## 6. Complete the CI/CD Setup
 
@@ -163,9 +120,9 @@ Revisit the setup instructions for your preferred Orka CI/CD integration. Fill i
 
 Note that you might need to provide the SSH credentials for the VM.
 
-**What are the credentials for my VM config?**
-
-By default, the `sonoma-90gb-orka3-arm` image is configured with an `admin/admin` set of credentials.
+<Tip>
+By default, MacStadium's official images use `admin/admin` credentials. Change this after first login.
+</Tip>
 
 ## Next Steps
 
