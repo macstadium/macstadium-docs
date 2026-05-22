@@ -21,7 +21,6 @@ GPU passthrough is disabled at the VM level for all Intel-based VMs, even when i
 - You can deploy only one VM with GPU passthrough per Intel-based node at a time.
 - GPU passthrough and VNC cannot work together on Intel-based VMs. Enabling GPU passthrough automatically disables the VNC console. Always pass `--disable-vnc` alongside `--gpu`. Make sure you can still access the VM via SSH or Apple Screen Sharing before enabling GPU passthrough.
 - GPU passthrough is always enabled for Apple silicon-based nodes and VMs and cannot be disabled.
-- For Orka clusters with 2013 Mac Pro nodes, GPU passthrough on those nodes requires dual AMD FirePro D500 cards. Both cards will be passed to the VM at once.
 
 ## Enable GPU passthrough in a VM config template
 
