@@ -89,7 +89,9 @@ Orka 3.3.1 is a patch release that addresses compatibility issues with JAMF MDM.
 
 **Known Issues**
 
-> If you implement code signing workflows in Orka this message pertains to you. Please consider your workflows before deciding to upgrade to 3.3.0
+<Warning>
+If you implement code signing workflows in Orka, review your workflows before deciding to upgrade to 3.3.0.
+</Warning>
 
 The 3.3.0 release implements behaviors to align with Apple’s guidelines for Virtualization regarding identifiers, as discussed in [VZMacMachineIdentifier | Apple Developer Documentation](https://developer.apple.com/documentation/virtualization/vzmacmachineidentifier), such that VMs are always created with a unique machine identifier.
 
