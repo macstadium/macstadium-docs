@@ -83,7 +83,7 @@ orka3 login
 ```
 Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run more `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Personal tokens (SSO login) are valid for one hour. Afterward, you must log in again to obtain a new token.
 
-For CI/CD automation, use a service account token instead — service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
+For CI/CD automation, use a service account token instead. Service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
 
 You now need to get your Orka authentication token from your `~/.kube/config`:
 
@@ -95,7 +95,7 @@ orka3 user get-token
 
 You can use the built-in Swagger UI to execute API calls directly against your cluster.
 
-In your browser, navigate to `<ORKA_API_URL>/api/v1/swagger`, click **Authorize** , and type `Bearer <TOKEN>`. For every call that you want to run, just click **Try it out** and fill the required details.
+In your browser, navigate to `<ORKA_API_URL>/api/v1/swagger`, click **Authorize**, and type `Bearer <TOKEN>`. For every call that you want to run, just click **Try it out** and fill the required details.
 
   1. Check the available resources in your cluster:
 
@@ -149,12 +149,6 @@ curl -X 'GET' \
 
 This API call provides an overview of your nodes. It shows the actual IP, the state, and the available resources on each node.
 
-<Note>
-**Node:** A genuine Apple physical host that provides computational resources (RAM and CPU) for your workloads. A host OS runs on top, and you have no direct access (via VNC, SSH, or Screen Sharing).
-
-**Namespace:** A way to isolate and dedicate resources to users and teams within the cluster. The resources within a namespace are completely isolated from one another and cannot be shared between namespaces. By default, users and service accounts limited to a specific namespace cannot access the resources in other namespaces, unless added to the respective role bindings.
-</Note>
-
   2. Check if there are any VMs on your environment.
 
 
@@ -176,10 +170,7 @@ curl -X 'GET' \
 ```
 This API call lists all VM instances in the `orka-default` namespace. If nothing prints, no one has created any VM instances yet.
 
-  3. List the available base images that you can use to deploy a VM.
-
-
-
+  3. List the available base images:
 
 ```bash
 curl -X 'GET' \
@@ -187,13 +178,9 @@ curl -X 'GET' \
 -H 'accept: application/json' \
 -H 'Authorization: Bearer <TOKEN>'
 ```
-You will likely see a `sonoma-90gb-orka3-arm` item in the response. It is a fully installed and configured macOS Sonoma image with a 90GB disk size. It also has an admin user configured and SSH and Apple Screen Sharing access enabled.
+MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually — you can deploy directly from the registry in the next step.
 
-<Note>
-**Image:** A disk image that represents VM storage. Base images are bootable disk images that provide the OS, file system, and storage for your VM configs and VMs. (Intel-only) Empty images provide added storage or serve as the base image during manual OS installs from ISO.
-</Note>
-
-  4. Deploying a VM is as simple as just specifying a base image. Run:
+  4. Deploying a VM requires only a base image. Run:
 
 
 
@@ -206,7 +193,7 @@ curl -X 'POST' \
 -H 'Authorization: Bearer <TOKEN>' \
 -H 'Content-Type: application/json' \
 -d '{
-  "image": "sonoma-90gb-orka3-arm"
+  "image": "ghcr.io/macstadium/orka-images/sequoia:latest"
 }'
 ```
 
@@ -224,40 +211,9 @@ curl -X 'POST' \
   "status": "Running"
 }
 ```
-The bare minimum required argument is `image`.
 
-Orka creates a simple VM with the specified image and 3 CPU, and assigns a randomly generated name to it.
+The bare minimum required argument is `image`. Orka creates a VM with 3 CPUs and assigns a randomly generated name.
 
-You can also deploy VMs using images from OCI-compatible registries.
-
-You can also deploy directly from MacStadium's public OCI registry.
-
-**cURL**
-
-```bash
-curl -X 'POST' \
-'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms' \
--H 'accept: application/json' \
--H 'Authorization: Bearer <TOKEN>' \
--H 'Content-Type: application/json' \
--d '{
-"image": "ghcr.io/macstadium/orka-images/sequoia:latest"
-}'
-```
-**Response**
-
-```json
-{
-  "name": "vm-cznfv",
-  "node": "mini-arm-13",
-  "memory": "4.80Gi",
-  "ip": "10.221.189.13",
-  "ssh": 8822,
-  "vnc": 5999,
-  "screenshare": 5901,
-  "status": "Running"
-}
-```
   5. What happens if you list your VMs again now?
 
 
@@ -280,7 +236,7 @@ curl -X 'GET' \
       "ip": "10.221.189.13",
       "cpu": 3,
       "deployDate": "2023-10-10T19:56:21Z",
-      "image": "sonoma-90gb-orka3-arm",
+      "image": "ghcr.io/macstadium/orka-images/sequoia:latest",
       "gpuPassthrough": false,
       "memory": "4.80Gi",
       "node": "mini-arm-13",
@@ -297,7 +253,7 @@ The API now returns information about your running VM.
 The `GET /api/v1/namespaces/orka-default/vms` call shows system information for your VMs, including IP and connection ports. Note that even though `screenshare` and `ssh` ports are always listed, you won't be able to use them unless the respective connection type is enabled in macOS. This is a security limitation of the OS.
 
 <Note>
-When you have a lot of VMs, the response of `GET /resources/vm/list` can become too crowded to use efficiently. Run `GET /namespaces/orka-default/vms/<VM_NAME>` instead to get system information for a single VM.
+When you have a lot of VMs, use `GET /api/v1/namespaces/orka-default/vms/<VM_NAME>` to get system information for a single VM instead of listing all of them.
 </Note>
 
   6. Check your nodes to see how many resources are now in use.
@@ -314,38 +270,36 @@ curl -X 'GET' \
 ```
 ## Experience Your VM Instance
 
-  1. Look at the last output of `GET /namespaces/orka-default/vms` again. Get that IP and `screenshare` port.
-  2. Launch Apple Screen Sharing on your local machine. In **Connect To:** , type `vnc://<VM-IP>:<Screenshare-port>`.
+  1. Look at the last output of `GET /api/v1/namespaces/orka-default/vms` again. Get that IP and `screenshare` port.
+  2. Launch Apple Screen Sharing on your local machine. In **Connect To:**, type `vnc://<VM-IP>:<Screenshare-port>`.
 
+<Note>
+This step works only on macOS. On Linux or Windows, launch your preferred VNC client and connect to `<VM-IP>:<VNC-port>`.
+</Note>
 
+One more thing to remember is that Screen Sharing needs to be already enabled on the macOS. Most of the time, this is not the case (especially on clean OS installs or after an ISO install (Intel only)), and you will need to enable the setting yourself.
 
-**Are you not working on macOS?**
+The good news is that MacStadium pre-built images are already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
 
-This step works only on macOS. If you're working on a Linux or Windows machine instead, launch your preferred VNC client and connect to `<VM-IP>:<VNC-port>`.
+<Note>
+If you're using a custom image or installing from ISO (Intel only), SSH and Screen Sharing are not enabled by default. Connect via VNC first, then enable them in the OS.
+</Note>
 
-One more thing to remember is that Screen Sharing needs to be already enabled on the macOS. Most of the time, this is not the case (especially on clean OS installs or after an ISO install (Intel Workloads Only)), and you will need to enable the setting yourself.
-
-The good news is that `sonoma-90gb-orka3-arm` is already preconfigured for you, and you can enjoy out-of-the-box Screen Sharing and SSH connectivity.
-
-**Are you not using the official Sonoma images?**
-
-If you're using another image as your starting point or if you are installing your OS from ISO, you will likely not have SSH or Screen Sharing enabled by default (even though the respective ports will be mapped by default). In this case, you need to connect to the VM via VNC. You can then enable SSH and Screen Sharing connectivity in the OS.
-
-  3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password one more time - when Apple connects to the VM.
+  3. When prompted by Apple Screen Sharing, provide the credentials for the VM (`admin/admin`). You will be prompted for the password one more time when Apple connects to the VM.
 
   4. On the VM, launch **System Settings** > **Users & Groups**. Select the **Admin** user and click **Change password**. Set the `Admin` user password to whatever works for you.
 
   5. (Optional) Inside the VM, launch the Terminal application and run the following command.
 
-
-
-
+If Orka VM Tools is not yet installed:
 
 ```bash
-# First time
 brew install orka-vm-tools
+```
 
-# If already installed
+If Orka VM Tools is already installed and needs updating:
+
+```bash
 brew upgrade orka-vm-tools
 ```
 This action ensures that your VM is running the latest version of the [Orka VM Tools](/orka/orka-resources/vm-tools). This collection of services lets Orka manage the guest operating system on Apple silicon-based VMs more efficiently and enables vital features, such as [shared VM storage](/orka/orka-resources/shared-vm-storage).
@@ -360,20 +314,34 @@ If your cluster is not running the latest Orka version, download and install an 
 
 Changing a running VM's configuration or file system does not affect its base image. As soon as you delete the VM, your changes will be lost, and you will need to recreate them manually on other VMs.
 
-To create changes that stick and appear on future deployments, you can commit your changes to the base image, save the changes as a new image, or push your changes to an OCI-compatible registry.
+To make changes permanent, push your image to an OCI-compatible registry. This is the recommended approach for Apple silicon clusters on Orka 3.5 or later.
 
-<Note>
-**Commit:** Modifies the original base image of the respective VM instance. With this operation, you apply the current state of a VM instance over the base image of its VM config. Newly deployed instances will launch in the same state as your current VM. This operation restarts the VM.
-
-**Save:** Creates a new base image from the current state of the respective VM instance. To use it, you need to create a new VM config that references the new base image. This operation restarts the VM.
-
-**Push:** Pushes your changes to the specified OCI-compatible registry, image, and image tag. Registry credentials are required to push an image.
-</Note>
-
-Return to the command line on your local machine and run the following command. You can get the `<VM_NAME>` from the `GET /namespaces/orka-default/vms` output you ran earlier.
+  1. Push the image to your OCI-compatible registry:
 
 **cURL**
 
+```bash
+curl -X 'POST' \
+'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/push' \
+-H 'accept: application/json' \
+-H 'Content-Type: application/json' \
+-d '{
+"imageReference": "<REGISTRY>/<IMAGE>:<TAG>"
+}'
+```
+
+**Response**
+
+```json
+{
+  "jobName": "<PUSH_JOB_ID>"
+}
+```
+
+<Note>
+If you are on Intel or need to write to NFS local cluster storage instead of an OCI registry, use `commit` (overwrites the original base image) or `save` (creates a new image):
+
+**Commit**
 ```bash
 curl -X 'POST' \
 '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/commit' \
@@ -383,9 +351,10 @@ curl -X 'POST' \
 -d '{
 "description": "Committed from <VM_NAME>"
 }'
+```
 
-OR
-
+**Save**
+```bash
 curl -X 'POST' \
 '<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/save' \
 -H 'accept: application/json' \
@@ -395,32 +364,10 @@ curl -X 'POST' \
 "description": "Saved from <VM_NAME>",
 "imageName": "<NEW_IMAGE_NAME>"
 }'
-
-OR
-
-curl -X 'POST' \
-'<ORKA_API_URL>/api/v1/namespaces/orka-default/vms/<VM_NAME>/push' \
--H 'accept: application/json' \
--H 'Content-Type: application/json' \
--d '{
-"imageReference": "<REGISTRY>/<IMAGE>:<TAG>"
-}'
 ```
-**Response** (commit or save)
+Both operations restart the VM. NFS local storage is being phased out in favor of OCI.
+</Note>
 
-```json
-{
-  "statusUrl": "/api/v1/namespaces/orka-default/images/sonoma-90gb-orka3-arm"
-}
-```
-
-**Response** (push)
-
-```json
-{
-  "jobName": "<PUSH_JOB_ID>"
-}
-```
   2. See how the changes are preserved for yourself. Deploy a new VM instance from your image:
 
 
