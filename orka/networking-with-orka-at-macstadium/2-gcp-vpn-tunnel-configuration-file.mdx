@@ -4,14 +4,9 @@ description: "Complete the Cisco ASA/ASAv config template for your GCP-to-Orka V
 zendesk_id: 28400048105243
 ---
 
-> #### **You need:**
-> 
->   * The name `Outside` from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The IP address for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The subnet mask for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The IPv4 address of your GCP local network.
->   * The subnet mask for your GCP local network converted from its CIDR notation (i.e. `255.255.0.0` instead of `/16`).
-> 
+<Note>
+**Before you begin:** From your [IP Plan](/macstadium/macstadium-overview/ip-plan), you need the `Outside` interface name, the `Private-1` IP address and subnet mask. From GCP, you need your local network's IPv4 address and subnet mask (converted from CIDR notation, e.g. `255.255.0.0` instead of `/16`).
+</Note>
 
 
 After you [have created your site-to-site VPN connection in Google Cloud Platform (GCP)](/orka/networking-with-orka-at-macstadium/1-gcp-side-of-the-vpn-tunnel), you need to configure your Cisco firewall to recognize the connection and let traffic into your Orka environment.
@@ -20,9 +15,9 @@ You can use the configuration template provided below and fill in the missing in
 
 ## Configuration template
 
-> #### **IMPORTANT**
-> 
-> Unless you have extensive experience with GCP and ASA/ASAv configurations, use the configuration from the template. Otherwise, your site-to-site VPN might not work as expected.
+<Warning>
+Unless you have extensive experience with GCP and ASA/ASAv configurations, use the configuration from the template. Otherwise, your site-to-site VPN might not work as expected.
+</Warning>
     
     
 ```

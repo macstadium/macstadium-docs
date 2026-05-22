@@ -6,12 +6,9 @@ zendesk_id: 28400298949147
 
 How to configure the GCP side of your VPN tunnel between GCP and Orka.
 
-> #### **You need:**
-> 
->   * The IP address for the `FW1-Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan.](/macstadium/macstadium-overview/ip-plan)
->   * . Most likely: `10.221.188.0/24` or `10.10.10.0/24`.
-> 
+<Note>
+**Before you begin:** You need the IP address for `FW1-Outside` and the CIDR range for `Private-1` (most likely `10.221.188.0/24` or `10.10.10.0/24`) from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+</Note>
 
 
 To establish a stable, persistent connection between a Google Cloud Platform (GCP) private cloud and your Orka environment, you need to configure a policy-based IPsec site-to-site VPN between the two clouds.
@@ -58,9 +55,9 @@ You will need this IP address when you configure the Orka side of the tunnel.
 
 
 
-> #### **IMPORTANT**
-> 
-> Keep a record of the pre-shared key. You will need it later.
+<Warning>
+Keep a record of the pre-shared key. You will need it later.
+</Warning>
 
   12. For **Routing options** , select **Policy-based**.
   13. For **Remote network IP ranges** , provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
@@ -94,9 +91,9 @@ If you have an existing classic VPN gateway that you want to use for the connect
 
 
 
-> #### **IMPORTANT**
-> 
-> Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
+<Warning>
+Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
+</Warning>
 
   3. Provide **Name**.
   4. (Optional) Provide **Description**.
@@ -106,9 +103,9 @@ If you have an existing classic VPN gateway that you want to use for the connect
 
 
 
-> #### **IMPORTANT**
-> 
-> Keep a record of the pre-shared key. You will need it later.
+<Warning>
+Keep a record of the pre-shared key. You will need it later.
+</Warning>
 
   8. For **Routing options** , select **Policy-based**.
   9. For **Remote network IP ranges** , provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
