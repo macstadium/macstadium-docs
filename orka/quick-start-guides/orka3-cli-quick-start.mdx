@@ -80,9 +80,9 @@ You can get your Orka API URL from your [IP Plan](/macstadium/macstadium-overvie
 
 Note that you can use `http://<orka-IP>`, `https://<orka-domain>`, and `https://<custom-domain>` interchangeably in your workflows.
 
-**Known limitation**
-
-The Orka3 CLI works only with trusted custom domains and valid TLS certificates issued by trusted certificate authorities.
+<Note>
+When connecting via HTTPS with a custom domain, the Orka3 CLI requires a valid TLS certificate from a trusted certificate authority. Self-signed certificates are not supported.
+</Note>
 
   3. Enable command autocompletion for the Orka3 CLI
 
