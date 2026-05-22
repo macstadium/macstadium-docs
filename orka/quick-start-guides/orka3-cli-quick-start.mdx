@@ -16,7 +16,7 @@ If you want to skip the detailed explanations, just run through these steps on y
   6. `orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest`
   7. `orka3 image list` (this will return the list of locally stored images)
   8. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
-  9. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 6. Use the `admin/admin` credentials.
+  9. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 8. Use the `admin/admin` credentials.
   10. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
   11. `orka3 vm push <VM_NAME> <IMAGE:TAG>` (Apple silicon, recommended) or `orka3 vm commit <VM_NAME>` / `orka3 vm save <VM_NAME>` (writes to NFS local storage)
   12. `orka3 vm deploy --image <IMAGE_NAME> -y` (use the name of the newly saved image or the original image, if you committed the changes to it).

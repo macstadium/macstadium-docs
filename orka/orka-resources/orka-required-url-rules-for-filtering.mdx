@@ -36,7 +36,7 @@ Permit Client | Public DNS server |  | DNS over HTTPS |  | DNS Resolution
 Permit Client |  |  | HTTP<br/>HTTPS | [http://idp.macstadium.com](http://idp.macstadium.com/)<br/>sso.macstadium.com | Single sign-on requirement  
 Permit Client | API Controllers<br/>10.221.188.19<br/>10.221.188.20 | HTTP<br/>TCP 6443 |  |  | .19 requires TCP/6443 - Ku. LB<br/>.20 requires HTTP - ORKA API  
 Permit Client | 10.221.188.22 |  | HTTPS |  | Traefik - a reverse proxy<br/>Use case: if customer is using HTTPS to access ORKA  
-Permit Client | 10.221.188.31 through 10.221.189.254 | TCP 5900-5912<br/>TCP 5999-6011<br/>TCP 8822-8834 |  |  | Reserved ports for interacting with created VMs  
+Permit Client | 10.221.188.31 through 10.221.189.254 | TCP 5900-6200 (Screenshare)<br/>TCP 5999-6299 (VNC)<br/>TCP 8822-9122 (SSH) |  |  | Reserved ports for interacting with created VMs. These ranges are globally tracked and allocated per Apple silicon node.  
 Permit Client | 10.221.188.0/23 |  | ICMP<br/>SSH |  | Ask/Requirement for ORKA Support during troubleshooting sessions  
 **Deny Client** | ANY |  |  |  | A catch all deny rule if traffic doesn't match the above  
 
