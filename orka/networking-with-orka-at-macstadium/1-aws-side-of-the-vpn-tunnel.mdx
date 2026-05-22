@@ -6,11 +6,9 @@ zendesk_id: 28401777655707
 
 How to configure the AWS side of your VPN tunnel between AWS and Orka.
 
-> #### **You need:**
-> 
->   * The IP address for the `FW1-Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan). Most likely: `10.221.188.0/24`.
-> 
+<Note>
+**Before you begin:** You need the IP address for `FW1-Outside` and the CIDR range for `Private-1` (most likely `10.221.188.0/24`) from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+</Note>
 
 
 To establish a stable, persistent connection between an Amazon Virtual Private Cloud (Amazon VPC) and your Orka cluster, you need to configure an IPsec site-to-site VPN (VPN tunnel) between the two.
