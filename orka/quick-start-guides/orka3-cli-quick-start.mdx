@@ -15,14 +15,14 @@ If you want to skip the detailed explanations, just run through these steps on y
   5. `orka3 vm list` (you should see 0 results)
   6. `orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest`
   7. `orka3 image list` (this will return the list of locally stored images)
-  10. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
-  11. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 7. Use the `admin/admin` credentials.
-  12. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
-  13. `orka3 vm push <VM_NAME> <IMAGE:TAG>` (Apple silicon, recommended) or `orka3 vm commit <VM_NAME>` / `orka3 vm save <VM_NAME>` (writes to NFS local storage)
-  14. `orka3 vm deploy --image <IMAGE_NAME> -y` (use the name of the newly saved image or the original image, if you committed the changes to it).
-  15. Run Apple Screen Sharing and connect to the newly deployed VM. Use the connection information printed by `orka3 vm deploy`. Verify that your changes are there.
-  16. `orka3 vm delete -v <NAME>`
-  17. `orka3 vm list`
+  8. `orka3 vm list <VM_NAME>` and `orka3 vm list <VM_NAME> -o wide`
+  9. Run Apple Screen Sharing to connect to the VM instance. Use `vnc://<VM-IP>:<Screenshare-port>` with the IP and port from Step 8. Use the `admin/admin` credentials.
+  10. On the VM, change the login credentials, apply the latest OS updates, and install (or upgrade) the Orka VM Tools for added security and functionality.
+  11. `orka3 vm push <VM_NAME> <IMAGE:TAG>` (Apple silicon, recommended) or `orka3 vm commit <VM_NAME>` / `orka3 vm save <VM_NAME>` (writes to NFS local storage)
+  12. `orka3 vm deploy --image <IMAGE_NAME> -y` (use the name of the newly saved image or the original image, if you committed the changes to it).
+  13. Run Apple Screen Sharing and connect to the newly deployed VM. Use the connection information printed by `orka3 vm deploy`. Verify that your changes are there.
+  14. `orka3 vm delete -v <NAME>`
+  15. `orka3 vm list`
 
 
 
@@ -184,17 +184,7 @@ orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest
 ```
 Orka creates a simple VM with the specified image and 3CPU and assigns a randomly generated name.
 
-#### **Did You Know?**
-
-Starting with Orka 3.0.0, you can deploy VMs using images from OCI-compatible registries.
-
-So, instead of using a locally stored image, you can deploy directly from MacStadium's public OCI registry.
-
-
-```bash
-orka3 vm deploy --image ghcr.io/macstadium/orka-images/sequoia:latest
-```
-  7. Check your nodes and your VMs.
+  5. Check your nodes and your VMs.
 
 
   * Re-run `orka3 node list`. Did the number of available resources change?
