@@ -35,7 +35,7 @@ Orka Engine provides macOS virtualization via Command Line Interface (CLI) on in
 
 
 
-##  System Requirements
+## System Requirements
 
   * Apple silicon Mac (M1 or later) with 8 GB RAM and 50 GB disk space
 
@@ -239,7 +239,7 @@ When the images pull is complete, it is available in `orka-engine image list` an
 
 ## Pushing local Images to Registry
 
-If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then it can image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
+If the previously run sonoma-latest image has been modified and saved with the necessary CI tools, then the image can be shared with team members by storing it on the team OCI repo and naming it **sequoiaCI** ; on the repo, use the `orka-engine image push` command. 
 
 The default local Orka Engine VM image files system path is `/Users/<host_username>/.local/share/orka/data/` where the host_username is **admin** in this example and the container registry is [ghcr.io](http://ghcr.io/) and the repo credentials are username=**dev1** and password=**repo**. 
 
