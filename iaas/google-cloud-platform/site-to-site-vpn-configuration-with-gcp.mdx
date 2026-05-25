@@ -285,30 +285,11 @@ Manually replace the placeholders in the configuration template with the values 
 
 After the VPN is configured, configure TCP State Bypass on the ASA / ASAv firewall in order to allow the outbound and inbound traffic to flow through separate VPN tunnels.
 
-Placeholder | Description | More Information | Example  
----|---|---|---  
-      
-    
-```
-{acl-state-bypass}
-```
-| A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation: Access  
-Control Lists | acl-state-bypass  
-      
-    
-```
-{cm_state-bypass}
-```
-| A unique name for the Class-map. | Cisco Documentation: TCP State  
-Bypass | cm-state-bypass  
-      
-    
-```
-{pm-state-bypass}
-```
-| A unique name for the access control list that permits the creation of the tunnel and  
-the traffic over it. | Cisco Documentation: TCP State  
-Bypass | pm-state-bypass  
+| Placeholder | Description | More Information | Example |
+|---|---|---|---|
+| `{acl-state-bypass}` | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation: Access Control Lists | acl-state-bypass |
+| `{cm_state-bypass}` | A unique name for the Class-map. | Cisco Documentation: TCP State Bypass | cm-state-bypass |
+| `{pm-state-bypass}` | A unique name for the access control list that permits the creation of the tunnel and the traffic over it. | Cisco Documentation: TCP State Bypass | pm-state-bypass |
   
   1. Define the Access list with the source and destination networks: 
      * ` access-list { acl-state-bypass } extended permit ip { macstadium_network_address } { macstadium_network_mask } { gcp_network_address } { gcp_network_mask } `
