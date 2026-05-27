@@ -15,7 +15,7 @@ These are recommended best practices for deploying Citrix HDX and HP Anyware PCo
 
 Disable FileVault unless your security policy requires it. If a machine with FileVault enabled powers down, a MacStadium Data Center Technician must intervene locally before it can be accessed remotely. If encryption is required, coordinate with MacStadium to set up secure restart scripts that automate reboots and recovery before enabling it.
 
-Note: If your organization requires the use of FileVault, it is highly recommend that macOS Tahoe is used on your host devices. Apple released a pre-boot SSH capability in Tahoe that allows for remote disk decryption as an alternative to physical DCT intervention.
+Note: If your organization requires the use of FileVault, it is highly recommend that macOS Tahoe is used on your host devices. Apple released a pre-boot SSH capability in Tahoe that allows for remote disk decryption as an alternative to physical DCT intervention. FileVault is not officially supported by MacStadium.
 
 Use an MDM solution (Jamf Pro, Kandji, or Intune) to enforce your security baseline. See [MDM Policies and Permissions](#mdm-policies-and-permissions) for VDI-specific configuration.
 
