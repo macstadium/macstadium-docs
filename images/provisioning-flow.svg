@@ -1,0 +1,197 @@
+<?xml version="1.0" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1550 880" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <!-- arrowD: brand blue — request/call -->
+    <marker id="arrowD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5366cc"/>
+    </marker>
+    <!-- arrowO: orange — data flow -->
+    <marker id="arrowO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#FE9000"/>
+    </marker>
+    <!-- arrowG: gray — response/return -->
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B80"/>
+    </marker>
+  </defs>
+
+  <!-- ── TITLE ── -->
+  <rect x="0" y="0" width="1550" height="48" fill="#323151"/>
+  <text x="775" y="31" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">MacStadium VDI — VM Provisioning Flow</text>
+
+  <!-- ── PARTICIPANT BOXES (y=55, h=110) ── -->
+
+  <!-- IT Admin: center x=95, 110×110 -->
+  <g transform="translate(40,55)">
+    <rect x="0" y="0" width="110" height="110" rx="8" fill="#FFFFFF" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <circle cx="55" cy="28" r="15" fill="#6B6B80"/>
+    <path d="M 10 72 C 10 55 100 55 100 72 L 100 85 L 10 85 Z" fill="#6B6B80"/>
+    <text x="55" y="103" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">IT Admin</text>
+  </g>
+
+  <!-- Control Plane: center x=315, 170×110 -->
+  <g transform="translate(230,55)">
+    <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="170" height="26" rx="8" fill="#323151"/>
+    <rect x="0" y="18" width="170" height="8" fill="#323151"/>
+    <text x="85" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">Control Plane</text>
+    <text x="85" y="52" text-anchor="middle" font-size="10" fill="#6B6B80">Orka Engine</text>
+    <text x="85" y="66" text-anchor="middle" font-size="10" fill="#6B6B80">orchestration</text>
+  </g>
+
+  <!-- Automation: center x=535, 170×110 -->
+  <g transform="translate(450,55)">
+    <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="170" height="26" rx="8" fill="#323151"/>
+    <rect x="0" y="18" width="170" height="8" fill="#323151"/>
+    <text x="85" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">Automation</text>
+    <text x="85" y="52" text-anchor="middle" font-size="10" fill="#6B6B80">Ansible /</text>
+    <text x="85" y="66" text-anchor="middle" font-size="10" fill="#6B6B80">Management UI</text>
+  </g>
+
+  <!-- Orka Engine: center x=755, 170×110 -->
+  <g transform="translate(670,55)">
+    <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="170" height="26" rx="8" fill="#323151"/>
+    <rect x="0" y="18" width="170" height="8" fill="#323151"/>
+    <text x="85" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">Orka Engine</text>
+    <text x="85" y="59" text-anchor="middle" font-size="10" fill="#6B6B80">on Apple silicon host</text>
+  </g>
+
+  <!-- Image Registry: center x=975, 170×110 -->
+  <g transform="translate(890,55)">
+    <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="170" height="26" rx="8" fill="#323151"/>
+    <rect x="0" y="18" width="170" height="8" fill="#323151"/>
+    <text x="85" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">Image Registry</text>
+    <text x="85" y="52" text-anchor="middle" font-size="10" fill="#6B6B80">Harbor / OCI</text>
+  </g>
+
+  <!-- MDM: center x=1195, 170×110 -->
+  <g transform="translate(1110,55)">
+    <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="170" height="26" rx="8" fill="#323151"/>
+    <rect x="0" y="18" width="170" height="8" fill="#323151"/>
+    <text x="85" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">MDM</text>
+    <text x="85" y="59" text-anchor="middle" font-size="10" fill="#6B6B80">e.g., Jamf, Iru, Intune</text>
+  </g>
+
+  <!-- Session Broker: center x=1415, 170×110 — dashed = external -->
+  <g transform="translate(1330,55)">
+    <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#5366cc" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="85" y="46" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">Session Broker</text>
+    <text x="85" y="64" text-anchor="middle" font-size="10" fill="#6B6B80">VDI broker /</text>
+    <text x="85" y="78" text-anchor="middle" font-size="10" fill="#6B6B80">gateway</text>
+  </g>
+
+  <!-- ── LIFELINES ── -->
+  <line x1="95"   y1="165" x2="95"   y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="315"  y1="165" x2="315"  y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="535"  y1="165" x2="535"  y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="755"  y1="165" x2="755"  y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="975"  y1="165" x2="975"  y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="1195" y1="165" x2="1195" y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="1415" y1="165" x2="1415" y2="800" stroke="#6B6B80" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ── ACTIVATION BOXES ── -->
+  <rect x="309"  y="188" width="12" height="590" rx="2" fill="#EFEFF3" stroke="#5366cc" stroke-width="1"/>
+  <rect x="529"  y="238" width="12" height="395" rx="2" fill="#EFEFF3" stroke="#5366cc" stroke-width="1"/>
+  <rect x="749"  y="288" width="12" height="295" rx="2" fill="#EFEFF3" stroke="#5366cc" stroke-width="1"/>
+  <rect x="969"  y="338" width="12" height="57"  rx="2" fill="#EFEFF3" stroke="#5366cc" stroke-width="1"/>
+  <rect x="1189" y="473" width="12" height="57"  rx="2" fill="#EFEFF3" stroke="#5366cc" stroke-width="1"/>
+  <rect x="1409" y="673" width="12" height="57"  rx="2" fill="#EFEFF3" stroke="#5366cc" stroke-width="1" stroke-dasharray="4 2"/>
+
+  <!-- ── STEPS ── -->
+
+  <!-- Step 1 (y=195): IT Admin → Control Plane -->
+  <circle cx="22" cy="195" r="10" fill="#5366cc"/>
+  <text x="22" y="199" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">1</text>
+  <line x1="95" y1="195" x2="309" y2="195" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="197" y="188" text-anchor="middle" font-size="10" fill="#5366cc">Request provisioning (Web UI / CLI)</text>
+
+  <!-- Step 2 (y=245): Control Plane → Automation -->
+  <circle cx="22" cy="245" r="10" fill="#5366cc"/>
+  <text x="22" y="249" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">2</text>
+  <line x1="321" y1="245" x2="529" y2="245" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="425" y="238" text-anchor="middle" font-size="10" fill="#5366cc">Execute provisioning playbook</text>
+
+  <!-- Step 3 (y=295): Automation → Orka Engine -->
+  <circle cx="22" cy="295" r="10" fill="#5366cc"/>
+  <text x="22" y="299" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">3</text>
+  <line x1="541" y1="295" x2="749" y2="295" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="645" y="288" text-anchor="middle" font-size="10" fill="#5366cc">Deploy VM from base image</text>
+
+  <!-- Step 4 (y=345): Orka Engine → Image Registry -->
+  <circle cx="22" cy="345" r="10" fill="#5366cc"/>
+  <text x="22" y="349" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">4</text>
+  <line x1="761" y1="345" x2="969" y2="345" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="865" y="338" text-anchor="middle" font-size="10" fill="#5366cc">Pull golden image</text>
+
+  <!-- Step 5 (y=395): Image Registry → Orka Engine (data flow) -->
+  <circle cx="22" cy="395" r="10" fill="#FE9000"/>
+  <text x="22" y="399" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">5</text>
+  <line x1="969" y1="395" x2="761" y2="395" stroke="#FE9000" stroke-width="2" marker-end="url(#arrowO)"/>
+  <text x="865" y="388" text-anchor="middle" font-size="10" fill="#FE9000">Stream golden image to host</text>
+
+  <!-- Step 6 (y=430): Orka Engine self — Creates VM -->
+  <circle cx="22" cy="430" r="10" fill="#5366cc"/>
+  <text x="22" y="434" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">6</text>
+  <path d="M 761 423 L 790 423 L 790 440 L 761 440" fill="none" stroke="#5366cc" stroke-width="1.5" marker-end="url(#arrowD)"/>
+  <rect x="795" y="419" width="110" height="26" rx="4" fill="#EFEFF3" stroke="#5366cc" stroke-width="1.5"/>
+  <text x="850" y="430" text-anchor="middle" font-size="10" font-weight="700" fill="#323151">Creates VM</text>
+  <text x="850" y="442" text-anchor="middle" font-size="9" fill="#6B6B80">from golden image</text>
+
+  <!-- Step 7 (y=480): Orka Engine → MDM -->
+  <circle cx="22" cy="480" r="10" fill="#5366cc"/>
+  <text x="22" y="484" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">7</text>
+  <line x1="761" y1="480" x2="1189" y2="480" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="975" y="473" text-anchor="middle" font-size="10" fill="#5366cc">MDM enrollment (first boot)</text>
+
+  <!-- Step 8 (y=530): MDM → Orka Engine (return) -->
+  <circle cx="22" cy="530" r="10" fill="#6B6B80"/>
+  <text x="22" y="534" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">8</text>
+  <line x1="1189" y1="530" x2="761" y2="530" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowG)"/>
+  <text x="975" y="523" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">Computer record created</text>
+
+  <!-- Step 9 (y=580): Orka Engine → Automation (return) -->
+  <circle cx="22" cy="580" r="10" fill="#6B6B80"/>
+  <text x="22" y="584" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">9</text>
+  <line x1="749" y1="580" x2="541" y2="580" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowG)"/>
+  <text x="645" y="573" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">VM ready (ID, IP address)</text>
+
+  <!-- Step 10 (y=630): Automation → Control Plane (return) -->
+  <circle cx="22" cy="630" r="10" fill="#6B6B80"/>
+  <text x="22" y="634" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">10</text>
+  <line x1="529" y1="630" x2="321" y2="630" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowG)"/>
+  <text x="425" y="623" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">Provisioning job complete</text>
+
+  <!-- Step 11 (y=680): Control Plane → Session Broker -->
+  <circle cx="22" cy="680" r="10" fill="#5366cc"/>
+  <text x="22" y="684" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">11</text>
+  <line x1="321" y1="680" x2="1409" y2="680" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+  <text x="865" y="673" text-anchor="middle" font-size="10" fill="#5366cc">Register VM as session target</text>
+
+  <!-- Step 12 (y=730): Session Broker → Control Plane (return) -->
+  <circle cx="22" cy="730" r="10" fill="#6B6B80"/>
+  <text x="22" y="734" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">12</text>
+  <line x1="1409" y1="730" x2="321" y2="730" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowG)"/>
+  <text x="865" y="723" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">Session target registered</text>
+
+  <!-- Step 13 (y=778): Control Plane → IT Admin (return) -->
+  <circle cx="22" cy="778" r="10" fill="#6B6B80"/>
+  <text x="22" y="782" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">13</text>
+  <line x1="309" y1="778" x2="95" y2="778" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowG)"/>
+  <text x="202" y="771" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">VM ready — assign to user</text>
+
+  <!-- ── LEGEND ── -->
+  <g transform="translate(40,818)">
+    <rect x="0" y="0" width="560" height="36" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <line x1="14" y1="18" x2="52" y2="18" stroke="#5366cc" stroke-width="2" marker-end="url(#arrowD)"/>
+    <text x="60" y="22" font-size="11" fill="#374151">Request / call</text>
+    <line x1="195" y1="18" x2="233" y2="18" stroke="#6B6B80" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowG)"/>
+    <text x="241" y="22" font-size="11" fill="#374151">Response / return</text>
+    <line x1="395" y1="18" x2="433" y2="18" stroke="#FE9000" stroke-width="2" marker-end="url(#arrowO)"/>
+    <text x="441" y="22" font-size="11" fill="#374151">Data flow</text>
+  </g>
+
+</svg>

@@ -1,0 +1,95 @@
+---
+title: "Prerequisites"
+description: "Hardware, accounts, software, and capacity planning requirements before deploying MacStadium VDI."
+---
+
+Confirm everything on this page is in place before you start deploying MacStadium VDI. Items that vary by deployment model are called out in each section.
+
+## Mac hosts
+
+Apple's software license agreement limits each host to two concurrent macOS VMs. Plan your host count accordingly: divide your peak concurrent user count by two and round up.
+
+<Tabs>
+  <Tab title="MSDC-Hosted">
+    MacStadium provisions and manages the Mac hardware. Contact your MacStadium account team to confirm host availability and reserve capacity before you begin setup.
+  </Tab>
+  <Tab title="Self-Hosted (On-Prem)">
+    You provide Apple Silicon Mac mini or Mac Studio hardware (M1 or later). Hosts must have SSH access enabled and be reachable from your control plane machine over the network.
+  </Tab>
+  <Tab title="Self-Hosted (AWS)">
+    You provision EC2 Mac dedicated instances in your AWS account. Supported instance types: mac2, mac2-m2, and mac2-m2pro. A 24-hour minimum allocation period applies per host. Hosts must be in a VPC subnet that can reach your control plane.
+  </Tab>
+</Tabs>
+
+## Control plane
+
+The control plane runs on a dedicated machine separate from your Mac hosts. It hosts Docker (for the management UI) and acts as the Ansible control node.
+
+| Requirement | Minimum |
+|---|---|
+| Operating system | macOS or Linux |
+| CPU | 2 vCPUs |
+| RAM | 4 GB |
+| Disk | 20 GB |
+| Network | SSH access to all Mac hosts |
+
+## Software
+
+Install the following on the control plane machine before setup:
+
+| Software | Purpose |
+|---|---|
+| [Docker](https://docs.docker.com/get-docker/) and Docker Compose | Runs the management UI |
+| [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/) | Runs orchestration playbooks |
+| [uv](https://docs.astral.sh/uv/) | Python package manager used by the orchestration layer |
+| Python 3.x | Required by Ansible and the orchestration layer |
+| `sshpass` | Required for Ansible playbooks that SSH into VMs via the host as a jump proxy |
+
+## Accounts and licenses
+
+| Item | Notes |
+|---|---|
+| MacStadium account | Required for all deployments |
+| Orka Engine license key | Provided by MacStadium at onboarding |
+| VDI broker subscription | Any platform that supports macOS VDI, such as Citrix DaaS or HP Anyware |
+| AWS account with EC2 Mac capacity | Self-Hosted (AWS) only |
+
+## VDI broker
+
+Before setup, confirm you have:
+
+- An active VDI broker subscription and Delivery Controller configured
+- The VDA installer for macOS (for Citrix DaaS, a `.dmg` file; MacStadium recommends hosting it in S3 with a presigned URL)
+- An enrollment token for registering VMs with your Delivery Controller
+
+## Identity provider
+
+MacStadium VDI uses your VDI broker's identity integration. You need one of the following:
+
+- Active Directory (on-premises or Microsoft Entra ID)
+- Okta
+- Any SAML 2.0-compatible provider your VDI broker supports
+
+No MacStadium-specific identity configuration is required.
+
+## MDM (optional, recommended for production)
+
+Supported MDM platforms: Jamf, Kandji, and Intune. MDM is not required to run VMs, but it's the recommended way to manage configuration profiles, compliance reporting, and app deployment in production.
+
+If you plan to use MDM, have your MDM server URL and an enrollment invitation ready before you seal your golden image. See [Jamf Enrollment](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment) for a full walkthrough.
+
+## Capacity planning
+
+Use the following to size your deployment before onboarding:
+
+**Host count:** Divide your peak concurrent user count by 2 and round up. For example, 50 concurrent users requires 25 hosts.
+
+**VM defaults per host:**
+
+| Resource | Default |
+|---|---|
+| vCPUs per VM | 2 |
+| Memory per VM | 4,096 MB |
+| Max VMs per host | 2 (Apple EULA) |
+
+Add 10 to 15 percent additional hosts beyond your steady-state user count to cover maintenance windows, rolling updates, and peak load headroom.

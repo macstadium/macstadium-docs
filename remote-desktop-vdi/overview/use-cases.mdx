@@ -1,0 +1,33 @@
+---
+title: "Use Cases"
+description: "Common scenarios where MacStadium VDI fits: iOS and macOS development, secure remote access, creative production, and compliance-sensitive environments."
+---
+
+MacStadium VDI is built for organizations that need managed macOS desktops at scale. It's the right fit if your work requires macOS specifically, or if you need to keep data in a controlled infrastructure while giving users access from anywhere.
+
+## iOS and macOS development
+
+Development teams working on iOS, macOS, or cross-platform Apple apps need Macs. There's no substitute: Xcode, the iOS Simulator, and code-signing workflows only run on macOS on Apple hardware. MacStadium VDI lets you provision macOS desktops for remote or distributed developers without shipping physical Macs or managing hardware per person. Each developer gets a consistent, pre-configured environment with the right toolchain, and you can add capacity in minutes as the team grows.
+
+## Secure remote access
+
+Organizations that handle sensitive data often can't let that data touch unmanaged personal devices. MacStadium VDI keeps all work inside a managed macOS environment: files stay on the VM, nothing is stored locally on the user's device, and access is brokered through your existing identity provider. This makes it a practical option for contractors, temporary workers, and employees in regulated roles who need access to internal systems without loosening your security posture.
+
+## Creative and media production
+
+Video editing, audio production, and other creative workflows that depend on Final Cut Pro, Logic Pro, or macOS-native tools require genuine Apple Silicon performance. MacStadium VDI gives remote editors and producers access to that performance over a remoting protocol, without the logistics of managing physical workstations across locations. Storage and project assets can live on shared network storage in the same data center, keeping transfer overhead low.
+
+## Compliance-sensitive environments
+
+Industries subject to SOC 2, HIPAA, or other data handling requirements often need to demonstrate that sensitive work happens in an auditable, controlled infrastructure. MacStadium VDI keeps compute and data in a fixed, known location (either a MacStadium data center or your own infrastructure), rather than distributed across employee laptops. Combined with MDM enrollment and your existing identity and access controls, it provides a consistent surface for compliance reporting.
+
+## When MacStadium VDI may not be the right fit
+
+<Note>
+  MacStadium VDI is purpose-built for macOS. It's not a general-purpose VDI platform. Consider these factors before committing:
+
+  - **You need Windows or Linux desktops.** MacStadium VDI only delivers macOS. For mixed-OS desktop environments, you'll need a separate solution for non-Mac users.
+  - **Your team is small and stable.** For a handful of users with predictable needs, individual Macs or Mac minis may be simpler and cheaper than a full VDI deployment.
+  - **Your use case doesn't require macOS.** If your work runs equally well on any OS, a platform with broader hardware support may give you more flexibility.
+  - **You need full-screen GPU acceleration.** macOS VMs on Apple Silicon don't support direct GPU passthrough. If your workflow depends on hardware-accelerated graphics (3D rendering, ML training), [VDI on Bare Metal Mac](/remote-desktop-vdi/overview/bare-metal-mac-vdi) is a better fit.
+</Note>

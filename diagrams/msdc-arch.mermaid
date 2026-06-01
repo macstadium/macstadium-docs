@@ -1,0 +1,60 @@
+%%  MSDC-Hosted Architecture
+%%  Source of truth for images/msdc-arch.svg
+%%  flowchart LR — left-to-right architecture view
+
+flowchart LR
+    admin(["IT Admin"])
+    subgraph users["End users (any device, anywhere)"]
+        laptop["Laptop / Desktop"]
+        tablet["Tablet"]
+        thin["Thin client (CWA)"]
+    end
+    subgraph broker["VDI broker / gateway\ne.g., Citrix DaaS / HP Anyware"]
+        dc["Delivery Controller\n(brokers sessions, SSO/MFA)"]
+    end
+    identity["Identity\nActive Directory /\nEntra ID / Okta"]
+
+    subgraph msdc["MacStadium Data Center (managed hosting)"]
+        subgraph cp["MacStadium VDI control plane\n(MacStadium Private Cloud VM — MacStadium-managed)"]
+            orch["Orka Engine orchestration"]
+            prov["Ansible (CLI) / Management UI (web)"]
+            lifecycle["VM lifecycle · images · API"]
+        end
+        subgraph shared["Shared services (customer-managed)"]
+            registry["Golden image registry (Harbor / OCI)"]
+            mdm["MDM (Jamf / Kandji)"]
+            storage["Backup / network storage"]
+            mon["Monitoring & logging"]
+            dns["DNS / DHCP / NTP"]
+        end
+        subgraph hosts["Apple silicon hosts (Mac mini / Mac Studio)"]
+            subgraph h1["Host 1"]
+                vm1a["macOS VM — VDI agent + user apps\n(user A)"]
+                vm1b["macOS VM — VDI agent + user apps\n(user B)"]
+            end
+            subgraph h2["Host 2"]
+                vm2a["macOS VM — VDI agent + user apps\n(user C)"]
+                vm2b["macOS VM — VDI agent + user apps\n(user D)"]
+            end
+            subgraph hN["Host N (scale out)"]
+                vmN["…"]
+            end
+        end
+        net["MacStadium firewall · managed network fabric · bridged tenant network · static IPs"]
+    end
+
+    admin -->|"via VPN"| cp
+    laptop -->|"remoting protocol"| dc
+    dc -->|"remoting protocol"| laptop
+    tablet -->|"remoting protocol"| dc
+    dc -->|"remoting protocol"| tablet
+    thin -->|"remoting protocol"| dc
+    dc -->|"remoting protocol"| thin
+    broker --> identity
+    dc --> vm1a
+    dc --> vm1b
+    dc --> vm2a
+    dc --> vm2b
+    cp -->|"manages"| hosts
+    vm1a <-->|"brokering"| dc
+    vm2a <-->|"brokering"| dc
