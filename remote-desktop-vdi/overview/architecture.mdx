@@ -11,7 +11,7 @@ MacStadium VDI is built on four logical layers: a VDI broker/gateway, a control 
 
 **VDI broker/gateway**
 
-The broker is the entry point for end users. It authenticates against your identity provider, enforces SSO, MFA, and conditional access policies, and assigns each user to an available macOS VM. MacStadium VDI works with any VDI platform that supports macOS, including [Citrix DaaS](https://docs.citrix.com/en-us/citrix-daas) and HP Anyware. The broker is always customer-managed or provided as a cloud service by your VDI vendor. MacStadium does not operate it.
+The broker is the entry point for end users. It authenticates against your identity provider, enforces <Tooltip tip="Single Sign-On — lets users authenticate once and access multiple services without re-entering credentials.">SSO</Tooltip>, <Tooltip tip="Multi-Factor Authentication — requires users to verify identity with a second factor beyond a password.">MFA</Tooltip>, and conditional access policies, and assigns each user to an available macOS VM. MacStadium VDI works with any VDI platform that supports macOS, including [Citrix DaaS](https://docs.citrix.com/en-us/citrix-daas) and HP Anyware. The broker is always customer-managed or provided as a cloud service by your VDI vendor. MacStadium does not operate it.
 
 **Control plane**
 
@@ -23,7 +23,7 @@ The hosts are the physical Mac hardware (Mac mini or Mac Studio) running the Ork
 
 **macOS VMs**
 
-Each VM is an isolated macOS desktop assigned to a single user session. It runs your golden image, which includes the VDI agent, user-facing applications, MDM enrollment scripts, and any system configuration your organization requires.
+Each VM is an isolated macOS desktop assigned to a single user session. It runs your golden image, which includes the VDI agent, user-facing applications, <Tooltip tip="Mobile Device Management — software for enrolling and managing device configuration, policies, and apps across a fleet.">MDM</Tooltip> enrollment scripts, and any system configuration your organization requires.
 
 ## Session connection
 
@@ -31,7 +31,7 @@ Connecting a user to their desktop is a two-phase process.
 
 In the first phase, the VDI agent installed inside each VM registers itself with the Delivery Controller, the brokering component of your VDI platform. When a user authenticates, the Delivery Controller selects an available VM and notifies the user's client of the assignment.
 
-In the second phase, session data (screen, keyboard, mouse, audio) flows directly between the agent on the VM and the user's client. The Delivery Controller is not in the data path. This direct connection is what the remoting protocol carries, so broker availability doesn't affect session performance once a session is established.
+In the second phase, session data (screen, keyboard, mouse, audio) flows directly between the agent on the VM and the user's client. <Tooltip tip="The brokering component of your VDI platform. It assigns sessions to available VMs and manages machine catalogs and delivery groups.">The Delivery Controller</Tooltip> is not in the data path. This direct connection is what the remoting protocol carries, so broker availability doesn't affect session performance once a session is established.
 
 ## Control plane
 

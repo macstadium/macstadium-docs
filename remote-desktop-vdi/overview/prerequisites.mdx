@@ -59,7 +59,7 @@ Install the following on the control plane machine before setup:
 Before setup, confirm you have:
 
 - An active VDI broker subscription and Delivery Controller configured
-- The VDA installer for macOS (for Citrix DaaS, a `.dmg` file; MacStadium recommends hosting it in S3 with a presigned URL)
+- The <Tooltip tip="Virtual Delivery Agent — software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> installer for macOS (for Citrix DaaS, a `.dmg` file; MacStadium recommends hosting it in S3 with a presigned URL)
 - An enrollment token for registering VMs with your Delivery Controller
 
 ## Identity provider
@@ -74,7 +74,7 @@ No MacStadium-specific identity configuration is required.
 
 ## MDM (optional, recommended for production)
 
-Supported MDM platforms: Jamf, Kandji, and Intune. MDM is not required to run VMs, but it's the recommended way to manage configuration profiles, compliance reporting, and app deployment in production.
+Supported <Tooltip tip="Mobile Device Management — software for enrolling and managing device configuration, policies, and apps across a fleet.">MDM</Tooltip> platforms: Jamf, Kandji, and Intune. MDM is not required to run VMs, but it's the recommended way to manage configuration profiles, compliance reporting, and app deployment in production.
 
 If you plan to use MDM, have your MDM server URL and an enrollment invitation ready before you seal your golden image. See [Jamf Enrollment](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment) for a full walkthrough.
 
