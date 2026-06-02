@@ -50,6 +50,16 @@ Both interfaces call the same underlying Ansible playbooks. For a full breakdown
 
 MacStadium VDI integrates with your existing identity provider (Active Directory, Microsoft Entra ID, or Okta) at the broker layer. Your VDI broker handles authentication, SSO, MFA, and conditional access. User group membership in your directory controls which desktops each user can access. No MacStadium-specific identity configuration is required.
 
+## Networking
+
+MacStadium VDI uses bridged networking to give each macOS VM a direct IP address on the host's network. This is required for VDI workloads: the Citrix VDA inside each VM must be reachable by Citrix Cloud for registration, and end-user HDX sessions connect directly to the VM's IP. Without bridged networking, you'd need port forwarding for every VM, which doesn't scale.
+
+Bridged networking is configured per deployment using the `network_interface` variable in your Ansible inventory. Set it to the physical interface on each Mac host — typically `en0` for Ethernet. VMs deployed with this setting receive an IP address from your DHCP server or management VLAN, just like any other device on that network.
+
+<Note>
+  Bridged networking requires Orka Engine 3.5.0 or later.
+</Note>
+
 ## Deployment models
 
 MacStadium VDI runs in three deployment configurations. The components and connection flows are the same in all three; what differs is where the hardware lives and who manages the control plane.
