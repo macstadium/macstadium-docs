@@ -325,7 +325,8 @@
               "remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices",
               "remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
               "remote-desktop-vdi/supporting-documentation/customer-environment-tips",
-              "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide"
+              "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
+              "remote-desktop-vdi/configuration/advanced-configuration"
             ]
           },
           {
@@ -335,13 +336,15 @@
               "remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
               "remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
               "remote-desktop-vdi/operational-guides/day-2-operations-guide",
-              "remote-desktop-vdi/operational-guides/ansible-quick-reference"
+              "remote-desktop-vdi/operational-guides/monitoring",
+              "remote-desktop-vdi/operational-guides/ansible-quick-reference",
+              "remote-desktop-vdi/operational-guides/incident-response"
             ]
           },
           {
             "group": "Reference",
             "pages": [
-              "remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
+              "remote-desktop-vdi/reference/networking-requirements",
               "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
               "remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers"
             ]
@@ -504,6 +507,11 @@
     {
       "source": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
       "destination": "/remote-desktop-vdi/getting-started/self-hosted",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
+      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
       "permanent": true
     },
     {
@@ -712,7 +720,7 @@
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues"
+      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
     },
     {
       "source": "/getting-started/creating-your-first-node",
@@ -1706,7 +1714,7 @@
     },
     {
       "source": "/hc/en-us/articles/44333132574107-Troubleshooting-Common-Issues",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
+      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
       "permanent": true
     },
     {

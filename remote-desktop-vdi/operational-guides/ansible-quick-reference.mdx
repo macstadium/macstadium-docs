@@ -10,19 +10,19 @@ zendesk_id: 44260146530715
     
     
 ```
-ansible hosts -i /inventory -m ping
+ansible hosts -i dev/inventory -m ping
 ```
 ### Check Orka Engine Version
     
     
 ```
-ansible hosts -i /inventory -m shell -a "orka-engine --version"
+ansible hosts -i dev/inventory -m shell -a "orka-engine --version"
 ```
 ### Verify Python Version
     
     
 ```
-ansible hosts -i /inventory -m shell -a "python3 --version"
+ansible hosts -i dev/inventory -m shell -a "python3 --version"
 ```
 * * *
 
@@ -32,7 +32,7 @@ ansible hosts -i /inventory -m shell -a "python3 --version"
     
     
 ```
-ansible-playbook -i /inventory install_engine.yml \
+ansible-playbook -i dev/inventory install_engine.yml \
   -e "orka_license_key=YOUR_KEY" \
   -e "engine_url=https://download.url/orka-engine"
 ```
@@ -40,7 +40,7 @@ ansible-playbook -i /inventory install_engine.yml \
     
     
 ```
-ansible-playbook -i /inventory deploy.yml \
+ansible-playbook -i dev/inventory deploy.yml \
   -e "vm_name=my-vm" \
   --tags plan
 ```
@@ -48,7 +48,7 @@ ansible-playbook -i /inventory deploy.yml \
     
     
 ```
-ansible-playbook -i /inventory deploy.yml \
+ansible-playbook -i dev/inventory deploy.yml \
   -e "vm_name=my-vm" \
   -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest"
 ```
@@ -56,7 +56,7 @@ ansible-playbook -i /inventory deploy.yml \
     
     
 ```
-ansible-playbook -i /inventory delete.yml \
+ansible-playbook -i dev/inventory delete.yml \
   -e "vm_name=my-vm" \
   --tags plan
 ```
@@ -64,14 +64,14 @@ ansible-playbook -i /inventory delete.yml \
     
     
 ```
-ansible-playbook -i /inventory delete.yml \
+ansible-playbook -i dev/inventory delete.yml \
   -e "vm_name=my-vm"
 ```
 ### Stop VM
     
     
 ```
-ansible-playbook -i /inventory vm.yml \
+ansible-playbook -i dev/inventory vm.yml \
   -e "vm_name=my-vm" \
   -e "desired_state=stopped"
 ```
@@ -79,7 +79,7 @@ ansible-playbook -i /inventory vm.yml \
     
     
 ```
-ansible-playbook -i /inventory vm.yml \
+ansible-playbook -i dev/inventory vm.yml \
   -e "vm_name=my-vm" \
   -e "desired_state=running"
 ```
@@ -87,7 +87,7 @@ ansible-playbook -i /inventory vm.yml \
     
     
 ```
-ansible-playbook -i /inventory vm.yml \
+ansible-playbook -i dev/inventory vm.yml \
   -e "vm_name=my-vm" \
   -e "desired_state=absent"
 ```
@@ -95,26 +95,26 @@ ansible-playbook -i /inventory vm.yml \
     
     
 ```
-ansible-playbook -i /inventory list.yml
+ansible-playbook -i dev/inventory list.yml
 ```
 ### List VMs by Name
     
     
 ```
-ansible-playbook -i /inventory list.yml -e "vm_name=my-vm"
+ansible-playbook -i dev/inventory list.yml -e "vm_name=my-vm"
 ```
 ### Pull Image to All Hosts
     
     
 ```
-ansible-playbook -i /inventory pull_image.yml \
+ansible-playbook -i dev/inventory pull_image.yml \
   -e "remote_image_name=ghcr.io/macstadium/orka-images/sonoma:latest"
 ```
 ### Create and Push Custom Image
     
     
 ```
-ansible-playbook -i /inventory create_image.yml \
+ansible-playbook -i dev/inventory create_image.yml \
   -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
   -e "remote_image_name=registry.example.com/custom:v1.0"
 ```
@@ -122,7 +122,7 @@ ansible-playbook -i /inventory create_image.yml \
     
     
 ```
-ansible-playbook -i /inventory create_image.yml \
+ansible-playbook -i dev/inventory create_image.yml \
   -e "vm_image=base:latest" \
   -e "remote_image_name=registry.example.com/custom:v1.0" \
   -e "upgrade_os=true"
@@ -135,26 +135,26 @@ ansible-playbook -i /inventory create_image.yml \
     
     
 ```
-ansible-playbook -i /inventory install_android_sdk.yml
+ansible-playbook -i dev/inventory install_android_sdk.yml
 ```
 
 To force reinstallation on hosts where the SDK is already present:
 
 ```
-ansible-playbook -i /inventory install_android_sdk.yml \
+ansible-playbook -i dev/inventory install_android_sdk.yml \
   -e "install_android_sdk_force=true"
 ```
 ### Install SDK Platforms and System Images
     
     
 ```
-ansible-playbook -i /inventory sdkmanager_install.yml
+ansible-playbook -i dev/inventory sdkmanager_install.yml
 ```
 
 With a specific platform and image types:
 
 ```
-ansible-playbook -i /inventory sdkmanager_install.yml \
+ansible-playbook -i dev/inventory sdkmanager_install.yml \
   -e "platform=android-34" \
   -e "image_types=default,google_apis,google_apis_playstore"
 ```
@@ -162,7 +162,7 @@ ansible-playbook -i /inventory sdkmanager_install.yml \
     
     
 ```
-ansible-playbook -i /inventory deploy_avd.yml \
+ansible-playbook -i dev/inventory deploy_avd.yml \
   -e "vm_name=my-vm" \
   --tags plan
 ```
@@ -170,14 +170,14 @@ ansible-playbook -i /inventory deploy_avd.yml \
     
     
 ```
-ansible-playbook -i /inventory deploy_avd.yml \
+ansible-playbook -i dev/inventory deploy_avd.yml \
   -e "vm_name=my-vm"
 ```
 
 With custom platform, image type, and resources:
 
 ```
-ansible-playbook -i /inventory deploy_avd.yml \
+ansible-playbook -i dev/inventory deploy_avd.yml \
   -e "vm_name=my-vm" \
   -e "platform=android-34" \
   -e "image_type=google_apis" \
@@ -189,17 +189,17 @@ ansible-playbook -i /inventory deploy_avd.yml \
     
 ```
 # Start AVD
-ansible-playbook -i /inventory avd.yml \
+ansible-playbook -i dev/inventory avd.yml \
   -e "vm_name=my-vm" \
   -e "desired_state=running"
 
 # Stop AVD
-ansible-playbook -i /inventory avd.yml \
+ansible-playbook -i dev/inventory avd.yml \
   -e "vm_name=my-vm" \
   -e "desired_state=stopped"
 
 # Delete AVD (specify index if multiple exist)
-ansible-playbook -i /inventory avd.yml \
+ansible-playbook -i dev/inventory avd.yml \
   -e "vm_name=my-vm" \
   -e "desired_state=absent" \
   -e "avd_index=0"
@@ -209,16 +209,16 @@ ansible-playbook -i /inventory avd.yml \
     
 ```
 # All AVDs across all hosts
-ansible-playbook -i /inventory list_avds.yml
+ansible-playbook -i dev/inventory list_avds.yml
 
 # Filter by VM
-ansible-playbook -i /inventory list_avds.yml -e "vm_name=my-vm"
+ansible-playbook -i dev/inventory list_avds.yml -e "vm_name=my-vm"
 ```
 ### Delete AVD by Index
     
     
 ```
-ansible-playbook -i /inventory delete_avd.yml \
+ansible-playbook -i dev/inventory delete_avd.yml \
   -e "vm_name=my-vm" \
   -e "avd_index=0"
 ```
@@ -226,10 +226,10 @@ ansible-playbook -i /inventory delete_avd.yml \
     
     
 ```
-ansible-playbook -i /inventory sdkmanager_uninstall.yml
+ansible-playbook -i dev/inventory sdkmanager_uninstall.yml
 
 # Target a specific platform
-ansible-playbook -i /inventory sdkmanager_uninstall.yml \
+ansible-playbook -i dev/inventory sdkmanager_uninstall.yml \
   -e "platform=android-34"
 ```
 * * *
@@ -289,9 +289,9 @@ ansible-playbook -i inventory pull_image.yml \
 
 ### MacStadium Public Images
 
+  * **Tahoe**: `ghcr.io/macstadium/orka-images/tahoe:latest`
+  * **Sequoia**: `ghcr.io/macstadium/orka-images/sequoia:latest`
   * **Sonoma**: `ghcr.io/macstadium/orka-images/sonoma:latest`
-  * **Ventura**: `ghcr.io/macstadium/orka-images/ventura:latest`
-  * **Monterey**: `ghcr.io/macstadium/orka-images/monterey:latest`
 
 
 
@@ -327,48 +327,48 @@ AVDs are named automatically based on the VM: `{vm_name}-avd-0`, `{vm_name}-avd-
     
     
 ```
-ansible-playbook -i /inventory <playbook.yml> --limit mac-node-1
+ansible-playbook -i dev/inventory <playbook.yml> --limit mac-node-1
 ```
 ### Dry Run (Check Mode)
     
     
 ```
-ansible-playbook -i /inventory <playbook.yml> --check
+ansible-playbook -i dev/inventory <playbook.yml> --check
 ```
 ### Verbose Output
     
     
 ```
 # Verbose output
-ansible-playbook -i /inventory <playbook.yml> -v
+ansible-playbook -i dev/inventory <playbook.yml> -v
 
 # More verbose output
-ansible-playbook -i /inventory <playbook.yml> -vv
+ansible-playbook -i dev/inventory <playbook.yml> -vv
 
 # Debug level output
-ansible-playbook -i /inventory <playbook.yml> -vvv
+ansible-playbook -i dev/inventory <playbook.yml> -vvv
 ```
 ### Run Specific Tags
     
     
 ```
 # Run only tasks tagged with 'configure'
-ansible-playbook -i /inventory create_image.yml --tags configure
+ansible-playbook -i dev/inventory create_image.yml --tags configure
 
 # Run only tasks tagged with 'push'
-ansible-playbook -i /inventory create_image.yml --tags push
+ansible-playbook -i dev/inventory create_image.yml --tags push
 ```
 ### Skip Tags
     
     
 ```
-ansible-playbook -i /inventory create_image.yml --skip-tags delete
+ansible-playbook -i dev/inventory create_image.yml --skip-tags delete
 ```
 ### Step Through Tasks
     
     
 ```
-ansible-playbook -i /inventory <playbook.yml> --step
+ansible-playbook -i dev/inventory <playbook.yml> --step
 ```
 * * *
 

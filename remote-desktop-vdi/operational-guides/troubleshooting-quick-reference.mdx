@@ -36,7 +36,7 @@ Tool usage guidelines:
 
 
 
-If your issue isn't listed here: Escalate using the procedures in Guide B: Day-2 Operations Guide.
+If your issue isn't listed here, see [Incident Response](/remote-desktop-vdi/operational-guides/incident-response) for escalation procedures.
 
 ## VM Provisioning Issues
 
@@ -159,6 +159,38 @@ VM disk locked | Logs show disk busy error | Stop all VMs using the disk; retry
 Permission issue | Logs show permission denied | Verify `ansible_user` has sudo access; check `ansible_become=yes` in inventory  
   
 **Most common fix:** VM is stuck in a hung state. Force stop and delete the VM via SSH to the host.
+
+### Symptom: VM Deploys But Never Boots or Services Don't Start
+
+**What you see:** Ansible playbook completes but VM never becomes usable. VM created but stuck in an unresponsive state.
+
+Quick diagnostic:
+
+```bash
+# Check Orka Engine status on all hosts
+ansible hosts -i dev/inventory -m shell -a "orka-engine --version"
+
+# Check available disk space
+ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"
+
+# Review Orka Engine logs
+ansible hosts -i dev/inventory -m shell -a "sudo tail -100 /var/log/orka-engine.log"
+
+# List VMs to confirm state
+ansible hosts -i dev/inventory -m shell -a "orka-engine vm list"
+```
+
+**Likely causes and solutions:**
+
+| Cause | How to verify | Solution |
+| --- | --- | --- |
+| Corrupted image | Orka logs show image errors | Re-pull image with `pull_image.yml`; redeploy |
+| Insufficient disk space | `df` shows >90% usage on `/var/orka` | Delete old images; add storage |
+| Host resource exhaustion | Orka logs show resource allocation failure | Reduce VM count on host; add hosts |
+| Apple 2-VM licensing limit reached | `orka-engine vm list` shows 2 VMs already on host | Deploy to a different host using `--limit` |
+| Network bridge misconfiguration | VM has no IP | Verify `network_interface` variable; check DHCP |
+
+**Most common fix:** Apple's EULA limits macOS VMs to 2 per host. Use `list.yml` to check capacity before deploying.
 
 ## Citrix VDA Registration Failures
 
@@ -283,6 +315,61 @@ HDX protocol failure | Users get protocol error | Check HDX policies; test with 
 VM networking issue | VM registered but can't be reached | Verify VM network connectivity  
   
 Most common fix: User was not added to the Delivery Group. Add the user via Citrix Cloud Console.
+
+### Symptom: Session Fails to Launch or Times Out
+
+**What you see:** Desktop appears in Citrix Workspace but won't launch. Connection progress bar stalls. "Unable to connect" error.
+
+Quick diagnostic:
+
+```bash
+# Verify VM is running
+ansible-playbook -i dev/inventory list.yml | grep <vm-name>
+
+# Test Rendezvous connectivity from the VM
+ansible mac_vms -i dev/inventory -m shell \
+  -a "curl -v https://*.*.nssvc.net 2>&1 | grep Connected"
+
+# Test HDX ports are reachable
+nc -zv <vm-ip> 1494
+nc -zv <vm-ip> 2598
+```
+
+**Likely causes and solutions:**
+
+| Cause | How to verify | Solution |
+| --- | --- | --- |
+| VM powered off or crashed | `list.yml` shows stopped state | Start VM with `vm.yml desired_state=running` |
+| Firewall blocking HDX ports | `nc` test fails | Open TCP/UDP 1494 and 2598 from client to VM |
+| Rendezvous connection broken | Curl to `*.nssvc.net` fails | Check Gateway Service availability; verify outbound 443 |
+| VM in maintenance mode | Console shows "Maintenance" | Take VM out of maintenance mode |
+| Citrix Workspace app outdated | Specific client versions fail | Update Citrix Workspace app; clear app cache |
+| Network routing issue | Works on one network, not another | Check firewall/proxy; try from different network |
+
+**Most common fix:** Firewall blocking HDX ports. Ensure TCP/UDP 1494 and 2598 are open from client to VM.
+
+### Symptom: Clipboard or File Transfer Not Working
+
+**What you see:** Can't copy/paste between client and VM. File drag-and-drop fails.
+
+Quick diagnostic:
+
+1. Check HDX policies: Citrix Cloud Console → Policies → HDX Settings
+   - "Client clipboard redirection" should be **Allowed**
+   - "Client drive redirection" should be **Allowed**
+2. Log out and back in — policies don't always apply to existing sessions.
+3. Test with plain text first, then formatted text, then files.
+
+**Likely causes and solutions:**
+
+| Cause | How to verify | Solution |
+| --- | --- | --- |
+| HDX clipboard policy disabled | Policy shows "Prohibited" | Set clipboard redirection to "Allowed" in the Delivery Group policy |
+| Security policy restricting file transfers | Drive redirection policy shows "Prohibited" | Update policy for the relevant Delivery Group |
+| Citrix Workspace app bug | Specific app version affected | Update to latest Citrix Workspace app |
+| Content exceeds size limit | Large file transfers fail | Increase clipboard/file size limits in HDX policy |
+
+**Most common fix:** HDX clipboard or drive redirection policy is set to Prohibited. Update the policy in Citrix Cloud Console → Policies.
 
 ## Network and Connectivity Problems
 
@@ -1064,38 +1151,6 @@ What you see: Playbook errors with permission/sudo errors during execution
 
 Quick diagnostic:
 
-  1. Test basic connectivity `ping <host-ip>`
-
-  2. Test SSH manually `ssh admin@<host-ip>`
-
-  3. Check inventory file `cat dev/inventory`
-
-```
- 1. Verify host IP addresses are correct
-```
-4. Test Ansible ping module `ansible hosts -i dev/inventory -m ping`
-
-Likely causes and solutions:
-
-**Cause** |  **How to verify** |  **Solution**  
----|---|---  
-Host powered off or unreachable | Ping test fails completely | Power on host via MacStadium portal; contact MacStadium support  
-Wrong IP address in inventory | IP doesn't match actual host address | Update `dev/inventory` file with correct host IP addresses  
-SSH service not running on host | Ping works but SSH connection refused/timeout | Restart SSH service on host; contact MacStadium support  
-Firewall blocking SSH from control node | SSH works from some locations but not control node | Check firewall rules; allow SSH (port 22) from Ansible control node IP  
-SSH key not in authorized_keys | SSH prompts for password instead of using key | Add Ansible control node's public SSH key to host's `~/.ssh/authorized_keys`  
-Wrong username configured | Using incorrect `ansible_user` value | Verify `ansible_user=admin` (or correct user) in inventory `[all:vars]`  
-Network routing issue | Can't reach host network from control node | Verify routing; check if VPN required; test from different network location  
-Host SSH configuration changed | SSH settings preventing key-based auth | Verify host SSH config allows public key authentication  
-  
-Most common fix: SSH key is not in `authorized_keys` on host. Add the Ansible control node's public key to the host.
-
-### Symptom: Playbook Fails with "Permission denied"
-
-What you see: Playbook errors with permission/sudo errors during execution
-
-Quick diagnostic:
-
   1. Test sudo access manually   
 `ssh admin@<host-ip> `  
 `sudo ls /var/orka`
@@ -1268,3 +1323,14 @@ Network infrastructure | Network team | Internal | Varies
 Citrix Cloud outage | Citrix support | support@citrix.com | Varies by support tier  
 VDA failures (widespread) | Citrix support | support@citrix.com | Varies by support tier  
 Storage/registry down | Storage team | Internal | Varies
+
+---
+
+## Troubleshooting best practices
+
+1. Start simple — verify basic connectivity before diving into application-layer issues.
+2. Check one layer at a time: network → host → VM → VDA → Citrix.
+3. Use verbose playbook output for any failing task: `ansible-playbook -i dev/inventory <playbook.yml> -vvv`
+4. Test on a single host before assuming an issue is widespread: add `--limit mac-node-1`
+5. Document what you tried and what worked — add it to your internal runbook.
+6. Monitor logs proactively rather than reactively. See [Monitoring & Observability](/remote-desktop-vdi/operational-guides/monitoring) for setup guidance.
