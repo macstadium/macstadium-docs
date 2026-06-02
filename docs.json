@@ -375,7 +375,7 @@
           {
             "group": "Bare Metal Macs",
             "pages": [
-              "iaas/bare-metal-macs/bare-metal-hosts",
+              "iaas/bare-metal-macs/mac-mini-comparison-chart",
               "iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks",
               "iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time",
               "iaas/bare-metal-macs/common-tools",
@@ -655,8 +655,8 @@
       "destination": "/iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time"
     },
     {
-      "source": "/iaas/bare-metal-macs/mac-mini-comparison-chart",
-      "destination": "/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks"
+      "source": "/iaas/bare-metal-macs/bare-metal-hosts",
+      "destination": "/iaas/bare-metal-macs/mac-mini-comparison-chart"
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/overview-architecture",

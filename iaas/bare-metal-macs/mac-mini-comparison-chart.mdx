@@ -1,0 +1,43 @@
+---
+title: "Bare metal Mac configurations"
+description: "Side-by-side specs for all MacStadium bare metal Mac configurations: Mac mini and Mac Studio, with chip, RAM, storage, and recommended use case."
+zendesk_id: 28198875080219
+---
+
+MacStadium offers bare metal Mac hardware in two product lines. Use the tables below to compare configurations and find the right fit for your workload. For benchmark scores, see the [benchmarks page](/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks).
+
+## Mac mini
+
+Mac mini is recommended for most CI/CD and Orka workloads. Standard configurations are available for immediate purchase on the [MacStadium customer portal](https://portal.macstadium.com/register).
+
+| Plan | Chip | CPU cores | RAM | SSD | Best for |
+|------|------|-----------|-----|-----|----------|
+| M2.S | M2 | 8 | 8 GB | 256 GB | VDI, light CI/CD, basic automation |
+| M4.S | M4 | 10 | 16 GB | 256 GB | VDI, light CI/CD, basic automation |
+| M1.M | M1 | 8 | 16 GB | 1 TB | VDI, CI/CD, remote development |
+| M2.M | M2 | 8 | 16 GB | 1 TB | VDI, CI/CD, Orka nodes |
+| M4.M | M4 | 10 | 24 GB | 512 GB | VDI, CI/CD, Orka clusters |
+| M2.L | M2 Pro | 10 | 16 GB | 1 TB | CI/CD, Orka nodes |
+| M4.L | M4 Pro | 12 | 48 GB | 1 TB | Multi-VM CI/CD, Orka clusters |
+| M2.XL | M2 Pro | 12 | 32 GB | 2 TB | CI/CD pipelines, Orka clusters |
+| M4.XL | M4 Pro | 14 | 64 GB | 2 TB | High-concurrency CI/CD, large Orka clusters |
+
+All Mac mini configurations are Apple silicon (ARM). Intel Mac mini hardware is available for custom orders. [Contact MacStadium sales](https://www.macstadium.com/contact/sales) for more.
+
+**For Orka clusters:** Medium and larger configurations (M2.M and above) are recommended. More RAM means more concurrent VMs per node. M2.XL and above are the best fit for teams running multiple VMs simultaneously.
+
+## Mac Studio
+
+Mac Studio is recommended for GPU-intensive workloads: video rendering, AI/ML inference, and running local language models. If your use case requires serving a model on-device rather than calling an external API, Mac Studio is the right tier. Standard configurations are available for immediate purchase on the [MacStadium customer portal](https://portal.macstadium.com/register).
+
+| Plan | Chip | CPU cores | RAM | SSD | Best for |
+|------|------|-----------|-----|-----|----------|
+| S1.M | M1 Max | 10 | 64 GB | 2 TB | GPU workloads, AI/ML inference, video rendering |
+| S2.M | M2 Ultra | 24 | 64 GB | 2 TB | High-throughput GPU, local LLM serving, on-device model inference |
+| S2.L | M2 Ultra | 24 | 128 GB | 2 TB | Very large local models, maximum memory GPU workloads |
+
+## Related
+
+- [MacStadium Bare Metal Mac Benchmarks](/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks)
+- [Data center locations](/iaas/iaas-overview/data-center-locations)
+- [Common tools](/iaas/bare-metal-macs/common-tools)
