@@ -8,7 +8,7 @@ This guide introduces IT administrators to managing a deployed MacStadium VDI en
 
 **What this guide covers:**
 
-  * Understanding your role and responsibilities in the support and maintenance of your organization’s MacStadium VDI architecture
+  * Understanding your role and responsibilities in the support and maintenance of your organization's MacStadium VDI architecture
 
   * Navigating core management interfaces (Ansible, Citrix Cloud, Orka Engine)
 
@@ -122,7 +122,7 @@ You will want to verify that you have access to all three MacStadium VDI managem
 
 #### Ansible control node:
 
-The Ansible control node (also known as an “Ansible runner") is where you execute playbooks to manage Orka hosts.
+The Ansible control node (also known as an "Ansible runner") is where you execute playbooks to manage Orka hosts.
 
 Access method: SSH to the Ansible control node  
   
@@ -206,7 +206,7 @@ You can access your Orka Engine hosts by SSHing directly to the host IP:
   
 `ssh admin@10.0.100.10`  
   
-When you’ll need this:
+When you'll need this:
 
   * Debugging Orka Engine issues
 
@@ -232,9 +232,9 @@ When you’ll need this:
 
 ## OCI registry
 
-An OCI registry is a container registry for storing your organization’s golden images. This can be public (GHCR) or private (Harbor, Artifactory, etc.)
+An OCI registry is a container registry for storing your organization's golden images. This can be public (GHCR) or private (Harbor, Artifactory, etc.)
 
-#### MacStadium’s public GHCR registry:
+#### MacStadium's public GHCR registry:
 
   * URL: `ghcr.io/macstadium/orka-images`
 
@@ -294,6 +294,7 @@ After logging in to [https://citrix.cloud.com](https://citrix.cloud.com/):
      * Documentation links
 
      * Support case management
+
 You may wish to run some quick checks to verify service health:
 
   * Machine Catalogs → Select your catalog → Verify VMs show "Registered"
@@ -443,11 +444,11 @@ You will need to refer to this workflow when a user requests access to a macOS v
 
 
 
-  1. Select the appropriate golden image. Determine this based on the user’s department/role/access needs:  
+  1. Select the appropriate golden image. Determine this based on the user's department/role/access needs:  
   
 `ansible hosts -i dev/inventory -m shell -a "orka-engine image list"` will list all available images in Orka Engine. For example: `registry.example.com/citrix-vda/sonoma-finance:latest.`  
   
-If the golden image isn’t cached, run:  
+If the golden image isn't cached, run:  
 `ansible-playbook -i dev/inventory pull_image.yml \ -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:latest"`  
   
 (This can take 5-15 minutes depending on the image size and your network speed)  
@@ -471,7 +472,7 @@ This typically takes between 5-10 minutes, and completes the following steps in 
 \- VM is created from the selected golden image  
 \- VM boots and VDA service starts  
 \- VDA registers with Citrix Cloud using an enrollment token  
-\- Desktop appears in the Machine Catalog as “Available”  
+\- Desktop appears in the Machine Catalog as "Available"  
   
 You can monitor the progress of your deployment in another terminal by running the following command:  
   
@@ -484,11 +485,11 @@ You can monitor the progress of your deployment in another terminal by running t
 \- Select your Machine Catalog (e.g., "Orka-macOS-Sonoma-Finance")  
 \- Refresh the machine list  
 \- New VMs should appear with:  
-\- Registration state: ‘Registered’  
-\- Power state: ‘On’  
-\- Fault state: ‘None’  
+\- Registration state: 'Registered'  
+\- Power state: 'On'  
+\- Fault state: 'None'  
   
-If the VM doesn’t appear after 10 minutes, check the VDA service status by running:  
+If the VM doesn't appear after 10 minutes, check the VDA service status by running:  
   
 `ansible-playbook -i dev/inventory list.yml -e "vm_group=citrix-vda-finance"`  
 `ansible mac_vms -i dev/inventory -m shell \ -a "sudo launchctl list | grep citrix" \ --limit 10.0.100.10`  
@@ -497,12 +498,12 @@ Expected output: Service running with PID. To confirm this, you can check the VD
   
 `ansible mac_vms -i dev/inventory -m shell \ -a "sudo tail -50 /Library/Application\ Support/Citrix/VDA/Logs/vda.log" \ --limit 10.0.100.10`  
   
-You should see a message similar to: ‘Registration successful', or ‘Connected to broker'. To troubleshoot VDA registration failures, refer to the Troubleshooting Quick Reference Guide.  
+You should see a message similar to: 'Registration successful', or 'Connected to broker'. To troubleshoot VDA registration failures, refer to the Troubleshooting Quick Reference Guide.  
 
 
   4. Assign to user/delivery group  
   
-If you’re using a static/dedicated assignment:  
+If you're using a static/dedicated assignment:  
   
 \- In Citrix Cloud Console → Web Studio → Delivery Groups  
 \- Select Delivery Group (e.g., "Finance-macOS-VDI")  
@@ -515,7 +516,7 @@ No action is needed if the user has already been assigned to a Delivery Group. T
   
 \- Having the user launch the Citrix Workspace application  
 \- User logs in  
-\- Desktop should appear: “Mac OS Finance Desktop” (or configured display name)  
+\- Desktop should appear: "Mac OS Finance Desktop" (or configured display name)  
 \- User clicks desktop → session launches successfully   
   
 The desktop should appear in Citrix Workspace immediately after being assigned to a Delivery Group, and should launch within 15-30 seconds. When the provisioning workflow has completed, the user will now have access to their macOS virtual desktop.
@@ -612,7 +613,7 @@ Important notes:
 
 
 
-Next, you’ll want to run the `create_image` playbook:  
+Next, you'll want to run the `create_image` playbook:  
 ```bash
 ansible-playbook -i dev/inventory create_image.yml \
   -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest \
@@ -650,7 +651,7 @@ Testing new images is critical. To test an image before production use, you can 
 
 You will want to verify that the VM has deployed successfully, the VDA registers with Citrix Cloud, applications launch correctly, there are no errors in the VDA logs, and test users can launch sessions and access applications. If issues are found, you can fix any script errors in the `/scripts` directory, delete the failed image from your container registry, and re-run `create_image.yml` with the corrected scripts.   
   
-Once the image has been validated, you can tag it as `:latest` for production use. To do so, you can re-run `create_image.yml` or if you have registry access, you can do so via your container registry’s CLI (e.g., Docker):  
+Once the image has been validated, you can tag it as `:latest` for production use. To do so, you can re-run `create_image.yml` or if you have registry access, you can do so via your container registry's CLI (e.g., Docker):  
   
 `docker pull registry.example.com/citrix-vda/sonoma-finance:v2.0 `  
 `docker tag registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry.example.com/citrix-vda/sonoma-finance:latest `  
@@ -789,11 +790,11 @@ After running the playbook, proceed through the following steps:
 
   2. Select machines by choosing the Machine Catalog containing the new VMs created in the previous step(s)
 
-  3. Add users by clicking “Add”, searching for the specified team, and selecting the correct AD/Azure AD group. Alternatively, you can add users individually.
+  3. Add users by clicking "Add", searching for the specified team, and selecting the correct AD/Azure AD group. Alternatively, you can add users individually.
 
-  4. To configure desktops, give them a display name (e.g. “MacOS Marketing Desktop”) and add a description for the VM.
+  4. To configure desktops, give them a display name (e.g. "MacOS Marketing Desktop") and add a description for the VM.
 
-  5. Choose ‘Add Desktop’ as the Delivery Type
+  5. Choose 'Add Desktop' as the Delivery Type
 
 
 
@@ -844,7 +845,7 @@ Remove user:
 
 #####  **Change assignment type:**
 
-Typically, you cannot change an existing Delivery Group’s assignment type. Instead, you can do the following:
+Typically, you cannot change an existing Delivery Group's assignment type. Instead, you can do the following:
 
   1. Create new a Delivery Group with the desired assignment type
 
@@ -876,7 +877,7 @@ In Citrix, `entitlements` are what grant users permission to access specific res
 
   * Remove the user from a Delivery Group
 
-  * The desktop disappears from the user’s Workspace within 5 minutes
+  * The desktop disappears from the user's Workspace within 5 minutes
 
 
 
@@ -1081,7 +1082,7 @@ You will likely need to Start, Stop, and Delete VMs on a regular basis as needed
 
 #####  **Stop a VM:** `ansible-playbook -i dev/inventory vm.yml -e "vm_name=webapp-abc123" -e "desired_state=stopped"`
 
-After a VM has been stopped, it shuts down gracefully (clean shutdown). The VDA then unregisters from Citrix (the desktop becomes “Unavailable”), and resources are freed on the Orka host. Users cannot access the desktop until the VM has been restarted.
+After a VM has been stopped, it shuts down gracefully (clean shutdown). The VDA then unregisters from Citrix (the desktop becomes "Unavailable"), and resources are freed on the Orka host. Users cannot access the desktop until the VM has been restarted.
 
 ##### Delete a single VM: `ansible-playbook -i dev/inventory vm.yml -e "vm_name=webapp-abc123" -e "desired_state=absent"`
 
@@ -1110,15 +1111,15 @@ To remove users from a Citrix Delivery Group:
 
 
 
-The desktop will disappear from the user’s Workspace immediately.
+The desktop will disappear from the user's Workspace immediately.
 
-If a VM has been statically assigned, refer to the following example Ansible playbook to find and delete a specific user’s VM:  
+If a VM has been statically assigned, refer to the following example Ansible playbook to find and delete a specific user's VM:  
   
 `ansible-playbook -i dev/inventory list.yml -e "vm_group=citrix-vda-finance"`  
   
 `ansible-playbook -i dev/inventory vm.yml \ -e "vm_name=citrix-vda-finance-abc123 \ desired_state=absent"`
 
-If the user’s desktop had local data on it, you will want to SSH into the VM before deletion, copy the user’s home directory, and delete the VM after the backup has been confirmed.
+If the user's desktop had local data on it, you will want to SSH into the VM before deletion, copy the user's home directory, and delete the VM after the backup has been confirmed.
 
 To delete an entire VM group and bulk-deprovision the VMs, run the following Ansible playbook:  
   
@@ -1149,7 +1150,7 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
      1. Unregistered Machines: Should be 0
 
-     2. Power state “Off”: Investigate why VMs are powered off
+     2. Power state "Off": Investigate why VMs are powered off
 
      3. Faults: Any VM faults which require attention
 
@@ -1173,13 +1174,13 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
      1. Average session launch time (target: &lt;30 seconds)
 
-     2. Session quality (should be “Good” or “Excellent”)
+     2. Session quality (should be "Good" or "Excellent")
 
      3. Peak concurrent users (plan capacity for 20% growth)
 
-  2. Host health can be verified by confirming available disk space using: `ansible hosts -i dev/inventory -m shell -a “df -h /var/orka”`
+  2. Host health can be verified by confirming available disk space using: `ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"`
 
-     1. Check for any errors in the Orka logs: `ansible hosts -i dev/inventory -m shell \ -a “sudo grep -i error /var/log/orka-engine.log | tail -20”`
+     1. Check for any errors in the Orka logs: `ansible hosts -i dev/inventory -m shell \ -a "sudo grep -i error /var/log/orka-engine.log | tail -20"`
 
   3. Image currency
 
@@ -1235,7 +1236,7 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
         3. Available disk space >75%
 
-     4. If session launch time exceeds baseline by 50%, or a new “Unregistered” VM appears, review this information daily.
+     4. If session launch time exceeds baseline by 50%, or a new "Unregistered" VM appears, review this information daily.
 ### Common issues and resolutions
 
 ##### VM deployed, but is not registered in Citrix:
