@@ -303,7 +303,9 @@
               "remote-desktop-vdi/overview/use-cases",
               "remote-desktop-vdi/overview/prerequisites",
               "remote-desktop-vdi/overview/choose-your-deployment-model",
-              "remote-desktop-vdi/overview/bare-metal-mac-vdi"
+              "remote-desktop-vdi/overview/bare-metal-mac-vdi",
+              "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
+              "remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases"
             ]
           },
           {
@@ -313,31 +315,34 @@
               "remote-desktop-vdi/getting-started/self-hosted"
             ]
           },
-          "remote-desktop-vdi/it-admin-onboarding-guide",
-          "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
-          "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
-          "remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
-          "remote-desktop-vdi/macstadium-vdi-deployment/image-management",
-          "remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment",
-          "remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices",
-          "remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
-          "remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
-          "remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases",
-          "remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
           {
-            "group": "Operational Guides",
+            "group": "Configuration",
             "pages": [
-              "remote-desktop-vdi/operational-guides/ansible-quick-reference",
-              "remote-desktop-vdi/operational-guides/day-2-operations-guide",
-              "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+              "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
+              "remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
+              "remote-desktop-vdi/macstadium-vdi-deployment/image-management",
+              "remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment",
+              "remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices",
+              "remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
+              "remote-desktop-vdi/supporting-documentation/customer-environment-tips",
+              "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide"
             ]
           },
           {
-            "group": "Supporting Documentation",
+            "group": "Operations",
             "pages": [
-              "remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
-              "remote-desktop-vdi/supporting-documentation/customer-environment-tips",
-              "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
+              "remote-desktop-vdi/it-admin-onboarding-guide",
+              "remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
+              "remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
+              "remote-desktop-vdi/operational-guides/day-2-operations-guide",
+              "remote-desktop-vdi/operational-guides/ansible-quick-reference"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
+              "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
               "remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers"
             ]
           },
