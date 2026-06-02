@@ -306,9 +306,15 @@
               "remote-desktop-vdi/overview/bare-metal-mac-vdi"
             ]
           },
+          {
+            "group": "Getting Started",
+            "pages": [
+              "remote-desktop-vdi/getting-started/msdc-hosted",
+              "remote-desktop-vdi/getting-started/self-hosted"
+            ]
+          },
           "remote-desktop-vdi/it-admin-onboarding-guide",
           "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
-          "remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
           "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
           "remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
           "remote-desktop-vdi/macstadium-vdi-deployment/image-management",
@@ -488,6 +494,11 @@
     {
       "source": "/orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
       "destination": "/remote-desktop-vdi/it-admin-onboarding-guide",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
+      "destination": "/remote-desktop-vdi/getting-started/self-hosted",
       "permanent": true
     },
     {
@@ -1130,7 +1141,7 @@
     },
     {
       "source": "/hc/en-us/articles/44259626250267-Deployment-Guide",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
+      "destination": "/remote-desktop-vdi/getting-started/self-hosted",
       "permanent": true
     },
     {
