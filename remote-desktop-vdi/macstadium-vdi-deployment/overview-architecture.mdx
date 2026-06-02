@@ -17,10 +17,10 @@ Unlike traditional approaches requiring physical Mac procurement and shipping, M
 
 ## Prerequisites
 
-* A macOS device with Apple silicon
-* MacStadium VDI software installed
-* A VM or container configured to run generated Ansible playbooks
-* macOS 13 (Ventura), 14 (Sonoma), 15 (Sequoia), or Tahoe (26) Note: macOS Tahoe is supported by Engine and the Citrix VDA. The HP Anyware engine Cloud Access only supports access through macOS Sequoia.
+- A macOS device with Apple silicon
+- MacStadium VDI software installed
+- A VM or container configured to run generated Ansible playbooks
+- macOS 13 (Ventura), 14 (Sonoma), 15 (Sequoia), or Tahoe (26) Note: macOS Tahoe is supported by Engine and the Citrix VDA. The HP Anyware engine Cloud Access only supports access through macOS Sequoia.
 
 For Citrix VDI deployments:
 
@@ -45,7 +45,7 @@ MacStadium VDI supports any Apple silicon Mac that meets the following specifica
 
 - Apple silicon processor (any M-series chip)
 - 8GB RAM
-- 512GB storage
+- 256GB storage
 - 1GB Ethernet
 - macOS 13 (Ventura) or later
 
@@ -64,31 +64,34 @@ MacStadium VDI supports any Apple silicon Mac that meets the following specifica
 The 2-VM-per-host ceiling is the constraint that shapes every MacStadium VDI deployment. Here's how to size from it.
 
 **Resource overhead per host:**
+
 - Host OS and Orka Engine: ~2GB RAM, ~20GB disk
 - Each Citrix VDA VM: 4-8GB RAM (8GB recommended for development workloads)
 - Usable RAM per host after overhead: total RAM minus 2GB
 
 **Hosts needed by user count:**
 
-| Concurrent users | Hosts needed | Notes |
-|---|---|---|
-| 10 | 5 | Minimum viable pilot |
-| 25 | 13 | |
-| 50 | 25 | |
-| 100 | 50 | |
+| Concurrent users | Hosts needed | Notes                |
+| ---------------- | ------------ | -------------------- |
+| 10               | 5            | Minimum viable pilot |
+| 25               | 13           |                      |
+| 50               | 25           |                      |
+| 100              | 50           |                      |
 
 This assumes one VM per concurrent user. For **dedicated (persistent) deployments**, size for your total user count, not just peak concurrency — each user holds a VM whether or not they're logged in. For **pooled (non-persistent) deployments**, size for your expected peak concurrency, typically 60-80% of total users.
 
 **RAM guidance by deployment type:**
 
-| Workload | RAM per VM | Recommended host spec |
-|---|---|---|
-| Standard office / browser-based | 4GB | 16GB host RAM |
-| Developer / Xcode / compilation | 8GB | 32GB+ host RAM |
-| Heavy creative / ML inference | 8-16GB | 64GB+ host RAM (Mac Studio) |
+| Workload                        | RAM per VM | Recommended host spec       |
+| ------------------------------- | ---------- | --------------------------- |
+| Standard office / browser-based | 4GB        | 16GB host RAM               |
+| Developer / Xcode / compilation | 8GB        | 32GB+ host RAM              |
+| Heavy creative / ML inference   | 8-16GB     | 64GB+ host RAM (Mac Studio) |
 
 <Note>
-  Start conservative. MacStadium hosted deployments can add nodes without re-architecting — it's easier to add hosts than to right-size VM RAM after users are in production.
+  Start conservative. MacStadium hosted deployments can add nodes without
+  re-architecting — it's easier to add hosts than to right-size VM RAM after
+  users are in production.
 </Note>
 
 **MacStadium hosted:** Select any bare metal Mac configuration meeting the above requirements from [Cloud-hosted Bare Metal Macs | MacStadium](https://www.macstadium.com/bare-metal-mac)

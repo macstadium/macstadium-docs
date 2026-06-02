@@ -1,0 +1,73 @@
+---
+title: "Architecture"
+description: "How MacStadium VDI is structured: the four system layers, how a user session connects, what the control plane manages, and how the three deployment models differ."
+---
+
+MacStadium VDI is built on four logical layers: a VDI broker/gateway, a control plane, Apple Silicon hosts, and macOS virtual machines. This page describes what each layer does and how they connect.
+
+![MacStadium VDI architecture overview showing the IT Admin, control plane, Mac hosts, and VDI delivery components](/images/vdi-architecture.svg)
+
+## System components
+
+**VDI broker/gateway**
+
+The broker is the entry point for end users. It authenticates against your identity provider, enforces <Tooltip tip="Single Sign-On — lets users authenticate once and access multiple services without re-entering credentials.">SSO</Tooltip>, <Tooltip tip="Multi-Factor Authentication — requires users to verify identity with a second factor beyond a password.">MFA</Tooltip>, and conditional access policies, and assigns each user to an available macOS VM. MacStadium VDI works with any VDI platform that supports macOS, including [Citrix DaaS](https://docs.citrix.com/en-us/citrix-daas) and HP Anyware. The broker is always customer-managed or provided as a cloud service by your VDI vendor. MacStadium does not operate it.
+
+**Control plane**
+
+The control plane is the orchestration layer that manages VM lifecycle, image distribution, and host capacity. It runs on the [Orka Engine](https://www.macstadium.com/orka) and exposes two interfaces: the management UI for day-to-day operations and the Ansible CLI for automation and advanced workflows. In an MSDC-Hosted (MacStadium Data Centers) deployment, MacStadium operates the control plane on your behalf. In Self-Hosted deployments, you run it yourself.
+
+**Apple Silicon hosts**
+
+The hosts are the physical Mac hardware (Mac mini or Mac Studio) running the Orka Engine hypervisor. Each host can run up to two macOS VMs, a limit set by Apple's software license agreement. Adding hosts is how you scale user capacity.
+
+**macOS VMs**
+
+Each VM is an isolated macOS desktop assigned to a single user session. It runs your golden image, which includes the VDI agent, user-facing applications, <Tooltip tip="Mobile Device Management — software for enrolling and managing device configuration, policies, and apps across a fleet.">MDM</Tooltip> enrollment scripts, and any system configuration your organization requires.
+
+## Session connection
+
+Connecting a user to their desktop is a two-phase process.
+
+In the first phase, the VDI agent installed inside each VM registers itself with the Delivery Controller, the brokering component of your VDI platform. When a user authenticates, the Delivery Controller selects an available VM and notifies the user's client of the assignment.
+
+In the second phase, session data (screen, keyboard, mouse, audio) flows directly between the agent on the VM and the user's client. <Tooltip tip="The brokering component of your VDI platform. It assigns sessions to available VMs and manages machine catalogs and delivery groups.">The Delivery Controller</Tooltip> is not in the data path. This direct connection is what the remoting protocol carries, so broker availability doesn't affect session performance once a session is established.
+
+## Control plane
+
+The control plane handles VM deployment and deletion, golden image distribution to hosts, and host capacity management. IT admins interact with it through two interfaces:
+
+- **Management UI:** a web-based interface for triggering operations without writing commands. This is the primary interface for day-to-day work.
+- **Ansible CLI:** the playbook-based interface for automation, bulk operations, and CI/CD integration.
+
+Both interfaces call the same underlying Ansible playbooks. For a full breakdown of how images move from a base image through customization to deployment, see the Image Lifecycle page (coming in a later section).
+
+<Note>
+  For a step-by-step view of how a VM is provisioned from the moment you request it to the moment it's registered with your session broker, see the VM Provisioning page (coming in the Operations section).
+</Note>
+
+## Identity
+
+MacStadium VDI integrates with your existing identity provider (Active Directory, Microsoft Entra ID, or Okta) at the broker layer. Your VDI broker handles authentication, SSO, MFA, and conditional access. User group membership in your directory controls which desktops each user can access. No MacStadium-specific identity configuration is required.
+
+## Deployment models
+
+MacStadium VDI runs in three deployment configurations. The components and connection flows are the same in all three; what differs is where the hardware lives and who manages the control plane.
+
+<Tabs>
+  <Tab title="MSDC-Hosted">
+    MacStadium hosts the Apple Silicon hardware in a MacStadium data center and operates the control plane on your behalf. You manage the VDI broker, golden images, identity, and shared services such as MDM, monitoring, and DNS.
+
+    ![MSDC-Hosted architecture diagram showing end users, VDI broker, identity, and the MacStadium data center with control plane, shared services, and Apple Silicon hosts](/images/msdc-arch.svg)
+  </Tab>
+  <Tab title="Self-Hosted (On-Prem)">
+    You own and operate the Apple Silicon hardware and the control plane in your own data center. MacStadium provides the software and support. You're responsible for all hardware, networking, and shared services.
+
+    ![Self-Hosted On-Premises architecture diagram](/images/onprem-arch.svg)
+  </Tab>
+  <Tab title="Self-Hosted (AWS)">
+    The control plane and hosts run on [EC2 Mac dedicated instances](https://aws.amazon.com/ec2/instance-types/mac/) in your AWS account. The architecture is otherwise identical to on-premises. EC2 Mac hosts have a 24-hour minimum allocation per host.
+
+    ![Self-Hosted AWS architecture diagram](/images/aws-arch.svg)
+  </Tab>
+</Tabs>

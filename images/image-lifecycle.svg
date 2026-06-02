@@ -1,0 +1,175 @@
+<?xml version="1.0" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 525" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrowD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5366cc"/>
+    </marker>
+    <marker id="arrowO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#FE9000"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B80"/>
+    </marker>
+  </defs>
+
+  <!-- ── TITLE ── -->
+  <rect x="0" y="0" width="1400" height="48" fill="#323151"/>
+  <text x="700" y="31" text-anchor="middle" font-size="19" font-weight="700" fill="#FFFFFF">MacStadium VDI — Image Management Lifecycle</text>
+
+  <!-- ── SUBTITLE ── -->
+  <text x="700" y="65" text-anchor="middle" font-size="12" fill="#6B6B80">
+    Base images are customized into golden images, versioned in the registry, and deployed as VMs on demand
+  </text>
+
+  <!-- ═══════════════════════════════════════════════════════
+       STAGE BOXES
+       Box width=215px, gap=55px, left margin=52px
+       Box x positions: 52, 322, 592, 862, 1132
+       Box centers x:  160, 430, 700, 970, 1240
+       Box y=85, h=178, center y=174
+  ═══════════════════════════════════════════════════════ -->
+
+  <!-- ── STAGE 1: Base Image ── -->
+  <g transform="translate(52,85)">
+    <rect x="0" y="0" width="215" height="178" rx="10" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="215" height="26" rx="10" fill="#323151"/>
+    <rect x="0" y="18" width="215" height="8" fill="#323151"/>
+    <text x="107" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">① Base Image</text>
+    <!-- disk image icon -->
+    <rect x="72" y="38" width="71" height="50" rx="10" fill="#F3F4F6" stroke="#5366cc" stroke-width="1.5"/>
+    <ellipse cx="107" cy="50" rx="22" ry="7" fill="#E0E4F5" stroke="#5366cc" stroke-width="1.5"/>
+    <line x1="85" y1="50" x2="85" y2="72" stroke="#5366cc" stroke-width="1.5"/>
+    <line x1="129" y1="50" x2="129" y2="72" stroke="#5366cc" stroke-width="1.5"/>
+    <rect x="85" y="50" width="44" height="22" fill="#EFEFF3"/>
+    <ellipse cx="107" cy="72" rx="22" ry="7" fill="#EFEFF3" stroke="#5366cc" stroke-width="1.5"/>
+    <!-- image reference -->
+    <text x="107" y="104" text-anchor="middle" font-size="10" fill="#6B6B80">ghcr.io/macstadium/</text>
+    <text x="107" y="119" text-anchor="middle" font-size="10" fill="#323151" font-weight="700">orka-images/tahoe:latest</text>
+    <line x1="14" y1="130" x2="201" y2="130" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="107" y="145" text-anchor="middle" font-size="10" fill="#6B6B80">Version-pinned, pre-built</text>
+    <text x="107" y="161" text-anchor="middle" font-size="9" fill="#9CA3AF" font-style="italic">"tahoe" = example macOS codename</text>
+  </g>
+
+  <!-- ── STAGE 2: Build Golden Image ── -->
+  <g transform="translate(322,85)">
+    <rect x="0" y="0" width="215" height="178" rx="10" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="215" height="26" rx="10" fill="#323151"/>
+    <rect x="0" y="18" width="215" height="8" fill="#323151"/>
+    <text x="107" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">② Build Golden Image</text>
+    <line x1="14" y1="36" x2="201" y2="36" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="14" y="53" font-size="11" fill="#323151">• Install VDA + apps &amp; tools</text>
+    <text x="14" y="70" font-size="11" fill="#323151">• MDM enrollment scripts</text>
+    <text x="22" y="85" font-size="9.5" fill="#6B6B80" font-style="italic">(LaunchDaemon + LaunchAgent)</text>
+    <text x="14" y="102" font-size="11" fill="#323151">• Security baseline &amp; policies</text>
+    <text x="14" y="119" font-size="11" fill="#323151">• macOS system config</text>
+    <line x1="14" y1="131" x2="201" y2="131" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="107" y="146" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">Scripts run at first boot / login</text>
+    <text x="107" y="162" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">per provisioned VM</text>
+  </g>
+
+  <!-- ── STAGE 3: Version & Push to Registry ── -->
+  <g transform="translate(592,85)">
+    <rect x="0" y="0" width="215" height="178" rx="10" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="215" height="26" rx="10" fill="#323151"/>
+    <rect x="0" y="18" width="215" height="8" fill="#323151"/>
+    <text x="107" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">③ Version &amp; Push to Registry</text>
+    <text x="107" y="40" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">Harbor / OCI</text>
+    <line x1="14" y1="50" x2="201" y2="50" stroke="#EFEFF3" stroke-width="1"/>
+    <rect x="14" y="58" width="187" height="22" rx="4" fill="#EFEFF3"/>
+    <text x="107" y="73" text-anchor="middle" font-size="10" fill="#323151" font-weight="700">tahoe-golden:v1.0</text>
+    <rect x="14" y="86" width="187" height="22" rx="4" fill="#EFEFF3"/>
+    <text x="107" y="101" text-anchor="middle" font-size="10" fill="#323151" font-weight="700">tahoe-golden:v1.1</text>
+    <rect x="14" y="114" width="187" height="22" rx="4" fill="#FFF5E8" stroke="#FE9000" stroke-width="1.5"/>
+    <text x="107" y="129" text-anchor="middle" font-size="10" fill="#FE9000" font-weight="700">tahoe-golden:v2.0  ← latest</text>
+    <line x1="14" y1="144" x2="201" y2="144" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="107" y="159" text-anchor="middle" font-size="10" fill="#6B6B80">Immutable, versioned</text>
+    <text x="107" y="173" text-anchor="middle" font-size="10" fill="#6B6B80">Rollback: pin an older tag</text>
+  </g>
+
+  <!-- ── STAGE 4: Pull to Host ── -->
+  <g transform="translate(862,85)">
+    <rect x="0" y="0" width="215" height="178" rx="10" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="215" height="26" rx="10" fill="#323151"/>
+    <rect x="0" y="18" width="215" height="8" fill="#323151"/>
+    <text x="107" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">④ Pull to Host</text>
+    <line x1="14" y1="36" x2="201" y2="36" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="107" y="54" text-anchor="middle" font-size="11" fill="#323151">Pull specified image version</text>
+    <text x="107" y="70" text-anchor="middle" font-size="11" fill="#323151">to Apple silicon host</text>
+    <text x="107" y="91" text-anchor="middle" font-size="22" fill="#5366cc">↓</text>
+    <rect x="14" y="103" width="187" height="20" rx="4" fill="#EFEFF3" stroke="#5366cc" stroke-width="1.5"/>
+    <text x="107" y="117" text-anchor="middle" font-size="10" fill="#323151" font-weight="700">pull_image.yml</text>
+    <line x1="14" y1="131" x2="201" y2="131" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="107" y="146" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">Auto-caches on all hosts</text>
+    <text x="107" y="160" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">in inventory</text>
+  </g>
+
+  <!-- ── STAGE 5: VM Instantiated & In Use ── -->
+  <g transform="translate(1132,85)">
+    <rect x="0" y="0" width="215" height="178" rx="10" fill="#FFFFFF" stroke="#5366cc" stroke-width="2"/>
+    <rect x="0" y="0" width="215" height="26" rx="10" fill="#323151"/>
+    <rect x="0" y="18" width="215" height="8" fill="#323151"/>
+    <text x="107" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">⑤ VM Instantiated &amp; In Use</text>
+    <line x1="14" y1="36" x2="201" y2="36" stroke="#EFEFF3" stroke-width="1"/>
+    <!-- mini VM box -->
+    <rect x="25" y="44" width="165" height="65" rx="6" fill="#FFFFFF" stroke="#5366cc" stroke-width="1.5"/>
+    <rect x="25" y="44" width="165" height="20" rx="6" fill="#323151"/>
+    <rect x="25" y="56" width="165" height="8" fill="#323151"/>
+    <text x="107" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">macOS VM</text>
+    <text x="107" y="75" text-anchor="middle" font-size="10" fill="#323151">VDI agent + user apps</text>
+    <text x="107" y="89" text-anchor="middle" font-size="10" fill="#6B6B80">user session via broker</text>
+    <text x="107" y="125" text-anchor="middle" font-size="10" fill="#323151">2 VMs per host (Apple EULA)</text>
+    <line x1="14" y1="137" x2="201" y2="137" stroke="#EFEFF3" stroke-width="1"/>
+    <text x="107" y="152" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">First boot / login:</text>
+    <text x="107" y="166" text-anchor="middle" font-size="10" fill="#6B6B80" font-style="italic">MDM enrollment scripts run</text>
+  </g>
+
+  <!-- ── MAIN FLOW ARROWS (y=174 = center of boxes) ── -->
+  <line x1="268" y1="174" x2="320" y2="174" stroke="#5366cc" stroke-width="2.5" marker-end="url(#arrowD)"/>
+  <line x1="538" y1="174" x2="590" y2="174" stroke="#5366cc" stroke-width="2.5" marker-end="url(#arrowD)"/>
+  <line x1="808" y1="174" x2="860" y2="174" stroke="#FE9000" stroke-width="2.5" marker-end="url(#arrowO)"/>
+  <line x1="1078" y1="174" x2="1130" y2="174" stroke="#FE9000" stroke-width="2.5" marker-end="url(#arrowO)"/>
+
+  <!-- ── GAP LABELS ── -->
+  <text x="294" y="163" text-anchor="middle" font-size="9" fill="#5366cc">build</text>
+  <text x="564" y="163" text-anchor="middle" font-size="9" fill="#5366cc">push</text>
+  <text x="834" y="163" text-anchor="middle" font-size="9" fill="#FE9000">pull</text>
+  <text x="1104" y="163" text-anchor="middle" font-size="9" fill="#FE9000">deploy</text>
+
+  <!-- ── PATCH / UPDATE LOOP ── -->
+  <path d="M 1240 263 L 1240 375 L 430 375 L 430 263"
+        fill="none" stroke="#FE9000" stroke-width="2" stroke-dasharray="7 4" marker-end="url(#arrowO)"/>
+
+  <!-- Loop label pill -->
+  <rect x="452" y="353" width="766" height="42" rx="8" fill="#FFFAF5" stroke="#FE9000" stroke-width="1.2"/>
+  <text x="835" y="369" text-anchor="middle" font-size="10" fill="#6B6B80">
+    Triggered by: security patch · app update · new macOS release · policy change
+  </text>
+  <text x="835" y="386" text-anchor="middle" font-size="11" fill="#323151" font-weight="700">
+    Modify golden image → bump version → re-push → delete VM → deploy from new tag
+  </text>
+
+  <!-- ── VERSION PROGRESSION CALLOUT ── -->
+  <rect x="52" y="408" width="1296" height="52" rx="10" fill="#FAFAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+  <text x="72" y="426" font-size="11" font-weight="700" fill="#323151">Version progression:</text>
+  <rect x="220" y="414" width="90" height="18" rx="4" fill="#EFEFF3"/>
+  <text x="265" y="427" text-anchor="middle" font-size="9" fill="#6B6B80">tahoe-golden:v1.0</text>
+  <text x="318" y="427" font-size="12" fill="#9CA3AF">→</text>
+  <rect x="332" y="414" width="90" height="18" rx="4" fill="#EFEFF3"/>
+  <text x="377" y="427" text-anchor="middle" font-size="9" fill="#6B6B80">tahoe-golden:v1.1</text>
+  <text x="430" y="427" font-size="12" fill="#9CA3AF">→  …  →</text>
+  <rect x="484" y="414" width="150" height="18" rx="4" fill="#FFF5E8" stroke="#FE9000" stroke-width="1.5"/>
+  <text x="559" y="427" text-anchor="middle" font-size="9" fill="#FE9000" font-weight="700">tahoe-golden:v2.0 ← latest</text>
+  <text x="72" y="450" font-size="10" fill="#6B6B80">Use semantic versioning · retain all major versions · rollback by pinning an older tag · document changes in CHANGELOG.md</text>
+
+  <!-- ── LEGEND ── -->
+  <g transform="translate(430,474)">
+    <rect x="0" y="0" width="540" height="36" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <line x1="14" y1="18" x2="52" y2="18" stroke="#5366cc" stroke-width="2.5" marker-end="url(#arrowD)"/>
+    <text x="60" y="22" font-size="11" fill="#374151">Build / push</text>
+    <line x1="175" y1="18" x2="213" y2="18" stroke="#FE9000" stroke-width="2.5" marker-end="url(#arrowO)"/>
+    <text x="221" y="22" font-size="11" fill="#374151">Pull / deploy</text>
+    <line x1="345" y1="18" x2="383" y2="18" stroke="#FE9000" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowO)"/>
+    <text x="391" y="22" font-size="11" fill="#374151">Update loop</text>
+  </g>
+
+</svg>

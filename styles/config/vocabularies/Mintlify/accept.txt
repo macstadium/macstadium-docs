@@ -2,7 +2,6 @@
 Orka
 orka3
 MacStadium
-macstadium
 
 # Orka-specific terms
 orka-default
@@ -35,6 +34,9 @@ CircleCI
 Bitrise
 ArgoCD
 Fern
+Anyware
+Okta
+Entra
 
 # File formats and protocols
 IPSW
@@ -87,4 +89,12 @@ failover
 onboarding
 repo
 Runtimes
-failover
+vCPUs
+vCPU
+presigned
+remoting
+toolchain
+walkthrough
+auditable
+unmanaged
+uv

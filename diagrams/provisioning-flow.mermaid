@@ -1,0 +1,26 @@
+%%  MacStadium VDI — VM Provisioning Flow
+%%  Source of truth for images/provisioning-flow.svg
+%%  sequenceDiagram — top-to-bottom sequence view
+
+sequenceDiagram
+    actor Admin as IT Admin
+    participant CP as Control Plane<br/>(Orka Engine orchestration)
+    participant Auto as Automation<br/>(Ansible / Management UI)
+    participant Orka as Orka Engine<br/>(on Apple silicon host)
+    participant Reg as Image Registry<br/>(Harbor / OCI)
+    participant Broker as Session Broker<br/>(VDI broker / gateway)
+
+    Admin->>CP: 1. Request provisioning (Web UI / CLI)
+    CP->>Auto: 2. Execute provisioning playbook
+    participant MDM as MDM
+    Auto->>Orka: 3. Deploy VM from base image
+    Orka->>Reg: 4. Pull golden image
+    Reg-->>Orka: 5. Stream golden image to host
+    Note over Orka: 6. Creates VM from golden image
+    Orka->>MDM: 7. Jamf enrollment (LaunchDaemon, first boot)
+    MDM-->>Orka: 8. Computer record created
+    Orka-->>Auto: 9. VM ready (ID, IP address)
+    Auto-->>CP: 10. Provisioning job complete
+    CP->>Broker: 11. Register VM as session target
+    Broker-->>CP: 12. Session target registered
+    CP-->>Admin: 13. VM ready — assign to user

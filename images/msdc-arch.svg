@@ -1,0 +1,211 @@
+<?xml version="1.0" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 728" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrowD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#323151"/>
+    </marker>
+    <marker id="arrowO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#FE9000"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6F6E83"/>
+    </marker>
+    <linearGradient id="dcGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FAFAFB"/>
+      <stop offset="100%" stop-color="#EFEFF3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ============= TIER 1: TOP ROW ============= -->
+
+  <!-- IT Admin -->
+  <g transform="translate(60,30)">
+    <rect x="0" y="0" width="130" height="120" rx="10" fill="#FFFFFF" stroke="#6F6E83" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <circle cx="65" cy="33" r="18" fill="#6F6E83"/>
+    <path d="M 18 80 C 18 60 112 60 112 80 L 112 96 L 18 96 Z" fill="#6F6E83"/>
+    <text x="65" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">IT Admin</text>
+  </g>
+
+  <!-- End Users -->
+  <g transform="translate(280,30)">
+    <rect x="0" y="0" width="350" height="120" rx="10" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+    <text x="175" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#323151">End users (any device, anywhere)</text>
+    <g transform="translate(36,46)">
+      <rect x="0" y="0" width="60" height="38" rx="3" fill="#FE9000"/>
+      <rect x="5" y="5" width="50" height="28" fill="#FFFFFF"/>
+      <rect x="-8" y="40" width="76" height="5" rx="2" fill="#323151"/>
+    </g>
+    <text x="66" y="104" text-anchor="middle" font-size="11" fill="#323151">Laptop / Desktop</text>
+    <g transform="translate(155,46)">
+      <rect x="0" y="-5" width="40" height="50" rx="4" fill="#323151"/>
+      <rect x="4" y="1" width="32" height="38" fill="#FFFFFF"/>
+      <circle cx="20" cy="43" r="2" fill="#FFFFFF"/>
+    </g>
+    <text x="175" y="104" text-anchor="middle" font-size="11" fill="#323151">Tablet</text>
+    <g transform="translate(260,50)">
+      <rect x="0" y="0" width="52" height="38" rx="3" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+      <rect x="5" y="5" width="42" height="18" fill="#FE9000"/>
+      <text x="26" y="33" text-anchor="middle" font-size="9" fill="#323151" font-weight="700">CWA</text>
+    </g>
+    <text x="286" y="104" text-anchor="middle" font-size="11" fill="#323151">Thin client</text>
+  </g>
+
+  <!-- VDI Broker -->
+  <g transform="translate(750,30)">
+    <rect x="0" y="0" width="330" height="120" rx="60" fill="#FFFFFF" stroke="#FE9000" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <text x="165" y="38" text-anchor="middle" font-size="16" font-weight="700" fill="#323151">VDI broker / gateway</text>
+    <text x="165" y="60" text-anchor="middle" font-size="13" fill="#323151">e.g., Citrix DaaS / HP Anyware</text>
+    <text x="165" y="81" text-anchor="middle" font-size="11" fill="#6F6E83">brokers sessions over remoting protocol</text>
+    <text x="165" y="99" text-anchor="middle" font-size="11" fill="#6F6E83">SSO / MFA / conditional access</text>
+  </g>
+
+  <!-- Identity -->
+  <g transform="translate(1175,30)">
+    <rect x="0" y="0" width="205" height="120" rx="10" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+    <text x="102" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#323151">Identity</text>
+    <text x="102" y="52" text-anchor="middle" font-size="13" fill="#323151">Active Directory /</text>
+    <text x="102" y="70" text-anchor="middle" font-size="13" fill="#323151">Entra ID / Okta</text>
+    <text x="102" y="94" text-anchor="middle" font-size="11" fill="#6F6E83">user groups,</text>
+    <text x="102" y="110" text-anchor="middle" font-size="11" fill="#6F6E83">authentication</text>
+  </g>
+
+  <!-- ============= TOP-ROW ARROWS ============= -->
+
+  <!-- IT Admin → DC (via VPN) -->
+  <line x1="125" y1="153" x2="125" y2="222" stroke="#6F6E83" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowG)"/>
+  <rect x="101" y="178" width="48" height="15" rx="3" fill="#FFFFFF" opacity="0.92"/>
+  <text x="125" y="190" text-anchor="middle" font-size="10" fill="#6F6E83" font-style="italic">via VPN</text>
+
+  <!-- End Users ↔ VDI Broker -->
+  <line x1="634" y1="87" x2="745" y2="87" stroke="#FE9000" stroke-width="2.5" marker-end="url(#arrowO)"/>
+  <line x1="745" y1="100" x2="634" y2="100" stroke="#FE9000" stroke-width="2.5" marker-end="url(#arrowO)"/>
+  <rect x="640" y="57" width="100" height="15" rx="3" fill="#FFFFFF" opacity="0.92"/>
+  <text x="690" y="69" text-anchor="middle" font-size="10" fill="#6F6E83" font-style="italic">remoting protocol</text>
+
+  <!-- VDI Broker → Identity -->
+  <line x1="1083" y1="90" x2="1170" y2="90" stroke="#323151" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrowD)"/>
+
+  <!-- VDI Broker → DC -->
+  <line x1="915" y1="153" x2="915" y2="222" stroke="#323151" stroke-width="2.5" marker-end="url(#arrowD)"/>
+
+  <!-- ============= MACSTADIUM DATA CENTER ============= -->
+  <g transform="translate(60,225)">
+    <rect x="0" y="0" width="1280" height="458" rx="14" fill="url(#dcGrad)" stroke="#323151" stroke-width="2"/>
+    <rect x="0" y="0" width="1280" height="40" rx="14" fill="#323151"/>
+    <rect x="0" y="26" width="1280" height="14" fill="#323151"/>
+    <text x="20" y="27" font-size="16" font-weight="700" fill="#FFFFFF">MacStadium Data Center (managed hosting)</text>
+    <text x="1260" y="27" text-anchor="end" font-size="12" fill="#FE9000" font-style="italic">MacStadium-managed firewall + control plane</text>
+
+    <!-- ── VDI CONTROL PLANE ── -->
+    <g transform="translate(30,55)">
+      <rect x="0" y="0" width="265" height="195" rx="10" fill="#FFFFFF" stroke="#FE9000" stroke-width="2.5"/>
+      <text x="132" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#323151">MacStadium VDI</text>
+      <text x="132" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#FE9000">control plane</text>
+      <line x1="14" y1="53" x2="251" y2="53" stroke="#EFEFF3" stroke-width="1.5"/>
+      <text x="132" y="70" text-anchor="middle" font-size="12" fill="#323151">MacStadium Private Cloud VM</text>
+      <text x="132" y="87" text-anchor="middle" font-size="11" fill="#FE9000" font-style="italic">MacStadium-managed</text>
+      <line x1="14" y1="97" x2="251" y2="97" stroke="#EFEFF3" stroke-width="1.5"/>
+      <text x="14" y="115" font-size="11" fill="#323151">• Orka Engine orchestration</text>
+      <text x="14" y="135" font-size="11" fill="#323151">• Ansible (CLI) / Management UI (web)</text>
+      <text x="14" y="155" font-size="11" fill="#323151">• VM lifecycle • images • API</text>
+      <text x="14" y="175" font-size="11" fill="#323151">• Web UI + CLI</text>
+    </g>
+
+    <!-- ── MANAGEMENT ARROW ── -->
+    <line x1="296" y1="152" x2="330" y2="152" stroke="#6F6E83" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowG)"/>
+    <text x="313" y="144" text-anchor="middle" font-size="7" fill="#6F6E83" font-style="italic">manages</text>
+
+    <!-- ── SHARED SERVICES ── -->
+    <g transform="translate(30,262)">
+      <rect x="0" y="0" width="265" height="175" rx="10" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+      <text x="132" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#323151">Shared services</text>
+      <line x1="14" y1="34" x2="251" y2="34" stroke="#EFEFF3" stroke-width="1.5"/>
+      <text x="14" y="53" font-size="12" fill="#323151">• Golden image registry (Harbor / OCI)</text>
+      <text x="14" y="71" font-size="12" fill="#323151">• MDM (Jamf / Kandji)</text>
+      <text x="14" y="89" font-size="12" fill="#323151">• Backup / network storage</text>
+      <text x="14" y="107" font-size="12" fill="#323151">• Monitoring &amp; logging</text>
+      <text x="14" y="125" font-size="12" fill="#323151">• DNS / DHCP / NTP</text>
+      <text x="14" y="158" font-size="11" fill="#6F6E83" font-style="italic">Customer-managed (in MacStadium DC)</text>
+    </g>
+
+    <!-- ── APPLE SILICON HOSTS ── -->
+    <g transform="translate(330,55)">
+      <text x="460" y="18" text-anchor="middle" font-size="14" font-weight="700" fill="#323151">Apple silicon hosts in MacStadium DC (Mac mini / Mac Studio)</text>
+      <text x="460" y="36" text-anchor="middle" font-size="11" fill="#6F6E83" font-style="italic">MacStadium hosts the hardware · customer manages macOS VMs (2 per host, Apple EULA)</text>
+
+      <g transform="translate(0,50)">
+        <rect x="0" y="0" width="290" height="200" rx="10" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+        <rect x="0" y="0" width="290" height="32" rx="10" fill="#323151"/>
+        <rect x="0" y="20" width="290" height="12" fill="#323151"/>
+        <text x="145" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Host 1 (Apple silicon)</text>
+        <rect x="1" y="32" width="288" height="24" fill="#FFF5E8"/>
+        <text x="145" y="49" text-anchor="middle" font-size="11" font-weight="700" fill="#FE9000">Orka Engine</text>
+        <rect x="12" y="65" width="124" height="118" rx="6" fill="#FFF5E8" stroke="#FE9000" stroke-width="1.5"/>
+        <text x="74" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">macOS VM</text>
+        <text x="74" y="107" text-anchor="middle" font-size="11" fill="#323151">VDI agent</text>
+        <text x="74" y="125" text-anchor="middle" font-size="11" fill="#323151">+ user apps</text>
+        <text x="74" y="150" text-anchor="middle" font-size="10" fill="#6F6E83">user A</text>
+        <rect x="154" y="65" width="124" height="118" rx="6" fill="#FFF5E8" stroke="#FE9000" stroke-width="1.5"/>
+        <text x="216" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">macOS VM</text>
+        <text x="216" y="107" text-anchor="middle" font-size="11" fill="#323151">VDI agent</text>
+        <text x="216" y="125" text-anchor="middle" font-size="11" fill="#323151">+ user apps</text>
+        <text x="216" y="150" text-anchor="middle" font-size="10" fill="#6F6E83">user B</text>
+      </g>
+
+      <g transform="translate(310,50)">
+        <rect x="0" y="0" width="290" height="200" rx="10" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+        <rect x="0" y="0" width="290" height="32" rx="10" fill="#323151"/>
+        <rect x="0" y="20" width="290" height="12" fill="#323151"/>
+        <text x="145" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Host 2 (Apple silicon)</text>
+        <rect x="1" y="32" width="288" height="24" fill="#FFF5E8"/>
+        <text x="145" y="49" text-anchor="middle" font-size="11" font-weight="700" fill="#FE9000">Orka Engine</text>
+        <rect x="12" y="65" width="124" height="118" rx="6" fill="#FFF5E8" stroke="#FE9000" stroke-width="1.5"/>
+        <text x="74" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">macOS VM</text>
+        <text x="74" y="107" text-anchor="middle" font-size="11" fill="#323151">VDI agent</text>
+        <text x="74" y="125" text-anchor="middle" font-size="11" fill="#323151">+ user apps</text>
+        <text x="74" y="150" text-anchor="middle" font-size="10" fill="#6F6E83">user C</text>
+        <rect x="154" y="65" width="124" height="118" rx="6" fill="#FFF5E8" stroke="#FE9000" stroke-width="1.5"/>
+        <text x="216" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#323151">macOS VM</text>
+        <text x="216" y="107" text-anchor="middle" font-size="11" fill="#323151">VDI agent</text>
+        <text x="216" y="125" text-anchor="middle" font-size="11" fill="#323151">+ user apps</text>
+        <text x="216" y="150" text-anchor="middle" font-size="10" fill="#6F6E83">user D</text>
+      </g>
+
+      <g transform="translate(640,50)">
+        <rect x="0" y="0" width="270" height="200" rx="10" fill="#FFFFFF" stroke="#6F6E83" stroke-width="2" stroke-dasharray="6 4"/>
+        <rect x="0" y="0" width="270" height="32" rx="10" fill="#6F6E83"/>
+        <rect x="0" y="20" width="270" height="12" fill="#6F6E83"/>
+        <text x="135" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Host N (scale out as needed)</text>
+        <rect x="1" y="32" width="268" height="24" fill="#F5F5F5"/>
+        <text x="135" y="49" text-anchor="middle" font-size="11" fill="#9CA3AF">Orka Engine</text>
+        <text x="135" y="120" text-anchor="middle" font-size="22" fill="#BDBDBD">…</text>
+        <text x="135" y="155" text-anchor="middle" font-size="11" fill="#6F6E83" font-style="italic">Add hosts to scale users</text>
+        <text x="135" y="173" text-anchor="middle" font-size="11" fill="#6F6E83" font-style="italic">(2 VMs per host)</text>
+      </g>
+    </g>
+
+    <!-- ── NETWORK FABRIC ── -->
+    <g transform="translate(330,318)">
+      <rect x="0" y="0" width="910" height="52" rx="8" fill="#323151"/>
+      <text x="455" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">MacStadium firewall • managed network fabric • bridged tenant network • static IPs</text>
+      <text x="455" y="40" text-anchor="middle" font-size="11" fill="#FE9000">MacStadium-managed firewall and connectivity</text>
+    </g>
+
+  </g><!-- end DC group -->
+
+  <!-- ============= LEGEND ============= -->
+  <g transform="translate(60,696)">
+    <rect x="0" y="0" width="1010" height="36" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <rect x="14" y="11" width="14" height="14" rx="2" fill="#FFFFFF" stroke="#FE9000" stroke-width="2"/>
+    <text x="34" y="22" font-size="11" fill="#374151">MacStadium-managed</text>
+    <rect x="208" y="11" width="14" height="14" rx="2" fill="#FFFFFF" stroke="#323151" stroke-width="2"/>
+    <text x="228" y="22" font-size="11" fill="#374151">Customer-managed</text>
+    <rect x="390" y="11" width="14" height="14" rx="2" fill="#FFFFFF" stroke="#FE9000" stroke-width="2" stroke-dasharray="4 2"/>
+    <text x="410" y="22" font-size="11" fill="#374151">Third-party cloud service</text>
+    <line x1="592" y1="18" x2="630" y2="18" stroke="#FE9000" stroke-width="2.5" marker-end="url(#arrowO)"/>
+    <text x="638" y="22" font-size="11" fill="#374151">Session / data flow</text>
+    <line x1="772" y1="18" x2="810" y2="18" stroke="#6F6E83" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowG)"/>
+    <text x="818" y="22" font-size="11" fill="#374151">Management / control</text>
+  </g>
+
+</svg>
