@@ -6,6 +6,10 @@ zendesk_id: 44332755734299
 
 Ansible playbooks automate VM lifecycle operations for Citrix VDA deployment. These are automation scripts written in YAML that define a series of tasks to be executed on remote systems. They describe the desired state of your infrastructure and document the steps needed to achieve it.
 
+<Note>
+  All playbooks on this page are sourced from the [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orchestration) repository. The **management UI** is the recommended interface for day-to-day playbook execution — it provides a browser-based dashboard with pre-configured task templates for every playbook listed here. The CLI is available for advanced workflows and troubleshooting. See [Getting Started: MSDC-Hosted](/remote-desktop-vdi/getting-started/msdc-hosted) or [Getting Started: Self-Hosted](/remote-desktop-vdi/getting-started/self-hosted) for management UI setup instructions.
+</Note>
+
 **How playbooks work:**
 
 A playbook contains one or more "plays," each targeting specific hosts and executing a sequence of tasks:
@@ -88,8 +92,9 @@ Note: This implementation does not have a dedicated backup Ansible playbook. To 
 
 
 #### Create a VM Image
-    
-    
+
+`create_image.yml` is the primary way to build a golden image for your VDI fleet. It deploys a temporary VM from a base image, runs your configuration scripts, commits the result to your OCI registry with a version tag, then deletes the temporary VM. The resulting image is the source for all VM deployments. See [Golden image lifecycle](/remote-desktop-vdi/macstadium-vdi-deployment/image-management#golden-image-lifecycle) for the full build-to-deploy loop.
+
 ```
 ansible-playbook -i inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-golden:v1.0"
 ```
@@ -108,8 +113,9 @@ Before running:
 - 03_configure_system.sh
 ```
 #### Cache a VM Image
-    
-    
+
+`pull_image.yml` pre-pulls an image to all hosts in your inventory so VMs deploy immediately without waiting for a registry download. Run this after `create_image.yml` and before deploying VMs in production.
+
 ```
 ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" 
 ```
