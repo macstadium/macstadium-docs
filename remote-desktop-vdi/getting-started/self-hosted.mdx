@@ -66,6 +66,10 @@ The Ansible controller is a separate machine (macOS or Linux) that runs orchestr
 
 Run all steps in this section on each physical Mac host. Repeat for every host in your fleet.
 
+<Warning>
+  Don't enable FileVault on Mac hosts without a remote recovery plan. If a host with FileVault enabled powers down, you'll need physical access to decrypt the disk before the host can be managed remotely. If FileVault is required by your security policy, use macOS Tahoe (26) — Tahoe supports pre-boot SSH for remote disk decryption. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
+</Warning>
+
 ### 1.1 Assign a static IP
 
 Assign a static IP to each host before installing Orka Engine. Either configure it manually or use a DHCP reservation.
