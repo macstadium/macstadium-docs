@@ -1,29 +1,42 @@
 ---
-title: "MacStadium bare metal Mac host options"
-description: "MacStadium bare metal Mac options: Mac mini and Mac Studio available now, Mac Pro via custom order. Links to benchmarks, tools, and configuration guides."
+title: "Bare metal Mac configurations"
+description: "Side-by-side specs for all MacStadium bare metal Mac configurations: Mac mini and Mac Studio, with chip, RAM, storage, and recommended use case."
 zendesk_id: 28198875080219
 ---
 
-MacStadium offers a selection of Bare Metal Mac hosts for various applications. Our [benchmarks page](/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks) offers a detailed breakdown of the performance differences between available machines.
+MacStadium offers bare metal Mac hardware in two product lines. Use the tables below to compare configurations and find the right fit for your workload. For benchmark scores, see the [benchmarks page](/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks).
 
-## Cloud-Hosted Mac Models
+## Mac mini
 
-### Mac mini
+Mac mini is recommended for most CI/CD and Orka workloads. Standard configurations are available for immediate purchase on the [MacStadium customer portal](https://portal.macstadium.com/register).
 
-Mac mini hardware is recommended for most applications, and offers excellent performance for CI/CD and virtual desktop workloads. Standard hardware configurations are available to purchase instantly on the [customer portal](https://portal.macstadium.com/register).
+| Plan | Chip | CPU cores | RAM | SSD | Best for |
+|------|------|-----------|-----|-----|----------|
+| M2.S | M2 | 8 | 8 GB | 256 GB | Light CI/CD, basic automation |
+| M2.M | M2 | 8 | 16 GB | 1 TB | CI/CD, Orka nodes |
+| M2.L | M2 Pro | 10 | 16 GB | 1 TB | CI/CD, Orka nodes |
+| M2.XL | M2 Pro | 12 | 32 GB | 2 TB | CI/CD pipelines, Orka clusters |
+| M4.S | M4 | 10 | 16 GB | 256 GB | Light CI/CD, basic automation |
+| M4.M | M4 | 10 | 24 GB | 512 GB | CI/CD, Orka clusters |
+| M4.L | M4 Pro | 12 | 48 GB | 1 TB | Multi-VM CI/CD, Orka clusters |
+| M4.XL | M4 Pro | 14 | 64 GB | 2 TB | High-concurrency CI/CD, large Orka clusters |
 
-**Need Intel Macs?** Intel Mac mini hardware is currently available for custom orders. [Contact MacStadium sales](https://www.macstadium.com/contact/sales) for more.
+All Mac mini configurations are Apple silicon (ARM). Intel Mac mini hardware is available for custom orders — [contact MacStadium sales](https://www.macstadium.com/contact/sales) for more.
 
-### Mac Studio
+**For Orka clusters:** Medium and larger configurations (M2.M and above) are recommended. More RAM means more concurrent VMs per node — M4.M and above are the best fit for teams running multiple VMs simultaneously.
 
-Mac Studio hardware is recommended for GPU-intensive or high-RAM applications, such as video rendering or AI/ML inference. Standard hardware configurations are available to purchase instantly on the [customer portal](https://portal.macstadium.com/register).
+## Mac Studio
 
-## Design Your Mac Cloud
+Mac Studio is recommended for GPU-intensive workloads: video rendering, AI/ML inference, and compute-heavy pipelines that benefit from high GPU core counts and large memory bandwidth. Standard configurations are available for immediate purchase on the [MacStadium customer portal](https://portal.macstadium.com/register).
 
-[Which location should I choose?](/iaas/iaas-overview/data-center-locations)
+| Plan | Chip | CPU cores | RAM | SSD | Best for |
+|------|------|-----------|-----|-----|----------|
+| S1.M | M1 Max | 10 | 64 GB | 2 TB | GPU workloads, AI/ML inference, video rendering |
+| S2.M | M2 Ultra | 24 | 64 GB | 2 TB | High-throughput GPU, large AI/ML models |
+| S2.L | M2 Ultra | 24 | 128 GB | 2 TB | Very large AI/ML models, maximum memory GPU workloads |
 
-[Which Mac should I choose? Bare Metal Mac Benchmarks Table.](/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks)
+## Related
 
-## More Mac Cloud Resources
-
-[Common Tools](/iaas/bare-metal-macs/common-tools)
+- [MacStadium Bare Metal Mac Benchmarks](/iaas/bare-metal-macs/macstadium-bare-metal-mac-benchmarks)
+- [Data center locations](/iaas/iaas-overview/data-center-locations)
+- [Common tools](/iaas/bare-metal-macs/common-tools)
