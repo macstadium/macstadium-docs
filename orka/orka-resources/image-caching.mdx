@@ -79,7 +79,7 @@ General information and guidance on Scheduled Caching
   * **Does caching have an impact on cluster performance?**
     * The Orka scheduler may experience increased latency on any node running active caching operations.
   * **Can I delete images from a cluster node cache?**
-    * Use `orka3 imagecache remove` to remove a cached image from one or more nodes. This operation requires admin privileges. To update an image without removing it first, cache a new copy under the same name or with an updated OCI tag.
+    * Orka's Kubernetes control plane automatically manages node caches. There is no manual "remove" command. To update an image, cache a new copy under the same name or with an updated OCI tag.
 
 <Note>
   **Orka 3.5.1 fix:** `orka3 ic add` previously failed silently when caching images to nodes in custom namespaces. This is resolved in Orka 3.5.1. If you cache images to non-default namespaces, upgrade to 3.5.1 or later and re-cache any previously failed images.
