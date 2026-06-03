@@ -1,7 +1,8 @@
 ---
-title: "Shared Responsibility Guide"
-description: "Who owns what in a MacStadium VDI deployment. Defines responsibilities for MacStadium, the customer, and — where applicable — a Citrix Service Provider, across all three deployment models."
+title: "Shared responsibility guide"
+description: "Who owns what in a MacStadium VDI deployment. Defines responsibilities for MacStadium, the customer, and (where applicable) a Citrix Service Provider, across all three deployment models."
 zendesk_id: 41205907064603
+keywords: ["shared responsibility", "MacStadium support boundary", "Citrix Service Provider", "customer responsibilities VDI"]
 ---
 
 MacStadium VDI is a shared responsibility model. MacStadium manages the infrastructure layer; you manage the orchestration, user access, and application layer. Where you've engaged a [Citrix Service Provider (CSP)](https://www.citrix.com/partner-programs/), some customer responsibilities may transfer to that partner.
@@ -81,14 +82,14 @@ You are responsible for the orchestration layer across all deployment models. Th
 You are responsible for your Citrix Cloud account, licensing, VDA installation, machine catalog setup, delivery groups, and policies. MacStadium does not have access to your Citrix environment.
 
 <Note>
-  If you're working with a **Citrix Service Provider (CSP)**, your CSP typically manages the Citrix layer on your behalf — including VDA installation, SSO setup, HDX policy tuning, and session troubleshooting. MacStadium currently partners with [Whitehat Virtual](https://whitehatvirtual.com/) for CSP services. Confirm the scope of your CSP's responsibilities before deployment. MacStadium's support boundary ends at the infrastructure layer regardless of whether you use a CSP.
+  If you're working with a **Citrix Service Provider (CSP)**, your CSP typically manages the Citrix layer on your behalf, including VDA installation, SSO setup, HDX policy tuning, and session troubleshooting. MacStadium currently partners with [Whitehat Virtual](https://whitehatvirtual.com/) for CSP services. Confirm the scope of your CSP's responsibilities before deployment. MacStadium's support boundary ends at the infrastructure layer regardless of whether you use a CSP.
 </Note>
 
 ### MDM enrollment
 
 Mac hosts support <Tooltip tip="Automated Device Enrollment">ADE</Tooltip> via [Apple Business Manager (ABM)](https://support.apple.com/guide/apple-business-manager). MacStadium can assist with host enrollment for MSDC-Hosted customers.
 
-macOS VMs cannot be registered with ABM directly. MacStadium provides scripts and guidance for automated user-driven MDM enrollment instead. Supported MDM tools include Jamf, Kandji, and Intune. See [Apple Business Manager and MDM with MacStadium](/remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium) for details.
+macOS VMs cannot be registered with ABM directly. MacStadium provides scripts and guidance for automated user-driven MDM enrollment instead. Supported MDM tools include Jamf, Kandji, and Intune. See [Apple Business Manager and MDM with MacStadium](/remote-desktop-vdi/configuration/apple-business-manager-and-mobile-device-management-with-macstadium) for details.
 
 ### Security and compliance
 

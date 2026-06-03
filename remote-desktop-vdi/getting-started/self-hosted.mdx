@@ -1,6 +1,7 @@
 ---
-title: "Getting Started: Self-Hosted"
-description: "Step-by-step guide to deploying MacStadium VDI on your own infrastructure — on-premises or on AWS. Covers hardware preparation, networking, Orka Engine installation, and first VM deployment."
+title: "Getting started: Self-Hosted"
+description: "Step-by-step guide to deploying MacStadium VDI on your own infrastructure, on-premises or on AWS. Covers hardware preparation, networking, Orka Engine installation, and first VM deployment."
+keywords: ["self-hosted macOS VDI", "on-premises VDI setup", "AWS Mac VDI deployment", "Ansible orchestration", "Orka Engine self-hosted"]
 ---
 
 This guide covers deploying MacStadium VDI on infrastructure you manage. Most steps are the same whether you're deploying on-premises or on AWS. Where the steps diverge, tabs or callout blocks mark the difference.
@@ -67,7 +68,7 @@ The Ansible controller is a separate machine (macOS or Linux) that runs orchestr
 Run all steps in this section on each physical Mac host. Repeat for every host in your fleet.
 
 <Warning>
-  Don't enable FileVault on Mac hosts without a remote recovery plan. If a host with FileVault enabled powers down, you'll need physical access to decrypt the disk before the host can be managed remotely. If FileVault is required by your security policy, use macOS Tahoe (26) — Tahoe supports pre-boot SSH for remote disk decryption. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
+  Don't enable FileVault on Mac hosts without a remote recovery plan. If a host with FileVault enabled powers down, you'll need physical access to decrypt the disk before the host can be managed remotely. If FileVault is required by your security policy, use macOS Tahoe (26). Tahoe supports pre-boot SSH for remote disk decryption. See [Security and Encryption](/remote-desktop-vdi/configuration/customer-environment-tips#security-and-encryption) for details.
 </Warning>
 
 ### 1.1 Assign a static IP
@@ -86,7 +87,7 @@ Assign a static IP to each host before installing Orka Engine. Either configure 
 2. Configure your DHCP server to assign a fixed IP to each MAC address.
 3. Verify the host receives the reserved IP.
 
-Document the following for each host — you'll need it for the Ansible inventory file:
+Document the following for each host (you'll need it for the Ansible inventory file):
 
 | Field | Example |
 | --- | --- |
@@ -150,8 +151,8 @@ Modern versions of macOS prevent installing Python packages system-wide. Install
 
 ```bash
 brew install pipx
-pipx install ansible-core==2.18.4
-pipx install ansible==11.4.0
+pipx install ansible-core==2.20.3
+pipx install ansible==13.4.0
 ```
 
 ---
@@ -263,7 +264,6 @@ Replace `YOUR-LICENSE-KEY` and `YOUR-INSTALLER-URL` with the values from your Ma
 
 ```bash
 ansible hosts -i inventory -m shell -a "orka-engine --version"
-ansible hosts -i inventory -m shell -a "/usr/local/bin/orka-engine info"
 ```
 
 ### Force reinstall or upgrade
@@ -338,7 +338,7 @@ SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD \
   uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
 ```
 
-Run `uv run ./semaphore/configure_semaphore.py --help` to see all options, including VM credentials and OCI registry settings.
+Run `uv run ./semaphore/configure_semaphore.py --help` to see all options, including VM credentials and <Tooltip tip="Open Container Initiative — an industry standard for container image formats. Orka stores VM images in OCI-compatible registries like GHCR or Harbor.">OCI</Tooltip> registry settings.
 
 **Option B: Manual (UI)**
 
@@ -398,10 +398,10 @@ ansible-playbook deploy.yml \
 Your infrastructure is ready. Continue with:
 
 <CardGroup cols={2}>
-  <Card title="Citrix DaaS Configuration" href="/remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration">
+  <Card title="Citrix DaaS Configuration" href="/remote-desktop-vdi/configuration/citrix-daas-configuration">
     Register your VMs with Citrix Cloud and configure delivery groups.
   </Card>
-  <Card title="Image Management" href="/remote-desktop-vdi/macstadium-vdi-deployment/image-management">
+  <Card title="Image Management" href="/remote-desktop-vdi/configuration/image-management">
     Build a golden image with Citrix VDA and your organization's applications pre-installed.
   </Card>
 </CardGroup>

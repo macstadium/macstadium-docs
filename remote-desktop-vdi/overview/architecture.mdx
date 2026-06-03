@@ -1,6 +1,7 @@
 ---
 title: "Architecture"
 description: "How MacStadium VDI is structured: the four system layers, how a user session connects, what the control plane manages, and how the three deployment models differ."
+keywords: ["VDI architecture", "Orka Engine", "control plane", "bridged networking", "deployment models", "Apple silicon hosting", "macOS VM layers"]
 ---
 
 MacStadium VDI is built on four logical layers: a VDI broker/gateway, a control plane, Apple Silicon hosts, and macOS virtual machines. This page describes what each layer does and how they connect.
@@ -52,13 +53,14 @@ MacStadium VDI integrates with your existing identity provider (Active Directory
 
 ## Networking
 
-MacStadium VDI uses bridged networking to give each macOS VM a direct IP address on the host's network. This is required for VDI workloads: the Citrix VDA inside each VM must be reachable by Citrix Cloud for registration, and end-user HDX sessions connect directly to the VM's IP. Without bridged networking, you'd need port forwarding for every VM, which doesn't scale.
+MacStadium VDI uses bridged networking to give each macOS VM a direct IP address on the host's network. This is required for VDI workloads: the VDA inside each VM must be reachable by your delivery controller for registration, and end-user remoting protocol sessions connect directly to the VM's IP. Without bridged networking, you'd need port forwarding for every VM, which doesn't scale.
 
-Bridged networking is configured per deployment using the `network_interface` variable in your Ansible inventory. Set it to the physical interface on each Mac host — typically `en0` for Ethernet. VMs deployed with this setting receive an IP address from your DHCP server or management VLAN, just like any other device on that network.
+Bridged networking is configured per deployment using the `network_interface` variable in your Ansible inventory. Set it to the physical interface on each Mac host, typically `en0` for Ethernet. VMs deployed with this setting receive an IP address from your DHCP server or management VLAN, just like any other device on that network.
 
 <Note>
-  Bridged networking requires Orka Engine 3.5.0 or later.
+  Bridged networking requires Orka Engine 3.5.0 or later and is supported for MSDC-Hosted and Self-Hosted (On-Prem) deployments. For Self-Hosted (AWS), confirm bridged networking support with your MacStadium account representative before relying on it.
 </Note>
+
 
 ## Deployment models
 

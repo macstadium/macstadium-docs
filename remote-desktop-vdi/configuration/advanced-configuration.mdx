@@ -1,9 +1,10 @@
 ---
-title: "Advanced Configuration"
+title: "Advanced configuration"
 description: "Advanced MacStadium VDI configuration: bridged networking, HDX tuning, resource allocation, Ansible automation extensions, CI/CD integration, and multi-tenant setup."
+keywords: ["bridged networking", "HDX optimization", "multi-tenancy VDI", "image caching", "VM resource tuning", "advanced VDI configuration"]
 ---
 
-This page covers advanced configuration topics for production MacStadium VDI environments. These are optional enhancements beyond the initial deployment — you don't need them to get started, but they unlock performance, scale, and automation capabilities.
+This page covers advanced configuration topics for production MacStadium VDI environments. These are optional enhancements beyond the initial deployment. You don't need them to get started, but they unlock performance, scale, and automation capabilities.
 
 ## Performance optimization
 
@@ -40,13 +41,13 @@ vm_network_mode: bridge
 
 Specify which physical network interface on your Orka hosts connects to your DHCP-enabled network.
 
-Option A: Same interface on all hosts — edit `nodes.yml`:
+Option A: Same interface on all hosts. Edit `nodes.yml`:
 
 ```yaml
 osx_node_vm_network_interface: en0 # or vlan0, en1, etc.
 ```
 
-Option B: Different interfaces per host — edit your `hosts` inventory file:
+Option B: Different interfaces per host. Edit your `hosts` inventory file:
 
 ```ini
 [arm-nodes]
@@ -143,13 +144,13 @@ M4 Macs support GPU passthrough for VMs. Requirements: Orka 3.5+, macOS 15.5+ on
 
 **4. Test with Citrix HDX Monitor:**
 
-Download the [Citrix HDX Monitor tool](https://cis.citrix.com/hdx/download/) to identify bottlenecks — network latency, bandwidth constraints, and frame rate drops. Use results to fine-tune HDX policies further.
+Download the [Citrix HDX Monitor tool](https://cis.citrix.com/hdx/download/) to identify bottlenecks: network latency, bandwidth constraints, and frame rate drops. Use results to fine-tune HDX policies further.
 
 ---
 
 ### Resource allocation (CPU, memory, storage)
 
-Default VM resources are inherited from the golden image — typically 4 CPU cores, 8 GB RAM, 90 GB storage.
+Default VM resources are inherited from the golden image, typically 4 CPU cores, 8 GB RAM, 90 GB storage.
 
 To change resources, modify the VM configuration and create a new golden image:
 
@@ -327,7 +328,7 @@ Use this schedule as a baseline:
 ### Isolation strategies
 
 **Option 1: Delivery Group separation**
-Deploy all VMs from shared infrastructure. Separate users into different Citrix Delivery Groups with different policies per group. Simple, maximizes resource efficiency — but teams share hardware and one team's resource spike affects others.
+Deploy all VMs from shared infrastructure. Separate users into different Citrix Delivery Groups with different policies per group. Simple and resource-efficient, but teams share hardware and one team's resource spike affects others.
 
 **Option 2: VM group separation**
 Deploy separate VM groups per tenant (`citrix-vda-finance`, `citrix-vda-engineering`), each with its own golden image. Groups still share Orka hosts.
@@ -354,7 +355,7 @@ ansible-playbook -i inventory deploy.yml \
   --limit finance_hosts
 ```
 
-Complete resource isolation, no noisy-neighbor problems — but reduced flexibility and potential underutilization.
+Complete resource isolation with no noisy-neighbor problems, but reduced flexibility and potential underutilization.
 
 ---
 
@@ -379,7 +380,7 @@ Calculate per-VM cost: divide host cost (hardware + MacStadium hosting) by VMs p
 Apply different Citrix policies per tenant:
 
 1. Create separate Delivery Groups per tenant
-2. Create policies with appropriate settings per tenant (e.g., Finance: no clipboard, no file transfer; Engineering: full access)
+2. Create policies with appropriate settings per tenant (for example, Finance: no clipboard, no file transfer; Engineering: full access)
 3. Filter policies by Delivery Group name
 
 Each tenant gets appropriate controls without affecting others.
