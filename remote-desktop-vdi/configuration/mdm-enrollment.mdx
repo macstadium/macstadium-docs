@@ -1,0 +1,855 @@
+---
+title: "MDM enrollment for MacStadium VDI desktops"
+description: "Enroll Orka-provisioned macOS VMs into Jamf Pro, Microsoft Intune, or Iru (Kandji) using a golden image with LaunchDaemon and LaunchAgent scripts."
+keywords: ["mdm", "mobile device management", "uem", "unified endpoint management", "jamf", "intune", "kandji", "iru"]
+---
+
+This guide walks through how to enroll Orka-provisioned macOS VMs into your MDM platform of choice. MacStadium provides verified guidance for [Jamf Pro](https://www.jamf.com) and [Microsoft Intune](https://intune.microsoft.com). Guidance for [Iru](https://iru.io) (formerly Kandji) is included as a starting point and is pending final validation.
+
+---
+
+## What's different about VMs
+
+The same Apple constraint applies across all three platforms: Apple Business Manager (ABM) does not support virtual machines, so the zero-touch automated enrollment paths (<Tooltip tip="Automated Device Enrollment — Apple's zero-touch setup path using Apple Business Manager. Requires the device to be registered in ABM before deployment.">ADE</Tooltip> for Jamf, ADE for Intune) aren't available for MacStadium VDI desktops.
+
+On macOS 10.13 and later, the available route is user-driven enrollment, which installs an <Tooltip tip="Mobile Device Management — software that lets IT teams remotely manage device configuration, security policies, and apps.">MDM</Tooltip> profile the user must explicitly approve in System Settings. That approval step can't be automated away. What you can do is get it down to a single click: a LaunchDaemon baked into the golden image preps the VM at boot, and a LaunchAgent surfaces the enrollment prompt at first login.
+
+On macOS 11 or later, [Apple's documentation](https://support.apple.com/guide/deployment/about-device-supervision-dep1d89f0bff/web) confirms that Macs enrolled via profile-based Device Enrollment (the mechanism Jamf UIE, Intune Company Portal, and Iru's Enrollment Portal all use) are supervised. ABM is not required for supervision on macOS 11+. This means Orka VMs running macOS 11 or later will be supervised after enrollment. See each platform's tab for details on what this enables.
+
+Because the MDM profile is installed without ABM, a user with local admin rights can remove it after installation. See [Security considerations](#security-considerations) before deploying to environments where MDM persistence is a compliance requirement.
+
+---
+
+<Tabs>
+  <Tab title="Jamf Pro">
+
+### How it works
+
+Two components go into your golden image.
+
+A **LaunchDaemon** runs at boot as root. It downloads the Jamf binary from your Jamf Pro server, installs the management framework, and creates a computer record in Jamf Pro. No user interaction required.
+
+A **LaunchAgent** runs at each login. If MDM enrollment isn't complete, it shows the user a dialog and opens Safari to the Jamf enrollment page. The user completes <Tooltip tip="Single Sign-On — lets users authenticate once with their organization's identity provider to access multiple services.">SSO</Tooltip> authentication, clears the pre-filled username field, clicks Enroll, clicks Download, then approves the profile in System Settings > General > Device Management. The prompt repeats at each login until enrollment is confirmed, then removes itself.
+
+Both components remove themselves once MDM enrollment is confirmed.
+
+---
+
+### What you need
+
+- Your Jamf Pro instance URL (for example, `https://yourcompany.jamfcloud.com`)
+- Jamf Pro admin access to configure User-Initiated Enrollment
+- Access to your Orka golden image
+
+**These instructions were written and verified against Jamf Pro 11.25.2 and macOS 15.6.1.**
+
+Navigation and feature placement have changed across major versions of Jamf Pro. If your instance looks different, refer to the [Jamf Pro documentation](https://learn.jamf.com) for your specific version.
+
+---
+
+### Step-by-step instructions
+
+#### Step 1: Enable User-Initiated Enrollment
+
+1. Click **Settings** at the bottom of the left sidebar.
+2. Under the **Global** tab, select **User-Initiated Enrollment**.
+3. On the **Computers** tab, confirm user-initiated enrollment is enabled. Save if you made changes.
+
+#### Step 2: Create an enrollment invitation
+
+Enrollment invitations in Jamf Pro 11 live under Computers, but may be inside the UIE settings screen in previous versions.
+
+1. Click **Computers** at the top of the left sidebar.
+2. Click **Enrollment Invitations** in the sidebar.
+3. Click **New** and follow the prompts. Set the expiration date as far out as your instance allows, and align it to your image rotation schedule so the invitation doesn't go stale before you re-seal the image.
+4. Scope the invitation to a specific Jamf site or LDAP group if needed.
+5. After saving, open the invitation record and copy the **Invitation ID**. This is the value you'll use as `INVITATION_CODE` in both scripts below.
+
+#### Step 3: Create the LaunchDaemon script
+
+Add the following script to your golden image at `/usr/local/bin/jamf-enroll.sh`. Fill in your `JSS_URL` and `INVITATION_CODE`, and swap out `com.yourcompany` for your reverse-domain identifier throughout.
+
+```bash
+mkdir -p /usr/local/bin
+```
+
+```bash
+#!/bin/bash
+# Runs at boot via LaunchDaemon. Installs the Jamf management framework
+# and creates a computer record in Jamf Pro. MDM profile installation
+# is handled separately via the login prompt.
+
+JSS_URL="https://yourcompany.jamfcloud.com"
+INVITATION_CODE="YOUR_INVITATION_CODE_HERE"
+JAMF_BINARY="/usr/local/jamf/bin/jamf"
+TMP_JAMF="/tmp/jamf"
+DAEMON_PLIST="/Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist"
+LOG="/var/log/jamf-enroll.log"
+MAX_ATTEMPTS=10
+ATTEMPT_FILE="/var/tmp/.jamf-enroll-attempts"
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOG"
+}
+
+attempts=0
+[ -f "$ATTEMPT_FILE" ] && attempts=$(cat "$ATTEMPT_FILE")
+
+if [ "$attempts" -ge "$MAX_ATTEMPTS" ]; then
+    log "Max attempts ($MAX_ATTEMPTS) reached. Verify invitation code and JSS reachability."
+    exit 1
+fi
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    log "MDM enrolled. Cleaning up LaunchDaemon."
+    launchctl unload "$DAEMON_PLIST" 2>/dev/null
+    rm -f "$DAEMON_PLIST" "/usr/local/bin/jamf-enroll.sh" "$ATTEMPT_FILE"
+    exit 0
+fi
+
+network_ready=false
+for i in $(seq 1 12); do
+    if curl -s --connect-timeout 5 -o /dev/null "${JSS_URL}/healthCheck.html"; then
+        network_ready=true
+        break
+    fi
+    log "Waiting for network... attempt $i"
+    sleep 5
+done
+
+if [ "$network_ready" = false ]; then
+    log "Network not available. Will retry at next boot."
+    echo $((attempts + 1)) > "$ATTEMPT_FILE"
+    exit 1
+fi
+
+if [ ! -f "$JAMF_BINARY" ]; then
+    log "Downloading Jamf binary."
+    curl -ks --connect-timeout 10 --max-time 60 "${JSS_URL}/bin/jamf" -o "$TMP_JAMF"
+    if [ $? -ne 0 ] || [ ! -s "$TMP_JAMF" ]; then
+        log "Download failed. Will retry."
+        echo $((attempts + 1)) > "$ATTEMPT_FILE"
+        exit 1
+    fi
+    chmod +x "$TMP_JAMF"
+    JAMF_BINARY="$TMP_JAMF"
+fi
+
+"$JAMF_BINARY" createConf -url "$JSS_URL" >> "$LOG" 2>&1
+
+log "Initiating Jamf framework enrollment."
+echo $((attempts + 1)) > "$ATTEMPT_FILE"
+"$JAMF_BINARY" enroll -invitation "$INVITATION_CODE" -jssUrl "$JSS_URL" >> "$LOG" 2>&1
+log "Enrollment command finished with exit code $?."
+```
+
+```bash
+chmod 755 /usr/local/bin/jamf-enroll.sh
+```
+
+#### Step 4: Create the LaunchDaemon
+
+Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist`. Update the label to use your reverse-domain identifier.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.jamf-enroll</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/jamf-enroll.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>StartInterval</key>
+      <integer>300</integer>
+      <key>StandardOutPath</key>
+      <string>/var/log/jamf-enroll.log</string>
+      <key>StandardErrorPath</key>
+      <string>/var/log/jamf-enroll.log</string>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist
+chmod 644 /Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist
+```
+
+#### Step 5: Create the LaunchAgent script
+
+Add the following script to your golden image at `/usr/local/bin/jamf-enroll-prompt.sh`. Fill in your `JSS_URL`, `INVITATION_CODE`, and reverse-domain identifier.
+
+```bash
+#!/bin/bash
+# Runs at login via LaunchAgent. Prompts the user to complete MDM enrollment
+# via Safari. Cleans itself up once enrollment is confirmed.
+
+JSS_URL="https://yourcompany.jamfcloud.com"
+INVITATION_CODE="YOUR_INVITATION_CODE_HERE"
+AGENT_PLIST="/Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist"
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    launchctl unload "$AGENT_PLIST" 2>/dev/null
+    rm -f "$AGENT_PLIST" "/usr/local/bin/jamf-enroll-prompt.sh"
+    exit 0
+fi
+
+button=$(osascript <<EOF
+button returned of (display dialog "Your Mac desktop needs to be enrolled in your organization's device management system before you can access company resources.
+
+Click Enroll Now to open the enrollment page in Safari. You will need your company login credentials. When the page loads, clear the username field and click Enroll, then approve the profile in System Settings." \
+buttons {"Remind Me Later", "Enroll Now"} \
+default button "Enroll Now" \
+with title "Device Enrollment Required" \
+with icon caution)
+EOF
+)
+
+[ "$button" = "Enroll Now" ] && open -a /Applications/Safari.app "${JSS_URL}/enroll?invitation=${INVITATION_CODE}"
+```
+
+```bash
+chmod 755 /usr/local/bin/jamf-enroll-prompt.sh
+```
+
+#### Step 6: Create the LaunchAgent
+
+Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist`. Update the label to use your reverse-domain identifier.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.jamf-enroll-prompt</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/jamf-enroll-prompt.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
+chmod 644 /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
+```
+
+#### Step 7: Seal the golden image
+
+1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
+2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
+3. Confirm no Jamf management framework is already installed. If `/Library/Application Support/JAMF/` exists, remove it before sealing: `sudo rm -rf "/Library/Application Support/JAMF/"`.
+4. Publish the image in Orka.
+
+---
+
+### Verifying enrollment
+
+After provisioning a VM from your updated golden image:
+
+```bash
+# Check what the LaunchDaemon did
+cat /var/log/jamf-enroll.log
+
+# Confirm MDM profile was installed after the user approved
+profiles status -type enrollment
+```
+
+In Jamf Pro, go to **Computers > Search Computers** and search for the VM by hostname or hardware UUID (get it with `system_profiler SPHardwareDataType | grep UUID`). Confirm a computer record was created and check the **Management** tab to verify the MDM profile is listed.
+
+---
+
+### A few things worth knowing
+
+**Each VM gets its own record.** Orka assigns each VM a unique hardware UUID, so every desktop shows up as a separate computer in Jamf. When you destroy and reprovision a VM, the new instance creates a new record. Stale records from old VMs stick around until you clean them up manually, so plan for that in high-churn environments.
+
+**Watch your invitation expiry.** If the enrollment invitation expires, the script hits its retry limit and stops trying. For long-lived golden images, set the invitation to "Never Expires." If you rotate invitations, update the script and re-seal the image before the old code goes stale.
+
+**The image contains credentials.** The enrollment script has your Jamf server URL and invitation code baked in. Apply the same access controls to this image that you'd use for any artifact holding credentials.
+
+**VMs on macOS 11+ are supervised via profile-based enrollment.** Per [Apple's documentation](https://support.apple.com/guide/deployment/about-device-supervision-dep1d89f0bff/web), Mac computers running macOS 11 or later that enroll via profile-based Device Enrollment (which is what Jamf User-Initiated Enrollment uses) are supervised, no ADE required. This means supervision-gated features (kernel extension policy, certain payload payloads) are available. Note that Jamf UIE does not set the profile as non-removable by default; for that, your Jamf administrator must configure `PayloadRemovalDisallowed` in the enrollment profile.
+
+**If enrollment isn't triggering,** check `/var/log/jamf-enroll.log`. The most common causes are the VM not having network access when the daemon first runs, an expired invitation code, or an MDM profile already present in the image before sealing.
+
+  </Tab>
+  <Tab title="Microsoft Intune">
+
+<Warning>
+  Microsoft officially supports macOS VMs in Intune **for testing purposes only**. Deploying VMs as production employee devices is not a supported scenario. See [Enroll virtual macOS machines for testing](https://learn.microsoft.com/en-us/intune/intune-service/enrollment/macos-enroll#enroll-virtual-macos-machines-for-testing) in Microsoft's documentation. MacStadium documents this workflow because customers ask for it, but production deployments are outside Microsoft's support boundary.
+</Warning>
+
+### How it works
+
+Two components go into your golden image.
+
+A **LaunchDaemon** runs at boot as root. It waits for network availability, confirms the Intune service endpoint is reachable, and verifies that the Company Portal app is present on disk. Unlike the Jamf flow, there is no daemon-initiated enrollment step: Intune has no equivalent of `jamf enroll` that pre-creates a record. The entire enrollment is gated on the user signing in to Company Portal with their Entra ID account, so the daemon's job is to confirm prerequisites are in place and monitor enrollment state.
+
+A **LaunchAgent** runs at each login. If MDM enrollment isn't complete, it shows the user a dialog and opens Company Portal. The user signs in with their work account, follows the in-app steps to download the management profile, then approves the profile in System Settings > General > Device Management. The prompt repeats at each login until enrollment is confirmed, then removes itself.
+
+Both components remove themselves once MDM enrollment is confirmed.
+
+---
+
+### What you need
+
+- A Microsoft Intune tenant with macOS device enrollment configured
+- An active **Apple MDM Push Certificate** uploaded to Intune (annual renewal required)
+- Entra ID (Azure AD) accounts for your end users, licensed for Intune (M365 E3/E5, EMS E3/E5, or an Intune standalone SKU)
+- Access to your Orka golden image
+- The Company Portal `.pkg` installer downloaded from [https://go.microsoft.com/fwlink/?linkid=853070](https://go.microsoft.com/fwlink/?linkid=853070)
+
+**These instructions were written and verified against macOS 15.6.1 and the Microsoft Intune admin center as of May 2026.** Microsoft's admin console layout and feature placement shift over time. If your tenant looks different, refer to the [macOS device enrollment guide for Microsoft Intune](https://learn.microsoft.com/en-us/intune/device-enrollment/apple/guide-macos) for the current navigation.
+
+---
+
+### Step-by-step instructions
+
+#### Step 1: Configure the Apple MDM Push Certificate
+
+The push certificate is required for Intune to communicate with Apple's MDM service. If you already manage iOS or macOS devices in Intune, this is already in place.
+
+1. In the [Intune admin center](https://intune.microsoft.com), go to **Devices > Enrollment > Apple > Apple MDM Push certificate**.
+2. If no certificate is listed, follow Microsoft's [Get an Apple MDM Push certificate for Intune](https://learn.microsoft.com/en-us/intune/device-enrollment/apple/create-mdm-push-certificate) procedure. You'll grant Microsoft permission to send push notifications, download a CSR, upload it to [https://identity.apple.com](https://identity.apple.com), then upload the resulting `.pem` back into Intune.
+3. Record the **Apple ID** used to create the certificate. Apple only allows renewal from the same Apple ID, and the certificate expires every 365 days. Store this in your team's password manager.
+
+#### Step 2: Confirm enrollment is enabled for macOS
+
+1. In **Devices > Enrollment**, confirm **Intune** is set as the MDM authority for your tenant.
+2. Under **Enrollment device platform restrictions**, confirm macOS device enrollment is allowed for the user groups that will own VDI desktops.
+
+#### Step 3: Assign Intune licenses to your VDI users
+
+Each end user enrolling a VM must have an Intune license assigned (M365 E3/E5, EMS, or Intune standalone). Without a license, Company Portal sign-in will succeed but enrollment will fail with a licensing error. Assign licenses in the [Microsoft 365 admin center](https://admin.microsoft.com) or via group-based licensing in Entra ID.
+
+#### Step 4: Stage the Company Portal app in your golden image
+
+Bake the latest Company Portal `.pkg` into the golden image rather than downloading it at boot. Pre-staging avoids a network dependency at first boot and keeps the install version pinned to whatever you tested against.
+
+```bash
+curl -L -o /tmp/CompanyPortal-Installer.pkg "https://go.microsoft.com/fwlink/?linkid=853070"
+sudo installer -pkg /tmp/CompanyPortal-Installer.pkg -target /
+ls -d "/Applications/Company Portal.app"
+```
+
+Once installed, Company Portal updates itself via Microsoft AutoUpdate on managed devices. You don't need to chase point releases. Refresh it on your normal image rotation cadence.
+
+#### Step 5: Create the LaunchDaemon script
+
+Add the following script to your golden image at `/usr/local/bin/intune-enroll.sh`. Swap `com.yourcompany` for your reverse-domain identifier if you want to namespace it differently.
+
+```bash
+mkdir -p /usr/local/bin
+```
+
+```bash
+#!/bin/bash
+# Runs at boot via LaunchDaemon. Verifies prerequisites for Intune enrollment
+# (network reachability and Company Portal presence) and monitors enrollment
+# state. The actual MDM profile install is a user-driven step handled by the
+# LaunchAgent. Self-removes once MDM enrollment is confirmed.
+
+INTUNE_ENDPOINT="https://manage.microsoft.com"
+COMPANY_PORTAL_APP="/Applications/Company Portal.app"
+DAEMON_PLIST="/Library/LaunchDaemons/com.yourcompany.intune-enroll.plist"
+LOG="/var/log/intune-enroll.log"
+MAX_ATTEMPTS=10
+ATTEMPT_FILE="/var/tmp/.intune-enroll-attempts"
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOG"
+}
+
+attempts=0
+[ -f "$ATTEMPT_FILE" ] && attempts=$(cat "$ATTEMPT_FILE")
+
+if [ "$attempts" -ge "$MAX_ATTEMPTS" ]; then
+    log "Max attempts ($MAX_ATTEMPTS) reached. Verify Company Portal install and tenant reachability."
+    exit 1
+fi
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    log "MDM enrolled. Cleaning up LaunchDaemon."
+    launchctl unload "$DAEMON_PLIST" 2>/dev/null
+    rm -f "$DAEMON_PLIST" "/usr/local/bin/intune-enroll.sh" "$ATTEMPT_FILE"
+    exit 0
+fi
+
+network_ready=false
+for i in $(seq 1 12); do
+    if curl -s --connect-timeout 5 -o /dev/null -w "%{http_code}" "${INTUNE_ENDPOINT}" | grep -qE "^(200|301|302|400|401|403)$"; then
+        network_ready=true
+        break
+    fi
+    log "Waiting for network... attempt $i"
+    sleep 5
+done
+
+if [ "$network_ready" = false ]; then
+    log "Network not available or Intune endpoint unreachable. Will retry at next interval."
+    echo $((attempts + 1)) > "$ATTEMPT_FILE"
+    exit 1
+fi
+
+if [ ! -d "$COMPANY_PORTAL_APP" ]; then
+    log "ERROR: Company Portal.app not found at $COMPANY_PORTAL_APP. Re-seal the golden image with Company Portal installed."
+    echo $((attempts + 1)) > "$ATTEMPT_FILE"
+    exit 1
+fi
+
+log "Prerequisites OK. Awaiting user login to complete enrollment via Company Portal."
+echo $((attempts + 1)) > "$ATTEMPT_FILE"
+exit 0
+```
+
+```bash
+chmod 755 /usr/local/bin/intune-enroll.sh
+```
+
+#### Step 6: Create the LaunchDaemon
+
+Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.intune-enroll.plist`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.intune-enroll</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/intune-enroll.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>StartInterval</key>
+      <integer>300</integer>
+      <key>StandardOutPath</key>
+      <string>/var/log/intune-enroll.log</string>
+      <key>StandardErrorPath</key>
+      <string>/var/log/intune-enroll.log</string>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchDaemons/com.yourcompany.intune-enroll.plist
+chmod 644 /Library/LaunchDaemons/com.yourcompany.intune-enroll.plist
+```
+
+#### Step 7: Create the LaunchAgent script
+
+Add the following script to your golden image at `/usr/local/bin/intune-enroll-prompt.sh`.
+
+```bash
+#!/bin/bash
+# Runs at login via LaunchAgent. Prompts the user to complete MDM enrollment
+# via the Company Portal app. Cleans itself up once enrollment is confirmed.
+
+COMPANY_PORTAL_APP="/Applications/Company Portal.app"
+AGENT_PLIST="/Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plist"
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    launchctl unload "$AGENT_PLIST" 2>/dev/null
+    rm -f "$AGENT_PLIST" "/usr/local/bin/intune-enroll-prompt.sh"
+    exit 0
+fi
+
+if [ ! -d "$COMPANY_PORTAL_APP" ]; then
+    osascript <<EOF >/dev/null 2>&1
+display dialog "This Mac desktop is missing the Company Portal app required for device enrollment. Please contact your IT administrator." \
+    buttons {"OK"} \
+    default button "OK" \
+    with title "Device Enrollment Unavailable" \
+    with icon stop
+EOF
+    exit 1
+fi
+
+button=$(osascript <<EOF
+button returned of (display dialog "Your Mac desktop needs to be enrolled in your organization's device management system before you can access company resources.
+
+Click Enroll Now to open Company Portal. Sign in with your work account, then follow the on-screen steps. When prompted, approve the management profile in System Settings > General > Device Management." \
+    buttons {"Remind Me Later", "Enroll Now"} \
+    default button "Enroll Now" \
+    with title "Device Enrollment Required" \
+    with icon caution)
+EOF
+)
+
+[ "$button" = "Enroll Now" ] && open -a "$COMPANY_PORTAL_APP"
+exit 0
+```
+
+```bash
+chmod 755 /usr/local/bin/intune-enroll-prompt.sh
+```
+
+#### Step 8: Create the LaunchAgent
+
+Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plist`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.intune-enroll-prompt</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/intune-enroll-prompt.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plist
+chmod 644 /Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plist
+```
+
+#### Step 9: Seal the golden image
+
+1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
+2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
+3. Confirm Company Portal is present: `ls -d "/Applications/Company Portal.app"`.
+4. If you've previously enrolled this image into Intune for testing, remove the residue before sealing:
+
+```bash
+sudo profiles remove -type enrollment   # only if a stale enrollment profile exists
+sudo rm -rf "/Library/Application Support/com.microsoft.CompanyPortalMac"
+```
+
+5. Publish the image in Orka.
+
+---
+
+### Verifying enrollment
+
+After provisioning a VM from your updated golden image:
+
+```bash
+# Check what the LaunchDaemon did
+cat /var/log/intune-enroll.log
+
+# Confirm MDM profile was installed after the user approved
+profiles status -type enrollment
+```
+
+In the Intune admin center, go to **Devices > macOS > All devices** and search by hostname or serial number. The hardware UUID Orka assigns to the VM appears in Intune as the device's hardware identifier. Pull it locally with `system_profiler SPHardwareDataType | grep UUID`.
+
+---
+
+### A few things worth knowing
+
+**Each VM gets its own record.** Orka assigns each VM a unique hardware UUID, so every desktop shows up as a separate device in Intune. When you destroy and reprovision a VM, the new instance creates a new record. Stale records stick around until you clean them up manually (via the admin center or Microsoft Graph). Plan for periodic cleanup in high-churn environments.
+
+**No invitation code, but there is an enrollment surface.** Unlike Jamf, Intune doesn't bake an enrollment secret into the image. The user authenticates with their own Entra ID credentials, which removes credential-leak risk. It also means anyone with a valid licensed Entra ID account and VM access can enroll it into your tenant. Restrict this via a Conditional Access policy or device platform restriction scoped to the Entra ID group your VDI users belong to.
+
+**Watch the APNs certificate expiry.** The Apple MDM Push Certificate expires every 365 days. If it lapses, all macOS enrollment and management of already-enrolled devices breaks until you renew it from the same Apple ID that created it. Add a calendar reminder 30 days out and store the Apple ID in your team's password manager.
+
+**Company Portal updates itself.** Once the device is enrolled, Microsoft AutoUpdate keeps Company Portal current. You only need to refresh the version baked into the golden image on your normal rotation cadence.
+
+**Intune turns on supervision for macOS 11+ user-approved enrollments.** Per [Microsoft's documentation](https://learn.microsoft.com/en-us/intune/intune-service/enrollment/macos-enroll#user-approved-enrollment), Intune automatically enables supervision for devices running macOS 11 or later that enroll via Company Portal. For VMs, this means supervision-requiring features (certain configuration payloads, bootstrap token escrow) may work. Given that Microsoft only supports VMs for testing, validate your specific compliance requirements before relying on supervision behavior in production.
+
+**If enrollment isn't triggering,** check `/var/log/intune-enroll.log`. Common causes: no network at boot, Company Portal missing from the image, or the user's Entra ID account lacks an Intune license (which surfaces as a Company Portal sign-in error rather than a daemon-side failure).
+
+  </Tab>
+  <Tab title="Iru (Kandji)">
+
+<Warning>
+  This guide has not been verified against a live Iru installation. MacStadium is still developing and validating the recommended enrollment pattern for Iru. Use it as a starting point and contact [support@macstadium.com](mailto:support@macstadium.com) for current guidance before deploying to production.
+</Warning>
+
+### How it works
+
+Two components go into your golden image.
+
+A **LaunchDaemon** runs at boot as root. It waits for network availability and confirms the Iru service endpoint is reachable. Unlike Jamf, there is no binary to download or daemon-initiated enrollment command. The daemon's job is to verify network prerequisites and monitor enrollment state.
+
+A **LaunchAgent** runs at each login. If MDM enrollment isn't complete, it shows the user a dialog and opens Safari to your Iru enrollment URL. The user authenticates with their work account, downloads the management profile, and approves it in System Settings > General > Device Management. The prompt repeats at each login until enrollment is confirmed, then removes itself.
+
+Both components remove themselves once MDM enrollment is confirmed.
+
+---
+
+### What you need
+
+- An active Iru tenant
+- Your Iru enrollment URL and Blueprint access code (from your Iru admin console under **Enrollment > Manual Enrollment**)
+- SSO configured in Iru if your organization uses federated login
+- Access to your Orka golden image
+
+---
+
+### Step-by-step instructions
+
+#### Step 1: Get your enrollment URL
+
+In the Iru admin console, go to **Enrollment > Manual Enrollment**. Enable the Enrollment Portal if it isn't already on, then toggle on the Blueprint you want VMs to enroll into. Copy the **Enrollment Code** for that Blueprint.
+
+The enrollment URL you'll bake into the LaunchAgent script takes this form (per [Iru's documentation](https://support.kandji.io/kb/configuring-device-enrollment)):
+
+```
+https://yourcompany.kandji.io/enroll/access-code/ENROLLMENTCODE
+```
+
+Replace `yourcompany` with your Iru subdomain and `ENROLLMENTCODE` with the code from your Blueprint (remove the dash between the two number groups).
+
+#### Step 2: Create the LaunchDaemon script
+
+Add the following script to your golden image at `/usr/local/bin/iru-enroll.sh`. Swap `com.yourcompany` for your reverse-domain identifier.
+
+```bash
+mkdir -p /usr/local/bin
+```
+
+```bash
+#!/bin/bash
+# Runs at boot via LaunchDaemon. Verifies network prerequisites for Iru
+# enrollment and monitors enrollment state. Self-removes once MDM enrollment
+# is confirmed.
+
+IRU_ENDPOINT="https://kandji.io"
+DAEMON_PLIST="/Library/LaunchDaemons/com.yourcompany.iru-enroll.plist"
+LOG="/var/log/iru-enroll.log"
+MAX_ATTEMPTS=10
+ATTEMPT_FILE="/var/tmp/.iru-enroll-attempts"
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOG"
+}
+
+attempts=0
+[ -f "$ATTEMPT_FILE" ] && attempts=$(cat "$ATTEMPT_FILE")
+
+if [ "$attempts" -ge "$MAX_ATTEMPTS" ]; then
+    log "Max attempts ($MAX_ATTEMPTS) reached. Verify network and Iru endpoint reachability."
+    exit 1
+fi
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    log "MDM enrolled. Cleaning up LaunchDaemon."
+    launchctl unload "$DAEMON_PLIST" 2>/dev/null
+    rm -f "$DAEMON_PLIST" "/usr/local/bin/iru-enroll.sh" "$ATTEMPT_FILE"
+    exit 0
+fi
+
+network_ready=false
+for i in $(seq 1 12); do
+    if curl -s --connect-timeout 5 -o /dev/null "${IRU_ENDPOINT}"; then
+        network_ready=true
+        break
+    fi
+    log "Waiting for network... attempt $i"
+    sleep 5
+done
+
+if [ "$network_ready" = false ]; then
+    log "Network not available. Will retry at next interval."
+    echo $((attempts + 1)) > "$ATTEMPT_FILE"
+    exit 1
+fi
+
+log "Prerequisites OK. Awaiting user login to complete enrollment via Iru enrollment URL."
+echo $((attempts + 1)) > "$ATTEMPT_FILE"
+exit 0
+```
+
+```bash
+chmod 755 /usr/local/bin/iru-enroll.sh
+```
+
+#### Step 3: Create the LaunchDaemon
+
+Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.iru-enroll.plist`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.iru-enroll</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/iru-enroll.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>StartInterval</key>
+      <integer>300</integer>
+      <key>StandardOutPath</key>
+      <string>/var/log/iru-enroll.log</string>
+      <key>StandardErrorPath</key>
+      <string>/var/log/iru-enroll.log</string>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchDaemons/com.yourcompany.iru-enroll.plist
+chmod 644 /Library/LaunchDaemons/com.yourcompany.iru-enroll.plist
+```
+
+#### Step 4: Create the LaunchAgent script
+
+Add the following script to your golden image at `/usr/local/bin/iru-enroll-prompt.sh`. Replace `YOUR_IRU_ENROLLMENT_URL` with the URL from your Iru admin console.
+
+```bash
+#!/bin/bash
+# Runs at login via LaunchAgent. Prompts the user to complete MDM enrollment
+# via the Iru enrollment URL. Cleans itself up once enrollment is confirmed.
+
+IRU_ENROLLMENT_URL="https://yourcompany.kandji.io/enroll/access-code/YOUR_ENROLLMENT_CODE"
+AGENT_PLIST="/Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist"
+
+if profiles status -type enrollment 2>/dev/null | grep -q "MDM enrollment: Yes"; then
+    launchctl unload "$AGENT_PLIST" 2>/dev/null
+    rm -f "$AGENT_PLIST" "/usr/local/bin/iru-enroll-prompt.sh"
+    exit 0
+fi
+
+button=$(osascript <<EOF
+button returned of (display dialog "Your Mac desktop needs to be enrolled in your organization's device management system before you can access company resources.
+
+Click Enroll Now to open the enrollment page in Safari. Sign in with your work account, then download and approve the management profile when prompted in System Settings." \
+    buttons {"Remind Me Later", "Enroll Now"} \
+    default button "Enroll Now" \
+    with title "Device Enrollment Required" \
+    with icon caution)
+EOF
+)
+
+[ "$button" = "Enroll Now" ] && open -a /Applications/Safari.app "$IRU_ENROLLMENT_URL"
+exit 0
+```
+
+```bash
+chmod 755 /usr/local/bin/iru-enroll-prompt.sh
+```
+
+#### Step 5: Create the LaunchAgent
+
+Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist`.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+      <key>Label</key>
+      <string>com.yourcompany.iru-enroll-prompt</string>
+      <key>ProgramArguments</key>
+      <array>
+          <string>/bin/bash</string>
+          <string>/usr/local/bin/iru-enroll-prompt.sh</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+  </dict>
+</plist>
+```
+
+```bash
+chown root:wheel /Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist
+chmod 644 /Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist
+```
+
+#### Step 6: Seal the golden image
+
+1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
+2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
+3. Publish the image in Orka.
+
+---
+
+### Verifying enrollment
+
+After provisioning a VM from your updated golden image:
+
+```bash
+# Check what the LaunchDaemon did
+cat /var/log/iru-enroll.log
+
+# Confirm MDM profile was installed after the user approved
+profiles status -type enrollment
+```
+
+In the Iru admin console, check **Devices** to confirm the VM appears with an enrolled status.
+
+---
+
+### A few things worth knowing
+
+**Each VM gets its own record.** Orka assigns each VM a unique hardware UUID, so every desktop shows up as a separate device in Iru. Plan for periodic cleanup of stale records from destroyed VMs.
+
+**The enrollment URL is baked into the image.** The LaunchAgent script contains your Iru enrollment URL. Apply the same access controls to this image that you'd use for any artifact containing configuration secrets. Rotate the URL on a defined schedule if Iru supports it.
+
+**macOS devices enrolled via the Iru Enrollment Portal are supervised.** Per [Iru's documentation](https://support.kandji.io/kb/configuring-device-enrollment), macOS devices enrolled through the Enrollment Portal (rather than ADE) are supervised on macOS. This is different from iOS, where supervision requires ADE. For Orka VMs specifically, validate this behavior against a live Iru installation; the general platform behavior is documented, but VM-specific edge cases may apply.
+
+**If enrollment isn't triggering,** check `/var/log/iru-enroll.log`. Common causes: no network at boot, or an MDM profile already present in the image before sealing.
+
+  </Tab>
+</Tabs>
+
+---
+
+## Security considerations
+
+The following applies across all three MDM platforms, with tool-specific notes where the behavior differs.
+
+**A user with local admin rights can remove the MDM profile, unless `PayloadRemovalDisallowed` is set.** Because Orka VMs enroll via profile-based Device Enrollment (not ADE), the MDM profile is removable by default. A user with admin access can open System Settings > General > Device Management and click Remove Management. To prevent this, your MDM must explicitly set `PayloadRemovalDisallowed` in the enrollment profile. Jamf, Intune, and Iru all support this setting, but it's not enabled automatically on user-initiated enrollment flows. Check your MDM's enrollment profile configuration. For Intune specifically, losing the MDM profile triggers a Compliance policy non-compliance state, which Conditional Access can use to automatically block access to corporate apps, a useful side effect that Jamf and Iru don't provide natively.
+
+**The LaunchDaemon provides partial recovery, not prevention.** The daemon is configured with a `StartInterval` of 300 seconds, so it re-runs every five minutes and checks enrollment state. If the MDM profile has been removed, the daemon detects the unenrolled state but cannot reinstall the profile silently on an unsupervised device. For Jamf, the daemon can re-create the computer record and reinstall the management framework on its own, but the MDM profile approval still requires user action. For Intune and Iru, the daemon can only ensure the LaunchAgent is in place to re-prompt at next login. It can't force the click-through. There is also a gap window of up to five minutes between profile removal and the next daemon run during which the VM is unmanaged.
+
+**Restrict local admin if MDM persistence is a compliance requirement.** The most effective control is to not give the end user admin rights on the VM. Without admin, the user can't remove a profile from System Settings, and the most common removal vectors (`profiles remove`, MDM payload deletion via the UI) require elevation. Standard-user accounts on the VM, with admin held by a separate provisioning identity, close most of this gap.
+
+**Monitor for unenrollment.** Treat lost MDM enrollment as an event worth alerting on.
+
+- **Jamf:** Create a smart group with the criterion "MDM Profile Removed" is "Yes", or "Last Inventory Update" older than your expected check-in interval. Configure a webhook, email notification, or policy that fires on smart group membership changes.
+- **Intune:** Create a dynamic device group in Entra ID flagging devices whose `lastSyncDateTime` is older than your expected check-in interval, or whose enrollment state has dropped. Wire it to an Azure Monitor alert or a Logic App webhook.
+- **Iru:** Use the Iru admin console's device compliance views to surface unenrolled devices.
+
+**Treat image credentials as secrets.** The Jamf enrollment script contains your JSS URL and invitation code. The Iru script contains your enrollment URL. A user who extracts these from a running VM can use them to enroll arbitrary devices until the credentials are rotated. Rotate on a defined schedule and re-seal the image, especially after personnel changes. Intune does not bake a credential into the image. Enrollment depends on the user's own Entra ID account and license, which is a smaller attack surface.
+
+---
+
+## References
+
+**Jamf Pro**
+- [Jamf Pro documentation](https://learn.jamf.com)
+- [User-Initiated Enrollment](https://learn.jamf.com/en-US/bundle/jamf-pro-documentation-current/page/User-Initiated_Enrollment_for_Computers.html)
+
+**Microsoft Intune**
+- [Set up enrollment for macOS devices in Intune](https://learn.microsoft.com/en-us/intune/intune-service/enrollment/macos-enroll)
+- [Enroll virtual macOS machines for testing](https://learn.microsoft.com/en-us/intune/intune-service/enrollment/macos-enroll#enroll-virtual-macos-machines-for-testing)
+- [Troubleshoot macOS VM enrollment in Intune](https://learn.microsoft.com/en-us/troubleshoot/mem/intune/device-enrollment/troubleshoot-macos-vm-enrollment)
+- [User-approved enrollment](https://learn.microsoft.com/en-us/intune/intune-service/enrollment/macos-enroll#user-approved-enrollment)
+- [Get an Apple MDM Push certificate for Intune](https://learn.microsoft.com/en-us/intune/device-enrollment/apple/create-mdm-push-certificate)
+
+**Iru (formerly Kandji)**
+- [Configuring device enrollment](https://support.kandji.io/kb/configuring-device-enrollment)
+- [Device enrollment guide for Apple IT](https://www.iru.com/blog/guide-for-apple-it-device-enrollment-uamdm-tcc-and-device-supervision)

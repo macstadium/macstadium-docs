@@ -1,6 +1,7 @@
 ---
-title: "Advanced Configuration"
+title: "Advanced configuration"
 description: "Advanced MacStadium VDI configuration: bridged networking, HDX tuning, resource allocation, Ansible automation extensions, CI/CD integration, and multi-tenant setup."
+keywords: ["bridged networking", "HDX optimization", "multi-tenancy VDI", "image caching", "VM resource tuning", "advanced VDI configuration"]
 ---
 
 This page covers advanced configuration topics for production MacStadium VDI environments. These are optional enhancements beyond the initial deployment. You don't need them to get started, but they unlock performance, scale, and automation capabilities.
@@ -364,7 +365,7 @@ Calculate per-VM cost: divide host cost (hardware + MacStadium hosting) by VMs p
 Apply different Citrix policies per tenant:
 
 1. Create separate Delivery Groups per tenant
-2. Create policies with appropriate settings per tenant (e.g., Finance: no clipboard, no file transfer; Engineering: full access)
+2. Create policies with appropriate settings per tenant (for example, Finance: no clipboard, no file transfer; Engineering: full access)
 3. Filter policies by Delivery Group name
 
 Each tenant gets appropriate controls without affecting others.

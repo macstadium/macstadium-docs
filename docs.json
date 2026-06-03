@@ -304,8 +304,7 @@
               "remote-desktop-vdi/overview/prerequisites",
               "remote-desktop-vdi/overview/choose-your-deployment-model",
               "remote-desktop-vdi/overview/bare-metal-mac-vdi",
-              "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
-              "remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases"
+              "remote-desktop-vdi/overview/business-outcomes-use-cases"
             ]
           },
           {
@@ -318,14 +317,14 @@
           {
             "group": "Configuration",
             "pages": [
-              "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
-              "remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
-              "remote-desktop-vdi/macstadium-vdi-deployment/image-management",
-              "remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment",
-              "remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices",
-              "remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
-              "remote-desktop-vdi/supporting-documentation/customer-environment-tips",
-              "remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
+              "remote-desktop-vdi/configuration/ansible-playbook-implementation",
+              "remote-desktop-vdi/configuration/citrix-daas-configuration",
+              "remote-desktop-vdi/configuration/image-management",
+              "remote-desktop-vdi/configuration/mdm-enrollment",
+              "remote-desktop-vdi/configuration/android-virtual-devices",
+              "remote-desktop-vdi/configuration/apple-business-manager-and-mobile-device-management-with-macstadium",
+              "remote-desktop-vdi/configuration/customer-environment-tips",
+              "remote-desktop-vdi/configuration/usb-passthrough-guide",
               "remote-desktop-vdi/configuration/advanced-configuration"
             ]
           },
@@ -333,8 +332,8 @@
             "group": "Operations",
             "pages": [
               "remote-desktop-vdi/it-admin-onboarding-guide",
-              "remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
-              "remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
+              "remote-desktop-vdi/operations/validation-and-testing",
+              "remote-desktop-vdi/operations/production-rollout",
               "remote-desktop-vdi/operational-guides/day-2-operations-guide",
               "remote-desktop-vdi/operational-guides/monitoring",
               "remote-desktop-vdi/operational-guides/ansible-quick-reference",
@@ -345,8 +344,8 @@
             "group": "Reference",
             "pages": [
               "remote-desktop-vdi/reference/networking-requirements",
-              "remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
-              "remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers"
+              "remote-desktop-vdi/reference/troubleshooting-quick-reference",
+              "remote-desktop-vdi/reference/shared-user-responsibility-guide-for-macstadium-customers"
             ]
           },
           {
@@ -356,7 +355,7 @@
             ]
           },
           {
-            "group": "Legacy (HP Anyware)",
+            "group": "Legacy (Cloud Access)",
             "pages": [
               "remote-desktop-vdi/cloud-access-legacy/cloud-access",
               "remote-desktop-vdi/cloud-access-legacy/getting-started-with-cloud-access",
@@ -499,6 +498,86 @@
     }
   },
   "redirects": [
+    {
+      "source": "/remote-desktop-vdi/overview/overview-architecture",
+      "destination": "/remote-desktop-vdi/overview/prerequisites",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/configuration/jamf-enrollment",
+      "destination": "/remote-desktop-vdi/configuration/mdm-enrollment",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
+      "destination": "/remote-desktop-vdi/overview/overview-architecture",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/business-outcomes-use-cases",
+      "destination": "/remote-desktop-vdi/overview/business-outcomes-use-cases",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
+      "destination": "/remote-desktop-vdi/configuration/ansible-playbook-implementation",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
+      "destination": "/remote-desktop-vdi/configuration/citrix-daas-configuration",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/image-management",
+      "destination": "/remote-desktop-vdi/configuration/image-management",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment",
+      "destination": "/remote-desktop-vdi/configuration/jamf-enrollment",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/android-virtual-devices",
+      "destination": "/remote-desktop-vdi/configuration/android-virtual-devices",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/supporting-documentation/apple-business-manager-and-mobile-device-management-with-macstadium",
+      "destination": "/remote-desktop-vdi/configuration/apple-business-manager-and-mobile-device-management-with-macstadium",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/supporting-documentation/customer-environment-tips",
+      "destination": "/remote-desktop-vdi/configuration/customer-environment-tips",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/supporting-documentation/usb-passthrough-guide",
+      "destination": "/remote-desktop-vdi/configuration/usb-passthrough-guide",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/validation-and-testing",
+      "destination": "/remote-desktop-vdi/operations/validation-and-testing",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/macstadium-vdi-deployment/production-rollout",
+      "destination": "/remote-desktop-vdi/operations/production-rollout",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
+      "destination": "/remote-desktop-vdi/reference/troubleshooting-quick-reference",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/supporting-documentation/shared-user-responsibility-guide-for-macstadium-customers",
+      "destination": "/remote-desktop-vdi/reference/shared-user-responsibility-guide-for-macstadium-customers",
+      "permanent": true
+    },
     {
       "source": "/orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
       "destination": "/remote-desktop-vdi/it-admin-onboarding-guide",
