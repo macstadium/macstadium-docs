@@ -198,7 +198,7 @@ The [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orches
       command: >
         ansible-playbook -i inventory deploy.yml
         -e "vm_name=image-test-01"
-        -e "vm_image={{ current_image }}"
+        -e "vm_image=[CURRENT_IMAGE]"
 
     - name: Wait for VM to be ready
       pause:
@@ -209,10 +209,10 @@ The [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orches
     - name: Create new golden image
       command: >
         ansible-playbook -i inventory create_image.yml
-        -e "vm_image={{ current_image }}"
-        -e "remote_image_name={{ new_image }}"
-        -e "registry_username={{ registry_user }}"
-        -e "registry_password={{ registry_pass }}"
+        -e "vm_image=[CURRENT_IMAGE]"
+        -e "remote_image_name=[NEW_IMAGE]"
+        -e "registry_username=[REGISTRY_USER]"
+        -e "registry_password=[REGISTRY_PASS]"
 
     - name: Clean up test VM
       command: >
@@ -244,7 +244,7 @@ The [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orches
 
     - name: Alert if VMs are down
       debug:
-        msg: "WARNING: {{ vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length }} VMs are not running"
+        msg: "WARNING: [VM_LIST_STDOUT___FROM_JSON___SELECTATTR'] VMs are not running"
       when: (vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length) > 0
 ```
 
@@ -289,11 +289,11 @@ jobs:
 
       - name: Create new golden image if tests pass
         run: |
-          ansible-playbook -i inventory create_image.yml -e "vm_image=image-test-abc123" -e "remote_image_name=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}" -e "registry_username=${{ secrets.REGISTRY_USER }}" -e "registry_password=${{ secrets.REGISTRY_PASS }}"
+          ansible-playbook -i inventory create_image.yml -e "vm_image=image-test-abc123" -e "remote_image_name=registry.example.com/citrix-vda/dev-tools:[GITHUB_SHA]" -e "registry_username=[SECRETS_REGISTRY_USER]" -e "registry_password=[SECRETS_REGISTRY_PASS]"
 
       - name: Deploy to production
         run: |
-          ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-dev-01" -e "vm_image=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}"
+          ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-dev-01" -e "vm_image=registry.example.com/citrix-vda/dev-tools:[GITHUB_SHA]"
 ```
 
 ---

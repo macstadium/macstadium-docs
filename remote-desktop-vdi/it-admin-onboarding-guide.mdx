@@ -617,7 +617,7 @@ Important notes:
 
 Next, you'll want to run the `create_image` playbook:  
 ```bash
-ansible-playbook -i dev/inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 registry_username={{ vault_registry_username }} registry_password={{ vault_registry_password }}"
+ansible-playbook -i dev/inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 registry_username=[VAULT_REGISTRY_USERNAME] registry_password=[VAULT_REGISTRY_PASSWORD]"
 ```
 
 What happens when running this playbook:
