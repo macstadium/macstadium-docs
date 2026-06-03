@@ -388,15 +388,10 @@ For pilot deployments or troubleshooting:
 
        ```bash
        # Plan deployment (dry-run)
-       ansible-playbook -i inventory deploy.yml \
-         -e "vm_name=citrix-vda-test-01" \
-         -e "vm_image=<your-image>" \
-         --tags plan
+       ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-test-01" -e "vm_image=<your-image>" --tags plan
 
        # Execute deployment
-       ansible-playbook -i inventory deploy.yml \
-         -e "vm_name=citrix-vda-test-01" \
-         -e "vm_image=<your-image>"
+       ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-test-01" -e "vm_image=<your-image>"
        ```
 
      - Allocate appropriate VM resources (CPU, RAM, storage)
@@ -438,9 +433,7 @@ For scalable deployments, automate VDA installation via Ansible.
   1. Deploy a clean VM using Orka Engine
 
      ```bash
-     ansible-playbook -i inventory.ini create_orka_vm.yml \
-       -e "vm_name=quick-vm" \
-       -e "image_source=ghcr.io/macstadium/orka-images/sonoma:latest"
+     ansible-playbook -i inventory.ini create_orka_vm.yml -e "vm_name=quick-vm" -e "image_source=ghcr.io/macstadium/orka-images/sonoma:latest"
      ```
 
   2. Install .NET Runtime 8.0
@@ -485,9 +478,7 @@ After successful VDA deployment:
   * Push to private registry
 
      ```bash
-     ansible-playbook -i inventory.ini publish_orka_image.yml \
-       -e "local_image=my-backup" \
-       -e "remote_image=myregistry.com/orka/my-image:v1"
+     ansible-playbook -i inventory.ini publish_orka_image.yml -e "local_image=my-backup" -e "remote_image=myregistry.com/orka/my-image:v1"
      ```
 
   * Document installed software versions
@@ -612,33 +603,25 @@ Look for successful registration messages:
 ##### Check VDA Service Status
 
 ```bash
-ansible mac_vms -i inventory.ini \
-  -m shell \
-  -a "sudo launchctl list | grep citrix"
+ansible mac_vms -i inventory.ini -m shell -a "sudo launchctl list | grep citrix"
 ```
 
 ##### Restart VDA Service
 
 ```bash
-ansible mac_vms -i inventory.ini \
-  -m shell \
-  -a "sudo launchctl kickstart -k system/com.citrix.vda"
+ansible mac_vms -i inventory.ini -m shell -a "sudo launchctl kickstart -k system/com.citrix.vda"
 ```
 
 ##### View VDA Logs
 
 ```bash
-ansible mac_vms -i inventory.ini \
-  -m shell \
-  -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
+ansible mac_vms -i inventory.ini -m shell -a "sudo tail -100 /Library/Application\ Support/Citrix/VDA/Logs/vda.log"
 ```
 
 ##### Test Citrix Cloud Connectivity
 
 ```bash
-ansible mac_vms -i inventory.ini \
-  -m shell \
-  -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
+ansible mac_vms -i inventory.ini -m shell -a "curl -v https://[customer_ID].xendesktop.net 2>&1 | grep Connected"
 ```
 
 **Re-registration scenarios:**

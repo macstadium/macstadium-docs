@@ -48,9 +48,9 @@ Configure and test these before sealing your golden image. Some permissions cann
 | Permission | Citrix HDX | HP Anyware PCoIP | MDM pre-approvable? |
 |---|---|---|---|
 | Accessibility | Required | Required | Yes |
-| Screen Recording | Required | Required | No — grant manually before sealing |
-| Microphone | Optional (audio redirect) | Optional | No — user-controlled |
-| Camera | Optional (webcam redirect) | Optional | No — user-controlled |
+| Screen Recording | Required | Required | No (grant manually before sealing) |
+| Microphone | Optional (audio redirect) | Optional | No (user-controlled) |
+| Camera | Optional (webcam redirect) | Optional | No (user-controlled) |
 
 **Bundle IDs for PPPC profiles:**
 
@@ -138,7 +138,7 @@ MacStadium hosts use wired Ethernet. If any nodes in your cluster are on Wi-Fi, 
 
 | Setting | Citrix HDX | HP Anyware PCoIP |
 |---|---|---|
-| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles — see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, frame rate — configured via plist (see below) |
+| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles (see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, frame rate — configured via plist (see below) |
 | Config location | Citrix Workspace settings | `/Library/Preferences/com.teradici.pcoip-agent.plist` |
 | Applies to | VDA | Graphics Agent and Standard Agent |
 

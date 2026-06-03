@@ -78,7 +78,7 @@ The 2-VM-per-host ceiling is the constraint that shapes every MacStadium VDI dep
 | 50               | 25           |                      |
 | 100              | 50           |                      |
 
-This assumes one VM per concurrent user. For **dedicated (persistent) deployments**, size for your total user count, not just peak concurrency — each user holds a VM whether or not they're logged in. For **pooled (non-persistent) deployments**, size for your expected peak concurrency, typically 60-80% of total users.
+This assumes one VM per concurrent user. For **dedicated (persistent) deployments**, size for your total user count, not just peak concurrency: each user holds a VM whether or not they're logged in. For **pooled (non-persistent) deployments**, size for your expected peak concurrency, typically 60-80% of total users.
 
 **RAM guidance by deployment type:**
 
@@ -90,7 +90,7 @@ This assumes one VM per concurrent user. For **dedicated (persistent) deployment
 
 <Note>
   Start conservative. MacStadium hosted deployments can add nodes without
-  re-architecting — it's easier to add hosts than to right-size VM RAM after
+  re-architecting. It's easier to add hosts than to right-size VM RAM after
   users are in production.
 </Note>
 

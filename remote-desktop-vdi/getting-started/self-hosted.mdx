@@ -1,6 +1,6 @@
 ---
 title: "Getting Started: Self-Hosted"
-description: "Step-by-step guide to deploying MacStadium VDI on your own infrastructure — on-premises or on AWS. Covers hardware preparation, networking, Orka Engine installation, and first VM deployment."
+description: "Step-by-step guide to deploying MacStadium VDI on your own infrastructure, on-premises or on AWS. Covers hardware preparation, networking, Orka Engine installation, and first VM deployment."
 ---
 
 This guide covers deploying MacStadium VDI on infrastructure you manage. Most steps are the same whether you're deploying on-premises or on AWS. Where the steps diverge, tabs or callout blocks mark the difference.
@@ -67,7 +67,7 @@ The Ansible controller is a separate machine (macOS or Linux) that runs orchestr
 Run all steps in this section on each physical Mac host. Repeat for every host in your fleet.
 
 <Warning>
-  Don't enable FileVault on Mac hosts without a remote recovery plan. If a host with FileVault enabled powers down, you'll need physical access to decrypt the disk before the host can be managed remotely. If FileVault is required by your security policy, use macOS Tahoe (26) — Tahoe supports pre-boot SSH for remote disk decryption. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
+  Don't enable FileVault on Mac hosts without a remote recovery plan. If a host with FileVault enabled powers down, you'll need physical access to decrypt the disk before the host can be managed remotely. If FileVault is required by your security policy, use macOS Tahoe (26). Tahoe supports pre-boot SSH for remote disk decryption. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
 </Warning>
 
 ### 1.1 Assign a static IP
@@ -86,7 +86,7 @@ Assign a static IP to each host before installing Orka Engine. Either configure 
 2. Configure your DHCP server to assign a fixed IP to each MAC address.
 3. Verify the host receives the reserved IP.
 
-Document the following for each host — you'll need it for the Ansible inventory file:
+Document the following for each host (you'll need it for the Ansible inventory file):
 
 | Field | Example |
 | --- | --- |
@@ -251,10 +251,7 @@ This playbook installs Orka Engine on every host in your inventory, applies your
 ```bash
 cd ~/orka-automation/orka-engine-orchestration
 
-ansible-playbook install_engine.yml \
-  -i inventory \
-  -e "orka_license_key=YOUR-LICENSE-KEY" \
-  -e "engine_url=YOUR-INSTALLER-URL"
+ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICENSE-KEY" -e "engine_url=YOUR-INSTALLER-URL"
 ```
 
 Replace `YOUR-LICENSE-KEY` and `YOUR-INSTALLER-URL` with the values from your MacStadium account representative.
@@ -271,11 +268,7 @@ ansible hosts -i inventory -m shell -a "/usr/local/bin/orka-engine info"
 To reinstall or upgrade to a newer version, add the `install_engine_force` flag:
 
 ```bash
-ansible-playbook install_engine.yml \
-  -i inventory \
-  -e "orka_license_key=YOUR-LICENSE-KEY" \
-  -e "engine_url=YOUR-INSTALLER-URL" \
-  -e "install_engine_force=true"
+ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICENSE-KEY" -e "engine_url=YOUR-INSTALLER-URL" -e "install_engine_force=true"
 ```
 
 ---
@@ -334,8 +327,7 @@ The management UI is available at `http://localhost:3000`. Log in with the admin
 **Option A: Setup script (recommended)**
 
 ```bash
-SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD \
-  uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
+SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
 ```
 
 Run `uv run ./semaphore/configure_semaphore.py --help` to see all options, including VM credentials and OCI registry settings.
@@ -355,11 +347,7 @@ From the management UI, open the **Orka Engine Orchestration** project and run t
 Or run the playbook directly:
 
 ```bash
-ansible-playbook deploy.yml \
-  -i inventory \
-  -e "vm_name=vdi-test-01" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" \
-  -e "network_interface=en0"
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-test-01" -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" -e "network_interface=en0"
 ```
 
 <Note>
@@ -384,11 +372,7 @@ ansible-playbook list.yml -i inventory -e "vm_name=vdi-test-01"
 To preview a deployment without making changes, add `--tags plan`:
 
 ```bash
-ansible-playbook deploy.yml \
-  -i inventory \
-  -e "vm_name=vdi-test-01" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" \
-  --tags plan
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-test-01" -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" --tags plan
 ```
 
 ---

@@ -54,7 +54,7 @@ MacStadium VDI integrates with your existing identity provider (Active Directory
 
 MacStadium VDI uses bridged networking to give each macOS VM a direct IP address on the host's network. This is required for VDI workloads: the Citrix VDA inside each VM must be reachable by Citrix Cloud for registration, and end-user HDX sessions connect directly to the VM's IP. Without bridged networking, you'd need port forwarding for every VM, which doesn't scale.
 
-Bridged networking is configured per deployment using the `network_interface` variable in your Ansible inventory. Set it to the physical interface on each Mac host — typically `en0` for Ethernet. VMs deployed with this setting receive an IP address from your DHCP server or management VLAN, just like any other device on that network.
+Bridged networking is configured per deployment using the `network_interface` variable in your Ansible inventory. Set it to the physical interface on each Mac host, typically `en0` for Ethernet. VMs deployed with this setting receive an IP address from your DHCP server or management VLAN, just like any other device on that network.
 
 <Note>
   Bridged networking requires Orka Engine 3.5.0 or later.

@@ -1,6 +1,6 @@
 ---
 title: "Networking Requirements"
-description: "Port and firewall requirements, network topology, DNS, and VPN/connectivity requirements for MacStadium VDI — covering all three deployment models."
+description: "Port and firewall requirements, network topology, DNS, and VPN/connectivity requirements for MacStadium VDI, covering all three deployment models."
 ---
 
 <Warning>
@@ -64,7 +64,7 @@ These rules apply to all deployment models.
     MacStadium manages the Mac hardware and data center network. Your responsibilities:
 
     - Connect to your MacStadium environment via VPN (credentials and configuration provided by MacStadium)
-    - Your Ansible controller can be located anywhere with VPN access — on your corporate network, a cloud VM, or a MacStadium-hosted VM
+    - Your Ansible controller can be located anywhere with VPN access (on your corporate network, a cloud VM, or a MacStadium-hosted VM)
     - MacStadium assigns static IPs to your Mac hosts; you don't configure host networking directly
     - VMs use bridged networking by default, receiving IPs from your DHCP-enabled management VLAN
 
@@ -77,7 +77,7 @@ These rules apply to all deployment models.
 
     - Assign static IPs to Mac hosts before installing Orka Engine (manual configuration or DHCP reservation)
     - Place Mac hosts on a management VLAN with connectivity to your Ansible controller
-    - VMs use bridged networking — they receive IPs from your network's DHCP server and appear as native devices on your LAN
+    - VMs use bridged networking: they receive IPs from your network's DHCP server and appear as native devices on your LAN
     - Your corporate firewall must permit outbound traffic from VMs to Citrix Cloud and inbound HDX traffic from end users
 
     **Recommended VLAN segmentation:**
@@ -132,7 +132,7 @@ If your network requires a proxy for outbound internet access:
 
   * Configure HTTP/HTTPS proxy settings in your golden image before deploying VMs
   * Set `HTTP_PROXY` and `HTTPS_PROXY` environment variables at the system level
-  * Ensure the proxy does not perform TLS inspection on Citrix Cloud traffic — Citrix VDA uses certificate pinning and TLS inspection will break VDA registration
+  * Ensure the proxy does not perform TLS inspection on Citrix Cloud traffic. Citrix VDA uses certificate pinning and TLS inspection will break VDA registration
   * Whitelist Citrix Cloud endpoints at the proxy level if deep inspection is required
 
 ---

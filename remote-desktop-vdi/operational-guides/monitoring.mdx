@@ -1,13 +1,10 @@
 ---
-title: "Monitoring & Observability"
+title: "Monitoring & observability"
 description: "How to monitor VM health, host utilization, session state, and integrate MacStadium VDI with external observability tools."
+keywords: ["VDI monitoring", "Orka metrics", "Citrix Cloud monitoring", "alerting VDI", "observability macOS VDI"]
 ---
 
-<Warning>
-  This page is pending engineering review for completeness. Some integration details (e.g., specific Prometheus metrics, Semaphore webhook endpoints) may change as the platform evolves. Contact [support@macstadium.com](mailto:support@macstadium.com) for the latest guidance.
-</Warning>
-
-This page covers monitoring and observability for a production MacStadium VDI environment — what data is available, how to collect it, and how to integrate with external tools.
+This page covers monitoring and observability for a production MacStadium VDI environment: what data is available, how to collect it, and how to integrate with external tools.
 
 ---
 
@@ -15,7 +12,7 @@ This page covers monitoring and observability for a production MacStadium VDI en
 
 ### Orka Engine
 
-Orka Engine exposes VM state and host utilization through the CLI and Ansible playbooks. There is no built-in metrics endpoint — monitoring is done by querying Orka through Ansible or the `orka-engine` CLI.
+Orka Engine exposes VM state and host utilization through the CLI and Ansible playbooks. There is no built-in metrics endpoint; monitoring is done by querying Orka through Ansible or the `orka-engine` CLI.
 
 **VM state:**
 
@@ -33,19 +30,13 @@ Output includes VM name, IP address, host assignment, and running state.
 
 ```bash
 # CPU and memory on all hosts
-ansible hosts -i inventory \
-  -m shell \
-  -a "top -l 1 | grep -E 'CPU|PhysMem'"
+ansible hosts -i inventory -m shell -a "top -l 1 | grep -E 'CPU|PhysMem'"
 
 # Disk space on all hosts
-ansible hosts -i inventory \
-  -m shell \
-  -a "df -h /var/orka"
+ansible hosts -i inventory -m shell -a "df -h /Users/<host_username>/.local/share/orka/data"
 
 # Orka Engine version (confirms service is running)
-ansible hosts -i inventory \
-  -m shell \
-  -a "orka-engine --version"
+ansible hosts -i inventory -m shell -a "orka-engine --version"
 ```
 
 **Orka Engine logs:**
@@ -54,15 +45,10 @@ Located at `/var/log/orka-engine.log` on each Mac host.
 
 ```bash
 # Recent errors across all hosts
-ansible hosts -i inventory \
-  -m shell \
-  -a "sudo grep -i error /var/log/orka-engine.log | tail -20"
+ansible hosts -i inventory -m shell -a "sudo grep -i error /var/log/orka-engine.log | tail -20"
 
 # Tail logs on a specific host
-ansible hosts -i inventory \
-  -m shell \
-  -a "sudo tail -100 /var/log/orka-engine.log" \
-  --limit mac-node-1
+ansible hosts -i inventory -m shell -a "sudo tail -100 /var/log/orka-engine.log" --limit mac-node-1
 ```
 
 ### Management UI (Semaphore)
@@ -73,7 +59,7 @@ Access at `http://localhost:3000` on your Ansible controller (or wherever you de
 
 ### Citrix Cloud Console
 
-Citrix Cloud provides the most complete view of session and VDA health. Key monitoring areas:
+Citrix Cloud provides the most complete view of session and <Tooltip tip="Virtual Delivery Agent — software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> health. Key monitoring areas:
 
 | Location | What to check |
 | --- | --- |
@@ -86,7 +72,7 @@ Citrix Cloud provides the most complete view of session and VDA health. Key moni
 **Target metrics (baseline):**
 - Unregistered machines: 0
 - Session launch success rate: >95%
-- Average session launch time: <30 seconds
+- Average session launch time: under 30 seconds
 - Cloud Connectors: all "Up"
 
 ### Citrix VDA logs (on VMs)
@@ -94,16 +80,13 @@ Citrix Cloud provides the most complete view of session and VDA health. Key moni
 Located at `/Library/Application Support/Citrix/VDA/Logs/` on each macOS VM.
 
 Key files:
-  * `vda.log` — main VDA service log (registration events, errors)
-  * `registration.log` — registration-specific events
-  * `broker.log` — communication with Citrix Cloud
+  * `vda.log`: main VDA service log (registration events, errors)
+  * `registration.log`: registration-specific events
+  * `broker.log`: communication with Citrix Cloud
 
 ```bash
 # Access via Ansible through host jump proxy
-ansible mac_vms -i inventory \
-  -m shell \
-  -a "sudo tail -50 /Library/Application\ Support/Citrix/VDA/Logs/vda.log" \
-  --limit <host-ip>
+ansible hosts -i inventory -m shell -a "sudo tail -50 /Library/Application\ Support/Citrix/VDA/Logs/vda.log" --limit <host-ip>
 ```
 
 ---
@@ -119,101 +102,27 @@ A cron job on the Ansible controller captures daily capacity snapshots:
 crontab -e
 
 # Daily capacity log at 6 AM
-0 6 * * * ansible-playbook -i /path/to/inventory list.yml \
-  > /var/log/orka-capacity-$(date +\%Y\%m\%d).log
+0 6 * * * ansible-playbook -i /path/to/inventory list.yml > /var/log/orka-capacity-$(date +\%Y\%m\%d).log
 
 # Daily disk space check
-30 6 * * * ansible hosts -i /path/to/inventory \
-  -m shell -a "df -h /var/orka" \
-  >> /var/log/orka-disk-$(date +\%Y\%m\%d).log
+30 6 * * * ansible hosts -i /path/to/inventory -m shell -a "df -h /Users/<host_username>/.local/share/orka/data" >> /var/log/orka-disk-$(date +\%Y\%m\%d).log
 ```
 
 Review these logs weekly to spot trends before they become incidents.
 
 ### Health check automation
 
-A scheduled Ansible playbook can detect and alert on VMs that aren't running:
-
-```yaml
-# health-check.yml
----
-- name: VM health check
-  hosts: hosts
-  tasks:
-    - name: Check VMs are running
-      shell: orka-engine vm list --format json
-      register: vm_list
-
-    - name: Alert if VMs are down
-      debug:
-        msg: "WARNING: {{ vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length }} VMs are not running on {{ inventory_hostname }}"
-      when: (vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length) > 0
-```
-
-Schedule this every 15 minutes via cron and pipe output to your alerting system.
+Run `list.yml` on a schedule and scan its output for unexpected VM states. Pipe the output through your alerting system's ingest endpoint (most support a simple `curl` POST to a webhook). Schedule via cron every 15 minutes and treat any non-zero exit code or missing VM name as an alert condition.
 
 ---
 
 ## Integration with external monitoring tools
 
-MacStadium VDI doesn't expose a native metrics API. The recommended integration pattern is to query Orka through Ansible and forward the output to your monitoring platform.
+MacStadium VDI doesn't expose a native metrics API. The general integration pattern is to run Ansible playbooks on a schedule, capture their output to log files, and forward those logs to your monitoring platform using its standard log ingestion agent.
 
-### Datadog
+For example, with Datadog: install the Datadog Agent on your Ansible controller, configure a log collection rule pointing at your capacity log files (for example, `/var/log/orka-capacity-*.log`), and create a monitor based on log content. The approach is the same for CloudWatch Logs, Grafana Loki, or any other log-based monitoring platform. The log files are the integration point, not a metrics API.
 
-Use the Datadog Agent on your Ansible controller with a custom check that runs `list.yml` and parses output:
-
-```python
-# /etc/datadog-agent/checks.d/orka_vms.py
-import subprocess, json
-from checks import AgentCheck
-
-class OrkaVMCheck(AgentCheck):
-    def check(self, instance):
-        result = subprocess.run(
-            ['ansible-playbook', '-i', 'inventory', 'list.yml', '--machine-readable'],
-            capture_output=True, text=True
-        )
-        # Parse output and submit metrics
-        self.gauge('orka.vms.running', count_running_vms(result.stdout))
-        self.gauge('orka.hosts.disk_free_pct', get_disk_free(instance['host']))
-```
-
-### CloudWatch (AWS Self-Hosted)
-
-Use CloudWatch Agent on your Ansible controller to collect custom metrics. Forward Orka capacity log files to CloudWatch Logs:
-
-```bash
-# In CloudWatch Agent config
-{
-  "logs": {
-    "files": [
-      {
-        "file_path": "/var/log/orka-capacity-*.log",
-        "log_group_name": "/macstadium/vdi/capacity"
-      }
-    ]
-  }
-}
-```
-
-### Grafana + Prometheus
-
-Export Orka metrics via a simple exporter script on the Ansible controller. The script queries Orka via Ansible and exposes a `/metrics` endpoint in Prometheus text format.
-
-Community scripts for this pattern are maintained in the [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orchestration) repository. Check the repository for the latest examples.
-
-### Generic webhook/alerting
-
-Pipe health check output to any webhook-compatible alerting system (PagerDuty, OpsGenie, Slack, etc.) by appending a `curl` call to your cron jobs:
-
-```bash
-# Example: send alert to Slack if VMs are down
-0 * * * * ansible-playbook -i /path/to/inventory health-check.yml 2>&1 | \
-  grep -i "WARNING" | \
-  xargs -I {} curl -s -X POST https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
-    -H 'Content-type: application/json' \
-    --data '{"text":"{}"}'
-```
+For alerting, most platforms support webhook-based notifications. Pipe playbook output through your alerting system's ingest endpoint from your cron jobs. Consult your monitoring platform's documentation for the specific agent configuration and webhook format.
 
 ---
 
@@ -225,7 +134,7 @@ Pipe health check output to any webhook-compatible alerting system (PagerDuty, O
 | --- | --- |
 | VDA registration drops below 80% of expected | Citrix Cloud Console → Monitor → Machines |
 | All VMs in a Delivery Group unavailable | Citrix Cloud Console → Monitor → Machines |
-| Host disk usage >90% | `df -h /var/orka` via Ansible |
+| Host disk usage >90% | `df -h /Users/<host_username>/.local/share/orka/data` via Ansible |
 | Orka Engine service not responding | `orka-engine --version` fails via Ansible |
 
 ### Warning (respond within 4 hours)
@@ -234,7 +143,7 @@ Pipe health check output to any webhook-compatible alerting system (PagerDuty, O
 | --- | --- |
 | >10% of session launches failing over 15 minutes | Citrix Cloud Console → Monitor → Trends |
 | Host CPU >80% sustained | `top` via Ansible |
-| Host disk usage >75% | `df -h /var/orka` via Ansible |
+| Host disk usage >75% | `df -h /Users/<host_username>/.local/share/orka/data` via Ansible |
 | Session launch time exceeds 30-second baseline by 50% | Citrix Cloud Console → Monitor → Trends |
 
 ### Informational (review daily)
@@ -255,10 +164,10 @@ Pipe health check output to any webhook-compatible alerting system (PagerDuty, O
 
     - For host hardware alerts (disk failure, hardware fault), MacStadium's monitoring will detect these and notify you.
     - For Orka Engine and VM-layer monitoring, use the Ansible-based approach above.
-    - MacStadium can provide infrastructure-level metrics on request — contact your account representative.
+    - MacStadium can provide infrastructure-level metrics on request. Contact your account representative.
   </Tab>
   <Tab title="Self-Hosted">
-    You own full-stack observability — from hardware to VDA. In addition to the Ansible-based monitoring above:
+    You own full-stack observability, from hardware to VDA. In addition to the Ansible-based monitoring above:
 
     - Install your standard server monitoring agent (Datadog, New Relic, Prometheus Node Exporter) on each Mac host
     - Monitor macOS system metrics: CPU, memory, disk I/O, network throughput

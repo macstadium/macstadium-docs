@@ -1,6 +1,6 @@
 ---
 title: "Getting Started: MSDC-Hosted"
-description: "Step-by-step guide to deploying MacStadium VDI on MacStadium-managed infrastructure. Your Mac hosts are ready — this guide covers connecting, configuring, and deploying your first VMs."
+description: "Step-by-step guide to deploying MacStadium VDI on MacStadium-managed infrastructure. Your Mac hosts are ready: this guide covers connecting, configuring, and deploying your first VMs."
 ---
 
 MacStadium has already provisioned your Mac hosts, configured networking, and installed macOS. This guide covers everything on your side: connecting to your infrastructure, setting up the orchestration controller, and deploying your first macOS VMs.
@@ -22,7 +22,7 @@ Before you begin, confirm you have the following:
 - An administrator account on your controller machine
 
 <Warning>
-  Don't enable FileVault on Mac hosts without coordinating with MacStadium first. If a host with FileVault enabled powers down, a MacStadium data center technician must intervene on-site before the host can be accessed remotely. If your security policy requires FileVault, use macOS Tahoe on your hosts — Tahoe supports pre-boot SSH for remote disk decryption, which avoids the need for on-site intervention. FileVault is not officially supported by MacStadium. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
+  Don't enable FileVault on Mac hosts without coordinating with MacStadium first. If a host with FileVault enabled powers down, a MacStadium data center technician must intervene on-site before the host can be accessed remotely. If your security policy requires FileVault, use macOS Tahoe on your hosts. Tahoe supports pre-boot SSH for remote disk decryption, which avoids the need for on-site intervention. FileVault is not officially supported by MacStadium. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
 </Warning>
 
 ---
@@ -176,10 +176,7 @@ This playbook installs Orka Engine on every host in your inventory. It applies y
 ```bash
 cd ~/orka-automation/orka-engine-orchestration
 
-ansible-playbook install_engine.yml \
-  -i inventory \
-  -e "orka_license_key=YOUR-LICENSE-KEY" \
-  -e "engine_url=YOUR-INSTALLER-URL"
+ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICENSE-KEY" -e "engine_url=YOUR-INSTALLER-URL"
 ```
 
 Replace `YOUR-LICENSE-KEY` and `YOUR-INSTALLER-URL` with the values from your MacStadium account representative.
@@ -249,8 +246,7 @@ The management UI is available at `http://localhost:3000`. Log in with the admin
 **Option A: Setup script (recommended)**
 
 ```bash
-SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD \
-  uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
+SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
 ```
 
 Run `uv run ./semaphore/configure_semaphore.py --help` to see all available options, including VM credentials and OCI registry settings.
@@ -270,11 +266,7 @@ From the management UI, open the **Orka Engine Orchestration** project and run t
 Or run the playbook directly from the controller:
 
 ```bash
-ansible-playbook deploy.yml \
-  -i inventory \
-  -e "vm_name=vdi-test-01" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" \
-  -e "network_interface=en0"
+ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-test-01" -e "vm_image=ghcr.io/macstadium/orka-images/sequoia:latest" -e "network_interface=en0"
 ```
 
 <Note>
