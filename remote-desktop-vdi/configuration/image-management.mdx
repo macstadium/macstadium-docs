@@ -2,18 +2,19 @@
 title: "VDI golden image management"
 description: "Create and manage golden images for MacStadium VDI: build images with Citrix VDA pre-installed, automate builds with Ansible, and distribute across hosts."
 zendesk_id: 44332794850971
+keywords: ["golden image", "OCI image", "image lifecycle", "Citrix VDA image", "create_image.yml", "VM image management"]
 ---
 
 Image management is critical for maintaining a scalable MacStadium VDI environment. This page covers creating a golden image with Citrix VDA pre-installed, automating image builds, distributing images across hosts, and version control practices for long-term maintenance.
 
 ## Golden image lifecycle
 
-Every VM in your fleet is deployed from a golden image — a versioned snapshot of macOS with Citrix VDA and your organization's applications pre-installed. The lifecycle repeats with each update cycle:
+Every VM in your fleet is deployed from a golden image, a versioned snapshot of macOS with Citrix VDA and your organization's applications pre-installed. The lifecycle repeats with each update cycle:
 
 ![Golden image lifecycle diagram](/images/image-lifecycle.svg)
 
 1. **Base image:** Start from a MacStadium public base image (`ghcr.io/macstadium/orka-images/sequoia:latest` or similar).
-2. **Build:** Run `create_image.yml` — it deploys a temporary VM, executes your scripts in the `/scripts` directory, commits the result, pushes the image to your OCI registry, and cleans up.
+2. **Build:** Run `create_image.yml`: it deploys a temporary VM, executes your scripts in the `/scripts` directory, commits the result, pushes the image to your OCI registry, and cleans up.
 3. **Version:** Tag the image with a version (`v1.0`, `v1.1`, etc.) before pushing to your registry. Tag as `:latest` once validated.
 4. **Cache:** Run `pull_image.yml` to pre-pull the image to all hosts. This avoids download delays at deployment time.
 5. **Deploy:** Run `deploy.yml` to provision VMs from the cached image. VMs are ready for Citrix VDA registration immediately.

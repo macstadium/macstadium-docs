@@ -1,6 +1,7 @@
 ---
-title: "Getting Started: MSDC-Hosted"
-description: "Step-by-step guide to deploying MacStadium VDI on MacStadium-managed infrastructure. Your Mac hosts are ready — this guide covers connecting, configuring, and deploying your first VMs."
+title: "Getting started: MSDC-Hosted"
+description: "Step-by-step guide to deploying MacStadium VDI on MacStadium-managed infrastructure. Your Mac hosts are ready: this guide covers connecting, configuring, and deploying your first VMs."
+keywords: ["MacStadium hosted setup", "MSDC VDI deployment", "Ansible controller setup", "Orka Engine installation", "VPN setup macOS VDI"]
 ---
 
 MacStadium has already provisioned your Mac hosts, configured networking, and installed macOS. This guide covers everything on your side: connecting to your infrastructure, setting up the orchestration controller, and deploying your first macOS VMs.
@@ -22,7 +23,7 @@ Before you begin, confirm you have the following:
 - An administrator account on your controller machine
 
 <Warning>
-  Don't enable FileVault on Mac hosts without coordinating with MacStadium first. If a host with FileVault enabled powers down, a MacStadium data center technician must intervene on-site before the host can be accessed remotely. If your security policy requires FileVault, use macOS Tahoe on your hosts — Tahoe supports pre-boot SSH for remote disk decryption, which avoids the need for on-site intervention. FileVault is not officially supported by MacStadium. See [Security and Encryption](/remote-desktop-vdi/supporting-documentation/customer-environment-tips#security-and-encryption) for details.
+  Don't enable FileVault on Mac hosts without coordinating with MacStadium first. If a host with FileVault enabled powers down, a MacStadium data center technician must intervene on-site before the host can be accessed remotely. If your security policy requires FileVault, use macOS Tahoe on your hosts. Tahoe supports pre-boot SSH for remote disk decryption, which avoids the need for on-site intervention. FileVault is not officially supported by MacStadium. See [Security and Encryption](/remote-desktop-vdi/configuration/customer-environment-tips#security-and-encryption) for details.
 </Warning>
 
 ---
@@ -71,8 +72,8 @@ Modern versions of macOS prevent installing Python packages system-wide. Install
 
 ```bash
 brew install pipx
-pipx install ansible-core==2.18.4
-pipx install ansible==11.4.0
+pipx install ansible-core==2.20.3
+pipx install ansible==13.4.0
 ```
 
 ---
@@ -188,7 +189,6 @@ Replace `YOUR-LICENSE-KEY` and `YOUR-INSTALLER-URL` with the values from your Ma
 
 ```bash
 ansible hosts -i inventory -m shell -a "orka-engine --version"
-ansible hosts -i inventory -m shell -a "/usr/local/bin/orka-engine info"
 ```
 
 ---
@@ -253,7 +253,7 @@ SEMAPHORE_ADMIN=$YOUR_ADMIN SEMAPHORE_ADMIN_PASSWORD=$YOUR_ADMIN_PASSWORD \
   uv run ./semaphore/configure_semaphore.py --ssh-key-file $YOUR_KEY
 ```
 
-Run `uv run ./semaphore/configure_semaphore.py --help` to see all available options, including VM credentials and OCI registry settings.
+Run `uv run ./semaphore/configure_semaphore.py --help` to see all available options, including VM credentials and <Tooltip tip="Open Container Initiative — an industry standard for container image formats. Orka stores VM images in OCI-compatible registries like GHCR or Harbor.">OCI</Tooltip> registry settings.
 
 **Option B: Manual (UI)**
 
@@ -300,10 +300,10 @@ ansible-playbook deploy.yml -i inventory -e "vm_name=vdi-test-01" -e "vm_image=g
 Your infrastructure is ready. Continue with:
 
 <CardGroup cols={2}>
-  <Card title="Citrix DaaS Configuration" href="/remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration">
+  <Card title="Citrix DaaS Configuration" href="/remote-desktop-vdi/configuration/citrix-daas-configuration">
     Register your VMs with Citrix Cloud and configure delivery groups.
   </Card>
-  <Card title="Image Management" href="/remote-desktop-vdi/macstadium-vdi-deployment/image-management">
+  <Card title="Image Management" href="/remote-desktop-vdi/configuration/image-management">
     Build a golden image with Citrix VDA and your organization's applications pre-installed.
   </Card>
 </CardGroup>

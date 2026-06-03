@@ -1,7 +1,8 @@
 ---
-title: "Troubleshooting Quick Reference"
+title: "Troubleshooting quick reference"
 description: "Quick-reference for MacStadium VDI issues organized by symptom. Each section lists likely causes, diagnostic commands, and recommended solutions."
 zendesk_id: 44261906056859
+keywords: ["VDI troubleshooting", "Citrix VDA issues", "connectivity problems", "enrollment failures", "macOS VDI errors"]
 ---
 
 ## MacStadium VDI Environment
@@ -357,7 +358,7 @@ Quick diagnostic:
 1. Check HDX policies: Citrix Cloud Console → Policies → HDX Settings
    - "Client clipboard redirection" should be **Allowed**
    - "Client drive redirection" should be **Allowed**
-2. Log out and back in — policies don't always apply to existing sessions.
+2. Log out and back in; policies don't always apply to existing sessions.
 3. Test with plain text first, then formatted text, then files.
 
 **Likely causes and solutions:**
@@ -1328,9 +1329,9 @@ Storage/registry down | Storage team | Internal | Varies
 
 ## Troubleshooting best practices
 
-1. Start simple — verify basic connectivity before diving into application-layer issues.
+1. Start simple: verify basic connectivity before diving into application-layer issues.
 2. Check one layer at a time: network → host → VM → VDA → Citrix.
 3. Use verbose playbook output for any failing task: `ansible-playbook -i dev/inventory <playbook.yml> -vvv`
 4. Test on a single host before assuming an issue is widespread: add `--limit mac-node-1`
-5. Document what you tried and what worked — add it to your internal runbook.
+5. Document what you tried and what worked. Add it to your internal runbook.
 6. Monitor logs proactively rather than reactively. See [Monitoring & Observability](/remote-desktop-vdi/operational-guides/monitoring) for setup guidance.

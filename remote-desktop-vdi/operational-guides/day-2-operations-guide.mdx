@@ -1,7 +1,8 @@
 ---
-title: "Day-2 Operations Guide"
+title: "Day-2 operations guide"
 description: "Ongoing operations for a production MacStadium VDI deployment: capacity planning, image management, user lifecycle, and backup and recovery."
 zendesk_id: 44261455694619
+keywords: ["day-2 operations", "VM lifecycle", "image updates", "capacity management", "VDI maintenance"]
 ---
 
 This guide covers the ongoing operational tasks for managing a production MacStadium VDI environment. It assumes your deployment is complete, users are onboarded, and you're now responsible for day-to-day operations and maintenance.
@@ -56,7 +57,7 @@ Check the current VM distribution across your Orka hosts by running the followin
 ```
 ansible-playbook -i inventory list.yml
 ```
-This playbook shows all your environment's VMs, and which host each is running on. You'll want to watch out for uneven host distribution (e.g., one host is overloaded while others remain idle), any hosts approaching their VM limit, and watch for any resource warnings in the log output. To check your existing host resource usage, run the following Ansible script:  
+This playbook shows all your environment's VMs, and which host each is running on. You'll want to watch out for uneven host distribution (for example, one host is overloaded while others remain idle), any hosts approaching their VM limit, and watch for any resource warnings in the log output. To check your existing host resource usage, run the following Ansible script:  
 
     
     
@@ -183,7 +184,7 @@ This may take anywhere between 2-4 hours for full host integration and testing.
 
 ####  **When you might scale down:**
 
-  * Your user count has reduced (e.g., seasonal workers have been offboarded)
+  * Your user count has reduced (for example, seasonal workers have been offboarded)
 
   * You are consolidating to newer hardware
 

@@ -1,7 +1,8 @@
 ---
-title: "Citrix DaaS Configuration"
+title: "Citrix DaaS configuration"
 description: "Citrix DaaS connects Orka infrastructure with end users. Configuration involves establishing Machine Catalogs to organize macOS VMs, generating enrollment."
 zendesk_id: 44332686963867
+keywords: ["Citrix DaaS configuration", "machine catalog", "delivery group", "VDA registration", "enrollment token", "Citrix Cloud macOS"]
 ---
 
 Citrix DaaS connects Orka infrastructure with end users. Configuration involves establishing Machine Catalogs to organize macOS VMs, generating enrollment tokens to authenticate VDA registration, and defining Delivery Groups that govern user access and desktop assignment policies within a Citrix Workspace.
@@ -40,7 +41,7 @@ Machine Catalogs are logical groupings of virtual machines in Citrix. When using
   4. **Configure Machine Catalog settings:**
 
      - **Catalog name:** Use a descriptive name like "Orka-macOS-Sonoma-Standard" or "MacStadium-VDI-Finance"
-     - **Description:** Document the purpose, OS version, and hardware specs (e.g., "macOS Sonoma on M2 Mac mini, 16GB RAM, for finance team")
+     - **Description:** Document the purpose, OS version, and hardware specs (for example, "macOS Sonoma on M2 Mac mini, 16GB RAM, for finance team")
      - **Session type:** Single-session (each user gets their own desktop)
      - **User assignment:** Choose based on your use case:
        - **Random (pooled):** Users get any available desktop (non-persistent)
@@ -87,7 +88,7 @@ An enrollment token is critical for connecting your Orka-hosted VMs to Citrix Cl
 
   4. **Configure token settings:**
 
-     - **Token name:** Descriptive identifier (e.g., "Orka-Finance-Q1-2026")
+     - **Token name:** Descriptive identifier (for example, "Orka-Finance-Q1-2026")
      - **Expiration:** Set based on your deployment timeline
        - 12 hours: For immediate testing
        - 7 days: Standard deployment window
@@ -158,7 +159,7 @@ Delivery Groups control which users can access which machines and define the use
   5. **Delivery Group name and settings:**
 
      - Name: Descriptive, for example: "Finance-macOS-VDI" or "Engineering-Sonoma-Desktops"
-     - Display name: What users see in Citrix Workspace (e.g., "macOS Finance Desktop")
+     - Display name: What users see in Citrix Workspace (for example, "macOS Finance Desktop")
      - Description: Document purpose and access requirements
      - Time zone: Set to match user locations or leave as client time zone
 

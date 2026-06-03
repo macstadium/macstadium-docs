@@ -1,5 +1,5 @@
 ---
-title: "Customer Environment Tips"
+title: "Customer environment tips"
 description: "Best practices for deploying Citrix HDX and HP Anyware PCoIP on MacStadium: MDM enrollment, permissions, networking, and performance tuning."
 keywords: ["citrix", "hdx", "pcoip", "hp anyware", "teradici", "vdi", "mdm", "jamf", "intune", "kandji"]
 zendesk_id: 40640583440539
@@ -27,7 +27,7 @@ Apple Business Manager (ABM) Automated Device Enrollment is not available for vi
 
 The standard approach is user-initiated enrollment scripted into your golden image. A LaunchDaemon runs at first boot to install the management framework. A LaunchAgent runs at login to prompt the user to approve the MDM profile. That approval is a macOS requirement on unsupervised devices.
 
-MacStadium's tested and supported enrollment process for VMs at scale uses Jamf Pro. For a full walkthrough, see [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment). The LaunchDaemon/LaunchAgent pattern is the same for Intune and Kandji, but MacStadium is still validating and developing optimized guidance for those platforms.
+MacStadium's tested and supported enrollment process for VMs at scale uses Jamf Pro. For a full walkthrough, see [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/configuration/jamf-enrollment). The LaunchDaemon/LaunchAgent pattern is the same for Intune and Kandji, but MacStadium is still validating and developing optimized guidance for those platforms.
 
 A few things to get right before sealing the image:
 
@@ -35,7 +35,7 @@ A few things to get right before sealing the image:
 - Verify enrollment on a test VM before promoting to production: `profiles status -type enrollment` should return `MDM enrollment: Yes`.
 - Do not seal the image with an MDM profile or management framework already present.
 
-For image build and versioning guidance, see [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management).
+For image build and versioning guidance, see [VDI Golden Image Management](/remote-desktop-vdi/configuration/image-management).
 
 ---
 
@@ -48,9 +48,9 @@ Configure and test these before sealing your golden image. Some permissions cann
 | Permission | Citrix HDX | HP Anyware PCoIP | MDM pre-approvable? |
 |---|---|---|---|
 | Accessibility | Required | Required | Yes |
-| Screen Recording | Required | Required | No — grant manually before sealing |
-| Microphone | Optional (audio redirect) | Optional | No — user-controlled |
-| Camera | Optional (webcam redirect) | Optional | No — user-controlled |
+| Screen Recording | Required | Required | No (grant manually before sealing) |
+| Microphone | Optional (audio redirect) | Optional | No (user-controlled) |
+| Camera | Optional (webcam redirect) | Optional | No (user-controlled) |
 
 **Bundle IDs for PPPC profiles:**
 
@@ -89,7 +89,7 @@ Citrix also installs background services under `/Library/LaunchAgents` and `/Lib
 
 | Platform | PPPC | System Extensions | Notes |
 |---|---|---|---|
-| Jamf Pro | Privacy Preferences Policy Control payload | System Extensions payload (Team ID `S272Y5R93J`) | MacStadium's tested and supported platform for VM enrollment at scale. For HP Anyware, generate the code requirement string with `codesign -dr -` and paste it manually. See the [Jamf Enrollment guide](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment). |
+| Jamf Pro | Privacy Preferences Policy Control payload | System Extensions payload (Team ID `S272Y5R93J`) | MacStadium's tested and supported platform for VM enrollment at scale. For HP Anyware, generate the code requirement string with `codesign -dr -` and paste it manually. See the [Jamf Enrollment guide](/remote-desktop-vdi/configuration/jamf-enrollment). |
 | Microsoft Intune | Custom Configuration Profile (macOS XML) | Endpoint Security > macOS System Extensions | Deploy HP Anyware or Citrix Workspace as a macOS DMG app via the Apps blade. Optimized VM enrollment guidance for Intune is in development. |
 | Kandji | Privacy Preferences Library Item | System Extensions Library Item (Team ID `S272Y5R93J`) | 3.x supports non-removable extensions on macOS 15. Optimized VM enrollment guidance for Kandji is in development. |
 
@@ -138,7 +138,7 @@ MacStadium hosts use wired Ethernet. If any nodes in your cluster are on Wi-Fi, 
 
 | Setting | Citrix HDX | HP Anyware PCoIP |
 |---|---|---|
-| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles — see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, frame rate — configured via plist (see below) |
+| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles (see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, frame rate, configured via plist (see below) |
 | Config location | Citrix Workspace settings | `/Library/Preferences/com.teradici.pcoip-agent.plist` |
 | Applies to | VDA | Graphics Agent and Standard Agent |
 
@@ -180,7 +180,7 @@ Define MDM policies before sealing your golden image. A baseline for Orka VDI:
 | Should be enabled | Password complexity, software firewall, Gatekeeper, software update enforcement |
 | Avoid | User lockout policies requiring local physical recovery; FileVault without a MacStadium-coordinated recovery plan |
 
-Do not apply aggressive idle timeout or auto-sleep policies that conflict with active session stability. See [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management) for incorporating MDM configuration into your image build pipeline.
+Do not apply aggressive idle timeout or auto-sleep policies that conflict with active session stability. See [VDI Golden Image Management](/remote-desktop-vdi/configuration/image-management) for incorporating MDM configuration into your image build pipeline.
 
 ---
 
@@ -205,8 +205,8 @@ Keep machines in an always-on or wake-on-network state. Maintain a secondary adm
 
 **Related:**
 
-- [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment)
-- [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management)
+- [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/configuration/jamf-enrollment)
+- [VDI Golden Image Management](/remote-desktop-vdi/configuration/image-management)
 - [Citrix Workspace App for Mac](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)
 - [HP Anyware Documentation](https://anyware.hp.com/web-help/pcoip_client/mac/24.03/)
 - [Apple Platform Security Guide](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf)

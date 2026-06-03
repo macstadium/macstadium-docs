@@ -1,6 +1,7 @@
 ---
 title: "Prerequisites"
 description: "Hardware, accounts, software, and capacity planning requirements before deploying MacStadium VDI."
+keywords: ["VDI requirements", "hardware specs", "capacity planning", "Mac mini VDI", "Mac Studio VDI", "host count", "minimum specifications"]
 ---
 
 Confirm everything on this page is in place before you start deploying MacStadium VDI. Items that vary by deployment model are called out in each section.
@@ -9,12 +10,24 @@ Confirm everything on this page is in place before you start deploying MacStadiu
 
 Apple's software license agreement limits each host to two concurrent macOS VMs. Plan your host count accordingly: divide your peak concurrent user count by two and round up.
 
+### Hardware specifications
+
+MacStadium VDI supports any Apple silicon Mac meeting the following requirements. Intel-based Macs are not supported.
+
+| Specification | Minimum | Recommended |
+|---|---|---|
+| Processor | Apple silicon (any M-series) | M2 Pro, M4 Pro, or higher |
+| RAM | 8 GB | 32 GB |
+| Storage | 512 GB | 1 TB+ |
+| Ethernet | 1 GbE | 10 GbE |
+| macOS | 13 (Ventura) or later | 14 (Sonoma), 15 (Sequoia), or 26 (Tahoe) |
+
 <Tabs>
   <Tab title="MSDC-Hosted">
     MacStadium provisions and manages the Mac hardware. Contact your MacStadium account team to confirm host availability and reserve capacity before you begin setup.
   </Tab>
   <Tab title="Self-Hosted (On-Prem)">
-    You provide Apple Silicon Mac mini or Mac Studio hardware (M1 or later). Hosts must have SSH access enabled and be reachable from your control plane machine over the network.
+    You provide Mac mini or Mac Studio hardware meeting the specifications above. Hosts must have SSH access enabled and be reachable from your control plane machine over the network.
   </Tab>
   <Tab title="Self-Hosted (AWS)">
     You provision EC2 Mac dedicated instances in your AWS account. Supported instance types: mac2, mac2-m2, and mac2-m2pro. A 24-hour minimum allocation period applies per host. Hosts must be in a VPC subnet that can reach your control plane.
@@ -76,20 +89,41 @@ No MacStadium-specific identity configuration is required.
 
 Supported <Tooltip tip="Mobile Device Management — software for enrolling and managing device configuration, policies, and apps across a fleet.">MDM</Tooltip> platforms: Jamf, Kandji, and Intune. MDM is not required to run VMs, but it's the recommended way to manage configuration profiles, compliance reporting, and app deployment in production.
 
-If you plan to use MDM, have your MDM server URL and an enrollment invitation ready before you seal your golden image. See [Jamf Enrollment](/remote-desktop-vdi/macstadium-vdi-deployment/jamf-enrollment) for a full walkthrough.
+If you plan to use MDM, have your MDM server URL and an enrollment invitation ready before you seal your golden image. See [MDM enrollment](/remote-desktop-vdi/configuration/mdm-enrollment) for a full walkthrough.
 
 ## Capacity planning
 
-Use the following to size your deployment before onboarding:
+Use the following to size your deployment before onboarding.
 
-**Host count:** Divide your peak concurrent user count by 2 and round up. For example, 50 concurrent users requires 25 hosts.
+### Host count
 
-**VM defaults per host:**
+Each host runs a maximum of two macOS VMs. Divide your peak concurrent user count by 2 and round up, then add 10 to 15 percent for maintenance windows, rolling updates, and peak headroom.
+
+| Concurrent users | Hosts needed |
+|---|---|
+| 10 | 5 |
+| 25 | 13 |
+| 50 | 25 |
+| 100 | 50 |
+
+For **dedicated (persistent) desktops**, size for your total user count rather than peak concurrency: each user holds a VM whether they're logged in or not. For **pooled (non-persistent) desktops**, size for peak concurrency, typically 60 to 80 percent of total users.
+
+### VM resource defaults
 
 | Resource | Default |
 |---|---|
 | vCPUs per VM | 2 |
-| Memory per VM | 4,096 MB |
+| RAM per VM | 4,096 MB |
 | Max VMs per host | 2 (Apple EULA) |
 
-Add 10 to 15 percent additional hosts beyond your steady-state user count to cover maintenance windows, rolling updates, and peak load headroom.
+### RAM guidance by workload
+
+| Workload type | RAM per VM | Recommended host RAM |
+|---|---|---|
+| Standard office / browser-based | 4 GB | 16 GB |
+| Developer / Xcode / compilation | 8 GB | 32 GB |
+| Heavy creative / ML inference | 8 to 16 GB | 64 GB+ (Mac Studio) |
+
+<Note>
+  Start conservative. MacStadium hosted deployments can add nodes without re-architecting. It's easier to add hosts than to right-size VM RAM after users are in production.
+</Note>
