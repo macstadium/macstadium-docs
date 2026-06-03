@@ -1,7 +1,6 @@
 ---
-title: "Android virtual devices"
+title: "Android Virtual Devices"
 description: "Run Android emulators natively on Apple silicon host nodes alongside MacStadium VDI macOS desktops, with automatic ADB connectivity to your VM."
-keywords: ["Android Virtual Device", "AVD macOS", "macOS Android emulator", "Orka AVD", "mobile testing VDI"]
 ---
 
 Mobile developers using MacStadium VDI often need Android emulator access alongside their macOS desktop for testing, debugging, or running Android apps in parallel with their Citrix-managed session.
@@ -14,7 +13,7 @@ MacStadium VDI solves this by running the Android emulator natively on the Apple
 
 Before setting up Android Virtual Devices, ensure:
 
-- MacStadium VDI is deployed and operational (see the [Deployment Guide](/remote-desktop-vdi/getting-started/self-hosted))
+- MacStadium VDI is deployed and operational (see the [Deployment Guide](/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide))
 - Ansible runner has `sshpass` installed
 - The target macOS VM is running on a host node where the Android SDK will be installed
 
@@ -61,7 +60,7 @@ Available variables:
 
 ## Create an Android Virtual Device
 
-AVDs are tied to a specific VM. The AVD name is derived automatically from the VM name using the pattern `{vm_name}-avd-{index}`, where the index increments for each additional AVD on that VM (for example, `my-vm-avd-0`, `my-vm-avd-1`).
+AVDs are tied to a specific VM. The AVD name is derived automatically from the VM name using the pattern `{vm_name}-avd-{index}`, where the index increments for each additional AVD on that VM (e.g. `my-vm-avd-0`, `my-vm-avd-1`).
 
 Run with `--tags plan` first to preview which host the AVD will be created on:
 
@@ -145,7 +144,7 @@ If the AVD is currently running, the playbook stops it before deleting.
 Required variables:
 
 - `vm_name`: name of the VM the AVD is associated with
-- `avd_index`: index of the AVD to delete (for example, `0` for `my-vm-avd-0`)
+- `avd_index`: index of the AVD to delete (e.g. `0` for `my-vm-avd-0`)
 
 ## Uninstall SDK Platforms and System Images
 

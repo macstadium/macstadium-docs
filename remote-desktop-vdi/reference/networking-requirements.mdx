@@ -1,27 +1,26 @@
 ---
-title: "Networking requirements"
+title: "Networking Requirements"
 description: "Port and firewall requirements, network topology, DNS, and VPN/connectivity requirements for MacStadium VDI, covering all three deployment models."
-keywords: ["port requirements", "firewall rules VDI", "HDX ports", "Citrix endpoints", "VPN macOS VDI", "network topology"]
 ---
 
-This page covers the network requirements for a MacStadium VDI deployment. Requirements differ by deployment model where noted.
+<Warning>
+  This page reflects current knowledge of MacStadium VDI networking requirements. It is pending engineering review for completeness and accuracy. If you encounter requirements not listed here, contact [support@macstadium.com](mailto:support@macstadium.com).
+</Warning>
 
-<Note>
-  The port and firewall requirements below cover Citrix DaaS, which is MacStadium's primary supported delivery platform. If you're using a different VDI broker, consult that platform's networking documentation for the equivalent port and endpoint requirements.
-</Note>
+This page covers the network requirements for a MacStadium VDI deployment. Requirements differ by deployment model where noted.
 
 ---
 
 ## Port and firewall requirements
 
-### Citrix <Tooltip tip="Virtual Delivery Agent — software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> and <Tooltip tip="High Definition Experience — Citrix's remoting protocol for carrying screen, keyboard, mouse, and audio data between the VDA and the user's client.">HDX</Tooltip> traffic
+### Citrix VDA and HDX traffic
 
-These rules apply to all deployment models using Citrix DaaS.
+These rules apply to all deployment models.
 
 | Traffic | Source | Destination | Protocol / Port | Purpose |
 | --- | --- | --- | --- | --- |
 | HDX sessions | End-user clients | macOS VMs | TCP/UDP 1494 | ICA/HDX protocol |
-| HDX sessions (<Tooltip tip="Citrix Gateway Protocol — used for Session Reliability, which lets sessions survive brief network interruptions without dropping the connection.">CGP</Tooltip>) | End-user clients | macOS VMs | TCP/UDP 2598 | Session Reliability |
+| HDX sessions (CGP) | End-user clients | macOS VMs | TCP/UDP 2598 | Session Reliability |
 | VDA → Citrix Cloud | macOS VMs | `[customer_ID].xendesktop.net` | TCP 443 | VDA registration and brokering |
 | VDA → Gateway Service | macOS VMs | `*.*.nssvc.net` | TCP/UDP 443 | Rendezvous protocol (HDX direct routing) |
 | VDA → Workspace API | macOS VMs | `*.citrixworkspacesapi.net` | TCP 443 | Gateway connectivity checks |
@@ -35,7 +34,8 @@ These rules apply to all deployment models using Citrix DaaS.
 
 | Traffic | Source | Destination | Protocol / Port | Purpose |
 | --- | --- | --- | --- | --- |
-| Ansible → Orka hosts | Ansible controller | Mac hosts | TCP 22 | SSH (playbook execution and CLI) |
+| Ansible → Orka hosts | Ansible controller | Mac hosts | TCP 22 | SSH (playbook execution) |
+| Orka API | Ansible controller | Mac hosts | TCP 80, 443 | Orka Engine API |
 | VM → Host (jump proxy) | Ansible controller | Mac hosts → VMs | TCP 22 | VM management via host as jump proxy |
 | Management UI | Admin browser | Ansible controller | TCP 3000 | Semaphore web UI |
 
@@ -48,7 +48,7 @@ These rules apply to all deployment models using Citrix DaaS.
 | Apple ADE (hosts) | Mac hosts | `gdmf.apple.com`, `deviceenrollment.apple.com` | TCP 443 | Automated Device Enrollment |
 | APNs | Mac hosts / VMs | `*.push.apple.com` | TCP 443, 5223 | Apple Push Notification service |
 
-### <Tooltip tip="Open Container Initiative — an industry standard for container image formats and distribution. Orka stores VM images in OCI-compatible registries like GHCR or Harbor.">OCI</Tooltip> registry
+### OCI registry
 
 | Traffic | Source | Destination | Protocol / Port | Purpose |
 | --- | --- | --- | --- | --- |

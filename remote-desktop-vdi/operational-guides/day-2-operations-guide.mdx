@@ -62,9 +62,7 @@ This playbook shows all your environment's VMs, and which host each is running o
     
     
 ```
-ansible hosts -i inventory \
-  -m shell \
-  -a "top -l 1 | grep -E 'CPU|PhysMem'"
+ansible hosts -i inventory -m shell -a "top -l 1 | grep -E 'CPU|PhysMem'"
 ```
 You will want to monitor CPU usage, and make sure this doesn't go above 80% sustained. You'll also want to observe memory pressure (swap usage), and confirm the amount of available disk space on `/var/orka`.
 
@@ -131,9 +129,7 @@ ansible_become=yes
   4. Confirm the Orka Engine version matches existing host(s):
          
 ```
-     ansible hosts -i inventory \
-       -m shell \
-       -a "orka-engine --version"
+     ansible hosts -i inventory -m shell -a "orka-engine --version"
 ```
 If the new host has a different Orka version, upgrade any existing hosts or downgrade the new host to match. Version mismatches can cause deployment issues.  
 
@@ -141,9 +137,7 @@ If the new host has a different Orka version, upgrade any existing hosts or down
   5. Pull required images to the new host:
          
 ```
-     ansible-playbook -i inventory pull_image.yml \
-       -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
-       --limit mac-node-4
+     ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0" --limit mac-node-4
 ```
 Repeat this for each image your environment uses. This prevents slow first deployments when users need desktops on the new host.  
 
@@ -151,17 +145,13 @@ Repeat this for each image your environment uses. This prevents slow first deplo
   6. Test VM deployment on the new host:
          
 ```
-     ansible-playbook -i inventory deploy.yml \
-       -e "vm_name=test-new-host-01" \
-       -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
-       --limit mac-node-4
+     ansible-playbook -i inventory deploy.yml -e "vm_name=test-new-host-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" --limit mac-node-4
 ```
 Verify the test VM boots, registers with Citrix VDA, and is accessible. Once this is confirmed, you can then delete the test VM by running:  
 
          
 ```
-     ansible-playbook -i inventory delete.yml \
-       -e "vm_name=test-new-host-01"
+     ansible-playbook -i inventory delete.yml -e "vm_name=test-new-host-01"
 ```
   7. Deploy production VMs  
   
@@ -169,9 +159,7 @@ With your new host successfully verified, you can now deploy additional desktops
 
          
 ```
-     ansible-playbook -i inventory deploy.yml \
-       -e "vm_name=citrix-vda-finance-01" \
-       -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+     ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
 _Run this command once for each additional VM, using a unique `vm_name` each time._
 
@@ -212,14 +200,10 @@ You will want to note all VM names running on the host you're removing.
          
 ```
      # Delete specific VM
-     ansible-playbook -i inventory vm.yml \
-       -e "vm_name=citrix-vda-finance-abc123" \
-       -e "desired_state=absent"
+     ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-finance-abc123" -e "desired_state=absent"
      
      # Redeploy VM
-     ansible-playbook -i inventory deploy.yml \
-       -e "vm_name=citrix-vda-finance-new-01" \
-       -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+     ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-new-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
 **Option B:** Snapshot and recreate VMs for dedicated desktops with user data.  
   
@@ -278,9 +262,7 @@ Recommended workflow:
 
          
 ```
-     ansible-playbook -i inventory deploy.yml \
-       -e "vm_name=image-test-01" \
-       -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+     ansible-playbook -i inventory deploy.yml -e "vm_name=image-test-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
   2. Access the test VM and install updates  
 
@@ -323,16 +305,13 @@ Inside the VM:
     
     
 ```
-ansible-playbook -i inventory create_image.yml \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" \
-  -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+ansible-playbook -i inventory create_image.yml -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.1"
 ```
   4. Delete the test VM  
 
          
 ```
-     ansible-playbook -i inventory delete.yml \
-       -e "vm_name=image-test-01"
+     ansible-playbook -i inventory delete.yml -e "vm_name=image-test-01"
 ```
 ##### Pilot update rollout
 
@@ -341,9 +320,7 @@ You may want to deploy the updated image to a small group of users first, as see
     
     
 ```
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-pilot-01" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-pilot-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
 ```
 _Run this command once for each additional pilot VM, using a unique `vm_name` each time._
 You will want to monitor the updated image deployment for 3-5 business days, collecting user feedback on any new issues or errors, performance changes, and application compatibility issues that may arise.
@@ -355,15 +332,12 @@ If the pilot succeeds, you can proceed to update all VMs in production. For pool
     
 ```
 # Delete existing VMs from finance group
-ansible-playbook -i inventory delete.yml \
-  -e "vm_name=citrix-vda-finance-01"
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-finance-01"
 
 _Run this command once for each VM to remove._
 
 # Redeploy with new image version
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-01" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
 
 _Run this command once for each additional VM, using a unique `vm_name` each time._
 ```
@@ -437,15 +411,12 @@ Rollback plan: Keep the previous golden image version available for 30 days afte
     
 ```
 # Delete existing VMs from finance group
-ansible-playbook -i inventory delete.yml \
-  -e "vm_name=citrix-vda-finance-01"
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-finance-01"
 
 _Run this command once for each VM to remove._
 
 # Redeploy with previous image version (rollback)
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-01" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
 
 _Run this command once for each additional VM, using a unique `vm_name` each time._
 ```
@@ -483,13 +454,9 @@ Compare the listed VM count against the number of users in the Delivery Group. I
     
 ```
 # Add two more desktops
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-11" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-11" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-12" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-12" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest"
 ```
   3. User logs in
 
@@ -566,9 +533,7 @@ Do nothing immediately. Keep the VM running, but inaccessible. After 30 days:
     
     
 ```
-ansible-playbook -i inventory vm.yml \
-  -e "vm_name=citrix-vda-finance-abc123" \
-  -e "desired_state=absent"
+ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-finance-abc123" -e "desired_state=absent"
 ```
 **Option B:** Archive user data before VM deletion
 
@@ -597,14 +562,11 @@ After offboarding multiple users, you may have excess VMs. If usage is consisten
 ansible-playbook -i inventory list.yml | grep citrix-vda-finance
 
 # Delete 3 VMs from finance group
-ansible-playbook -i inventory delete.yml \
-  -e "vm_name=citrix-vda-finance-10"
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-finance-10"
 
-ansible-playbook -i inventory delete.yml \
-  -e "vm_name=citrix-vda-finance-11"
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-finance-11"
 
-ansible-playbook -i inventory delete.yml \
-  -e "vm_name=citrix-vda-finance-12"
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-finance-12"
 ```
 ### Backup and Recovery
 
@@ -633,9 +595,7 @@ Implementation:
     
     
 ```
-ansible-playbook -i inventory create_image.yml \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1" \
-  -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.2"
+ansible-playbook -i inventory create_image.yml -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.2"
 ```
 In your container registry, configure your image retention policies to keep the number of image versions specified:
 
@@ -694,8 +654,7 @@ Manually export images for offline backup:
     
     
 ```
-ansible-playbook -i inventory pull_image.yml \
-  -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+ansible-playbook -i inventory pull_image.yml -e "remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
 ### Disaster Recovery Runbook
 
@@ -730,16 +689,13 @@ Prerequisites:
 
          
 ```
-     ansible-playbook -i inventory-dr pull_image.yml \
-       -e "remote_image_name=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
+     ansible-playbook -i inventory-dr pull_image.yml -e "remote_image_name=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
   3. Deploy VMs in the disaster recovery environment  
 
          
 ```
-     ansible-playbook -i inventory-dr deploy.yml \
-       -e "vm_name=citrix-vda-finance-01" \
-       -e "vm_image=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
+     ansible-playbook -i inventory-dr deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=backup-registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
 _Run this command once for each additional VM, using a unique `vm_name` each time._
   4. Update Citrix Cloud configuration
@@ -804,18 +760,14 @@ If you are using host-level snapshots:
   2. Stop the affected VM:
          
 ```
-     ansible-playbook -i inventory vm.yml \
-       -e "vm_name=citrix-vda-finance-abc123" \
-       -e "desired_state=stopped"
+     ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-finance-abc123" -e "desired_state=stopped"
 ```
   3. Restore VM disk from snapshot (manual process; depends on host storage configuration)  
   
 Start the affected VM:
          
 ```
-     ansible-playbook -i inventory vm.yml \
-       -e "vm_name=citrix-vda-finance-abc123" \
-       -e "desired_state=running"
+     ansible-playbook -i inventory vm.yml -e "vm_name=citrix-vda-finance-abc123" -e "desired_state=running"
 ```
 If using third-party backup tools, follow your vendor's restore procedures to restore specific files or a full VM.  
   

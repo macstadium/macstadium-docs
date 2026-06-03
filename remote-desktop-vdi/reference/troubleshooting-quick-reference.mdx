@@ -48,14 +48,9 @@ What you see: `deploy.yml` playbook fails with error messages
 Quick diagnostic:
 
 ```bash
-ansible-playbook -i dev/inventory deploy.yml \
-  -e "vm_name=test-01" \
-  -e "vm_image=<image-name>" \
-  -vvv
+ansible-playbook -i dev/inventory deploy.yml -e "vm_name=test-01" -e "vm_image=<image-name>" -vvv
 
-ansible-playbook -i dev/inventory pull_image.yml \
-  -e "remote_image_name=<image-name>" \
-  -v
+ansible-playbook -i dev/inventory pull_image.yml -e "remote_image_name=<image-name>" -v
 
 ansible hosts -i dev/inventory -m shell -a "df -h /var/orka"
 
@@ -85,10 +80,7 @@ Quick diagnostic:
 ```bash
 ansible-playbook -i dev/inventory list.yml | grep <vm-name>
 
-ansible-playbook -i dev/inventory vm.yml \
-  -e "vm_name=<vm-name>" \
-  -e "desired_state=running" \
-  -v
+ansible-playbook -i dev/inventory vm.yml -e "vm_name=<vm-name>" -e "desired_state=running" -v
 
 ssh admin@<host-ip> sudo log show --predicate 'process == "orka-engine"' --last 30m | grep -i error
 
@@ -137,10 +129,7 @@ Partial playbook failure | Playbook shows some failed tasks | Review errors in v
 **Quick diagnostic:**
 
 ```bash
-ansible-playbook -i dev/inventory vm.yml \
-  -e "vm_name=<vm-name>" \
-  -e "desired_state=absent" \
-  -vvv
+ansible-playbook -i dev/inventory vm.yml -e "vm_name=<vm-name>" -e "desired_state=absent" -vvv
 
 ansible-playbook -i dev/inventory list.yml | grep <vm-name>
 
@@ -328,8 +317,7 @@ Quick diagnostic:
 ansible-playbook -i dev/inventory list.yml | grep <vm-name>
 
 # Test Rendezvous connectivity from the VM
-ansible mac_vms -i dev/inventory -m shell \
-  -a "curl -v https://*.*.nssvc.net 2>&1 | grep Connected"
+ansible mac_vms -i dev/inventory -m shell -a "curl -v https://*.*.nssvc.net 2>&1 | grep Connected"
 
 # Test HDX ports are reachable
 nc -zv <vm-ip> 1494

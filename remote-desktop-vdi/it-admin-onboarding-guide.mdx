@@ -1,11 +1,10 @@
 ---
-title: "IT administrator onboarding guide"
+title: "IT Administrator Onboarding Guide"
 description: "IT admin guide for MacStadium VDI. Covers Ansible, Citrix Cloud, and Orka Engine interfaces, user provisioning, image management, and daily operations."
 zendesk_id: 44260623061915
-keywords: ["IT admin VDI", "VDI administration", "Ansible management", "Citrix Cloud console", "image management workflow", "golden image operations"]
 ---
 
-This guide introduces IT administrators to managing a deployed MacStadium VDI environment. Once you've completed the initial deployment following the [MacStadium VDI deployment guide](/remote-desktop-vdi/getting-started/self-hosted) this document covers ongoing operations, user management, and system maintenance.
+This guide introduces IT administrators to managing a deployed MacStadium VDI environment. Once you've completed the initial deployment following the [MacStadium VDI deployment guide](/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide) this document covers ongoing operations, user management, and system maintenance.
 
 **What this guide covers:**
 
@@ -37,15 +36,16 @@ As an administrator, you will be responsible for managing the three interconnect
 
 Your responsibility: Managing capacity, host health, and VM distribution.
 
-**VDI broker (delivery layer):**
+**Citrix DaaS/CVAD (delivery layer):**
 
-MacStadium VDI works with any VDI platform that supports macOS. MacStadium provides primary support for [Citrix DaaS](https://docs.citrix.com/en-us/citrix-daas), and the examples in these guides use Citrix. The broker, whether Citrix DaaS, CVAD, or another platform, is responsible for:
+  * Brokers user connections to desktops
 
-  * Brokering user connections to desktops
+  * Manages Machine Catalogs and Delivery Groups
 
-  * Managing machine catalogs and delivery groups
+  * Controls access policies and user assignments
 
-  * Controlling access policies and user assignments
+
+
 
 Your responsibility: User entitlements, session policies, and VDA registration.
 
@@ -68,9 +68,9 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
 **Orka-specific terms:**
 
-  * Orka host: Physical Mac running Orka Engine (for example, Mac mini M4, Mac Studio)
+  * Orka host: Physical Mac running Orka Engine (e.g. Mac mini M4, Mac Studio)
 
-  * VM group: A logical collection of VMs managed together (for example, `citrix-vda-finance`, `citrix-vda-engineering`)
+  * VM group: A logical collection of VMs managed together (e.g. `citrix-vda-finance`, `citrix-vda-engineering`)
 
   * Golden image: Template VM with macOS, Citrix VDA, and applications pre-installed
 
@@ -104,7 +104,7 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * Group vars: Configuration variables shared across hosts (`dev/group_vars/all/main.yml`)
 
-  * Tags: Selective playbook execution (for example, `--tags plan` for dry runs)
+  * Tags: Selective playbook execution (e.g., `--tags plan` for dry runs)
 
 
 
@@ -247,7 +247,7 @@ An OCI registry is a container registry for storing your organization's golden i
 
 #### Private OCI registry:
 
-  * URL: Defined in `dev/group_vars/all/main.yml` (for example, `registry.example.com`)
+  * URL: Defined in `dev/group_vars/all/main.yml` (e.g., `registry.example.com`)
 
   * Credentials: Stored in Ansible Vault (`vault_registry_username`, `vault_registry_password`)
 
@@ -420,7 +420,7 @@ Create a reference document containing the following information:
 
   * Network interface (10Gb vs 1Gb)
 
-  * Notes (for example, "Reserved for engineering team")
+  * Notes (e.g., "Reserved for engineering team")
 
 
 
@@ -484,7 +484,7 @@ You can monitor the progress of your deployment in another terminal by running t
   3. Verify VDA registration in Citrix  
   
 \- Navigate to Citrix Cloud Console → Web Studio → Machine Catalogs  
-\- Select your Machine Catalog (for example, "Orka-macOS-Sonoma-Finance")  
+\- Select your Machine Catalog (e.g., "Orka-macOS-Sonoma-Finance")  
 \- Refresh the machine list  
 \- New VMs should appear with:  
 \- Registration state: 'Registered'  
@@ -508,7 +508,7 @@ You should see a message similar to: 'Registration successful', or 'Connected to
 If you're using a static/dedicated assignment:  
   
 \- In Citrix Cloud Console → Web Studio → Delivery Groups  
-\- Select Delivery Group (for example, "Finance-macOS-VDI")  
+\- Select Delivery Group (e.g., "Finance-macOS-VDI")  
 \- Click "Edit Delivery Group" → "Users" tab  
 \- Add user: Search for user account, select, assign to specific VM  
   
@@ -547,7 +547,7 @@ Golden images are the foundation for rapid desktop provisioning. The image lifec
 
 
 
-You will need to create new golden images when a new application is required for your team (for example, Microsoft Office, Slack, etc.), Citrix VDA updates, or you have department-specific configurations to consider (design tools such as Adobe, or engineering IDEs such as Jetbrains or Visual Studio Code). Before beginning this workflow, ensure the following prerequisites have been met:
+You will need to create new golden images when a new application is required for your team (e.g. Microsoft Office, Slack, etc.), Citrix VDA updates, or you have department-specific configurations to consider (design tools such as Adobe, or engineering IDEs such as Jetbrains or Visual Studio Code). Before beginning this workflow, ensure the following prerequisites have been met:
 
   * Configuration scripts are prepared in the `/scripts` directory
 
@@ -617,11 +617,7 @@ Important notes:
 
 Next, you'll want to run the `create_image` playbook:  
 ```bash
-ansible-playbook -i dev/inventory create_image.yml \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest \
-  remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 \
-  registry_username={{ vault_registry_username }} \
-  registry_password={{ vault_registry_password }}"
+ansible-playbook -i dev/inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest remote_image_name=registry.example.com/citrix-vda/sonoma-finance:v2.0 registry_username={{ vault_registry_username }} registry_password={{ vault_registry_password }}"
 ```
 
 What happens when running this playbook:
@@ -653,7 +649,7 @@ Testing new images is critical. To test an image before production use, you can 
 
 You will want to verify that the VM has deployed successfully, the VDA registers with Citrix Cloud, applications launch correctly, there are no errors in the VDA logs, and test users can launch sessions and access applications. If issues are found, you can fix any script errors in the `/scripts` directory, delete the failed image from your container registry, and re-run `create_image.yml` with the corrected scripts.   
   
-Once the image has been validated, you can tag it as `:latest` for production use. To do so, you can re-run `create_image.yml` or if you have registry access, you can do so via your container registry's CLI (for example, Docker):  
+Once the image has been validated, you can tag it as `:latest` for production use. To do so, you can re-run `create_image.yml` or if you have registry access, you can do so via your container registry's CLI (e.g., Docker):  
   
 `docker pull registry.example.com/citrix-vda/sonoma-finance:v2.0 `  
 `docker tag registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry.example.com/citrix-vda/sonoma-finance:latest `  
@@ -756,7 +752,7 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 Track versions by maintaining a CHANGELOG.MD in your Git repository. If a new image causes issues, you can identify the last known good version by checking the CHANGELOG.MD or registry tags. Next, you will want to update the default image:  
   
 `vim dev/group_vars/all/main.yml`  
-`vm_image: registry.example.com/citrix-vda/sonoma-finance:v1.2.1`(for example, rollback to v1.2.1)
+`vm_image: registry.example.com/citrix-vda/sonoma-finance:v1.2.1`(e.g. rollback to v1.2.1)
 
 Then, you will want to recreate the affected VMs by deleting the VMs using the problematic image, and redeploying from the rollback image:  
   
@@ -794,7 +790,7 @@ After running the playbook, proceed through the following steps:
 
   3. Add users by clicking "Add", searching for the specified team, and selecting the correct AD/Azure AD group. Alternatively, you can add users individually.
 
-  4. To configure desktops, give them a display name (for example, "macOS Marketing Desktop") and add a description for the VM.
+  4. To configure desktops, give them a display name (e.g. "macOS Marketing Desktop") and add a description for the VM.
 
   5. Choose 'Add Desktop' as the Delivery Type
 
@@ -1755,7 +1751,7 @@ Where data resides:
 
 ##### Annually:
 
-  * Upgrade macOS major version (for example, Sonoma → Sequoia)
+  * Upgrade macOS major version (e.g., Sonoma → Sequoia)
 
   * Review all configuration scripts
 

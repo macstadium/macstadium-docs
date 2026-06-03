@@ -86,9 +86,7 @@ ansible-playbook -i inventory configure-hosts.yml
 **Step 5: Deploy VMs with bridged networking**
 
 ```bash
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-01" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
 ```
 
 **Step 6: Verify VMs received DHCP addresses**
@@ -171,9 +169,7 @@ orka-engine vm start <vm-name>
 Then create a new golden image from the resized VM:
 
 ```bash
-ansible-playbook -i inventory create_image.yml \
-  -e "vm_image=<resized-vm-name>" \
-  -e "remote_image_name=registry.example.com/citrix-vda/sonoma-highspec:v1.0"
+ansible-playbook -i inventory create_image.yml -e "vm_image=<resized-vm-name>" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-highspec:v1.0"
 ```
 
 Recommended high-spec configuration for power users: 8+ CPU cores, 32 GB RAM, 500 GB storage.
@@ -283,9 +279,7 @@ jobs:
 
       - name: Deploy test VM
         run: |
-          ansible-playbook -i inventory deploy.yml \
-            -e "vm_name=image-test-01" \
-            -e "vm_image=registry.example.com/citrix-vda/dev-base:latest"
+          ansible-playbook -i inventory deploy.yml -e "vm_name=image-test-01" -e "vm_image=registry.example.com/citrix-vda/dev-base:latest"
 
       - name: Copy application to test VM
         run: scp -r ./dist admin@<vm-ip>:/Applications/YourApp.app
@@ -295,17 +289,11 @@ jobs:
 
       - name: Create new golden image if tests pass
         run: |
-          ansible-playbook -i inventory create_image.yml \
-            -e "vm_image=image-test-abc123" \
-            -e "remote_image_name=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}" \
-            -e "registry_username=${{ secrets.REGISTRY_USER }}" \
-            -e "registry_password=${{ secrets.REGISTRY_PASS }}"
+          ansible-playbook -i inventory create_image.yml -e "vm_image=image-test-abc123" -e "remote_image_name=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}" -e "registry_username=${{ secrets.REGISTRY_USER }}" -e "registry_password=${{ secrets.REGISTRY_PASS }}"
 
       - name: Deploy to production
         run: |
-          ansible-playbook -i inventory deploy.yml \
-            -e "vm_name=citrix-vda-dev-01" \
-            -e "vm_image=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}"
+          ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-dev-01" -e "vm_image=registry.example.com/citrix-vda/dev-tools:${{ github.sha }}"
 ```
 
 ---
@@ -349,10 +337,7 @@ mac-node-4 ansible_host=10.0.100.13
 Deploy tenant VMs only to their assigned hosts:
 
 ```bash
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=citrix-vda-finance-01" \
-  -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest" \
-  --limit finance_hosts
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest" --limit finance_hosts
 ```
 
 Complete resource isolation with no noisy-neighbor problems, but reduced flexibility and potential underutilization.

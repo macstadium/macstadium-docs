@@ -33,64 +33,49 @@ ansible hosts -i dev/inventory -m shell -a "python3 --version"
     
     
 ```
-ansible-playbook -i dev/inventory install_engine.yml \
-  -e "orka_license_key=YOUR_KEY" \
-  -e "engine_url=https://download.url/orka-engine"
+ansible-playbook -i dev/inventory install_engine.yml -e "orka_license_key=YOUR_KEY" -e "engine_url=https://download.url/orka-engine"
 ```
 ### Plan Deployment (Dry Run)
     
     
 ```
-ansible-playbook -i dev/inventory deploy.yml \
-  -e "vm_name=my-vm" \
-  --tags plan
+ansible-playbook -i dev/inventory deploy.yml -e "vm_name=my-vm" --tags plan
 ```
 ### Deploy VM
     
     
 ```
-ansible-playbook -i dev/inventory deploy.yml \
-  -e "vm_name=my-vm" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest"
+ansible-playbook -i dev/inventory deploy.yml -e "vm_name=my-vm" -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest"
 ```
 ### Plan Deletion (Dry Run)
     
     
 ```
-ansible-playbook -i dev/inventory delete.yml \
-  -e "vm_name=my-vm" \
-  --tags plan
+ansible-playbook -i dev/inventory delete.yml -e "vm_name=my-vm" --tags plan
 ```
 ### Delete VM
     
     
 ```
-ansible-playbook -i dev/inventory delete.yml \
-  -e "vm_name=my-vm"
+ansible-playbook -i dev/inventory delete.yml -e "vm_name=my-vm"
 ```
 ### Stop VM
     
     
 ```
-ansible-playbook -i dev/inventory vm.yml \
-  -e "vm_name=my-vm" \
-  -e "desired_state=stopped"
+ansible-playbook -i dev/inventory vm.yml -e "vm_name=my-vm" -e "desired_state=stopped"
 ```
 ### Start VM
     
     
 ```
-ansible-playbook -i dev/inventory vm.yml \
-  -e "vm_name=my-vm" \
-  -e "desired_state=running"
+ansible-playbook -i dev/inventory vm.yml -e "vm_name=my-vm" -e "desired_state=running"
 ```
 ### Delete Single VM
     
     
 ```
-ansible-playbook -i dev/inventory vm.yml \
-  -e "vm_name=my-vm" \
-  -e "desired_state=absent"
+ansible-playbook -i dev/inventory vm.yml -e "vm_name=my-vm" -e "desired_state=absent"
 ```
 ### List All VMs
     
@@ -108,25 +93,19 @@ ansible-playbook -i dev/inventory list.yml -e "vm_name=my-vm"
     
     
 ```
-ansible-playbook -i dev/inventory pull_image.yml \
-  -e "remote_image_name=ghcr.io/macstadium/orka-images/sonoma:latest"
+ansible-playbook -i dev/inventory pull_image.yml -e "remote_image_name=ghcr.io/macstadium/orka-images/sonoma:latest"
 ```
 ### Create and Push Custom Image
     
     
 ```
-ansible-playbook -i dev/inventory create_image.yml \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
-  -e "remote_image_name=registry.example.com/custom:v1.0"
+ansible-playbook -i dev/inventory create_image.yml -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "remote_image_name=registry.example.com/custom:v1.0"
 ```
 ### Create Image with OS Upgrade
     
     
 ```
-ansible-playbook -i dev/inventory create_image.yml \
-  -e "vm_image=base:latest" \
-  -e "remote_image_name=registry.example.com/custom:v1.0" \
-  -e "upgrade_os=true"
+ansible-playbook -i dev/inventory create_image.yml -e "vm_image=base:latest" -e "remote_image_name=registry.example.com/custom:v1.0" -e "upgrade_os=true"
 ```
 * * *
 
@@ -142,8 +121,7 @@ ansible-playbook -i dev/inventory install_android_sdk.yml
 To force reinstallation on hosts where the SDK is already present:
 
 ```
-ansible-playbook -i dev/inventory install_android_sdk.yml \
-  -e "install_android_sdk_force=true"
+ansible-playbook -i dev/inventory install_android_sdk.yml -e "install_android_sdk_force=true"
 ```
 ### Install SDK Platforms and System Images
     
@@ -155,55 +133,38 @@ ansible-playbook -i dev/inventory sdkmanager_install.yml
 With a specific platform and image types:
 
 ```
-ansible-playbook -i dev/inventory sdkmanager_install.yml \
-  -e "platform=android-34" \
-  -e "image_types=default,google_apis,google_apis_playstore"
+ansible-playbook -i dev/inventory sdkmanager_install.yml -e "platform=android-34" -e "image_types=default,google_apis,google_apis_playstore"
 ```
 ### Create an AVD (Plan First)
     
     
 ```
-ansible-playbook -i dev/inventory deploy_avd.yml \
-  -e "vm_name=my-vm" \
-  --tags plan
+ansible-playbook -i dev/inventory deploy_avd.yml -e "vm_name=my-vm" --tags plan
 ```
 ### Create an AVD
     
     
 ```
-ansible-playbook -i dev/inventory deploy_avd.yml \
-  -e "vm_name=my-vm"
+ansible-playbook -i dev/inventory deploy_avd.yml -e "vm_name=my-vm"
 ```
 
 With custom platform, image type, and resources:
 
 ```
-ansible-playbook -i dev/inventory deploy_avd.yml \
-  -e "vm_name=my-vm" \
-  -e "platform=android-34" \
-  -e "image_type=google_apis" \
-  -e "cpu=4" \
-  -e "memory=2048"
+ansible-playbook -i dev/inventory deploy_avd.yml -e "vm_name=my-vm" -e "platform=android-34" -e "image_type=google_apis" -e "cpu=4" -e "memory=2048"
 ```
 ### Manage AVD State
     
     
 ```
 # Start AVD
-ansible-playbook -i dev/inventory avd.yml \
-  -e "vm_name=my-vm" \
-  -e "desired_state=running"
+ansible-playbook -i dev/inventory avd.yml -e "vm_name=my-vm" -e "desired_state=running"
 
 # Stop AVD
-ansible-playbook -i dev/inventory avd.yml \
-  -e "vm_name=my-vm" \
-  -e "desired_state=stopped"
+ansible-playbook -i dev/inventory avd.yml -e "vm_name=my-vm" -e "desired_state=stopped"
 
 # Delete AVD (specify index if multiple exist)
-ansible-playbook -i dev/inventory avd.yml \
-  -e "vm_name=my-vm" \
-  -e "desired_state=absent" \
-  -e "avd_index=0"
+ansible-playbook -i dev/inventory avd.yml -e "vm_name=my-vm" -e "desired_state=absent" -e "avd_index=0"
 ```
 ### List AVDs
     
@@ -219,9 +180,7 @@ ansible-playbook -i dev/inventory list_avds.yml -e "vm_name=my-vm"
     
     
 ```
-ansible-playbook -i dev/inventory delete_avd.yml \
-  -e "vm_name=my-vm" \
-  -e "avd_index=0"
+ansible-playbook -i dev/inventory delete_avd.yml -e "vm_name=my-vm" -e "avd_index=0"
 ```
 ### Uninstall SDK Platform
     
@@ -230,8 +189,7 @@ ansible-playbook -i dev/inventory delete_avd.yml \
 ansible-playbook -i dev/inventory sdkmanager_uninstall.yml
 
 # Target a specific platform
-ansible-playbook -i dev/inventory sdkmanager_uninstall.yml \
-  -e "platform=android-34"
+ansible-playbook -i dev/inventory sdkmanager_uninstall.yml -e "platform=android-34"
 ```
 * * *
 
@@ -241,48 +199,31 @@ ansible-playbook -i dev/inventory sdkmanager_uninstall.yml \
     
     
 ```
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=dev-desktop" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
-  -e "cpu=4" \
-  -e "memory=8192"
+ansible-playbook -i inventory deploy.yml -e "vm_name=dev-desktop" -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "cpu=4" -e "memory=8192"
 ```
 ### Deploy with Network Interface
     
     
 ```
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=prod-desktop" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
-  -e "network_interface=en0"
+ansible-playbook -i inventory deploy.yml -e "vm_name=prod-desktop" -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" -e "network_interface=en0"
 ```
 ### Deploy to Specific Host
     
     
 ```
-ansible-playbook -i inventory deploy.yml \
-  -e "vm_name=build-01" \
-  -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" \
-  --limit mac-node-1
+ansible-playbook -i inventory deploy.yml -e "vm_name=build-01" -e "vm_image=ghcr.io/macstadium/orka-images/sonoma:latest" --limit mac-node-1
 ```
 ### Image Creation with Auth
     
     
 ```
-ansible-playbook -i inventory create_image.yml \
-  -e "vm_image=base:latest" \
-  -e "remote_image_name=registry.company.com/app:v2.0" \
-  -e "registry_username=deploy" \
-  -e "registry_password=secret" \
-  -e "insecure_push=false"
+ansible-playbook -i inventory create_image.yml -e "vm_image=base:latest" -e "remote_image_name=registry.company.com/app:v2.0" -e "registry_username=deploy" -e "registry_password=secret" -e "insecure_push=false"
 ```
 ### Insecure Registry
     
     
 ```
-ansible-playbook -i inventory pull_image.yml \
-  -e "remote_image_name=insecure-registry:5000/image:latest" \
-  -e "insecure_pull=true"
+ansible-playbook -i inventory pull_image.yml -e "remote_image_name=insecure-registry:5000/image:latest" -e "insecure_pull=true"
 ```
 * * *
 
