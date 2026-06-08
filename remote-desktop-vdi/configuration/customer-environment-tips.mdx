@@ -35,7 +35,7 @@ A few things to get right before sealing the image:
 - Verify enrollment on a test VM before promoting to production: `profiles status -type enrollment` should return `MDM enrollment: Yes`.
 - Do not seal the image with an MDM profile or management framework already present.
 
-For image build and versioning guidance, see [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management).
+For image build and versioning guidance, see [VDI Golden Image Management](/remote-desktop-vdi/configuration/image-management).
 
 ---
 
@@ -180,7 +180,7 @@ Define MDM policies before sealing your golden image. A baseline for Orka VDI:
 | Should be enabled | Password complexity, software firewall, Gatekeeper, software update enforcement |
 | Avoid | User lockout policies requiring local physical recovery; FileVault without a MacStadium-coordinated recovery plan |
 
-Do not apply aggressive idle timeout or auto-sleep policies that conflict with active session stability. See [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management) for incorporating MDM configuration into your image build pipeline.
+Do not apply aggressive idle timeout or auto-sleep policies that conflict with active session stability. See [VDI Golden Image Management](/remote-desktop-vdi/configuration/image-management) for incorporating MDM configuration into your image build pipeline.
 
 ---
 
@@ -206,7 +206,7 @@ Keep machines in an always-on or wake-on-network state. Maintain a secondary adm
 **Related:**
 
 - [Jamf Enrollment for MacStadium VDI Desktops](/remote-desktop-vdi/configuration/mdm-enrollment)
-- [VDI Golden Image Management](/remote-desktop-vdi/macstadium-vdi-deployment/image-management)
+- [VDI Golden Image Management](/remote-desktop-vdi/configuration/image-management)
 - [Citrix Workspace App for Mac](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)
 - [HP Anyware Documentation](https://anyware.hp.com/web-help/pcoip_client/mac/24.03/)
 - [Apple Platform Security Guide](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf)
