@@ -4,7 +4,7 @@ description: "How MacStadium VDI is structured: the four system layers, how a us
 keywords: ["VDI architecture", "Orka Engine", "control plane", "bridged networking", "deployment models", "Apple silicon hosting", "macOS VM layers"]
 ---
 
-MacStadium VDI is built on four logical layers: a VDI broker/gateway, a control plane, Apple Silicon hosts, and macOS virtual machines. This page describes what each layer does and how they connect.
+MacStadium VDI is built on four logical layers: a VDI broker/gateway, a control plane, Apple silicon hosts, and macOS virtual machines. This page describes what each layer does and how they connect.
 
 ![MacStadium VDI architecture overview showing the IT Admin, control plane, Mac hosts, and VDI delivery components](/images/vdi-architecture.svg)
 
@@ -18,7 +18,7 @@ The broker is the entry point for end users. It authenticates against your ident
 
 The control plane is the orchestration layer that manages VM lifecycle, image distribution, and host capacity. It runs on the [Orka Engine](https://www.macstadium.com/orka) and exposes two interfaces: the management UI for day-to-day operations and the Ansible CLI for automation and advanced workflows. In an MSDC-Hosted (MacStadium Data Centers) deployment, MacStadium operates the control plane on your behalf. In Self-Hosted deployments, you run it yourself.
 
-**Apple Silicon hosts**
+**Apple silicon hosts**
 
 The hosts are the physical Mac hardware (Mac mini or Mac Studio) running the Orka Engine hypervisor. Each host can run up to two macOS VMs, a limit set by Apple's software license agreement. Adding hosts is how you scale user capacity.
 
@@ -68,12 +68,12 @@ MacStadium VDI runs in three deployment configurations. The components and conne
 
 <Tabs>
   <Tab title="MSDC-Hosted">
-    MacStadium hosts the Apple Silicon hardware in a MacStadium data center and operates the control plane on your behalf. You manage the VDI broker, golden images, identity, and shared services such as MDM, monitoring, and DNS.
+    MacStadium hosts the Apple silicon hardware in a MacStadium data center and operates the control plane on your behalf. You manage the VDI broker, golden images, identity, and shared services such as MDM, monitoring, and DNS.
 
-    ![MSDC-Hosted architecture diagram showing end users, VDI broker, identity, and the MacStadium data center with control plane, shared services, and Apple Silicon hosts](/images/msdc-arch.svg)
+    ![MSDC-Hosted architecture diagram showing end users, VDI broker, identity, and the MacStadium data center with control plane, shared services, and Apple silicon hosts](/images/msdc-arch.svg)
   </Tab>
   <Tab title="Self-Hosted (On-Prem)">
-    You own and operate the Apple Silicon hardware and the control plane in your own data center. MacStadium provides the software and support. You're responsible for all hardware, networking, and shared services.
+    You own and operate the Apple silicon hardware and the control plane in your own data center. MacStadium provides the software and support. You're responsible for all hardware, networking, and shared services.
 
     ![Self-Hosted On-Premises architecture diagram](/images/onprem-arch.svg)
   </Tab>
