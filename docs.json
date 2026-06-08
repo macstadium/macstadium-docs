@@ -336,7 +336,6 @@
               "remote-desktop-vdi/operations/production-rollout",
               "remote-desktop-vdi/operational-guides/day-2-operations-guide",
               "remote-desktop-vdi/operational-guides/monitoring",
-              "remote-desktop-vdi/operational-guides/ansible-quick-reference",
               "remote-desktop-vdi/operational-guides/incident-response"
             ]
           },
@@ -344,6 +343,7 @@
             "group": "Reference",
             "pages": [
               "remote-desktop-vdi/reference/networking-requirements",
+              "remote-desktop-vdi/reference/ansible-quick-reference",
               "remote-desktop-vdi/reference/troubleshooting-quick-reference",
               "remote-desktop-vdi/reference/shared-user-responsibility-guide-for-macstadium-customers"
             ]
@@ -867,8 +867,13 @@
       "permanent": true
     },
     {
+      "source": "/remote-desktop-vdi/operational-guides/ansible-quick-reference",
+      "destination": "/remote-desktop-vdi/reference/ansible-quick-reference",
+      "permanent": true
+    },
+    {
       "source": "/hc/en-us/articles/44260146530715-Ansible-Quick-Reference",
-      "destination": "/remote-desktop-vdi/operational-guides/ansible-quick-reference",
+      "destination": "/remote-desktop-vdi/reference/ansible-quick-reference",
       "permanent": true
     },
     {
