@@ -1,15 +1,13 @@
 ---
 title: "Shared VM storage for Orka CI artifacts"
-description: "Mount a shared storage volume across Orka VMs for CI artifact caching. Deprecated on Apple silicon Monterey; available for Intel and Apple silicon Ventura+."
+description: "Mount a shared storage volume across Orka VMs for CI artifact caching. Available for Apple silicon and Intel VMs running macOS Ventura or later."
 zendesk_id: 28340384486683
 ---
 
 | Platform | Status | Notes |
 |---|---|---|
-| Apple silicon, macOS Monterey | Removed as of Orka 3.0 | Intel Monterey VMs are not affected |
-| Intel, macOS Monterey | Supported |  |
 | Apple silicon, macOS Ventura and later | Supported as of [Orka 3.0](/orka/orka-upgrades-and-release-notes/orka-30-release-notes) | Requires Orka VM Tools |
-| Intel, macOS Ventura and later | Supported |  |
+| Intel, macOS Ventura (13) and Sonoma (14) | Supported |  |
 
 <Note>
   **Orka 3.5 default change:** Shared VM storage is disabled by default for new Orka deployments. Existing deployments retain the previous setting (enabled). To enable shared storage on a new deployment, open a support ticket.
@@ -150,7 +148,7 @@ When connecting to the VM over SSH and attempting to access the shared storage v
 
 ![Terminal showing "orka: Operation not permitted" SSH error](/images/attachments/28340339125531.png)
 
-To fix this issue, connect to the VM via VNC and navigate to **Full Disk Access** (macOS Ventura and later: System Settings → Privacy & Security → Full Disk Access; macOS Monterey: System Preferences → Security & Privacy → Privacy → Full Disk Access). Click the padlock to make changes:
+To fix this issue, connect to the VM via VNC and navigate to **System Settings → Privacy & Security → Full Disk Access**. Click the padlock to make changes:
 
 ![macOS Security and Privacy Full Disk Access settings with padlock](/images/attachments/28340384468251.png)
 

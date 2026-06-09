@@ -19,7 +19,6 @@ Network boost* | ✅ | ✅*
 
 macOS version | Notes
 ---|---
-macOS 12 (Monterey) | Supported
 macOS 13 (Ventura) | Supported
 macOS 14 (Sonoma) | Supported
 macOS 15 (Sequoia) | Supported (since Orka 3.2)
@@ -31,15 +30,7 @@ GPU passthrough, I/O boost, and Network boost are always enabled for Apple silic
 
 macOS version | I/O boost | Network boost | GPU passthrough
 ---|---|---|---
-macOS 10.14 (Mojave) | ✅* | ❌** | ✅***
-macOS 10.15 (Catalina) | ✅ | ❌** | ✅***
-macOS 11 (Big Sur) | ✅ | ✅ | ✅***
-macOS 12 (Monterey) | ✅ | ✅ | ✅***
-macOS 13 (Ventura) | ✅ | ✅ | ✅***
-macOS 14 (Sonoma) | ✅ | ✅ | ✅***
+macOS 13 (Ventura) | ✅ | ✅ | ✅*
+macOS 14 (Sonoma) | ✅ | ✅ | ✅*
   
-* I/O boost is supported on macOS 10.14.5 and later.
-
-** Always disable the feature for Intel-based VMs running the respective macOS version.
-
-*** By default, GPU passthrough is disabled for VM configurations and VMs. When you enable GPU passthrough for an Intel VM, this automatically disables VNC for the VM. Make sure that you will be able to access the VM by SSH or Apple Screen Sharing before enabling GPU passthrough.
+* By default, GPU passthrough is disabled for VM configurations and VMs. When you enable GPU passthrough for an Intel VM, this automatically disables VNC for the VM. Make sure that you will be able to access the VM by SSH or Apple Screen Sharing before enabling GPU passthrough.
