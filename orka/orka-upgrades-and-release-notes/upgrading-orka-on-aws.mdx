@@ -37,6 +37,27 @@ Starting with the 3.5 to 3.6 upgrade path, MacStadium updates ARM node tooling i
 
 As part of the 3.6 upgrade, the Orka Upgrade Service is deployed to your cluster. This enables smoother tooling updates in future Orka releases without requiring AMI replacement.
 
+### AWS credentials no longer required for artifact distribution
+
+Orka binaries and container images are now distributed publicly via CloudFront. You no longer need AWS credentials configured to pull Orka artifacts during upgrades or deployments.
+
+### cert-manager behavior change
+
+Orka no longer installs its own cert-manager if one is already present in the cluster. If your cluster runs its own cert-manager and you previously experienced version or configuration conflicts with Orka's bundled installation, those conflicts are resolved in 3.6.
+
+If your automation or tooling depends on Orka's cert-manager specifically, verify your setup before upgrading.
+
+### Credential scoping: action required
+
+The permissions required for Orka to run have been tightened to least-privilege. Separate, minimal credential sets are now defined for:
+
+* Orka configuration
+* Virtual Kubelet
+* ECR access
+* Backup operations
+
+If your deployment uses broad IAM credentials for Orka, you will need to update your IAM policies to align with the new scoped credential sets before or as part of the upgrade. MacStadium support will provide the updated permission requirements when scheduling your maintenance window.
+
 ## During the maintenance window
 
 | Aspect | Notes |
