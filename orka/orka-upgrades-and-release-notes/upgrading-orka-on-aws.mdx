@@ -1,0 +1,66 @@
+---
+title: "Upgrading Orka on AWS"
+description: "Upgrade your Orka cluster on AWS from 3.5 to 3.6. Covers ARM node tooling updates, SSH requirements, and what changes with the new Ansible-based upgrade path."
+---
+
+Upgrading Orka on AWS follows the same general process as MSDC-hosted upgrades: submit a support ticket, schedule a maintenance window, and MacStadium handles the upgrade. However, AWS deployments have specific requirements and a different upgrade mechanism for ARM Mac nodes.
+
+## Before you upgrade
+
+### Check your ARM node SSH configuration
+
+Starting with the 3.5 to 3.6 upgrade, MacStadium uses an Ansible-based process to update tooling on your ARM Mac nodes rather than replacing the AMI. This approach is significantly faster and preserves your node names, namespaces, and custom tags.
+
+For this to work, your ARM EC2 Mac instances must have SSH enabled and accessible using MacStadium's key. If your nodes are configured for SSM-only access, the upgrade will still work but will take significantly longer (up to several hours per node vs. approximately 2 minutes with SSH).
+
+If you're unsure how your nodes are configured, check with your AWS administrator before scheduling the upgrade.
+
+### Verify your node tags
+
+MacStadium uses a dynamic Ansible inventory to identify your ARM nodes during the upgrade. Your ARM EC2 Mac instances must be tagged so that the inventory can select the correct nodes. Contact MacStadium support to confirm your nodes are tagged correctly before scheduling.
+
+## Requesting an upgrade
+
+1. Review the [3.6 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) and complete any preparation steps listed there.
+2. Submit a ticket through the MacStadium portal.
+3. Schedule a maintenance window via the link in your ticket.
+
+## What changes in 3.5 to 3.6
+
+### ARM node tooling updates no longer require AMI replacement
+
+Previously, updating tooling on ARM nodes required replacing the EC2 Mac AMI: the instance had to be deleted, a new one provisioned (a ~2 hour process), and the node's name, namespace, and custom tags had to be manually reapplied.
+
+Starting with the 3.5 to 3.6 upgrade path, MacStadium updates ARM node tooling in place using Ansible over SSH. The upgrade takes approximately 2 minutes per node. Your node names, namespaces, and tags are preserved.
+
+### Upgrade Service is installed
+
+As part of the 3.6 upgrade, the Orka Upgrade Service is deployed to your cluster. This enables smoother tooling updates in future Orka releases without requiring AMI replacement.
+
+## During the maintenance window
+
+| Aspect | Notes |
+|--------|-------|
+| Maintenance window | Up to 3 hours. Must be scheduled with MacStadium support. |
+| Access to the environment | Unavailable during the window. Restored at the original endpoint after completion. |
+| Orka users | Persist. |
+| Service Accounts | Persist. Tokens must be regenerated after the upgrade. |
+| VMs and VM configs | VM configs persist. VMs may be deleted. Redeploy from VM configs after the upgrade. |
+| Images | Persist. |
+| Image cache | Cleared from each node. |
+| Namespaces and RoleBindings | Persist. |
+| ARM node names and tags | Preserved with the Ansible-based upgrade path. |
+
+<Warning>
+  Service Account tokens must be regenerated after this upgrade. Any automated workflows using service account tokens will fail until tokens are regenerated with `orka3 serviceaccount token <name>`.
+</Warning>
+
+## After the upgrade
+
+Once the upgrade is complete:
+
+1. [Download and install](/orka/orka-overview/tools-integrations) the Orka 3.6 CLI if you haven't already.
+2. Regenerate Service Account tokens for any automated workflows.
+3. Repopulate the image cache on your ARM nodes if needed: `orka3 imagecache add <image> --all`
+
+{/* TODO: Add hybrid deployment upgrade section once confirmed with engineering. DI-623 */}
