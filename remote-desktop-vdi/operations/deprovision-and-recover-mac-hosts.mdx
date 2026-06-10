@@ -1,13 +1,13 @@
 ---
 title: "Deprovision and recover Mac hosts with Jamf Pro"
-description: "Set up a Jamf Pro workflow that automatically restores a bare-metal Mac host to a remotely accessible state after a wipe, with no on-site intervention required."
+description: "Set up a Jamf Pro workflow that automatically restores a bare metal Mac host to a remotely accessible state after a wipe, with no on-site intervention required."
 ---
 
 <Note>
-  This page applies to bare-metal Mac host deployments only. It does not apply to MacStadium VDI or virtual machines, which cannot be registered with Apple Business Manager.
+  This page applies to bare metal Mac host deployments only. It does not apply to MacStadium VDI or virtual machines, which cannot be registered with Apple Business Manager.
 </Note>
 
-This guide describes a tested, repeatable procedure for deprovisioning bare-metal Mac hosts via Jamf Pro and automatically restoring them to a remotely accessible state. After an administrator issues the wipe command, the machine re-enrolls, creates a temporary user account, enables SSH, and enables Screen Sharing. A user can connect via VNC with temporary credentials immediately, with no further action from the administrator.
+This guide describes a tested, repeatable procedure for deprovisioning bare metal Mac hosts via Jamf Pro and automatically restoring them to a remotely accessible state. After an administrator issues the wipe command, the machine re-enrolls, creates a temporary user account, enables SSH, and enables Screen Sharing. A user can connect via VNC with temporary credentials immediately, with no further action from the administrator.
 
 This workflow depends on Automated Device Enrollment (ADE) via [Apple Business Manager](https://support.apple.com/guide/apple-business-manager) (ABM), which requires physical hardware registered to your ABM account.
 
