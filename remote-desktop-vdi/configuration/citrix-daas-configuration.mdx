@@ -160,6 +160,28 @@ Rendezvous is enabled by default in Citrix DaaS environments with non-domain-joi
 
 ---
 
+## SSO authentication
+
+By default, users authenticate through Citrix Workspace and then see a macOS
+login screen. With SSO enabled on the VDA, Workspace credentials pass through
+to macOS automatically and the user lands directly in their desktop.
+
+A few things to know before enabling it:
+
+- Username and password only. FAS, smart cards, and passwordless providers
+  are not supported.
+- The macOS account credentials must match the user's Workspace credentials
+  exactly.
+- SSO conflicts with Jamf Pro/Connect and other tools that customize the macOS
+  login process. If your VMs are managed that way, SSO won't work.
+- The **Allow users not in Active Directory to use this delivery group**
+  checkbox must be unchecked on the Delivery Group.
+
+For setup steps, see [SSO Authentication](https://docs.citrix.com/en-us/mac-vda/configure/authentication/non-sso-authentication.html)
+in the Citrix VDA for macOS documentation.
+
+---
+
 ## Troubleshooting
 
 ### VM doesn't appear in the Machine Catalog
