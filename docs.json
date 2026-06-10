@@ -336,7 +336,8 @@
               "remote-desktop-vdi/operations/production-rollout",
               "remote-desktop-vdi/operational-guides/day-2-operations-guide",
               "remote-desktop-vdi/operational-guides/monitoring",
-              "remote-desktop-vdi/operational-guides/incident-response"
+              "remote-desktop-vdi/operational-guides/incident-response",
+              "remote-desktop-vdi/operations/deprovision-and-recover-mac-hosts"
             ]
           },
           {
