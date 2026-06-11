@@ -47,15 +47,15 @@ Navigation and feature placement have changed across major versions of Jamf Pro.
 
 ---
 
-### Step-by-step instructions
-
-#### Step 1: Enable user-initiated enrollment
+<Steps>
+<Step title="Enable user-initiated enrollment">
 
 1. Click **Settings** at the bottom of the left sidebar.
 2. Under the **Global** tab, select **User-Initiated Enrollment**.
 3. On the **Computers** tab, confirm user-initiated enrollment is enabled. Save if you made changes.
 
-#### Step 2: Create an enrollment invitation
+</Step>
+<Step title="Create an enrollment invitation">
 
 Enrollment invitations in Jamf Pro 11 live under Computers, but may be inside the UIE settings screen in previous versions.
 
@@ -65,7 +65,8 @@ Enrollment invitations in Jamf Pro 11 live under Computers, but may be inside th
 4. Scope the invitation to a specific Jamf site or LDAP group if needed.
 5. After saving, open the invitation record and copy the **Invitation ID**. This is the value you'll use as `INVITATION_CODE` in the LaunchDaemon and LaunchAgent scripts that follow.
 
-#### Step 3: Create the LaunchDaemon script
+</Step>
+<Step title="Create the LaunchDaemon script">
 
 Add the following script to your golden image at `/usr/local/bin/jamf-enroll.sh`. Fill in your `JSS_URL` and `INVITATION_CODE`, and swap out `com.yourcompany` for your reverse-domain identifier throughout.
 
@@ -147,7 +148,8 @@ log "Enrollment command finished with exit code $?."
 chmod 755 /usr/local/bin/jamf-enroll.sh
 ```
 
-#### Step 4: Create the LaunchDaemon
+</Step>
+<Step title="Create the LaunchDaemon">
 
 Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist`. Update the label to use your reverse-domain identifier.
 
@@ -181,7 +183,8 @@ chown root:wheel /Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist
 chmod 644 /Library/LaunchDaemons/com.yourcompany.jamf-enroll.plist
 ```
 
-#### Step 5: Create the LaunchAgent script
+</Step>
+<Step title="Create the LaunchAgent script">
 
 Add the following script to your golden image at `/usr/local/bin/jamf-enroll-prompt.sh`. Fill in your `JSS_URL`, `INVITATION_CODE`, and reverse-domain identifier.
 
@@ -218,7 +221,8 @@ EOF
 chmod 755 /usr/local/bin/jamf-enroll-prompt.sh
 ```
 
-#### Step 6: Create the LaunchAgent
+</Step>
+<Step title="Create the LaunchAgent">
 
 Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist`. Update the label to use your reverse-domain identifier.
 
@@ -246,12 +250,16 @@ chown root:wheel /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
 chmod 644 /Library/LaunchAgents/com.yourcompany.jamf-enroll-prompt.plist
 ```
 
-#### Step 7: Seal the golden image
+</Step>
+<Step title="Seal the golden image">
 
 1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
 2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
 3. Confirm no Jamf management framework is already installed. If `/Library/Application Support/JAMF/` exists, remove it before sealing: `sudo rm -rf "/Library/Application Support/JAMF/"`.
 4. Publish the image in Orka.
+
+</Step>
+</Steps>
 
 ---
 
@@ -314,9 +322,8 @@ Both components remove themselves once MDM enrollment is confirmed.
 
 ---
 
-### Step-by-step instructions
-
-#### Step 1: Configure the Apple MDM Push Certificate
+<Steps>
+<Step title="Configure the Apple MDM Push Certificate">
 
 The push certificate is required for Intune to communicate with Apple's MDM service. If you already manage iOS or macOS devices in Intune, this is already in place.
 
@@ -324,16 +331,19 @@ The push certificate is required for Intune to communicate with Apple's MDM serv
 2. If no certificate is listed, follow Microsoft's [Get an Apple MDM Push certificate for Intune](https://learn.microsoft.com/en-us/intune/device-enrollment/apple/create-mdm-push-certificate) procedure. You'll grant Microsoft permission to send push notifications, download a CSR, upload it to [https://identity.apple.com](https://identity.apple.com), then upload the resulting `.pem` back into Intune.
 3. Record the **Apple ID** used to create the certificate. Apple only allows renewal from the same Apple ID, and the certificate expires every 365 days. Store this in your team's password manager.
 
-#### Step 2: Confirm enrollment is enabled for macOS
+</Step>
+<Step title="Confirm enrollment is enabled for macOS">
 
 1. In **Devices > Enrollment**, confirm **Intune** is set as the MDM authority for your tenant.
 2. Under **Enrollment device platform restrictions**, confirm macOS device enrollment is allowed for the user groups that will own VDI desktops.
 
-#### Step 3: Assign Intune licenses to your VDI users
+</Step>
+<Step title="Assign Intune licenses to your VDI users">
 
 Each end user enrolling a VM must have an Intune license assigned (M365 E3/E5, EMS, or Intune standalone). Without a license, Company Portal sign-in will succeed but enrollment will fail with a licensing error. Assign licenses in the [Microsoft 365 admin center](https://admin.microsoft.com) or via group-based licensing in Entra ID.
 
-#### Step 4: Stage the Company Portal app in your golden image
+</Step>
+<Step title="Stage the Company Portal app in your golden image">
 
 Bake the latest Company Portal `.pkg` into the golden image rather than downloading it at boot. Pre-staging avoids a network dependency at first boot and keeps the install version pinned to whatever you tested against.
 
@@ -345,7 +355,8 @@ ls -d "/Applications/Company Portal.app"
 
 Once installed, Company Portal updates itself via Microsoft AutoUpdate on managed devices. You don't need to chase point releases. Refresh it on your normal image rotation cadence.
 
-#### Step 5: Create the LaunchDaemon script
+</Step>
+<Step title="Create the LaunchDaemon script">
 
 Add the following script to your golden image at `/usr/local/bin/intune-enroll.sh`. Swap `com.yourcompany` for your reverse-domain identifier if you want to namespace it differently.
 
@@ -417,7 +428,8 @@ exit 0
 chmod 755 /usr/local/bin/intune-enroll.sh
 ```
 
-#### Step 6: Create the LaunchDaemon
+</Step>
+<Step title="Create the LaunchDaemon">
 
 Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.intune-enroll.plist`.
 
@@ -451,7 +463,8 @@ chown root:wheel /Library/LaunchDaemons/com.yourcompany.intune-enroll.plist
 chmod 644 /Library/LaunchDaemons/com.yourcompany.intune-enroll.plist
 ```
 
-#### Step 7: Create the LaunchAgent script
+</Step>
+<Step title="Create the LaunchAgent script">
 
 Add the following script to your golden image at `/usr/local/bin/intune-enroll-prompt.sh`.
 
@@ -499,7 +512,8 @@ exit 0
 chmod 755 /usr/local/bin/intune-enroll-prompt.sh
 ```
 
-#### Step 8: Create the LaunchAgent
+</Step>
+<Step title="Create the LaunchAgent">
 
 Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plist`.
 
@@ -527,7 +541,8 @@ chown root:wheel /Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plis
 chmod 644 /Library/LaunchAgents/com.yourcompany.intune-enroll-prompt.plist
 ```
 
-#### Step 9: Seal the golden image
+</Step>
+<Step title="Seal the golden image">
 
 1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
 2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
@@ -540,6 +555,9 @@ sudo rm -rf "/Library/Application Support/com.microsoft.CompanyPortalMac"
 ```
 
 5. Publish the image in Orka.
+
+</Step>
+</Steps>
 
 ---
 
@@ -601,9 +619,8 @@ Both components remove themselves once MDM enrollment is confirmed.
 
 ---
 
-### Step-by-step instructions
-
-#### Step 1: Get your enrollment URL
+<Steps>
+<Step title="Get your enrollment URL">
 
 In the Iru admin console, go to **Enrollment > Manual Enrollment**. Enable the Enrollment Portal if it isn't already on, then toggle on the Blueprint you want VMs to enroll into. Copy the **Enrollment Code** for that Blueprint.
 
@@ -615,7 +632,8 @@ https://yourcompany.kandji.io/enroll/access-code/ENROLLMENTCODE
 
 Replace `yourcompany` with your Iru subdomain and `ENROLLMENTCODE` with the code from your Blueprint (remove the dash between the two number groups).
 
-#### Step 2: Create the LaunchDaemon script
+</Step>
+<Step title="Create the LaunchDaemon script">
 
 Add the following script to your golden image at `/usr/local/bin/iru-enroll.sh`. Swap `com.yourcompany` for your reverse-domain identifier.
 
@@ -679,7 +697,8 @@ exit 0
 chmod 755 /usr/local/bin/iru-enroll.sh
 ```
 
-#### Step 3: Create the LaunchDaemon
+</Step>
+<Step title="Create the LaunchDaemon">
 
 Add this to your golden image at `/Library/LaunchDaemons/com.yourcompany.iru-enroll.plist`.
 
@@ -713,7 +732,8 @@ chown root:wheel /Library/LaunchDaemons/com.yourcompany.iru-enroll.plist
 chmod 644 /Library/LaunchDaemons/com.yourcompany.iru-enroll.plist
 ```
 
-#### Step 4: Create the LaunchAgent script
+</Step>
+<Step title="Create the LaunchAgent script">
 
 Add the following script to your golden image at `/usr/local/bin/iru-enroll-prompt.sh`. Replace `YOUR_IRU_ENROLLMENT_URL` with the URL from your Iru admin console.
 
@@ -750,7 +770,8 @@ exit 0
 chmod 755 /usr/local/bin/iru-enroll-prompt.sh
 ```
 
-#### Step 5: Create the LaunchAgent
+</Step>
+<Step title="Create the LaunchAgent">
 
 Add this to your golden image at `/Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist`.
 
@@ -778,11 +799,15 @@ chown root:wheel /Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist
 chmod 644 /Library/LaunchAgents/com.yourcompany.iru-enroll-prompt.plist
 ```
 
-#### Step 6: Seal the golden image
+</Step>
+<Step title="Seal the golden image">
 
 1. Don't load the LaunchDaemon or LaunchAgent in the image itself. They load on first boot and first login of each provisioned VM.
 2. Confirm no MDM profile is already enrolled: `profiles status -type enrollment` should return "MDM enrollment: No".
 3. Publish the image in Orka.
+
+</Step>
+</Steps>
 
 ---
 
