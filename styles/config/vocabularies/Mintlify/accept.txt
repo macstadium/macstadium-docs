@@ -24,6 +24,7 @@ vSphere
 Kubernetes
 Citrix
 Jamf
+JAMF
 Kandji
 Intune
 Harbor
@@ -37,6 +38,10 @@ Fern
 Anyware
 Okta
 Entra
+Teradici
+AnyConnect
+SecureMobility
+OpenConnect
 
 # File formats and protocols
 IPSW
@@ -65,6 +70,7 @@ MDM
 UEM
 ABM
 VPN
+VPNs
 IPSW
 ADE
 VPP
@@ -74,6 +80,17 @@ MFA
 PAT
 NFS
 k8s
+PCoIP
+FQDN
+WAN
+PSK
+XAuth
+ASA
+TSM
+UHD
+GPU
+GHz
+RTTs
 
 # macOS versions
 Sonoma
