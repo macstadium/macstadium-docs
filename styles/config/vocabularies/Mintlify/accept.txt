@@ -13,6 +13,7 @@ namespaces
 
 # Third-party integrations
 Buildkite
+FileVault
 Tekton
 TeamCity
 Packer
@@ -91,6 +92,14 @@ UHD
 GPU
 GHz
 RTTs
+DaaS
+MSDC
+HDX
+VLAN
+VPC
+CWA
+HID
+TCC
 
 # macOS versions
 Sonoma
