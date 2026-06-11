@@ -191,32 +191,41 @@ max_vms_per_host: 2
 
 Before deploying to production, validate all playbook operations in a test environment.
 
-#### Test Sequence
+#### Test sequence
 
-  1. Test connectivity
+<Steps>
+  <Step title="Test connectivity">
+    Verify Ansible can reach all hosts in your inventory.
+  </Step>
+  <Step title="Test image operations">
+    Run `pull_image.yml` to confirm image pulls succeed on all hosts.
+  </Step>
+  <Step title="Test VM deployment">
+    Deploy a test VM using `deploy.yml` and confirm it appears in the output of `list.yml`.
+  </Step>
+  <Step title="Test VDA registration">
+    Run `install_citrix_vda.yml` and `register_citrix_vda.yml` against the test VM, then confirm the VDA registers in Citrix Cloud.
+  </Step>
+  <Step title="Test VM lifecycle">
+    Start, stop, and restart the test VM to confirm lifecycle operations complete without errors.
+  </Step>
+  <Step title="Test image creation">
+    Run `create_image.yml` to produce a golden image and confirm it appears in your OCI registry.
+  </Step>
+  <Step title="Test VM recreation">
+    Delete the test VM and redeploy from the golden image to confirm the recreation path works.
+  </Step>
+  <Step title="Test VM deletion">
+    Delete the test VM using `delete.yml` and confirm it is removed from `list.yml` output.
+  </Step>
+  <Step title="Test end-to-end user sessions">
+    Launch a Citrix session to the new VM and confirm a user can connect successfully.
+  </Step>
+  <Step title="Troubleshoot with verbose output">
+    If any step fails, rerun the failing playbook with `-vvv` for detailed output:
 
-  2. Test image operations
-
-  3. Test VM deployment
-
-  4. Test VDA registration
-
-  5. Test VM lifecycle
-
-  6. Test image creation
-
-  7. Test VM recreation
-
-  8. Test VM deletion
-
-  9. Test end-to-end user sessions
-
-  10. Use verbose output for troubleshooting:
-
-
-
-    
-    
-```
-ansible-playbook -i inventory deploy.yml -vvv -e "vm_name=test-vm-debug" -e "vm_image=<your-image>"
-```
+    ```bash
+    ansible-playbook -i inventory deploy.yml -vvv -e "vm_name=test-vm-debug" -e "vm_image=<your-image>"
+    ```
+  </Step>
+</Steps>
