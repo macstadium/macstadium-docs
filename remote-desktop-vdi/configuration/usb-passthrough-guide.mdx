@@ -87,9 +87,11 @@ ctxsession -v  # Check session latency
 
 
 
-### Testing Guide
+### Testing guide
 
-#### 1. Prerequisites
+<Steps>
+
+<Step title="Prerequisites">
 
 Target system:
 
@@ -106,48 +108,43 @@ Physical USB devices:
   * Mass storage device (USB drive).
     * Optional: HID device (Wacom tablet, game controller).
     * Optional: iPhone/iPad (for developer redirection testing).
-#### 2. Test Procedure
 
-  1. Enable Policy
-     1. Confirm USB Redirection is enabled for the correct Delivery Group.
-     2. Allow ~5 minutes for policy propagation.
+</Step>
 
-  2. Connect from Client
-     1. Plug USB device into local client.
-     2. Launch Citrix Workspace App → open the macOS VDA desktop session.
-     3. Check Devices menu in Workspace toolbar for USB device.
+<Step title="Test procedure">
 
-  3. Switch Redirection Mode
-     1. If device not mounted, try switching from Optimized to Generic.
-     2. On macOS 15.4+, Generic may revert to Optimized (known issue).
+1. **Enable policy:** Confirm USB Redirection is enabled for the correct Delivery Group, then allow ~5 minutes for policy propagation.
 
-  4. Validate in VDA
-     1. Inside VDA, check Finder for mount.
-     2. Run to confirm detection:
+2. **Connect from client:** Plug the USB device into the local client. Launch Citrix Workspace App, open the macOS VDA desktop session, and check the Devices menu in the Workspace toolbar for the USB device.
+
+3. **Switch redirection mode:** If the device isn't mounted, try switching from Optimized to Generic. On macOS 15.4+, Generic may revert to Optimized (known issue).
+
+4. **Validate in VDA:** Inside the VDA, check Finder for the mount. Run the following to confirm detection:
 
 ```bash
 diskutil list
 ```
 
-  5. Network Latency Check
-     1. Run:
+5. **Network latency check:** Run the following and check the output. If latency is greater than 150–200ms, the device may not mount.
 
 ```bash
 ctxsession -v
 ```
 
-     2. If latency >150–200ms, device may not mount.
-
-  6. Collect Logs (if issues)
-     1. Run:
+6. **Collect logs (if issues):** Run the following, then save and attach logs for escalation.
 
 ```bash
 sudo xdlcollect
 ```
 
-     2. Save and attach logs for escalation.
-#### 3. Expected Results
+</Step>
 
-Windows Client: USB mass storage should appear and mount in Finder.  
-macOS Client: Device may show but not mount due to known issue.  
-HID Devices & iDevices: Should redirect and function if supported by release.
+<Step title="Expected results">
+
+- **Windows client:** USB mass storage should appear and mount in Finder.
+- **macOS client:** Device may show but not mount due to known issue.
+- **HID devices and iDevices:** Should redirect and function if supported by the installed release.
+
+</Step>
+
+</Steps>
