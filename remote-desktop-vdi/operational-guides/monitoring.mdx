@@ -1,5 +1,5 @@
 ---
-title: "Monitoring & observability"
+title: "Monitoring and observability"
 description: "Monitor MacStadium VDI VM health, host utilization, and user session state, and integrate metrics and logs with external observability and alerting tools."
 keywords: ["VDI monitoring", "Orka metrics", "Citrix Cloud monitoring", "alerting VDI", "observability macOS VDI"]
 ---
@@ -51,7 +51,7 @@ ansible hosts -i inventory -m shell -a "sudo grep -i error /var/log/orka-engine.
 ansible hosts -i inventory -m shell -a "sudo tail -100 /var/log/orka-engine.log" --limit mac-node-1
 ```
 
-### Management UI (Semaphore)
+### Management UI
 
 The management UI provides task execution history, playbook run logs, and basic job status. All playbook runs are logged with timestamps, operator name, and output.
 

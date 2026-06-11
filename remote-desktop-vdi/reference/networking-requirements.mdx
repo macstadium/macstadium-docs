@@ -1,5 +1,5 @@
 ---
-title: "Networking Requirements"
+title: "Networking requirements"
 description: "Port and firewall requirements, network topology, DNS, and VPN/connectivity requirements for MacStadium VDI, covering all three deployment models."
 ---
 
@@ -37,7 +37,7 @@ These rules apply to all deployment models.
 | Ansible → Orka hosts | Ansible controller | Mac hosts | TCP 22 | SSH (playbook execution) |
 | Orka API | Ansible controller | Mac hosts | TCP 80, 443 | Orka Engine API |
 | VM → Host (jump proxy) | Ansible controller | Mac hosts → VMs | TCP 22 | VM management via host as jump proxy |
-| Management UI | Admin browser | Ansible controller | TCP 3000 | Semaphore web UI |
+| Management UI | Admin browser | Ansible controller | TCP 3000 | Web access to the management UI |
 
 ### MDM traffic
 
