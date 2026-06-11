@@ -39,7 +39,7 @@ To force reinstallation on hosts where the SDK is already present:
 ansible-playbook install_android_sdk.yml -i inventory -e "install_android_sdk_force=true"
 ```
 
-## Install SDK Platforms and System Images
+## Install SDK platforms and system images
 
 Once the Android SDK is installed, install the platform and system images you want to use for your AVDs.
 
@@ -58,9 +58,9 @@ Available variables:
 - `platform`: Android platform to install (default: `android-35`)
 - `image_types`: comma-separated list of system image types (default: `default,google_apis`)
 
-## Create an Android Virtual Device
+## Create an Android virtual device
 
-AVDs are tied to a specific VM. The AVD name is derived automatically from the VM name using the pattern `{vm_name}-avd-{index}`, where the index increments for each additional AVD on that VM (e.g. `my-vm-avd-0`, `my-vm-avd-1`).
+AVDs are tied to a specific VM. The AVD name is derived automatically from the VM name using the pattern `{vm_name}-avd-{index}`, where the index increments for each additional AVD on that VM (for example, `my-vm-avd-0`, `my-vm-avd-1`).
 
 Run with `--tags plan` first to preview which host the AVD will be created on:
 
@@ -91,7 +91,7 @@ Example with custom settings:
 ansible-playbook deploy_avd.yml -i inventory -e "vm_name=my-vm" -e "platform=android-34" -e "image_type=google_apis" -e "cpu=4" -e "memory=2048"
 ```
 
-## Manage Android Virtual Devices
+## Manage Android virtual devices
 
 ### Start, stop, or delete an AVD
 
@@ -144,9 +144,9 @@ If the AVD is currently running, the playbook stops it before deleting.
 Required variables:
 
 - `vm_name`: name of the VM the AVD is associated with
-- `avd_index`: index of the AVD to delete (e.g. `0` for `my-vm-avd-0`)
+- `avd_index`: index of the AVD to delete (for example, `0` for `my-vm-avd-0`)
 
-## Uninstall SDK Platforms and System Images
+## Uninstall SDK platforms and system images
 
 To uninstall a specific platform and all of its system images from host nodes:
 

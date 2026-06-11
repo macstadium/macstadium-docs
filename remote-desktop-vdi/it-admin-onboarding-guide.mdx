@@ -68,9 +68,9 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
 **Orka-specific terms:**
 
-  * Orka host: Physical Mac running Orka Engine (e.g. Mac mini M4, Mac Studio)
+  * Orka host: Physical Mac running Orka Engine (for example, Mac mini M4, Mac Studio)
 
-  * VM group: A logical collection of VMs managed together (e.g. `citrix-vda-finance`, `citrix-vda-engineering`)
+  * VM group: A logical collection of VMs managed together (for example, `citrix-vda-finance`, `citrix-vda-engineering`)
 
   * Golden image: Template VM with macOS, Citrix VDA, and applications pre-installed
 
@@ -104,7 +104,7 @@ Day-to-day activities can vary, but will often consist of a mix of provisioning 
 
   * Group vars: Configuration variables shared across hosts (`dev/group_vars/all/main.yml`)
 
-  * Tags: Selective playbook execution (e.g., `--tags plan` for dry runs)
+  * Tags: Selective playbook execution (for example, `--tags plan` for dry runs)
 
 
 
@@ -247,7 +247,7 @@ An OCI registry is a container registry for storing your organization's golden i
 
 #### Private OCI registry:
 
-  * URL: Defined in `dev/group_vars/all/main.yml` (e.g., `registry.example.com`)
+  * URL: Defined in `dev/group_vars/all/main.yml` (for example, `registry.example.com`)
 
   * Credentials: Stored in Ansible Vault (`vault_registry_username`, `vault_registry_password`)
 
@@ -420,7 +420,7 @@ Create a reference document containing the following information:
 
   * Network interface (10Gb vs 1Gb)
 
-  * Notes (e.g., "Reserved for engineering team")
+  * Notes (for example, "Reserved for engineering team")
 
 
 
@@ -431,9 +431,9 @@ Having this information documented and updated regularly helps with capacity pla
 
 ### Provisioning a new desktop
 
-![MacStadium VDI VM provisioning flow — sequence diagram showing the IT Admin, Control Plane, Automation, Orka Engine, Image Registry, MDM, and Session Broker steps](/images/provisioning-flow.svg)
+![MacStadium VDI VM provisioning flow: sequence diagram showing the IT Admin, Control Plane, Automation, Orka Engine, Image Registry, MDM, and Session Broker steps](/images/provisioning-flow.svg)
 
-You will need to refer to this workflow when a user requests access to a macOS virtual desktop. Be sure the following prerequisites have been met before proceeding:
+Follow this workflow when a user requests access to a macOS virtual desktop. Be sure the following prerequisites have been met before proceeding:
 
   * The user account exists in your identity provider (Azure AD, Okta, etc.)
 
@@ -484,7 +484,7 @@ You can monitor the progress of your deployment in another terminal by running t
   3. Verify VDA registration in Citrix  
   
 \- Navigate to Citrix Cloud Console → Web Studio → Machine Catalogs  
-\- Select your Machine Catalog (e.g., "Orka-macOS-Sonoma-Finance")  
+\- Select your Machine Catalog (for example, "Orka-macOS-Sonoma-Finance")  
 \- Refresh the machine list  
 \- New VMs should appear with:  
 \- Registration state: 'Registered'  
@@ -500,7 +500,7 @@ Expected output: Service running with PID. To confirm this, you can check the VD
   
 `ansible mac_vms -i dev/inventory -m shell \ -a "sudo tail -50 /Library/Application\ Support/Citrix/VDA/Logs/vda.log" \ --limit 10.0.100.10`  
   
-You should see a message similar to: 'Registration successful', or 'Connected to broker'. To troubleshoot VDA registration failures, refer to the Troubleshooting Quick Reference Guide.  
+You should see a message similar to: 'Registration successful', or 'Connected to broker'. To troubleshoot VDA registration failures, see the Troubleshooting Quick Reference Guide.  
 
 
   4. Assign to user/delivery group  
@@ -508,7 +508,7 @@ You should see a message similar to: 'Registration successful', or 'Connected to
 If you're using a static/dedicated assignment:  
   
 \- In Citrix Cloud Console → Web Studio → Delivery Groups  
-\- Select Delivery Group (e.g., "Finance-macOS-VDI")  
+\- Select Delivery Group (for example, "Finance-macOS-VDI")  
 \- Click "Edit Delivery Group" → "Users" tab  
 \- Add user: Search for user account, select, assign to specific VM  
   
@@ -547,7 +547,7 @@ Golden images are the foundation for rapid desktop provisioning. The image lifec
 
 
 
-You will need to create new golden images when a new application is required for your team (e.g. Microsoft Office, Slack, etc.), Citrix VDA updates, or you have department-specific configurations to consider (design tools such as Adobe, or engineering IDEs such as Jetbrains or Visual Studio Code). Before beginning this workflow, ensure the following prerequisites have been met:
+You will need to create new golden images when a new application is required for your team (for example, Microsoft Office, Slack, etc.), Citrix VDA updates, or you have department-specific configurations to consider (design tools such as Adobe, or engineering IDEs such as Jetbrains or Visual Studio Code). Before beginning this workflow, ensure the following prerequisites have been met:
 
   * Configuration scripts are prepared in the `/scripts` directory
 
@@ -649,7 +649,7 @@ Testing new images is critical. To test an image before production use, you can 
 
 You will want to verify that the VM has deployed successfully, the VDA registers with Citrix Cloud, applications launch correctly, there are no errors in the VDA logs, and test users can launch sessions and access applications. If issues are found, you can fix any script errors in the `/scripts` directory, delete the failed image from your container registry, and re-run `create_image.yml` with the corrected scripts.   
   
-Once the image has been validated, you can tag it as `:latest` for production use. To do so, you can re-run `create_image.yml` or if you have registry access, you can do so via your container registry's CLI (e.g., Docker):  
+Once the image has been validated, you can tag it as `:latest` for production use. To do so, you can re-run `create_image.yml` or if you have registry access, you can do so via your container registry's CLI (for example, Docker):  
   
 `docker pull registry.example.com/citrix-vda/sonoma-finance:v2.0 `  
 `docker tag registry.example.com/citrix-vda/sonoma-finance:v2.0 \ registry.example.com/citrix-vda/sonoma-finance:latest `  
@@ -752,7 +752,7 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 Track versions by maintaining a CHANGELOG.MD in your Git repository. If a new image causes issues, you can identify the last known good version by checking the CHANGELOG.MD or registry tags. Next, you will want to update the default image:  
   
 `vim dev/group_vars/all/main.yml`  
-`vm_image: registry.example.com/citrix-vda/sonoma-finance:v1.2.1`(e.g. rollback to v1.2.1)
+`vm_image: registry.example.com/citrix-vda/sonoma-finance:v1.2.1`(for example, rollback to v1.2.1)
 
 Then, you will want to recreate the affected VMs by deleting the VMs using the problematic image, and redeploying from the rollback image:  
   
@@ -790,7 +790,7 @@ After running the playbook, proceed through the following steps:
 
   3. Add users by clicking "Add", searching for the specified team, and selecting the correct AD/Azure AD group. Alternatively, you can add users individually.
 
-  4. To configure desktops, give them a display name (e.g. "macOS Marketing Desktop") and add a description for the VM.
+  4. To configure desktops, give them a display name (for example, "macOS Marketing Desktop") and add a description for the VM.
 
   5. Choose 'Add Desktop' as the Delivery Type
 
@@ -864,7 +864,7 @@ In Citrix, `entitlements` are what grant users permission to access specific res
 
 #####  **Grant access:**
 
-  * Assign the user to a Delivery Group (as shown above)
+  * Assign the user to a Delivery Group (see Provisioning a new desktop, earlier on this page)
 
   * The user sees the assigned desktop in Citrix Workspace immediately
 
@@ -1084,13 +1084,13 @@ After a VM has been stopped, it shuts down gracefully (clean shutdown). The VDA 
 
 ##### Delete a single VM: `ansible-playbook -i dev/inventory vm.yml -e "vm_name=webapp-abc123" -e "desired_state=absent"`
 
-You may also need to recreate a VM from a template in order to refresh pooled desktops to a golden image (remove user changes), fix corrupted VMs, or apply an updated golden image to an existing VM. To delete and re-deploy a VM, refer to the following example Ansible playbook:  
+You may also need to recreate a VM from a template in order to refresh pooled desktops to a golden image (remove user changes), fix corrupted VMs, or apply an updated golden image to an existing VM. To delete and re-deploy a VM, see the following example Ansible playbook:  
   
 `ansible-playbook -i dev/inventory vm.yml \ -e "vm_name=citrix-vda-finance-abc123 \ desired_state=absent" `  
   
 `ansible-playbook -i dev/inventory deploy.yml \ -e "vm_group=citrix-vda-finance \ desired_vms=10 \ vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"`  
   
-To recreate VMs in a batch, refer to the following example:  
+To recreate VMs in a batch, see the following example:  
   
 `ansible-playbook -i dev/inventory delete.yml \ -e "vm_group=citrix-vda-finance \ delete_count=10"`  
   
@@ -1111,7 +1111,7 @@ To remove users from a Citrix Delivery Group:
 
 The desktop will disappear from the user's Workspace immediately.
 
-If a VM has been statically assigned, refer to the following example Ansible playbook to find and delete a specific user's VM:  
+If a VM has been statically assigned, see the following example Ansible playbook to find and delete a specific user's VM:  
   
 `ansible-playbook -i dev/inventory list.yml -e "vm_group=citrix-vda-finance"`  
   
@@ -1751,7 +1751,7 @@ Where data resides:
 
 ##### Annually:
 
-  * Upgrade macOS major version (e.g., Sonoma → Sequoia)
+  * Upgrade macOS major version (for example, Sonoma → Sequoia)
 
   * Review all configuration scripts
 

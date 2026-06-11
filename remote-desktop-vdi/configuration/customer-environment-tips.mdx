@@ -11,7 +11,7 @@ These are recommended best practices for deploying Citrix HDX and HP Anyware PCo
 
 ---
 
-## Security and Encryption
+## Security and encryption
 
 Disable FileVault unless your security policy requires it. If a machine with FileVault enabled powers down, a MacStadium Data Center Technician must intervene locally before it can be accessed remotely. If encryption is required, coordinate with MacStadium to set up secure restart scripts that automate reboots and recovery before enabling it.
 
@@ -21,7 +21,7 @@ Use an MDM solution (Jamf Pro, Kandji, or Intune) to enforce your security basel
 
 ---
 
-## MDM Enrollment for VMs
+## MDM enrollment for VMs
 
 Apple Business Manager (ABM) Automated Device Enrollment is not available for virtual machines. Apple identifies VM hardware identifiers as virtual and blocks auto-enrollment. This cannot be worked around.
 
@@ -39,11 +39,11 @@ For image build and versioning guidance, see [VDI Golden Image Management](/remo
 
 ---
 
-## MDM Policies and Permissions
+## MDM policies and permissions
 
 Configure and test these before sealing your golden image. Some permissions cannot be pre-approved via MDM, so they need to be granted manually on a clean VM before the image is sealed.
 
-### Privacy Preferences (PPPC / TCC)
+### Privacy preferences (PPPC / TCC)
 
 | Permission | Citrix HDX | HP Anyware PCoIP | MDM pre-approvable? |
 |---|---|---|---|
@@ -72,7 +72,7 @@ codesign -dr - /path/to/PCoIPAgent.app
 
 Paste the `designated =>` line from the output into the Code Requirement field of your MDM's PPPC payload.
 
-### System Extensions (Citrix only)
+### System extensions (Citrix only)
 
 Citrix VDA installs system extensions for camera and USB redirection. Pre-approve these to prevent user-facing prompts.
 
@@ -85,7 +85,7 @@ On macOS 15 (Sequoia), admin users can remove system extensions via System Setti
 
 Citrix also installs background services under `/Library/LaunchAgents` and `/Library/LaunchDaemons`. On Ventura and later, users see a "Background Items Added" notification on first login. This is expected. Do not suppress or disable these services.
 
-### MDM Platform Notes
+### MDM platform notes
 
 | Platform | PPPC | System Extensions | Notes |
 |---|---|---|---|
@@ -95,7 +95,7 @@ Citrix also installs background services under `/Library/LaunchAgents` and `/Lib
 
 ---
 
-## Networking and Connectivity
+## Networking and connectivity
 
 Disable packet inspection and SSL interception on VDI session traffic. Both HDX and PCoIP are sensitive to latency added by middleboxes. Route sessions as directly as possible and avoid unnecessary proxy hops.
 
@@ -104,9 +104,9 @@ Disable packet inspection and SSL interception on VDI session traffic. Both HDX 
 | Protocol | Citrix HDX | HP Anyware PCoIP |
 |---|---|---|
 | Primary session | TCP/UDP 1494, 2598 | UDP 4172 |
-| Session fallback | — | TCP 4172 |
+| Session fallback | N/A | TCP 4172 |
 | Broker / licensing | TCP 443 | TCP 443, 60443 |
-| EDT (performance) | UDP 1494, 2598 | — |
+| EDT (performance) | UDP 1494, 2598 | N/A |
 
 Enable EDT (UDP 1494/2598) for Citrix where possible. It provides noticeably better performance over variable-quality connections compared to TCP-only transport.
 
@@ -122,9 +122,9 @@ Maintain a secondary administrative access path (VNC or MacStadium remote consol
 
 ---
 
-## Performance Tuning
+## Performance tuning
 
-### macOS Settings (both protocols)
+### macOS settings (both protocols)
 
 Disable desktop animations and transparency effects before sealing your image: **System Settings > Accessibility > Display > Reduce Motion** and **Reduce Transparency**. Disable screen saver, hot corners, and idle timers:
 
@@ -134,11 +134,11 @@ sudo pmset -a sleep 0 disksleep 0 displaysleep 0
 
 MacStadium hosts use wired Ethernet. If any nodes in your cluster are on Wi-Fi, disable Wi-Fi power saving to prevent the NIC from dropping into a low-power state during active sessions.
 
-### Protocol-Specific Tuning
+### Protocol-specific tuning
 
 | Setting | Citrix HDX | HP Anyware PCoIP |
 |---|---|---|
-| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles (see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, frame rate — configured via plist (see below) |
+| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles (see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) | `pcoip.max_link_rate`, image quality, and frame rate. Configure via the plist entries below. |
 | Config location | Citrix Workspace settings | `/Library/Preferences/com.teradici.pcoip-agent.plist` |
 | Applies to | VDA | Graphics Agent and Standard Agent |
 
@@ -170,7 +170,7 @@ Changes take effect after the PCoIP agent service restarts or the VM reboots.
 
 ---
 
-## Management and Policy
+## Management and policy
 
 Define MDM policies before sealing your golden image. A baseline for Orka VDI:
 
@@ -184,13 +184,13 @@ Do not apply aggressive idle timeout or auto-sleep policies that conflict with a
 
 ---
 
-## Backup and Recovery
+## Backup and recovery
 
 Keep machines in an always-on or wake-on-network state. Maintain a secondary administrative connection (VNC or MacStadium secure console) that does not depend on your VDI session. Enable Time Machine or equivalent backup on a schedule that meets your retention requirements. VDI sessions are not a substitute for enterprise backup.
 
 ---
 
-## Quick Reference
+## Quick reference
 
 | | Citrix HDX | HP Anyware PCoIP |
 |---|---|---|

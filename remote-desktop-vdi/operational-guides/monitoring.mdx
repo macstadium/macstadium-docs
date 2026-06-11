@@ -59,7 +59,7 @@ Access at `http://localhost:3000` on your Ansible controller (or wherever you de
 
 ### Citrix Cloud Console
 
-Citrix Cloud provides the most complete view of session and <Tooltip tip="Virtual Delivery Agent — software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> health. Key monitoring areas:
+Citrix Cloud provides the most complete view of session and <Tooltip tip="Virtual Delivery Agent: software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> health. Key monitoring areas:
 
 | Location | What to check |
 | --- | --- |
@@ -163,11 +163,11 @@ For alerting, most platforms support webhook-based notifications. Pipe playbook 
     MacStadium monitors physical host health, hardware, and data center infrastructure. You don't have access to hardware-level metrics directly.
 
     - For host hardware alerts (disk failure, hardware fault), MacStadium's monitoring will detect these and notify you.
-    - For Orka Engine and VM-layer monitoring, use the Ansible-based approach above.
+    - For Orka Engine and VM-layer monitoring, use the Ansible-based approach described on this page.
     - MacStadium can provide infrastructure-level metrics on request. Contact your account representative.
   </Tab>
   <Tab title="Self-Hosted">
-    You own full-stack observability, from hardware to VDA. In addition to the Ansible-based monitoring above:
+    You own full-stack observability, from hardware to VDA. In addition to the Ansible-based monitoring described on this page:
 
     - Install your standard server monitoring agent (Datadog, New Relic, Prometheus Node Exporter) on each Mac host
     - Monitor macOS system metrics: CPU, memory, disk I/O, network throughput

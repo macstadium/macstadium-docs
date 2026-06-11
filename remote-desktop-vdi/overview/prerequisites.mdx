@@ -27,7 +27,7 @@ MacStadium VDI supports any Apple silicon Mac meeting the following requirements
     MacStadium provisions and manages the Mac hardware. Contact your MacStadium account team to confirm host availability and reserve capacity before you begin setup.
   </Tab>
   <Tab title="Self-Hosted (On-Prem)">
-    You provide Mac mini or Mac Studio hardware meeting the specifications above. Hosts must have SSH access enabled and be reachable from your control plane machine over the network.
+    You provide Mac mini or Mac Studio hardware meeting the host specifications listed in this section. Hosts must have SSH access enabled and be reachable from your control plane machine over the network.
   </Tab>
   <Tab title="Self-Hosted (AWS)">
     You provision EC2 Mac dedicated instances in your AWS account. Supported instance types: mac2, mac2-m2, and mac2-m2pro. A 24-hour minimum allocation period applies per host. Hosts must be in a VPC subnet that can reach your control plane.
@@ -72,7 +72,7 @@ Install the following on the control plane machine before setup:
 Before setup, confirm you have:
 
 - An active VDI broker subscription and Delivery Controller configured
-- The <Tooltip tip="Virtual Delivery Agent — software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> installer for macOS (for Citrix DaaS, a `.dmg` file; MacStadium recommends hosting it in S3 with a presigned URL)
+- The <Tooltip tip="Virtual Delivery Agent: software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> installer for macOS (for Citrix DaaS, a `.dmg` file; MacStadium recommends hosting it in S3 with a presigned URL)
 - An enrollment token for registering VMs with your Delivery Controller
 
 ## Identity provider
@@ -87,7 +87,7 @@ No MacStadium-specific identity configuration is required.
 
 ## MDM (optional, recommended for production)
 
-Supported <Tooltip tip="Mobile Device Management — software for enrolling and managing device configuration, policies, and apps across a fleet.">MDM</Tooltip> platforms: Jamf, Kandji, and Intune. MDM is not required to run VMs, but it's the recommended way to manage configuration profiles, compliance reporting, and app deployment in production.
+Supported <Tooltip tip="Mobile Device Management: software for enrolling and managing device configuration, policies, and apps across a fleet.">MDM</Tooltip> platforms: Jamf, Kandji, and Intune. MDM is not required to run VMs, but it's the recommended way to manage configuration profiles, compliance reporting, and app deployment in production.
 
 If you plan to use MDM, have your MDM server URL and an enrollment invitation ready before you seal your golden image. See [MDM enrollment](/remote-desktop-vdi/configuration/mdm-enrollment) for a full walkthrough.
 
