@@ -10,9 +10,9 @@ This guide walks through how to enroll Orka-provisioned macOS VMs into your MDM 
 
 ## What's different about VMs
 
-The same Apple constraint applies across all three platforms: Apple Business Manager (ABM) does not support virtual machines, so the zero-touch automated enrollment paths (<Tooltip tip="Automated Device Enrollment — Apple's zero-touch setup path using Apple Business Manager. Requires the device to be registered in ABM before deployment.">ADE</Tooltip> for Jamf, ADE for Intune) aren't available for MacStadium VDI desktops.
+The same Apple constraint applies across all three platforms: Apple Business Manager (ABM) does not support virtual machines, so the zero-touch automated enrollment paths (<Tooltip tip="Automated Device Enrollment: Apple's zero-touch setup path using Apple Business Manager. Requires the device to be registered in ABM before deployment.">ADE</Tooltip> for Jamf, ADE for Intune) aren't available for MacStadium VDI desktops.
 
-On macOS 10.13 and later, the available route is user-driven enrollment, which installs an <Tooltip tip="Mobile Device Management — software that lets IT teams remotely manage device configuration, security policies, and apps.">MDM</Tooltip> profile the user must explicitly approve in System Settings. That approval step can't be automated away. What you can do is get it down to a single click: a LaunchDaemon baked into the golden image preps the VM at boot, and a LaunchAgent surfaces the enrollment prompt at first login.
+On macOS 10.13 and later, the available route is user-driven enrollment, which installs an <Tooltip tip="Mobile Device Management: software that lets IT teams remotely manage device configuration, security policies, and apps.">MDM</Tooltip> profile the user must explicitly approve in System Settings. That approval step can't be automated away. What you can do is get it down to a single click: a LaunchDaemon baked into the golden image preps the VM at boot, and a LaunchAgent surfaces the enrollment prompt at first login.
 
 On macOS 11 or later, [Apple's documentation](https://support.apple.com/guide/deployment/about-device-supervision-dep1d89f0bff/web) confirms that Macs enrolled via profile-based Device Enrollment (the mechanism Jamf UIE, Intune Company Portal, and Iru's Enrollment Portal all use) are supervised. ABM is not required for supervision on macOS 11+. This means Orka VMs running macOS 11 or later will be supervised after enrollment. See each platform's tab for details on what this enables.
 
@@ -29,7 +29,7 @@ Two components go into your golden image.
 
 A **LaunchDaemon** runs at boot as root. It downloads the Jamf binary from your Jamf Pro server, installs the management framework, and creates a computer record in Jamf Pro. No user interaction required.
 
-A **LaunchAgent** runs at each login. If MDM enrollment isn't complete, it shows the user a dialog and opens Safari to the Jamf enrollment page. The user completes <Tooltip tip="Single Sign-On — lets users authenticate once with their organization's identity provider to access multiple services.">SSO</Tooltip> authentication, clears the pre-filled username field, clicks Enroll, clicks Download, then approves the profile in System Settings > General > Device Management. The prompt repeats at each login until enrollment is confirmed, then removes itself.
+A **LaunchAgent** runs at each login. If MDM enrollment isn't complete, it shows the user a dialog and opens Safari to the Jamf enrollment page. The user completes <Tooltip tip="Single Sign-On: lets users authenticate once with their organization's identity provider to access multiple services.">SSO</Tooltip> authentication, clears the pre-filled username field, clicks Enroll, clicks Download, then approves the profile in System Settings > General > Device Management. The prompt repeats at each login until enrollment is confirmed, then removes itself.
 
 Both components remove themselves once MDM enrollment is confirmed.
 
@@ -43,13 +43,13 @@ Both components remove themselves once MDM enrollment is confirmed.
 
 **These instructions were written and verified against Jamf Pro 11.25.2 and macOS 15.6.1.**
 
-Navigation and feature placement have changed across major versions of Jamf Pro. If your instance looks different, refer to the [Jamf Pro documentation](https://learn.jamf.com) for your specific version.
+Navigation and feature placement have changed across major versions of Jamf Pro. If your instance looks different, see the [Jamf Pro documentation](https://learn.jamf.com) for your specific version.
 
 ---
 
 ### Step-by-step instructions
 
-#### Step 1: Enable User-Initiated Enrollment
+#### Step 1: Enable user-initiated enrollment
 
 1. Click **Settings** at the bottom of the left sidebar.
 2. Under the **Global** tab, select **User-Initiated Enrollment**.
@@ -63,7 +63,7 @@ Enrollment invitations in Jamf Pro 11 live under Computers, but may be inside th
 2. Click **Enrollment Invitations** in the sidebar.
 3. Click **New** and follow the prompts. Set the expiration date as far out as your instance allows, and align it to your image rotation schedule so the invitation doesn't go stale before you re-seal the image.
 4. Scope the invitation to a specific Jamf site or LDAP group if needed.
-5. After saving, open the invitation record and copy the **Invitation ID**. This is the value you'll use as `INVITATION_CODE` in both scripts below.
+5. After saving, open the invitation record and copy the **Invitation ID**. This is the value you'll use as `INVITATION_CODE` in the LaunchDaemon and LaunchAgent scripts that follow.
 
 #### Step 3: Create the LaunchDaemon script
 
@@ -310,7 +310,7 @@ Both components remove themselves once MDM enrollment is confirmed.
 - Access to your Orka golden image
 - The Company Portal `.pkg` installer downloaded from [https://go.microsoft.com/fwlink/?linkid=853070](https://go.microsoft.com/fwlink/?linkid=853070)
 
-**These instructions were written and verified against macOS 15.6.1 and the Microsoft Intune admin center as of May 2026.** Microsoft's admin console layout and feature placement shift over time. If your tenant looks different, refer to the [macOS device enrollment guide for Microsoft Intune](https://learn.microsoft.com/en-us/intune/device-enrollment/apple/guide-macos) for the current navigation.
+**These instructions were written and verified against macOS 15.6.1 and the Microsoft Intune admin center as of May 2026.** Microsoft's admin console layout and feature placement shift over time. If your tenant looks different, see the [macOS device enrollment guide for Microsoft Intune](https://learn.microsoft.com/en-us/intune/device-enrollment/apple/guide-macos) for the current navigation.
 
 ---
 
