@@ -1,6 +1,6 @@
 ---
 title: "MacStadium VDI 1.0 release notes"
-description: "MacStadium VDI 1.0 release notes: Semaphore-based management UI, automated Citrix VDA provisioning, OCI image support, and Android Virtual Device capabilities."
+description: "MacStadium VDI 1.0 release notes: web-based management UI, automated Citrix VDA provisioning, OCI image support, and Android Virtual Device capabilities."
 keywords: ["VDI release notes", "macOS Tahoe VDI", "Android VDI", "fresh machine ID", "VDI 1.0"]
 ---
 
@@ -10,7 +10,7 @@ keywords: ["VDI release notes", "macOS Tahoe VDI", "Android VDI", "fresh machine
 
 ### Release summary
 
-MacStadium VDI 1.0 is the initial production release of MacStadium's virtual desktop platform. This release delivers a Semaphore-based management UI, automated Citrix VDA provisioning, OCI image support, Android Virtual Device capabilities, and a full set of VM lifecycle management tools.
+MacStadium VDI 1.0 is the initial production release of MacStadium's virtual desktop platform. This release delivers a web-based management UI, automated Citrix VDA provisioning, OCI image support, Android Virtual Device capabilities, and a full set of VM lifecycle management tools.
 
 ### Requirements
 
@@ -28,9 +28,9 @@ MacStadium VDI 1.0 is the initial production release of MacStadium's virtual des
 
 ## New features
 
-### Semaphore UI for VDI management
+### Management UI
 
-MacStadium VDI ships with a MacStadium-branded Semaphore instance (an open-source Ansible GUI) that runs via Docker Compose. The Semaphore UI is distributed as a prebuilt Docker image maintained by MacStadium, so end users do not need to build it themselves. It comes with all task templates pre-loaded, so IT administrators can manage VDI deployments through a web interface without invoking Ansible directly. After initial setup, operators only need to update SSH credentials in the key store.
+MacStadium VDI ships with a web-based management UI (built on an open-source Ansible GUI) that runs via Docker Compose. The management UI is distributed as a prebuilt Docker image maintained by MacStadium, so end users do not need to build it themselves. It comes with all task templates pre-loaded, so IT administrators can manage VDI deployments through a web interface without invoking Ansible directly. After initial setup, operators only need to update SSH credentials in the key store.
 
 Available task templates cover the full VM lifecycle: deploy, list, manage VM state (`running`, `stopped`, `absent`), delete, create and push images, pull images, install the [Orka Engine](https://github.com/macstadium/orka-engine-orchestration), Citrix VDA installation and enrollment, and Android AVD management.
 
@@ -48,8 +48,8 @@ VDI deployments can push and pull VM images to and from OCI registries, includin
 
 * Deployments accept RAM, CPU, and network interface as parameters, giving operators direct control over VM resource allocation and networking configuration (including bridge networking) at deploy time.
 * VM IP addresses are displayed in both deploy and list outputs, eliminating the need to look up IPs separately after provisioning.
-* `provision_user.yml` creates macOS admin user accounts on running VMs via SSH. It is available as the **VM: Provision User to VM** task template in Semaphore, or can be run directly via Ansible.
-* Image `list` and `delete` operations are available as Semaphore tasks.
+* `provision_user.yml` creates macOS admin user accounts on running VMs via SSH. It is available as the **VM: Provision User to VM** task template in the management UI, or can be run directly via Ansible.
+* Image `list` and `delete` operations are available as management UI tasks.
 * VMs can be managed and deleted by name prefix, making bulk operations across groups of VMs simpler.
 
 ### Android Virtual Device support
