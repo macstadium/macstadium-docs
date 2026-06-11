@@ -29,7 +29,9 @@ Before you begin, confirm you have the following:
 
 <Steps>
 
-<Step title="Connect to your MacStadium network">
+<Step>
+
+### Connect to your MacStadium network
 
 All Mac hosts are on MacStadium's private network. You'll need an active VPN connection before the controller can reach them.
 
@@ -45,11 +47,14 @@ Repeat for each host IP in your fleet. All hosts must be reachable before you co
 
 </Step>
 
-<Step title="Set up your controller">
+<Step>
+
+### Set up your controller
 
 Run all steps in this section on your controller machine.
 
-#### Set the hostname
+**Set the hostname**
+
 
 Set a consistent hostname before configuring anything else. Replace `example-controller` with your chosen name.
 
@@ -60,14 +65,16 @@ sudo scutil --set HostName "example-controller"
 dscacheutil -flushcache
 ```
 
-#### Install Homebrew
+**Install Homebrew**
+
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew doctor
 ```
 
-#### Install Ansible
+**Install Ansible**
+
 
 Modern versions of macOS prevent installing Python packages system-wide. Install Ansible through pipx to keep it isolated from the system Python environment.
 
@@ -79,11 +86,14 @@ pipx install ansible==11.4.0
 
 </Step>
 
-<Step title="Configure SSH access to your hosts">
+<Step>
+
+### Configure SSH access to your hosts
 
 Ansible uses SSH key authentication to connect to each Mac host.
 
-#### Generate an SSH key
+**Generate an SSH key**
+
 
 If you don't already have one:
 
@@ -93,7 +103,8 @@ ssh-keygen -t ed25519
 
 Accept the default file path or specify your own.
 
-#### Copy the key to each host
+**Copy the key to each host**
+
 
 Run once per host, substituting the correct IP address:
 
@@ -111,11 +122,14 @@ Repeat for each host in your fleet.
 
 </Step>
 
-<Step title="Configure the orchestration library">
+<Step>
+
+### Configure the orchestration library
 
 Run all steps in this section on your controller.
 
-#### Clone the repository
+**Clone the repository**
+
 
 ```bash
 mkdir -p ~/orka-automation
@@ -124,7 +138,8 @@ git clone https://github.com/macstadium/orka-engine-orchestration.git
 cd orka-engine-orchestration
 ```
 
-#### Create the inventory file
+**Create the inventory file**
+
 
 The inventory file tells Ansible which hosts to manage. Add the IP address of each Mac host:
 
@@ -143,7 +158,8 @@ Inventory file contents:
 10.0.100.12
 ```
 
-#### Configure group variables
+**Configure group variables**
+
 
 Group variables apply settings across all hosts. Open the file created in the previous step:
 
@@ -171,7 +187,9 @@ vm_image: ghcr.io/macstadium/orka-images/sequoia:latest
 
 </Step>
 
-<Step title="Install Orka Engine">
+<Step>
+
+### Install Orka Engine
 
 This playbook installs Orka Engine on every host in your inventory. It applies your license key and starts the service automatically.
 
@@ -183,7 +201,8 @@ ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICEN
 
 Replace `YOUR-LICENSE-KEY` and `YOUR-INSTALLER-URL` with the values from your MacStadium account representative.
 
-#### Verify the installation
+**Verify the installation**
+
 
 ```bash
 ansible hosts -i inventory -m shell -a "orka-engine --version"
@@ -192,11 +211,14 @@ ansible hosts -i inventory -m shell -a "/usr/local/bin/orka-engine info"
 
 </Step>
 
-<Step title="Set up the management UI">
+<Step>
+
+### Set up the management UI
 
 The management UI is the primary interface for IT administrators. It provides a browser-based dashboard for running orchestration playbooks without touching the CLI.
 
-#### Install prerequisites
+**Install prerequisites**
+
 
 Docker and `uv` are required to run the management UI.
 
@@ -209,7 +231,8 @@ brew install uv
   Docker Desktop is an alternative if you prefer a GUI installer.
 </Note>
 
-#### Configure the environment
+**Configure the environment**
+
 
 ```bash
 cd ~/orka-automation/orka-engine-orchestration
@@ -234,7 +257,8 @@ SEMAPHORE_ACCESS_KEY_ENCRYPTION=your-generated-key-here
 
 Also set your admin username and password in the same file before starting.
 
-#### Start the management UI
+**Start the management UI**
+
 
 ```bash
 cd ~/orka-automation/orka-engine-orchestration
@@ -243,7 +267,8 @@ docker compose up -d
 
 The management UI is available at `http://localhost:3000`. Log in with the admin credentials you set in the `.env` file.
 
-#### Configure SSH credentials
+**Configure SSH credentials**
+
 
 **Option A: Setup script (recommended)**
 
@@ -259,7 +284,9 @@ After logging in, navigate to **Key Store** and edit the Mac Hosts SSH key. Repl
 
 </Step>
 
-<Step title="Deploy your first VM">
+<Step>
+
+### Deploy your first VM
 
 With your hosts configured and the management UI running, you're ready to deploy a macOS VM.
 

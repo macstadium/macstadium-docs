@@ -64,7 +64,9 @@ The Ansible controller is a separate machine (macOS or Linux) that runs orchestr
 
 <Steps>
 
-<Step title="Prepare your Mac hosts">
+<Step>
+
+### Prepare your Mac hosts
 
 Run all steps in this section on each physical Mac host. Repeat for every host in your fleet.
 
@@ -72,7 +74,8 @@ Run all steps in this section on each physical Mac host. Repeat for every host i
   Don't enable FileVault on Mac hosts without a remote recovery plan. If a host with FileVault enabled powers down, you'll need physical access to decrypt the disk before the host can be managed remotely. If FileVault is required by your security policy, use macOS Tahoe (26). Tahoe supports pre-boot SSH for remote disk decryption. See [Security and Encryption](/remote-desktop-vdi/configuration/customer-environment-tips#security-and-encryption) for details.
 </Warning>
 
-#### Assign a static IP
+**Assign a static IP**
+
 
 Assign a static IP to each host before installing Orka Engine. Either configure it manually or use a DHCP reservation.
 
@@ -98,7 +101,8 @@ Document the following for each host (you'll need it for the Ansible inventory f
 | Hardware model | Mac mini M4 |
 | Network interface | en0 |
 
-#### Set the hostname
+**Set the hostname**
+
 
 Replace `example-host0` with the appropriate hostname for each machine. Use a short name without dots for `HostName`.
 
@@ -109,14 +113,16 @@ sudo scutil --set HostName "host0"
 dscacheutil -flushcache
 ```
 
-#### Install Homebrew
+**Install Homebrew**
+
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew doctor
 ```
 
-#### Verify Python
+**Verify Python**
+
 
 Python 3 is required for Ansible to manage the host. It ships with macOS but confirm it's present:
 
@@ -126,11 +132,14 @@ python3 --version
 
 </Step>
 
-<Step title="Set up your controller">
+<Step>
+
+### Set up your controller
 
 Run all steps in this section on the controller machine.
 
-#### Set the hostname
+**Set the hostname**
+
 
 ```bash
 sudo scutil --set ComputerName "example-controller"
@@ -139,14 +148,16 @@ sudo scutil --set HostName "example-controller"
 dscacheutil -flushcache
 ```
 
-#### Install Homebrew
+**Install Homebrew**
+
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew doctor
 ```
 
-#### Install Ansible
+**Install Ansible**
+
 
 Modern versions of macOS prevent installing Python packages system-wide. Install Ansible through pipx to keep it isolated from the system Python environment.
 
@@ -158,11 +169,14 @@ pipx install ansible==11.4.0
 
 </Step>
 
-<Step title="Configure SSH access to your hosts">
+<Step>
+
+### Configure SSH access to your hosts
 
 Ansible uses SSH key authentication to connect to each Mac host. Run these steps on the controller.
 
-#### Generate an SSH key
+**Generate an SSH key**
+
 
 If you don't already have one:
 
@@ -172,7 +186,8 @@ ssh-keygen -t ed25519
 
 Accept the default file path or specify your own.
 
-#### Copy the key to each host
+**Copy the key to each host**
+
 
 Run once per host, substituting the correct IP:
 
@@ -190,11 +205,14 @@ Repeat for every host.
 
 </Step>
 
-<Step title="Configure the orchestration library">
+<Step>
+
+### Configure the orchestration library
 
 Run all steps in this section on the controller.
 
-#### Clone the repository
+**Clone the repository**
+
 
 ```bash
 mkdir -p ~/orka-automation
@@ -203,7 +221,8 @@ git clone https://github.com/macstadium/orka-engine-orchestration.git
 cd orka-engine-orchestration
 ```
 
-#### Create the inventory file
+**Create the inventory file**
+
 
 ```bash
 mkdir -p dev/group_vars/all
@@ -220,7 +239,8 @@ Add the IP address of each host:
 10.0.100.12
 ```
 
-#### Configure group variables
+**Configure group variables**
+
 
 ```bash
 vim dev/group_vars/all/main.yml
@@ -246,7 +266,9 @@ vm_image: ghcr.io/macstadium/orka-images/sequoia:latest
 
 </Step>
 
-<Step title="Install Orka Engine">
+<Step>
+
+### Install Orka Engine
 
 This playbook installs Orka Engine on every host in your inventory, applies your license key, and starts the service.
 
@@ -258,14 +280,16 @@ ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICEN
 
 Replace `YOUR-LICENSE-KEY` and `YOUR-INSTALLER-URL` with the values from your MacStadium account representative.
 
-#### Verify the installation
+**Verify the installation**
+
 
 ```bash
 ansible hosts -i inventory -m shell -a "orka-engine --version"
 ansible hosts -i inventory -m shell -a "/usr/local/bin/orka-engine info"
 ```
 
-#### Force reinstall or upgrade
+**Force reinstall or upgrade**
+
 
 To reinstall or upgrade to a newer version, add the `install_engine_force` flag:
 
@@ -275,11 +299,14 @@ ansible-playbook install_engine.yml -i inventory -e "orka_license_key=YOUR-LICEN
 
 </Step>
 
-<Step title="Set up the management UI">
+<Step>
+
+### Set up the management UI
 
 The management UI is the primary interface for IT administrators. It provides a browser-based dashboard for running orchestration playbooks without touching the CLI.
 
-#### Install prerequisites
+**Install prerequisites**
+
 
 ```bash
 brew install docker docker-compose
@@ -290,7 +317,8 @@ brew install uv
   Docker Desktop is an alternative if you prefer a GUI installer.
 </Note>
 
-#### Configure the environment
+**Configure the environment**
+
 
 ```bash
 cd ~/orka-automation/orka-engine-orchestration
@@ -315,7 +343,8 @@ SEMAPHORE_ACCESS_KEY_ENCRYPTION=your-generated-key-here
 
 Also set your admin username and password in the same file.
 
-#### Start the management UI
+**Start the management UI**
+
 
 ```bash
 cd ~/orka-automation/orka-engine-orchestration
@@ -324,7 +353,8 @@ docker compose up -d
 
 The management UI is available at `http://localhost:3000`. Log in with the admin credentials you set in `.env`.
 
-#### Configure SSH credentials
+**Configure SSH credentials**
+
 
 **Option A: Setup script (recommended)**
 
@@ -340,7 +370,9 @@ After logging in, navigate to **Key Store** and edit the Mac Hosts SSH key. Repl
 
 </Step>
 
-<Step title="Deploy your first VM">
+<Step>
+
+### Deploy your first VM
 
 With your hosts configured and the management UI running, you're ready to deploy a macOS VM.
 
