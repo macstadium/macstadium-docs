@@ -7,9 +7,14 @@ description: "Set up a Jamf Pro workflow that automatically restores a bare meta
   This page applies to bare metal Mac host deployments only. It does not apply to MacStadium VDI or virtual machines, which cannot be registered with Apple Business Manager.
 </Note>
 
-This guide describes a tested, repeatable procedure for deprovisioning bare metal Mac hosts via Jamf Pro and automatically restoring them to a remotely accessible state. After an administrator issues the wipe command, the machine re-enrolls, creates a temporary user account, enables SSH, and enables Screen Sharing. A user can connect via VNC with temporary credentials immediately, with no further action from the administrator.
+This guide describes a tested, repeatable procedure for deprovisioning bare metal Mac hosts via Jamf Pro and automatically restoring them to a remotely accessible state. After an administrator issues the wipe command, the machine re-enrolls, enables SSH, and enables Screen Sharing, with no further action from the administrator.
 
-This workflow depends on Automated Device Enrollment (ADE) via [Apple Business Manager](https://support.apple.com/guide/apple-business-manager) (ABM), which requires physical hardware registered to your ABM account.
+Two script variants are available. Choose the one that fits your workflow:
+
+- **With temporary user** — creates a standard local account with a forced password change on first login. A user can connect via VNC immediately with temporary credentials.
+- **Login screen only** — enables SSH and Screen Sharing and brings the machine to the macOS login screen. An administrator creates the user account separately.
+
+This workflow depends on Automated Device Enrollment (<Tooltip tip="Automated Device Enrollment — Apple's mechanism for automatically enrolling devices into an MDM server during Setup Assistant, triggered when a device assigned to your MDM in Apple Business Manager first boots.">ADE</Tooltip>) via [Apple Business Manager](https://support.apple.com/guide/apple-business-manager) (ABM), which requires physical hardware registered to your ABM account.
 
 One-time setup takes approximately 30 minutes. Subsequent wipe-to-accessible cycles take 5 to 10 minutes depending on network conditions.
 
@@ -20,10 +25,10 @@ When a wipe is issued, the following sequence runs automatically:
 1. The Mac reboots, connects to the network over wired Ethernet, and contacts Apple's activation servers.
 2. ADE applies the PreStage profile, skipping all Setup Assistant screens and creating a managed admin account.
 3. The Mac enrolls in Jamf Pro. An enrollment-triggered policy fires immediately.
-4. The policy script creates a standard local temporary user account and forces a password change on first login.
+4. **(With temporary user only)** The policy script creates a standard local temporary user account and forces a password change on first login.
 5. The script enables SSH directly on the machine.
 6. The script calls the Jamf API to send the `EnableRemoteDesktop` MDM command to the device.
-7. Jamf pushes the MDM command. Screen Sharing is enabled. A user can connect via VNC with the temporary credentials.
+7. Jamf pushes the MDM command. Screen Sharing is enabled.
 
 ## Prerequisites
 
@@ -43,6 +48,12 @@ Complete these steps once. After setup, the recovery loop runs automatically for
 In Jamf Pro, go to **Computers > PreStage Enrollments** and open or create the PreStage for your Mac fleet.
 
 **General tab:** Ensure the PreStage is assigned to your target devices in ABM.
+
+<Note>
+  A device must be assigned to this PreStage the first time its serial number is added to Jamf Pro. Once assigned, it stays in scope for all future wipes and no further action is required.
+
+  To handle the initial assignment automatically, enable **Automatically assign new devices** on the General tab. Jamf recommends this for single-ADE setups. If you manage multiple PreStages, assign devices manually: confirm the device is assigned to your Jamf Pro MDM server in ABM, sync the token in Jamf Pro under **Settings > Global > Device Enrollment Program**, then add the device under the PreStage's **Devices** tab. See [Automated Device Enrollment for Computers](https://learn.jamf.com/r/en-US/jamf-pro-documentation-current/Automated_Device_Enrollment_for_Computers) in the Jamf Pro documentation.
+</Note>
 
 **Setup Assistant tab:** Select all items to skip. The machine must advance through Setup Assistant completely unattended.
 
@@ -102,6 +113,12 @@ Go to **Settings > Computer Management > Scripts > New**.
 
 Set the Display Name to `Enable Remote Access Post-Enrollment`.
 
+Choose the script variant that fits your workflow, then complete the Options and Script tabs as shown.
+
+<Tabs>
+
+<Tab title="With temporary user">
+
 On the **Options** tab, set the following parameter labels:
 
 - Parameter 4: `API Client ID`
@@ -128,7 +145,7 @@ On the **Script** tab, paste the following:
 # Parameters:
 #   $4 - Jamf Pro API Client ID
 #   $5 - Jamf Pro API Client Secret
-#   $6 - Jamf Pro URL (e.g. https://yourinstance.jamfcloud.com)
+#   $6 - Jamf Pro URL (e.g. https://[yourinstance].jamfcloud.com)
 #   $7 - Temporary local username (e.g. tempuser)
 #   $8 - Temporary local password
 ###############################################################################
@@ -231,6 +248,116 @@ else
 fi
 ```
 
+</Tab>
+
+<Tab title="Login screen only">
+
+On the **Options** tab, set the following parameter labels:
+
+- Parameter 4: `API Client ID`
+- Parameter 5: `API Client Secret`
+- Parameter 6: `Jamf Pro URL`
+
+On the **Script** tab, paste the following:
+
+```bash
+#!/bin/bash
+
+###############################################################################
+# enable_remote_access.sh
+#
+# Triggered by Jamf Pro enrollment complete policy.
+# - Enables SSH (Remote Login) directly via systemsetup
+# - Calls the Jamf Pro API to send the Enable Remote Desktop MDM command
+#   to this device using its own serial number for lookup
+#
+# The machine is brought to the macOS login screen. An administrator
+# creates the user account separately.
+#
+# Parameters:
+#   $4 - Jamf Pro API Client ID
+#   $5 - Jamf Pro API Client Secret
+#   $6 - Jamf Pro URL (e.g. https://[yourinstance].jamfcloud.com)
+###############################################################################
+
+CLIENT_ID="$4"
+CLIENT_SECRET="$5"
+JAMF_URL="$6"
+
+if [[ -z "$CLIENT_ID" || -z "$CLIENT_SECRET" || -z "$JAMF_URL" ]]; then
+    echo "ERROR: Missing required parameters. Check Parameter 4 (Client ID), 5 (Client Secret), 6 (Jamf URL)."
+    exit 1
+fi
+
+JAMF_URL="${JAMF_URL%/}"
+
+# Enable SSH (Remote Login) locally -- no MDM command required
+echo "Enabling SSH (Remote Login)..."
+/usr/sbin/systemsetup -setremotelogin on
+if [[ $? -eq 0 ]]; then
+    echo "SSH enabled."
+else
+    echo "WARNING: systemsetup -setremotelogin returned an error. SSH may not be enabled."
+fi
+
+# Get bearer token
+echo "Requesting API token..."
+TOKEN_RESPONSE=$(curl -s -X POST "$JAMF_URL/api/oauth/token" -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials")
+
+TOKEN=$(echo "$TOKEN_RESPONSE" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+
+if [[ -z "$TOKEN" ]]; then
+    echo "ERROR: Failed to obtain API token. Check Client ID and Secret."
+    echo "Response: $TOKEN_RESPONSE"
+    exit 1
+fi
+
+echo "Token obtained."
+
+# Get this device's serial number
+SERIAL=$(system_profiler SPHardwareDataType | awk '/Serial Number/{print $4}')
+
+if [[ -z "$SERIAL" ]]; then
+    echo "ERROR: Could not determine serial number."
+    exit 1
+fi
+
+echo "Serial number: $SERIAL"
+
+# Brief pause for Jamf DB write lag after enrollment
+sleep 20
+
+# Look up Jamf device ID by serial number
+echo "Looking up Jamf ID for serial $SERIAL..."
+COMPUTER_XML=$(curl -s -H "Authorization: Bearer $TOKEN" -H "Accept: application/xml" "$JAMF_URL/JSSResource/computers/serialnumber/$SERIAL")
+
+COMPUTER_ID=$(echo "$COMPUTER_XML" | xpath -q -e "//computer/general/id/text()" 2>/dev/null)
+
+if [[ -z "$COMPUTER_ID" ]]; then
+    echo "ERROR: Could not find Jamf ID for serial $SERIAL."
+    echo "Response: $COMPUTER_XML"
+    exit 1
+fi
+
+echo "Jamf ID: $COMPUTER_ID"
+
+# Send Enable Remote Desktop MDM command via Jamf API
+echo "Sending Enable Remote Desktop command..."
+COMMAND_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: Bearer $TOKEN" "$JAMF_URL/JSSResource/computercommands/command/EnableRemoteDesktop/id/$COMPUTER_ID")
+
+if [[ "$COMMAND_RESPONSE" == "201" ]]; then
+    echo "SUCCESS: Enable Remote Desktop command queued for device ID $COMPUTER_ID."
+    exit 0
+else
+    echo "ERROR: API returned HTTP $COMMAND_RESPONSE when sending remote desktop command."
+    exit 1
+fi
+```
+
+</Tab>
+
+</Tabs>
+
 <Note>
   On a freshly wiped macOS install, `/usr/bin/python3` is a stub that triggers an Xcode Command Line Tools install prompt. In a headless session this fails silently. The script uses `grep` and `cut` instead, which are always available.
 </Note>
@@ -247,13 +374,29 @@ Go to **Computers > Policies > New**.
 - Trigger: **Enrollment Complete**
 - Execution Frequency: **Ongoing**
 
-**Scripts payload:** Add `Enable Remote Access Post-Enrollment` and fill in all five parameters:
+**Scripts payload:** Add `Enable Remote Access Post-Enrollment` and fill in the parameters for the script variant you chose.
+
+<Tabs>
+
+<Tab title="With temporary user">
 
 - Parameter 4: your API Client ID
 - Parameter 5: your API Client Secret
-- Parameter 6: `https://yourinstance.jamfcloud.com`
+- Parameter 6: `https://[yourinstance].jamfcloud.com`
 - Parameter 7: temp username (for example, `tempuser`)
 - Parameter 8: temp password
+
+</Tab>
+
+<Tab title="Login screen only">
+
+- Parameter 4: your API Client ID
+- Parameter 5: your API Client Secret
+- Parameter 6: `https://[yourinstance].jamfcloud.com`
+
+</Tab>
+
+</Tabs>
 
 **Scope tab:** Scope to the `ADE Enrolled Machines` Smart Group. Save the policy.
 
@@ -271,16 +414,16 @@ Once setup is complete, recovering a machine requires a single action.
    - If prompted for a wipe passcode, enter any 6-digit value (for example, `123456`). The secure enclave wipe bypasses it on modern macOS.
 3. Click **Wipe**. No further action is required.
 
-The machine reboots, re-enrolls, and the policy runs automatically. The temporary user account is created, SSH is enabled, and Screen Sharing is enabled. Hand the temporary credentials to the user. They can connect via VNC immediately and will be prompted to set a new password on first login.
+The machine reboots, re-enrolls, and the policy runs automatically. SSH is enabled and Screen Sharing is enabled. If you used the **With temporary user** script, the temporary user account is also created. Hand the credentials to the user so they can connect via VNC. They'll be prompted to set a new password on first login.
 
-**Monitoring progress:** Refresh **Computers** until the machine reappears (typically 5 to 10 minutes). Open the computer record and check **History > Policy Logs** to confirm the script exited with code 0. Then check **History > Management Commands** to see `EnableRemoteDesktop` move from Pending to Completed. Policy Logs is the leading indicator: if the script succeeded, SSH is already up and the temporary user account exists before the MDM command finishes.
+**Monitoring progress:** Refresh **Computers** until the machine reappears (typically 5 to 10 minutes). Open the computer record and check **History > Policy Logs** to confirm the script exited with code 0. Then check **History > Management Commands** to see `EnableRemoteDesktop` move from Pending to Completed. Policy Logs is the leading indicator: if the script succeeded, SSH is already up (and the temporary user account exists, if you used that variant) before the MDM command finishes.
 
 ## Verify the recovery
 
 - **Policy Logs:** `Enable Remote Access - Post Enrollment` ran and exited with code 0.
 - **Management Commands:** `EnableRemoteDesktop` shows status Completed.
 - **SSH:** `ssh administrator@[machine-ip]`
-- **Screen Sharing:** connect to `vnc://[machine-ip]` and log in with the temporary credentials.
+- **Screen Sharing:** connect to `vnc://[machine-ip]` and log in. Use the temporary credentials if you used the **With temporary user** script.
 - The machine no longer appears in the `Remote Management - Disabled` Smart Group.
 
 ## Troubleshooting
@@ -290,6 +433,6 @@ The machine reboots, re-enrolls, and the policy runs automatically. The temporar
 | Machine stuck on account creation screen after wipe | Local User Account Type in PreStage not set to Skip | Edit PreStage Account Settings and select Skip under Local User Account Type |
 | Machine does not appear in Jamf after wipe | ABM assignment not synced to Jamf | Go to Settings > Global > Device Enrollment Program > your ABM token > Sync Now |
 | Script fails with token error | Client ID or Secret incorrect in policy parameters | Edit the policy Scripts payload and verify Parameters 4 and 5 |
-| Temp user not created | Username or password missing from policy parameters | Edit the policy Scripts payload and verify Parameters 7 and 8 |
+| Temp user not created (with temporary user script only) | Username or password missing from policy parameters | Edit the policy Scripts payload and verify Parameters 7 and 8 |
 | Policy never fires after enrollment | Trigger not set to Enrollment Complete, or machine not in ADE Enrolled Machines group | Verify the policy trigger and Smart Group criteria |
 | EnableRemoteDesktop queued but never completes | Machine lost network before Jamf could push the MDM command | Confirm wired Ethernet and DHCP; re-run the policy manually |
