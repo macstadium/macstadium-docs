@@ -542,12 +542,12 @@ For buildfarm setups, the buildfarm server also provides a Content-Addressable S
 
 ## Why Orka for the worker pool
 
-Bazel RBE handles scheduling, caching, and build orchestration. What it doesn't handle is provisioning a fleet of macOS workers that stays clean, versioned, and operationally tractable at scale. That's what Orka provides:
+Bazel RBE handles scheduling, caching, and build orchestration. What it doesn't provide is the macOS worker fleet itself. Running Bazel RBE on macOS requires clean, versioned, isolated Mac workers that don't turn into an ops problem at scale. That's what Orka handles.
 
-- **Clean workers on demand.** Deploying a fresh Orka VM from a versioned OCI image takes seconds. Bare-metal re-imaging takes hours.
-- **Image versioning.** Orka 3.5's Harbor OCI registry lets you treat your build environments like container images — versioned, signed, pullable by tag. Xcode drift across the fleet collapses cache hit rates; pinned OCI images prevent it.
-- **Worker pool scaling.** Deploy additional worker VMs from the same base image without configuring physical hardware.
-- **Declarative VM counts.** Orka's Kubernetes-native operator supports deployment-style VM pool management. Declare the pool size; the control plane keeps it warm.
-- **Node failover.** If an Orka node goes down, VMs reschedule to healthy nodes. Bare-metal host failure is a manual remediation.
+- **Clean workers on demand.** Deploying a fresh Orka VM from a versioned OCI image takes seconds. Bare-metal re-imaging takes hours: DEP enrollment, a full Xcode install, re-configuration. At CI cadence, that's not a viable clean-boot story.
+- **Pinned build environments.** Bazel pins toolchain state into the action hash. If your worker's Xcode version or SDK drifts, cache hits collapse. Orka 3.5's Harbor OCI registry lets you version, sign, and pin your build images the same way you'd pin a container image. Bare metal has no equivalent primitive.
+- **Isolation per project or team.** VMs are isolated by definition. If one build poisons a worker, it doesn't affect other workers. On bare metal, a bad build corrupts the host until someone re-images it.
+- **Worker pool scaling without physical hardware.** Deploy more workers from the same base image. Orka's Kubernetes-native operator supports declarative pool sizing.
+- **Node failover.** If an Orka node goes down, VMs reschedule to healthy nodes. A bare-metal host failure is a manual remediation.
 
-For more on the Orka value proposition in Bazel RBE architectures, contact [support@macstadium.com](mailto:support@macstadium.com) or speak with your MacStadium solutions engineer.
+For more on running Bazel RBE on Orka, contact [support@macstadium.com](mailto:support@macstadium.com) or speak with your MacStadium solutions engineer.
