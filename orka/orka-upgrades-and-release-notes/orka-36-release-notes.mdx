@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.6 Release Notes"
-description: "Orka 3.6 release notes covering the Orka Upgrade Service, Kubernetes 1.35 validation, VM network isolation policies, and CloudFront artifact distribution."
+description: "Orka 3.6 release notes covering the Orka Upgrade Service, Kubernetes 1.35 validation, VM network isolation policies, CloudFront artifact distribution, and patch releases including 3.6.2."
 ---
 
 **IMPORTANT**
@@ -10,6 +10,41 @@ Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools 
 **Upgrading to 3.6.0 requires Orka 3.2.x.** Contact [MacStadium support](mailto:support@macstadium.com) if you need a staged upgrade.
 
 **Some maintenance operations, such as adding Mac compute nodes, require the latest patch version** (the .z in x.y.z). Patch upgrades are zero-downtime, include the latest bug fixes, and can be requested through [MacStadium support](mailto:support@macstadium.com).
+
+## Orka 3.6.2
+
+### Release summary
+
+Orka 3.6.2 is a patch release that fixes a VM runtime deadlock, adds UDP support for host/guest port reservations, ships code-signed `darwin-arm64` binaries for the Virtual Kubelet and Upgrade Service agent, and includes an updated GitHub Actions integration (v1.1.14). It also includes several bug fixes.
+
+### Improvements
+
+**On-prem deployments**
+
+* Network isolation policy Ansible variables are now available for on-prem deployments. The VM network isolation feature introduced in Orka 3.6.0 can now be configured via Ansible for on-prem clusters. Contact [MacStadium support](mailto:support@macstadium.com) to configure network isolation policies for your cluster.
+
+**Platform**
+
+* VM port reservations now support an optional protocol suffix. Use `<NODE_PORT>:<VM_PORT>/udp` or `<NODE_PORT>:<VM_PORT>/tcp` when deploying a VM. The protocol is case-insensitive and defaults to TCP if omitted.
+* The Virtual Kubelet and Upgrade Service agent darwin-arm64 binaries are now code-signed with a Developer ID certificate in CI.
+* CLI help text image references have been updated.
+
+**GitHub Actions integration**
+
+The GitHub Actions integration releases independently of Orka and is compatible with Orka 3.x. Version 1.1.14 is available.
+
+* The integration now tracks in-flight VM deployments to prevent over-provisioning when multiple jobs start at the same time.
+* On restart, the integration reconciles existing VMs rather than ignoring them. Running VMs are adopted and cleaned up when their jobs finish; failed or non-running VMs are cleaned up immediately, preventing orphaned VMs from consuming cluster resources. Controlled by the new `ENABLE_RECONCILIATION` environment variable (default: `True`).
+* The integration now reuses an existing runner scale set on restart instead of creating a new one, allowing in-progress jobs to continue uninterrupted. Controlled by the new `MANAGE_RUNNER_SCALE_SETS` environment variable (default: `True`).
+* Improved resilience for curl download errors during VM provisioning.
+
+### Bug fixes
+
+* Fixed: VM deadlock on long-lived VMs.
+
+### Coming in Orka 3.7
+
+**Minimum host OS requirement change:** Orka 3.7 will require macOS 15.0 (Sequoia) or later on the host. Customers running macOS 14 (Sonoma) or earlier should plan to upgrade their hosts to Sequoia ahead of the 3.7 release.
 
 ## Orka 3.6.0
 
