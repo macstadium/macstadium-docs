@@ -17,6 +17,34 @@ If your nodes cannot accept SSH, the upgrade can run over SSM instead. SSM upgra
 
 If you're unsure how your nodes are configured, check with your AWS administrator before scheduling.
 
+### Enabling SSH on nodes launched without a key pair
+
+If your nodes were not launched with a key pair and do not accept SSH connections, you can use SSM to install MacStadium's CodeBuild public SSH key first, then proceed with the faster SSH upgrade path. This requires your instances to be SSM-managed: the `AmazonSSMManagedInstanceCore` policy must be attached to the instance profile, as recommended in the Orka on AWS setup guide.
+
+To set this up:
+
+1. Contact MacStadium support to obtain the CodeBuild public SSH key.
+2. Run the following SSM command to install it on all tagged ARM nodes (replace `<macstadium-codebuild-public-key>` with the key from support):
+
+    ```shell
+    aws ssm send-command \
+      --document-name "AWS-RunShellScript" \
+      --targets "Key=tag:role,Values=orka-arm" \
+      --parameters '{"commands":[
+        "mkdir -p /Users/ec2-user/.ssh",
+        "echo \"<macstadium-codebuild-public-key>\" >> /Users/ec2-user/.ssh/authorized_keys",
+        "chmod 700 /Users/ec2-user/.ssh",
+        "chmod 600 /Users/ec2-user/.ssh/authorized_keys",
+        "chown -R ec2-user /Users/ec2-user/.ssh"
+      ]}'
+    ```
+
+    The identity running `send-command` requires `ssm:SendCommand` on the target instances and on the `AWS-RunShellScript` document, plus `ssm:GetCommandInvocation`.
+
+3. Ensure your security group allows inbound TCP port 22 from MacStadium's CodeBuild subnets.
+
+Once the key is installed, MacStadium can proceed with the SSH upgrade path.
+
 ### Verify your node tags
 
 MacStadium uses a dynamic Ansible inventory to identify your ARM nodes during the upgrade. Each ARM EC2 Mac instance must have the EC2 tag:
@@ -26,11 +54,26 @@ MacStadium uses a dynamic Ansible inventory to identify your ARM nodes during th
 
 Instances without this tag will not be selected by the inventory and will be skipped during the upgrade. Verify this tag is applied to all ARM nodes before scheduling.
 
+### Multi-region deployments
+
+The upgrade discovers ARM nodes in the region configured on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, MacStadium runs a separate upgrade pass per region. When scheduling, provide the full list of regions where you have ARM nodes.
+
 ## Requesting an upgrade
 
 1. Review the [3.6 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) and complete any preparation steps listed there.
 2. Submit a ticket through the MacStadium portal.
 3. Schedule a maintenance window via the link in your ticket.
+
+## Changing node values during the upgrade
+
+By default, the upgrade reads all configuration from the running node and reapplies it automatically. If you want to change any of the following values as part of the upgrade, request the override when scheduling:
+
+| Value | Notes |
+|-------|-------|
+| Node hostname | The node re-registers under the new name in Kubernetes. |
+| Node IP | Use if the node's IP address is changing. |
+| License key | Replaces the license key applied to the node. |
+| VM quota | Changes the number of VMs the node is permitted to run. |
 
 ## What changes in 3.5 to 3.6
 
