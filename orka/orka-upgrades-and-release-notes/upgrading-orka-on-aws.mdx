@@ -86,7 +86,7 @@ Once the upgrade is complete:
 
 ## Hybrid deployments (EKS control plane + on-premises Mac nodes)
 
-If your Orka deployment has a mixed topology — EKS control plane on AWS with Mac nodes on-premises — the upgrade follows the same pattern as installation: each component is upgraded using the workflow for where it runs.
+If your Orka deployment combines an EKS control plane on AWS with Mac nodes on-premises, the upgrade follows the same pattern as installation: each component is upgraded using the workflow for where it runs.
 
 * **EKS control plane and AWS services**: Follow the AWS upgrade flow in this guide.
 * **On-premises Mac nodes**: Follow the on-premises upgrade flow using your on-premises Ansible installation. The process is the same as the on-premises installation flow. SSH access to the nodes must be available via the same network path used during installation.
