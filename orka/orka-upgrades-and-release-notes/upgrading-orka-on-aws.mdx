@@ -23,8 +23,8 @@ If your nodes were not launched with a key pair and do not accept SSH connection
 
 To set this up:
 
-1. Contact MacStadium support to obtain the CodeBuild public SSH key.
-2. Run the following SSM command to install it on all tagged ARM nodes (replace `<macstadium-codebuild-public-key>` with the key from support):
+1. Generate an SSH key pair (ed25519 or RSA).
+2. Run the following SSM command to install the public key on all tagged ARM nodes:
 
     ```shell
     aws ssm send-command \
@@ -32,7 +32,7 @@ To set this up:
       --targets "Key=tag:role,Values=orka-arm" \
       --parameters '{"commands":[
         "mkdir -p /Users/ec2-user/.ssh",
-        "echo \"<macstadium-codebuild-public-key>\" >> /Users/ec2-user/.ssh/authorized_keys",
+        "echo \"<your-public-key>\" >> /Users/ec2-user/.ssh/authorized_keys",
         "chmod 700 /Users/ec2-user/.ssh",
         "chmod 600 /Users/ec2-user/.ssh/authorized_keys",
         "chown -R ec2-user /Users/ec2-user/.ssh"
@@ -41,9 +41,21 @@ To set this up:
 
     The identity running `send-command` requires `ssm:SendCommand` on the target instances and on the `AWS-RunShellScript` document, plus `ssm:GetCommandInvocation`.
 
-3. Ensure your security group allows inbound TCP port 22 from MacStadium's CodeBuild subnets.
+3. Store the private key in AWS Secrets Manager as a plaintext secret.
+4. Grant MacStadium's CodeBuild service role permission to read the secret:
 
-Once the key is installed, MacStadium can proceed with the SSH upgrade path.
+    ```json
+    {
+      "Effect": "Allow",
+      "Action": "secretsmanager:GetSecretValue",
+      "Resource": "arn:aws:secretsmanager:*:*:secret:<your-secret-name>*"
+    }
+    ```
+
+5. Ensure your security group allows inbound TCP port 22 from MacStadium's CodeBuild subnets.
+6. When scheduling, provide MacStadium support with the Secrets Manager secret ARN.
+
+MacStadium will use the stored private key to connect over SSH for the upgrade.
 
 ### Verify your node tags
 
@@ -71,9 +83,7 @@ By default, the upgrade reads all configuration from the running node and reappl
 | Value | Notes |
 |-------|-------|
 | Node hostname | The node re-registers under the new name in Kubernetes. |
-| Node IP | Use if the node's IP address is changing. |
 | License key | Replaces the license key applied to the node. |
-| VM quota | Changes the number of VMs the node is permitted to run. |
 
 ## What changes in 3.5 to 3.6
 
