@@ -84,4 +84,13 @@ Once the upgrade is complete:
 2. Regenerate Service Account tokens for any automated workflows.
 3. Repopulate the image cache on your ARM nodes if needed: `orka3 imagecache add <image> --all`
 
-{/* TODO: Add hybrid deployment upgrade section once confirmed with engineering. DI-623 */}
+## Hybrid deployments (EKS control plane + on-premises Mac nodes)
+
+If your Orka deployment has a mixed topology — EKS control plane on AWS with Mac nodes on-premises — the upgrade follows the same pattern as installation: each component is upgraded using the workflow for where it runs.
+
+* **EKS control plane and AWS services**: Follow the AWS upgrade flow in this guide.
+* **On-premises Mac nodes**: Follow the on-premises upgrade flow using your on-premises Ansible installation. The process is the same as the on-premises installation flow. SSH access to the nodes must be available via the same network path used during installation.
+
+The Orka Upgrade Service deploys identically regardless of whether nodes are on AWS or on-premises.
+
+For on-premises installation and upgrade prerequisites, see [Getting started with Orka on-premises](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started).
