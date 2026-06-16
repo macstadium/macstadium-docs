@@ -206,16 +206,6 @@ Orka no longer installs its own cert-manager if one is already present in the cl
 
 If your automation or tooling depends on Orka's cert-manager specifically, verify your setup before upgrading.
 
-### Credential scoping: action required
-
-The permissions required for Orka to run have been tightened to least-privilege. Separate, minimal credential sets are now defined for:
-
-* Orka configuration
-* Virtual Kubelet
-* ECR access
-* Backup operations
-
-If your deployment uses broad IAM credentials for Orka, update your IAM policies to align with the new scoped credential sets before upgrading.
 
 ## After the upgrade
 
