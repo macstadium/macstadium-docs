@@ -1,25 +1,32 @@
 ---
 title: "Upgrading Orka on AWS"
-description: "Upgrade your Orka cluster on AWS from 3.5 to 3.6. Covers ARM node tooling updates, SSH and SSM requirements, what's preserved during the upgrade, and what changes with the new Ansible-based upgrade path."
+description: "Upgrade your Orka cluster on AWS from 3.5 to 3.6. Covers the Orka services upgrade and the new Ansible-based in-place tooling upgrade for ARM Mac nodes, including SSH and SSM requirements."
 ---
 
-Upgrading Orka on AWS follows the same general process as MSDC-hosted upgrades: submit a support ticket, schedule a maintenance window, and MacStadium handles the upgrade. However, AWS deployments have specific requirements and a different upgrade mechanism for ARM Mac nodes.
+Orka on AWS upgrades are self-service. You run the upgrade using the same CodeBuild project used for installation, pointed at the Orka 3.6 Ansible image. There are two parts: upgrading the Orka Kubernetes services, and upgrading the tooling on your ARM Mac nodes.
+
+Review the [3.6 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) before upgrading.
 
 ## Before you upgrade
 
+### Verify your node tags
+
+The upgrade uses a dynamic Ansible inventory to identify your ARM nodes. Each ARM EC2 Mac instance must have the EC2 tag:
+
+* **Key:** `role`
+* **Value:** `orka-arm`
+
+Instances without this tag will not be selected by the inventory and will be skipped. Verify this tag is applied to all ARM nodes before proceeding.
+
 ### Check your ARM node SSH configuration
 
-Starting with the 3.5 to 3.6 upgrade, MacStadium uses an Ansible-based process to update tooling on your ARM Mac nodes rather than replacing the AMI. This approach is significantly faster and preserves your node configuration.
-
-For this to work, your ARM EC2 Mac instances must accept SSH connections on port 22 for the `ec2-user` account using key-based authentication. EC2 Mac instances launched with a key pair have this enabled by default. Your security group must allow inbound TCP port 22 from MacStadium's CodeBuild subnets — confirm this with your MacStadium support contact when scheduling.
+Starting with the 3.5 to 3.6 upgrade, ARM node tooling is updated in place using Ansible rather than replacing the AMI. For this to work, your ARM EC2 Mac instances must accept SSH connections on port 22 for the `ec2-user` account using key-based authentication. EC2 Mac instances launched with a key pair have this enabled by default. Your security group must allow inbound TCP port 22 from your CodeBuild subnets.
 
 If your nodes cannot accept SSH, the upgrade can run over SSM instead. SSM upgrades require an S3 bucket in the same region as your ARM nodes for Ansible file transfer, and can take significantly longer (up to 4 hours). SSH is strongly recommended.
 
-If you're unsure how your nodes are configured, check with your AWS administrator before scheduling.
-
 ### Enabling SSH on nodes launched without a key pair
 
-If your nodes were not launched with a key pair and do not accept SSH connections, you can use SSM to install MacStadium's CodeBuild public SSH key first, then proceed with the faster SSH upgrade path. This requires your instances to be SSM-managed: the `AmazonSSMManagedInstanceCore` policy must be attached to the instance profile, as recommended in the Orka on AWS setup guide.
+If your nodes were not launched with a key pair and do not accept SSH connections, you can use SSM to install a public SSH key first, then proceed with the faster SSH upgrade path. This requires your instances to be SSM-managed: the `AmazonSSMManagedInstanceCore` policy must be attached to the instance profile.
 
 To set this up:
 
@@ -42,7 +49,7 @@ To set this up:
     The identity running `send-command` requires `ssm:SendCommand` on the target instances and on the `AWS-RunShellScript` document, plus `ssm:GetCommandInvocation`.
 
 3. Store the private key in AWS Secrets Manager as a plaintext secret.
-4. Grant MacStadium's CodeBuild service role permission to read the secret:
+4. Grant your CodeBuild service role permission to read the secret:
 
     ```json
     {
@@ -52,38 +59,123 @@ To set this up:
     }
     ```
 
-5. Ensure your security group allows inbound TCP port 22 from MacStadium's CodeBuild subnets.
-6. When scheduling, provide MacStadium support with the Secrets Manager secret ARN.
+5. Ensure your security group allows inbound TCP port 22 from your CodeBuild subnets.
 
-MacStadium will use the stored private key to connect over SSH for the upgrade.
-
-### Verify your node tags
-
-MacStadium uses a dynamic Ansible inventory to identify your ARM nodes during the upgrade. Each ARM EC2 Mac instance must have the EC2 tag:
-
-* **Key:** `role`
-* **Value:** `orka-arm`
-
-Instances without this tag will not be selected by the inventory and will be skipped during the upgrade. Verify this tag is applied to all ARM nodes before scheduling.
+Once the key is installed, proceed with the SSH upgrade path below.
 
 ### Multi-region deployments
 
-The upgrade discovers ARM nodes in the region configured on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, MacStadium runs a separate upgrade pass per region. When scheduling, provide the full list of regions where you have ARM nodes.
+The upgrade discovers ARM nodes in the region set by `AWS_DEFAULT_REGION` on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, run a separate upgrade pass per region and set `AWS_DEFAULT_REGION` to the target region before each run.
 
-## Requesting an upgrade
+## Upgrading the Orka services
 
-1. Review the [3.6 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) and complete any preparation steps listed there.
-2. Submit a ticket through the MacStadium portal.
-3. Schedule a maintenance window via the link in your ticket.
+The Orka Kubernetes services are upgraded the same way they were installed: run the CodeBuild project pointed at the Orka 3.6 Ansible image. No additional configuration is required.
+
+## Upgrading ARM node tooling
+
+### Over SSH (recommended)
+
+Store your SSH private key in AWS Secrets Manager as a plaintext secret. Give your CodeBuild service role permission to read it:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": "secretsmanager:GetSecretValue",
+  "Resource": "arn:aws:secretsmanager:*:*:secret:<your-secret-name>*"
+}
+```
+
+Update your CodeBuild buildspec to pull the key and run the upgrade playbook:
+
+```yaml
+version: 0.2
+
+env:
+  shell: bash
+  secrets-manager:
+    SSH_PRIVATE_KEY: "<your-secret-name>"
+
+phases:
+  install:
+    commands:
+      - apt-get update
+      - apt-get install -y openssh-client
+      - mkdir -p ~/.ssh
+      - printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-keygen -y -f ~/.ssh/id_rsa >/dev/null
+  build:
+    commands:
+      - ansible-playbook -i arm.ssh.aws_ec2.yml configure-arm.yml --private-key ~/.ssh/id_rsa
+```
+
+Start the CodeBuild project. The upgrade takes under 10 minutes per node.
+
+### Over SSM
+
+Use this method only if SSH cannot be enabled. SSM upgrades may take up to 4 hours per run.
+
+Requirements:
+
+1. Instances are SSM-managed (`AmazonSSMManagedInstanceCore` policy attached to the instance profile).
+2. An S3 bucket in the same region as your ARM nodes. Set the `ANSIBLE_AWS_SSM_BUCKET` environment variable on the CodeBuild project to the bucket name.
+3. CodeBuild service role permissions for Session Manager:
+
+    ```json
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:StartSession",
+        "ssm:TerminateSession",
+        "ssm:ResumeSession",
+        "ssm:DescribeSessions",
+        "ssm:GetConnectionStatus"
+      ],
+      "Resource": [
+        "arn:aws:ec2:<region>:<account-id>:instance/*",
+        "arn:aws:ssm:<region>:<account-id>:document/SSM-SessionManagerRunShell",
+        "arn:aws:ssm:<region>:<account-id>:session/*"
+      ]
+    }
+    ```
+
+4. CodeBuild service role permissions on the S3 bucket:
+
+    ```json
+    [
+      {
+        "Effect": "Allow",
+        "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
+        "Resource": "arn:aws:s3:::bucket-name/*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": ["s3:ListBucket", "s3:GetBucketLocation"],
+        "Resource": "arn:aws:s3:::bucket-name"
+      }
+    ]
+    ```
+
+Run the upgrade playbook:
+
+```shell
+ansible-playbook -i arm.ssm.aws_ec2.yml configure-arm.yml
+```
 
 ## Changing node values during the upgrade
 
-By default, the upgrade reads all configuration from the running node and reapplies it automatically. If you want to change any of the following values as part of the upgrade, request the override when scheduling:
+By default, the upgrade reads all configuration from the running node and reapplies it automatically. To change a value during the upgrade, pass it as an extra variable:
 
-| Value | Notes |
-|-------|-------|
-| Node hostname | The node re-registers under the new name in Kubernetes. |
-| License key | Replaces the license key applied to the node. |
+| Value | Variable |
+|-------|----------|
+| Node hostname | `-e override_node_hostname=<new-name>` |
+| License key | `-e override_orka_engine_license_key=<key>` |
+
+Example:
+
+```shell
+ansible-playbook -i arm.ssh.aws_ec2.yml configure-arm.yml --private-key ~/.ssh/id_rsa -e override_node_hostname=arm-node-1
+```
 
 ## What changes in 3.5 to 3.6
 
@@ -91,7 +183,9 @@ By default, the upgrade reads all configuration from the running node and reappl
 
 Previously, updating tooling on ARM nodes required replacing the EC2 Mac AMI: the instance had to be deleted, a new one provisioned (a process that takes approximately 2 hours), and the node's name, namespace, and custom tags had to be manually reapplied.
 
-Starting with the 3.5 to 3.6 upgrade path, MacStadium updates ARM node tooling in place using Ansible over SSH. The upgrade takes under 10 minutes per node over SSH. The following are read from the running node and reapplied automatically: node name, node IP, cluster registration, license key, VM quota, and storage layout (including data volumes on instances with local NVMe). Running VMs are not interrupted.
+Starting with the 3.5 to 3.6 upgrade path, ARM node tooling is updated in place using Ansible over SSH. The upgrade takes under 10 minutes per node. The following are read from the running node and reapplied automatically: node name, node IP, cluster registration, license key, VM quota, and storage layout (including data volumes on instances with local NVMe). Running VMs are not interrupted.
+
+AMI replacement is still required when the host operating system needs to be upgraded. Release notes will call this out explicitly when it applies.
 
 ### Upgrade Service is installed
 
@@ -116,30 +210,14 @@ The permissions required for Orka to run have been tightened to least-privilege.
 * ECR access
 * Backup operations
 
-If your deployment uses broad IAM credentials for Orka, you will need to update your IAM policies to align with the new scoped credential sets before or as part of the upgrade. MacStadium support will provide the updated permission requirements when scheduling your maintenance window.
+If your deployment uses broad IAM credentials for Orka, update your IAM policies to align with the new scoped credential sets before upgrading.
 
-## During the maintenance window
+## After the upgrade
 
-| Aspect | Notes |
-|--------|-------|
-| Maintenance window | Up to 3 hours. Must be scheduled with MacStadium support. |
-| Access to the environment | Unavailable during the window. Restored at the original endpoint after completion. |
-| Orka users | Persist. |
-| Service Accounts | Persist. Tokens must be regenerated after the upgrade. |
-| VMs and VM configs | VM configs persist. Running VMs on ARM nodes are preserved during the in-place tooling upgrade. Redeploy from VM configs after the upgrade if needed. |
-| Images | Persist. |
-| Image cache | Cleared from each node. |
-| Namespaces and RoleBindings | Persist. |
-| ARM node names and tags | Preserved with the Ansible-based upgrade path. |
+1. [Download and install](/orka/orka-overview/tools-integrations) the Orka 3.6 CLI if you haven't already.
+2. Regenerate Service Account tokens for any automated workflows: `orka3 serviceaccount token <name>`
+3. Repopulate the image cache on your ARM nodes if needed: `orka3 imagecache add <image> --all`
 
 <Warning>
   Service Account tokens must be regenerated after this upgrade. Any automated workflows using service account tokens will fail until tokens are regenerated with `orka3 serviceaccount token <name>`.
 </Warning>
-
-## After the upgrade
-
-Once the upgrade is complete:
-
-1. [Download and install](/orka/orka-overview/tools-integrations) the Orka 3.6 CLI if you haven't already.
-2. Regenerate Service Account tokens for any automated workflows.
-3. Repopulate the image cache on your ARM nodes if needed: `orka3 imagecache add <image> --all`
