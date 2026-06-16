@@ -65,7 +65,12 @@ Once the key is installed, proceed with the SSH upgrade path below.
 
 ### Multi-region deployments
 
-The upgrade discovers ARM nodes in the region set by `AWS_DEFAULT_REGION` on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, run a separate upgrade pass per region and set `AWS_DEFAULT_REGION` to the target region before each run.
+The upgrade discovers ARM nodes in the region set by `AWS_DEFAULT_REGION` on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, run a separate upgrade pass per region. Override the region per run without editing the project:
+
+```shell
+aws codebuild start-build --project-name <project-name> \
+  --environment-variables-override name=AWS_DEFAULT_REGION,value=us-west-2,type=PLAINTEXT
+```
 
 ## Upgrading the Orka services
 
