@@ -65,7 +65,7 @@ Once the key is installed, proceed with the SSH upgrade path below.
 
 ### Multi-region deployments
 
-The upgrade discovers ARM nodes in the region set by `AWS_DEFAULT_REGION` on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, run a separate upgrade pass per region. Override the region per run without editing the project:
+The upgrade discovers ARM nodes in the region set by `AWS_DEFAULT_REGION` on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, you can either configure multiple steps in a single CodeBuild project (one per region), or trigger separate runs with a region override:
 
 ```shell
 aws codebuild start-build --project-name <project-name> \
