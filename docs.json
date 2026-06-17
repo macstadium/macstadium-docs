@@ -343,6 +343,7 @@
           {
             "group": "Reference",
             "pages": [
+              "remote-desktop-vdi/reference/known-issues",
               "remote-desktop-vdi/reference/networking-requirements",
               "remote-desktop-vdi/reference/ansible-quick-reference",
               "remote-desktop-vdi/reference/troubleshooting-quick-reference",
