@@ -42,8 +42,8 @@ The Control Plane is built on k8s, and is responsible for managing and distribut
 
 **Resiliency/HA Capabilities**
 
-  * When hosted by MacStadium, Orka Cluster employs an  _active-active_ control plane architecture, utilizing three VM hosts located in a single site*. If a node goes down, another node takes over while the failed node restarts.
-    * Active-active control plane is enabled with  _Orka Cluster Advanced_.
+  * When hosted by MacStadium, Orka Cluster employs an _active-active_ control plane architecture, utilizing three VM hosts located in a single site*. If a node goes down, another node takes over while the failed node restarts.
+    * Active-active control plane is enabled with _Orka Cluster Advanced_.
   * This setup provides a level of resiliency and High Availability (HA) if one or two control plane nodes fail, so the system can continue orchestrating workloads without interruption.
 
 
