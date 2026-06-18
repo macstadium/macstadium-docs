@@ -92,7 +92,7 @@ sudo apt install redis-tools
 redis-cli config set stop-writes-on-bgsave-error no
 ```
 
-**Clone and configure buildfarm:**
+**Clone and build buildfarm:**
 
 ```bash
 sudo apt install gh
@@ -102,28 +102,44 @@ cd bazel-buildfarm
 
 # Pin Bazel version (9.0.0 is not supported)
 echo "8.2.1" > .bazelversion
+
+mkdir -p ~/buildfarm
+bazel build //src/main/java/build/buildfarm:buildfarm-server_deploy.jar
+cp bazel-bin/src/main/java/build/buildfarm/buildfarm-server_deploy.jar ~/buildfarm/
 ```
 
-Edit `examples/config.minimal.yml` and set the Redis URI to your VM's IP:
+**Create the server config** at `~/buildfarm/server-config.yml`:
 
 ```yaml
+digestFunction: SHA256
+defaultActionTimeout: 600
+maximumActionTimeout: 3600
+server:
+  instanceType: SHARD
+  name: shard
+  port: 8980
 backplane:
-  redisUri: "redis://<LINUX_VM_IP>:6379"
+  type: SHARD
+  redisUri: redis://<LINUX_VM_IP>:6379
   queues:
-    - name: "cpu"
-      properties:
-        - name: "min-cores"
-          value: "*"
-        - name: "max-cores"
-          value: "*"
+  - name: cpu
+    allowUnmatched: true
+    properties:
+    - name: min-cores
+      value: '*'
+    - name: max-cores
+      value: '*'
 ```
+
+<Note>
+The backplane type is `SHARD`, not `REDIS`. Use a flat YAML config — the `config.minimal.yml` in the examples directory uses a preprocessor format the server does not support at runtime.
+</Note>
 
 **Start the buildfarm server:**
 
 ```bash
-bazelisk run //src/main/java/build/buildfarm:buildfarm-server -- \
-  --jvm_flag=-Djava.util.logging.config.file=$PWD/examples/logging.properties \
-  $PWD/examples/config.minimal.yml
+cd ~/buildfarm
+nohup java -jar buildfarm-server_deploy.jar server-config.yml > server.log 2>&1 &
 ```
 
 The server listens on port `8980` by default.
@@ -154,13 +170,34 @@ brew install bazelisk   # Bazel version manager
 brew install gh         # GitHub CLI
 ```
 
-**Clone buildfarm and pin Bazel:**
+**Clone and build buildfarm:**
 
 ```bash
 gh auth login
 gh repo clone bazelbuild/bazel-buildfarm
 cd bazel-buildfarm
 echo "8.2.1" > .bazelversion
+```
+
+Build the worker JAR. The `--copt` flags work around a macOS deployment target issue in abseil-cpp and protobuf:
+
+```bash
+bazel build \
+  //src/main/java/build/buildfarm:buildfarm-shard-worker_deploy.jar \
+  --host_copt=-mmacosx-version-min=10.15 \
+  --copt=-mmacosx-version-min=10.15
+
+mkdir -p ~/buildfarm
+cp bazel-bin/src/main/java/build/buildfarm/buildfarm-shard-worker_deploy.jar ~/buildfarm/
+```
+
+This takes 3 to 5 minutes on first run.
+
+**Create the macOS execution wrapper:**
+
+```bash
+printf '#!/bin/bash\nexec "$@"\n' > ~/buildfarm/macos-wrapper.sh
+chmod +x ~/buildfarm/macos-wrapper.sh
 ```
 
 Once everything is installed, save this VM as a base image in Orka. You'll use this image for all your workers.
@@ -177,26 +214,48 @@ For each worker, deploy an Orka VM from your base image and configure it to poin
 orka3 vm deploy --vm-config <your-worker-config> --name <worker-name>
 ```
 
-**Edit the worker config on each VM:**
-
-On the worker VM, edit `bazel-buildfarm/examples/config.minimal.yml`:
+**Create the worker config** at `~/buildfarm/worker-config.yml`:
 
 ```yaml
+digestFunction: SHA256
+defaultActionTimeout: 600
+maximumActionTimeout: 3600
 backplane:
-  redisUri: "redis://<LINUX_VM_IP>:6379"
+  type: SHARD
+  redisUri: redis://<LINUX_VM_IP>:6379
   queues:
-    - name: "cpu"
-      properties:
-        - name: "min-cores"
-          value: "*"
-        - name: "max-cores"
-          value: "*"
+  - name: cpu
+    allowUnmatched: true
+    properties:
+    - name: min-cores
+      value: '*'
+    - name: max-cores
+      value: '*'
 worker:
-  publicName: "<WORKER_VM_IP>:8981"  # Must be unique per worker
+  port: 8981
+  publicName: <WORKER_VM_IP>:8981
+  root: /tmp/worker
+  dequeueMatchSettings:
+    allowUnmatched: true
+  storages:
+  - type: FILESYSTEM
+    path: /tmp/worker/cache
+    maxSizeBytes: 2147483648
+    fileDirectoriesIndexInMemory: false
+    skipLoad: false
+    hexBucketLevels: 0
+    execRootCopyFallback: false
+  executeStageWidth: 1
+  inputFetchStageWidth: 1
+  inputFetchDeadline: 60
+  reportResultStageWidth: 1
+  linkExecFileSystem: false
+  linkInputDirectories: false
   executionPolicies:
-    - name: test
-      executionWrapper:
-        path: "/Users/admin/buildfarm/bazel-buildfarm/macos-wrapper.sh"
+  - name: test
+    executionWrapper:
+      path: /Users/admin/buildfarm/macos-wrapper.sh
+      arguments:
 ```
 
 The `publicName` field must be unique for each worker. Use each VM's IP address. Workers that share a `publicName` will conflict.
@@ -204,10 +263,9 @@ The `publicName` field must be unique for each worker. Use each VM's IP address.
 **Start the worker:**
 
 ```bash
-cd ~/bazel-buildfarm
-bazelisk run //src/main/java/build/buildfarm:buildfarm-shard-worker -- \
-  --jvm_flag=-Djava.util.logging.config.file=$PWD/examples/logging.properties \
-  $PWD/examples/config.minimal.yml
+mkdir -p /tmp/worker/cache
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+nohup $JAVA_HOME/bin/java -jar ~/buildfarm/buildfarm-shard-worker_deploy.jar ~/buildfarm/worker-config.yml > ~/buildfarm/worker.log 2>&1 &
 ```
 
 Repeat for each worker VM. All workers point at the same Redis and buildfarm server; the server distributes work across the pool automatically.
@@ -379,10 +437,8 @@ The key to making ephemeral workers viable is having the worker process start au
 
 ```bash
 #!/bin/bash
-cd /Users/admin/bazel-buildfarm
-exec bazelisk run //src/main/java/build/buildfarm:buildfarm-shard-worker -- \
-  --jvm_flag=-Djava.util.logging.config.file=$PWD/examples/logging.properties \
-  $PWD/examples/config.minimal.yml
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+exec $JAVA_HOME/bin/java -jar /Users/admin/buildfarm/buildfarm-shard-worker_deploy.jar /Users/admin/buildfarm/worker-config.yml
 ```
 
 ```bash
