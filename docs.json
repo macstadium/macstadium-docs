@@ -249,7 +249,8 @@
           {
             "group": "Engine",
             "pages": [
-              "orka/orka-engine/orka-engine-30"
+              "orka/orka-engine/orka-engine-30",
+              "orka/orka-engine/managing-your-orka-license"
             ]
           },
           {
