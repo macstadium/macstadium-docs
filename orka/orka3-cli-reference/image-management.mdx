@@ -305,6 +305,62 @@ orka3 imagecache list sonoma-90gb-orka3-arm ghcr.io/macstadium/orka-images/sonom
 orka3 imagecache list --output json
 ```
 
+### orka3 imagecache remove
+
+<Note>Requires Orka 3.6.x or later.</Note>
+
+Remove a cached image from one or more nodes. Use this to free disk space on specific nodes, rotate stale images, or remove images that were cached automatically when a VM was deployed.
+
+Removal is asynchronous — the command initiates the operation and returns immediately. Run `orka3 imagecache info IMAGE_NAME` to check the status.
+
+The `--nodes`, `--tags`, and `--all` flags are mutually exclusive. Exactly one is required.
+
+**Syntax:**
+
+```bash
+orka3 imagecache remove IMAGE_NAME [--namespace CURRENT_NAMESPACE] {--nodes | --tags | --all} [flags]
+```
+
+**Options:**
+
+```
+--all                    Remove the cached image from all nodes in the current namespace
+-h, --help               Display help for remove
+--nodes string           The node(s) from which to remove the cached image
+--tags string            The node tag(s) by which to filter nodes (matches nodes with ALL listed tags)
+-n, --namespace string   (Optional) Namespace scope (default "orka-default")
+```
+
+**Examples:**
+
+```bash
+# Remove from a specific node
+orka3 imagecache remove sonoma-90gb-orka3-arm --nodes mini-arm-10
+
+# Remove from multiple nodes
+orka3 imagecache remove sonoma-90gb-orka3-arm --nodes mini-arm-10,mini-arm-11
+
+# Remove from all nodes in the current namespace
+orka3 imagecache remove sonoma-90gb-orka3-arm --all
+
+# Remove from nodes with specific tags
+orka3 imagecache remove sonoma-90gb-orka3-arm --tags my-tag,my-other-tag
+
+# Remove from a node in a specific namespace
+orka3 imagecache remove sonoma-90gb-orka3-arm --nodes mini-arm-10 --namespace my-namespace
+```
+
+**Removal states:**
+
+| State | Meaning |
+|---|---|
+| `Removing` | Remove job is running on the target node |
+| `Failed` | Remove job failed; image stays cached and will not retry automatically |
+
+If the targeted node no longer exists, the cache entry is cleaned up immediately. If the image is not currently cached on a targeted node, the operation completes without error.
+
+If removal reaches `Failed`, contact [support@macstadium.com](mailto:support@macstadium.com).
+
 ## Remote images (deprecated)
 
 <Warning>This functionality will be removed in future releases. MacStadium recommends using OCI registries for image storage and management. The `orka3 imagecache` command should be used as a replacement to load images into the cluster.</Warning>
