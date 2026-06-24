@@ -53,6 +53,10 @@ Complete the login in the browser. Once you finish, the `orka3 login` session on
 
 ## Connect to a VM via SSH
 
+<Note>
+  This section applies only when your Mac nodes are EC2 instances inside the AWS VPC. For hybrid deployments (EKS on AWS + on-premises Mac nodes), VM connections go through your on-premises network, not SSM.
+</Note>
+
 To SSH into a running VM, you need the VM's private IP address within the VPC. You can retrieve this from `orka3 vm list`.
 
 **Step 1: On your local machine, open an SSM port forwarding session that targets the VM's private IP.**
@@ -76,7 +80,7 @@ The default username for MacStadium base images is `admin`. If your image uses a
 
 ## Connect to a VM via Screen Share or VNC
 
-The process for Screen Share and VNC access mirrors the SSH approach, using the appropriate port instead.
+The process mirrors SSH, using the appropriate port instead.
 
 **Screen Share (port 5900 and above):**
 
