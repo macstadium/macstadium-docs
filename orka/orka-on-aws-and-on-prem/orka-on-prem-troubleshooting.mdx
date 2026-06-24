@@ -54,6 +54,8 @@ kubectl cordon <node-name>
 ```
 
 To bring it back after resolving the issue: `kubectl uncordon <node-name>`
+
+As an Orka-native alternative, `orka3 node namespace <node-name> <namespace>` moves the node to a different namespace, which takes it out of rotation for any namespace where VMs are actively being deployed.
 </Note>
 
 ## Common root causes
