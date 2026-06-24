@@ -1,0 +1,139 @@
+---
+title: "Orka Anywhere On-Prem: Troubleshooting VM Deployments"
+description: "Diagnose failed VM deployments on Orka Anywhere on-prem nodes. Covers log locations, keychain and GUI session issues, SIGKILL from Virtual Kubelet, and how to isolate the VM process from Kubernetes."
+---
+
+When a VM deployment fails in an Orka Anywhere on-prem cluster, the error surfacing in the operator logs is usually generic: `Unable to deploy the VM as the underlying VM process has crashed.` The actual root cause almost always lives on the Mac node itself, not in the cluster. This guide covers where those logs are, how to find which node a failed deployment landed on, and how to work through the most common failures.
+
+Commands and paths in this guide reflect Orka 3.6.x.
+
+## The two services on each Mac node
+
+Every Mac node in an on-prem Orka cluster runs two services:
+
+- **Orka Engine:** manages the VM process lifecycle and launches VMs as the configured virtual machine user.
+- **Virtual Kubelet:** registers the node with Kubernetes and manages VMs as pods. It will delete any VM it doesn't recognize.
+
+Understanding which service is responsible for a failure determines where to look and what to fix.
+
+## Log and config locations
+
+| What | Path |
+| --- | --- |
+| Orka Engine server log | `/opt/orka/logs/com.macstadium.orka-engine.server.managed.log` |
+| Orka VM logs | `/opt/orka/logs/vm/` |
+| Virtual Kubelet log | `/var/log/virtual-kubelet/vk.log` |
+| Orka Engine LaunchDaemon | `/Library/LaunchDaemons/com.macstadium.orka-engine.server.managed.plist` |
+| Virtual Kubelet LaunchDaemon | `/Library/LaunchDaemons/orka.virtual.kubeletd.plist` |
+
+<Note>
+These paths apply to Orka 3.4 and later. For Orka 3.3 and earlier, see [Logging, Monitoring, and Alerting](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started#logging-monitoring-and-alerting) in the on-prem getting started guide.
+</Note>
+
+## Find which node a failed VM landed on
+
+Failed VMs are cleaned up automatically, so they won't appear in `orka3 vm list`. The operator logs name the failed VMI but not the node; Kubernetes events name the node. Cross-reference by VMI name:
+
+```shell
+# 1. Find the failed VMI name in the operator logs
+kubectl logs -n default deployment/orka-operator --since=1h | grep -i "error\|fail"
+
+# 2. Match it to a Scheduled event to identify the node
+# orka-default is the default VM namespace
+kubectl events -n orka-default -w
+# Example output: "Successfully assigned orka-default/<vmi-name> to orka-mini-NN"
+```
+
+Once you have the node name, SSH into it and read the Orka Engine log and Virtual Kubelet log.
+
+<Note>
+Kubernetes reports a node as `Ready` even if it cannot successfully provision VMs. If a node fails consistently, cordon it to stop the scheduler from sending more work to it while you investigate:
+
+```shell
+kubectl cordon <node-name>
+```
+
+To bring it back after resolving the issue: `kubectl uncordon <node-name>`
+</Note>
+
+## Common root causes
+
+### Locked keychain or wrong GUI user
+
+**Engine log signature:** `VZErrorDomain Code=-9 "The virtual machine encountered a security error."`
+
+Starting with Sequoia (macOS 15) guests, the macOS Virtualization framework requires an unlocked login keychain on the host. The keychain is only unlocked when its owning user has an active GUI session. Orka runs the VM as the configured virtual machine user, so that user must be the one logged into the GUI on the node.
+
+**What to check:**
+
+- Run `who` on the node. The VM user should have a `console` session.
+- Via Screen Sharing or KVM, confirm the VM user holds the foreground GUI session. The trap: autologin and a `console` entry in `who` can look correct while a different user is actually in the foreground, leaving the VM user's keychain locked.
+- Check `ORKA_ENGINE_VIRTUAL_MACHINE_USER` in the Orka Engine LaunchDaemon plist (`/Library/LaunchDaemons/com.macstadium.orka-engine.server.managed.plist`) and confirm it matches the intended autologin user.
+
+**Fix:** ensure the VM user is logged into the GUI. Cordon affected nodes as immediate mitigation.
+
+This issue is most common on nodes with two user accounts, for example an `admin` account and a separate VM user, where the wrong user ends up in the foreground after a reboot. Standardize so the VM user is also the autologin user. MacStadium-hosted nodes avoid this by using a single user (`devadmin`) for both roles.
+
+### Guest requires a newer host OS
+
+Some guest images require a minimum host macOS version. If a specific image consistently fails on a subset of nodes, compare those nodes' host OS versions against nodes where the image deploys successfully.
+
+### VM process SIGKILLed right after start
+
+**Engine log signature:** `VM ... exited with code 9` appearing seconds after the VM registers with the Engine socket, with no `VZErrorDomain` error.
+
+Exit code 9 is SIGKILL from the Virtual Kubelet, not Orka Engine. This typically happens when the Virtual Kubelet encounters a VM it doesn't recognize and terminates it. To diagnose: raise the VK log level and redeploy to capture what's happening at the moment of the kill (see [Manage the Virtual Kubelet service](#manage-the-virtual-kubelet-service) below), or bypass Kubernetes entirely to confirm whether the VM process starts cleanly on its own (see [Run a VM directly with Orka Engine](#run-a-vm-directly-with-orka-engine) below).
+
+## Manage the Virtual Kubelet service
+
+The Virtual Kubelet's default log level is `error`. Raising it to `info` gives you visibility into scheduling decisions and VM lifecycle events.
+
+To change the log level, stop the service, edit the plist, then restart:
+
+```shell
+sudo launchctl bootout system /Library/LaunchDaemons/orka.virtual.kubeletd.plist
+# Edit LOG_LEVEL to "info" in the plist, then reload:
+sudo launchctl bootstrap system /Library/LaunchDaemons/orka.virtual.kubeletd.plist
+```
+
+After reloading, redeploy to the node and watch `vk.log`:
+
+```shell
+orka3 vm deploy --image <image> --node <node-name>
+```
+
+## Run a VM directly with Orka Engine
+
+Running a VM directly through the Orka Engine binary removes Kubernetes and the Virtual Kubelet from the picture and streams logs to the terminal. Use this when you need to confirm whether the problem is in the VM process itself or in the Kubernetes layer.
+
+<Warning>
+Stop the Virtual Kubelet before running a VM directly. If both are running simultaneously, the kubelet will delete the VM it doesn't manage.
+</Warning>
+
+```shell
+# Stop the Virtual Kubelet
+sudo launchctl bootout system /Library/LaunchDaemons/orka.virtual.kubeletd.plist
+
+# Run the VM — attached mode streams logs to the terminal
+orka-engine vm run --image <image> foo
+
+# For detached mode, logs go to /opt/orka/logs/vm/<vm-name>
+orka-engine vm run --image <image> foo -d
+
+# Clean up when done, then restore the Virtual Kubelet
+orka-engine vm delete foo
+sudo launchctl bootstrap system /Library/LaunchDaemons/orka.virtual.kubeletd.plist
+```
+
+## Error signature reference
+
+| Signature | Where | Meaning |
+| --- | --- | --- |
+| `Unable to deploy the VM as the underlying VM process has crashed.` | Operator logs / VMI status | Generic crash. Identify the node via `kubectl events`, then read the node logs. |
+| `VZErrorDomain Code=-9 "...security error..."` | Orka Engine log | Locked keychain or wrong foreground GUI user. See [Locked keychain or wrong GUI user](#locked-keychain-or-wrong-gui-user). |
+| `VM ... exited with code 9` after socket registration | Orka Engine log | SIGKILL from the Virtual Kubelet. See [VM process SIGKILLed right after start](#vm-process-sigkilled-right-after-start). |
+| `403 ... VM config name must be a valid DNS-1035 label` | Orka API | Name must be lowercase alphanumeric or `-`, start with a letter, end with alphanumeric, and be 50 characters or fewer. |
+
+## Still stuck?
+
+If the node logs don't point to a clear root cause, contact [MacStadium support](mailto:support@macstadium.com) and include the relevant excerpts from the Orka Engine log and Virtual Kubelet log from the node where the failure occurred.
