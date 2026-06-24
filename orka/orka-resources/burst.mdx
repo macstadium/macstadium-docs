@@ -62,3 +62,90 @@ If your burst nodes are in the same namespace as your normal Orka nodes, move th
      * Graceful deletion: use a `preStop` hook to allow pods to clean up before `SIGTERM`.
      * Forced deletion: add `--force --grace-period=0` to the delete command.
   3. Confirm cleanup and reschedule your CI jobs once burst nodes are back online.
+
+# Automate burst via the Portal API
+
+If you're running automated CI pipelines, clicking the portal toggle doesn't scale. The MacStadium Portal exposes a GraphQL API at `https://portal.macstadium.com/graphql` that gives you programmatic control over burst state, so you can wire enable/disable directly into a pipeline trigger, a cron job, or a queue-depth-based scaler.
+
+All examples below use `curl`, but any HTTP client works: POST to `https://portal.macstadium.com/graphql` with the appropriate `Authorization` header and JSON body.
+
+## Authentication
+
+You'll need a Portal API token with read and write permissions. <!-- TODO: confirm exact portal UI path for creating this token with Robert/Matthew before publishing -->
+
+<Note>Portal API tokens are separate from the Orka service account tokens used with the `orka3` CLI. They are issued at the Portal account level and require admin permissions.</Note>
+
+## Find your cluster ID
+
+The burst mutations take a cluster `id`, which is different from the human-readable `displayId`. Run this once to look it up:
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"query":"{ viewer { account { orkaServices(pagination:{offset:0,limit:50}) { edges { node { id displayId } } } } } }"}'
+```
+
+The response includes both `id` and `displayId` for each cluster. Use the `id` value in all subsequent requests.
+
+## Check burst status
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "query": "query GetOrkaServiceById($id: ID!) { node(id: $id) { ... on OrkaService { id displayId name status hasBurst burstEnabled burstLastTime actions { canUpdate cannotUpdateReasons } } } }",
+    "variables": { "id": "<ORKA_SERVICE_ID>" }
+  }'
+```
+
+Key response fields:
+
+| Field | Description |
+|-------|-------------|
+| `hasBurst` | Whether the cluster is provisioned with burst nodes |
+| `burstEnabled` | Current burst state |
+| `burstLastTime` | Timestamp of the last burst state change |
+| `canUpdate` | Whether burst can be toggled right now |
+| `cannotUpdateReasons` | If `canUpdate` is false, why |
+
+Check `canUpdate` before triggering a mutation, especially in automated contexts where the cluster state may have changed since your last poll.
+
+## Enable burst
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "query": "mutation UpdateOrkaBurst($input: UpdateOrkaBurstInput!) { updateOrkaBurst(input: $input) { service { id displayId burstEnabled burstLastTime } } }",
+    "variables": { "input": { "id": "<ORKA_SERVICE_ID>", "state": true } }
+  }'
+```
+
+## Disable burst
+
+<Warning>Burst has no visibility into running workloads. Disabling burst while jobs are executing on burst nodes will cause those jobs to fail and require rescheduling. The same caveats from the Enable/Disable Burst section above apply here, and carry extra weight in automated contexts where a disable might fire without a human reviewing cluster state first.</Warning>
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "query": "mutation UpdateOrkaBurst($input: UpdateOrkaBurstInput!) { updateOrkaBurst(input: $input) { service { id displayId burstEnabled burstLastTime } } }",
+    "variables": { "input": { "id": "<ORKA_SERVICE_ID>", "state": false } }
+  }'
+```
+
+## Automation patterns
+
+**Pipeline trigger**: Call the enable mutation at the start of a heavy CI workflow and the disable mutation in a teardown step, after draining burst nodes. The API fits naturally into a GitHub Actions or GitLab CI job that bookends your build runs.
+
+**Off-peak scheduler**: Run a cron job that disables burst during known low-utilization windows and re-enables it before peak hours. Pull `canUpdate` from the status query before each mutation so the job skips safely if the cluster isn't in a state to toggle.
+
+**Queue-depth scaler**: Watch your CI queue depth and fire the enable mutation when pending jobs pass a threshold. This requires wiring the status check into your existing queue monitoring, but if you're already tracking runner utilization, the burst toggle is a short hop from there.
+
+## Monitoring burst consumption
+
+`burstLastTime` tells you when burst state last changed, but there's no endpoint yet for usage history or credit balance. Both are on the roadmap for a future release. In the meantime, if you need to track consumption against a pre-paid credit balance, contact [support@macstadium.com](mailto:support@macstadium.com) and your CSM can pull current usage data for your account.
