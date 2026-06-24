@@ -211,6 +211,17 @@ Orka no longer installs its own cert-manager when configured to skip the bundled
 If your automation or tooling depends on Orka's cert-manager specifically, verify your setup before upgrading.
 
 
+## Hybrid deployments (EKS control plane + on-premises Mac nodes)
+
+If your Orka deployment combines an EKS control plane on AWS with Mac nodes on-premises, the upgrade follows the same pattern as installation: each component is upgraded using the workflow for where it runs.
+
+- **EKS control plane and AWS services**: Follow the AWS upgrade flow in this guide.
+- **On-premises Mac nodes**: Follow the on-premises upgrade flow using your on-premises Ansible installation. SSH access to the nodes must be available via the same network path used during installation.
+
+The Orka Upgrade Service deploys identically regardless of whether nodes are on AWS or on-premises.
+
+For on-premises installation and upgrade prerequisites, see [Getting started with Orka on-premises](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started).
+
 ## After the upgrade
 
 [Download and install](/orka/orka-overview/tools-integrations) the Orka 3.6 CLI if you haven't already.
