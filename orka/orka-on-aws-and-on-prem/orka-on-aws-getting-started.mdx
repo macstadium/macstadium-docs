@@ -365,7 +365,8 @@ If you prefer to use CloudWatch, you can reference [AWS documentation for consum
 What | Resource | Accessing | Purpose
 ---|---|---|---
 Virtual Kubelet Logs | Mac EC2 Node | Via promtail: `/var/log/virtual-kubelet/vk.log` | Interactions between EKS and worker node for managing virtualization.
-Orka VM Logs | Mac EC2 Node | Via promtail: `/Users/administrator/.local/state/virtual-kubelet/vm-logs/*` | Logs pertaining to the lifecycle of a specific VM
+Orka Engine Server Logs | Mac EC2 Node | Via promtail: `/opt/orka/logs/com.macstadium.orka-engine.server.managed.log` | Orka Engine process lifecycle, VM start/stop events, and errors.
+Orka VM Logs | Mac EC2 Node | Via promtail: `/opt/orka/logs/vm/` | Per-VM runtime logs.
 Pod Logs | EKS | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior
 
 #### Key Metrics

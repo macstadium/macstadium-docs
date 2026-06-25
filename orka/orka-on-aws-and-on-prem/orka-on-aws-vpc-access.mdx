@@ -57,7 +57,7 @@ Complete the login in the browser. Once you finish, the `orka3 login` session on
   This section applies only when your Mac nodes are EC2 instances inside the AWS VPC. For hybrid deployments (EKS on AWS + on-premises Mac nodes), VM connections go through your on-premises network, not SSM.
 </Note>
 
-To SSH into a running VM, you need the VM's private IP address within the VPC. You can retrieve this from `orka3 vm list`.
+To SSH into a running VM, you need the private IP of the Mac EC2 node running the VM. You can retrieve this from `orka3 vm list`. Orka VMs use NAT by default, so you target the node IP, not the VM's internal IP.
 
 **Step 1: On your local machine, open an SSM port forwarding session that targets the VM's private IP.**
 
@@ -65,10 +65,10 @@ To SSH into a running VM, you need the VM's private IP address within the VPC. Y
 aws ssm start-session \
   --target <BASTION_INSTANCE_ID> \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{"host":["<VM_PRIVATE_IP>"],"portNumber":["8822"],"localPortNumber":["8822"]}'
+  --parameters '{"host":["<NODE_PRIVATE_IP>"],"portNumber":["8822"],"localPortNumber":["8822"]}'
 ```
 
-Replace `<BASTION_INSTANCE_ID>` with your bastion instance ID and `<VM_PRIVATE_IP>` with the private IP of the Mac EC2 node running the VM (for example, `10.0.1.50`). The SSH port range for Orka VMs starts at `8822`.
+Replace `<BASTION_INSTANCE_ID>` with your bastion instance ID and `<NODE_PRIVATE_IP>` with the private IP of the Mac EC2 node (for example, `10.0.1.50`). The SSH port range for Orka VMs starts at `8822`.
 
 **Step 2: SSH to localhost on the forwarded port.**
 
@@ -88,7 +88,7 @@ The process mirrors SSH, using the appropriate port instead.
 aws ssm start-session \
   --target <BASTION_INSTANCE_ID> \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{"host":["<VM_PRIVATE_IP>"],"portNumber":["5900"],"localPortNumber":["5900"]}'
+  --parameters '{"host":["<NODE_PRIVATE_IP>"],"portNumber":["5900"],"localPortNumber":["5900"]}'
 ```
 
 **VNC (port 5999 and above):**
@@ -97,13 +97,13 @@ aws ssm start-session \
 aws ssm start-session \
   --target <BASTION_INSTANCE_ID> \
   --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{"host":["<VM_PRIVATE_IP>"],"portNumber":["5999"],"localPortNumber":["5999"]}'
+  --parameters '{"host":["<NODE_PRIVATE_IP>"],"portNumber":["5999"],"localPortNumber":["5999"]}'
 ```
 
 Once the tunnel is open, connect your Screen Share or VNC client to `localhost` on the forwarded port.
 
 <Note>
-  Screen Share and VNC must be enabled in macOS on the VM for these connections to work. If you haven't enabled them, you can do so via System Settings on the VM or through a startup script.
+  To use Screen Share (port 5900), macOS Screen Sharing must be enabled in the guest VM (System Settings > Sharing > Screen Sharing). For VNC connections on port 5999, the VNC server runs on the host; no guest configuration is required.
 </Note>
 
 ## Port reference
@@ -113,6 +113,5 @@ Once the tunnel is open, connect your Screen Share or VNC client to `localhost` 
 | SSH | 8822 |
 | Screen Share | 5900 |
 | VNC | 5999 |
-| Orka API | 51234 |
 
 Each port range covers all VMs across a single Mac EC2 node. See [Networking and VPC Considerations](/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started#networking-and-vpc-considerations) for the full port ranges.

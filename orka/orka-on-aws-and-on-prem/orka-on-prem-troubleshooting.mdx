@@ -74,7 +74,7 @@ Starting with Sequoia (macOS 15) guests, the macOS Virtualization framework requ
 
 **Fix:** ensure the VM user is logged into the GUI. Cordon affected nodes as immediate mitigation.
 
-This issue is most common on nodes with two user accounts, for example an `admin` account and a separate VM user, where the wrong user ends up in the foreground after a reboot. Standardize so the VM user is also the autologin user. MacStadium-hosted nodes avoid this by using a single user (`devadmin`) for both roles.
+This issue is most common on nodes with two user accounts, for example an `admin` account and a separate VM user, where the wrong user ends up in the foreground after a reboot. Standardize so the VM user is also the autologin user.
 
 ### Guest requires a newer host OS
 
@@ -84,7 +84,7 @@ Some guest images require a minimum host macOS version. If a specific image cons
 
 **Engine log signature:** `VM ... exited with code 9` appearing seconds after the VM registers with the Engine socket, with no `VZErrorDomain` error.
 
-Exit code 9 is SIGKILL from the Virtual Kubelet, not Orka Engine. This typically happens when the Virtual Kubelet encounters a VM it doesn't recognize and terminates it. To diagnose: raise the VK log level and redeploy to capture what's happening at the moment of the kill (see [Manage the Virtual Kubelet service](#manage-the-virtual-kubelet-service) below), or bypass Kubernetes entirely to confirm whether the VM process starts cleanly on its own (see [Run a VM directly with Orka Engine](#run-a-vm-directly-with-orka-engine) below).
+Exit code 9 is SIGKILL from the Virtual Kubelet, not Orka Engine. The VK sends SIGKILL on every VM termination, including normal deletes, so this log line is always expected and is not itself a signal of a problem. What matters is the surrounding log context explaining why the kill happened. To diagnose: raise the VK log level and look at the entries immediately before the kill (see [Manage the Virtual Kubelet service](#manage-the-virtual-kubelet-service) below), or bypass Kubernetes entirely to confirm whether the VM process starts cleanly on its own (see [Run a VM directly with Orka Engine](#run-a-vm-directly-with-orka-engine) below).
 
 ## Manage the Virtual Kubelet service
 
