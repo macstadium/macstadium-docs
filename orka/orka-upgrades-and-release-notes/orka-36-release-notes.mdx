@@ -45,6 +45,20 @@ The GitHub Actions integration releases independently of Orka and is compatible 
 * Fixed: VM deadlock on long-lived VMs.
 * Fixed: Intel node disk performance regression.
 
+### Upgrade notes
+
+**CLI API URL for clusters with public NAT IPs**
+
+If your cluster has public NAT IPs or a custom domain configured for the Orka API, the CLI now uses TLS based on a feature flag returned by the API rather than by detecting whether the configured address is a public IP. If your CLI is configured to use the internal IP address (`http://10.221.188.20`) on a cluster with public API access, connections will time out after upgrading to 3.6.2.
+
+Update your CLI configuration to use your public NAT IP or custom domain:
+
+```bash
+orka3 config set --api-url https://<YOUR_PUBLIC_URL>
+```
+
+If you do not have a public URL or custom domain, no action is needed.
+
 ## Orka 3.6.0
 
 ### Release summary
