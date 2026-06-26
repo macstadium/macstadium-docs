@@ -3,7 +3,10 @@ title: "Upgrading Orka on AWS"
 description: "Upgrade your Orka cluster on AWS from 3.5 to 3.6. Covers the Orka services upgrade and the new Ansible-based in-place tooling upgrade for ARM Mac nodes, including SSH and SSM requirements."
 ---
 
-Orka on AWS upgrades are self-service. You run the upgrade using the same CodeBuild project used for installation, pointed at the Orka 3.6 Ansible image. There are two parts: upgrading the Orka Kubernetes services, and upgrading the tooling on your ARM Mac nodes.
+Orka on AWS upgrades are self-service. You run the upgrade using the same CodeBuild project used for installation, pointed at the Orka 3.6 Ansible image. There are two parts:
+
+- **Services upgrade:** upgrades the Orka Kubernetes services on EKS.
+- **Node tooling upgrade:** updates the Virtual Kubelet and Orka Engine on your ARM Mac nodes in place.
 
 Review the [3.6 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) before upgrading.
 
@@ -198,7 +201,7 @@ AMI replacement is still required when the host operating system needs to be upg
 
 ### Upgrade Service is installed
 
-As part of the 3.6 upgrade, the Orka Upgrade Service is deployed to your cluster. This enables smoother tooling updates in future Orka releases without requiring you to provision new EC2 Mac instances.
+As part of the 3.6 upgrade, the Orka Upgrade Service is deployed to your cluster. This will enable smoother tooling updates in future Orka releases without requiring you to provision new EC2 Mac instances.
 
 ### AWS credentials no longer required for artifact distribution
 
