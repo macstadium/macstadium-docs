@@ -301,7 +301,6 @@
             "pages": [
               "orka/orka-on-aws-and-on-prem/it-administrator-onboarding-guide",
               "remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
-              "remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
               "remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation",
               "remote-desktop-vdi/macstadium-vdi-deployment/citrix-daas-configuration",
               "remote-desktop-vdi/macstadium-vdi-deployment/image-management",
@@ -654,7 +653,7 @@
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture"
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
@@ -722,7 +721,7 @@
     },
     {
       "source": "/docs/ansible",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
     },
     {
       "source": "/docs/:path*",
@@ -1120,7 +1119,7 @@
     },
     {
       "source": "/hc/en-us/articles/44259626250267-Deployment-Guide",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide",
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture",
       "permanent": true
     },
     {
@@ -1957,11 +1956,11 @@
     },
     {
       "source": "/v1.0/docs/ansible",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
     },
     {
       "source": "/edit/ansible",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
     },
     {
       "source": "/edit/private-cloud",
