@@ -1,0 +1,42 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#2d3f51",
+    "primaryBorderColor": "#5366cc",
+    "lineColor": "#6B6B80",
+    "secondaryColor": "#f5f7fa",
+    "tertiaryColor": "#fff8f0",
+    "clusterBkg": "#f5f7fa",
+    "clusterBorder": "#323151",
+    "edgeLabelBackground": "#ffffff",
+    "fontFamily": "Inter, -apple-system, sans-serif",
+    "fontSize": "14px"
+  }
+}}%%
+flowchart LR
+    admin(["IT Admin"])
+
+    subgraph ms["MacStadium VDI"]
+        subgraph ctrl["Controller Node"]
+            ui["Management UI"]
+            ans["Ansible & Playbooks"]
+        end
+        subgraph mh["Mac Hosts"]
+            ork["Orka Engine"]
+            vm["macOS VMs"]
+        end
+        ans -->|SSH| mh
+        ork --> vm
+    end
+
+    subgraph cs["Customer VDI Stack"]
+        dc["Delivery Controller"]
+        vc["VDI Client"]
+        eu(["End User"])
+        dc --> vc --> eu
+    end
+
+    admin -->|"Browser"| ui
+    admin -->|"CLI"| ans
+    vm <-->|"VDA"| dc

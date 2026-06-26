@@ -111,7 +111,7 @@ orka3 vmc list small-ventura-vm
 orka3 vmc list small-ventura-vm --output wide
 
 # Show information about multiple VM configurations
-orka3 vmc list small-monterey small-ventura
+orka3 vmc list small-ventura small-sonoma
 
 # Return output as JSON
 orka3 vmc list --output json
@@ -269,7 +269,7 @@ orka3 vm deploy -i 90gbventurassh.img --system-serial A00BC123D4
 orka3 vm deploy -i 90gbventurassh.img --gpu=true --disable-vnc
 
 # Deploy with disabled network boost
-orka3 vm deploy -i 90gbmontereyssh.img --disable-net-boost
+orka3 vm deploy -i 90gbventurassh.img --disable-net-boost
 ```
 
 **Examples - VM Configuration Deployments:**
@@ -329,7 +329,7 @@ orka3 vm list small-ventura-vm
 orka3 vm list small-ventura-vm --output wide
 
 # Show information about multiple VMs
-orka3 vm list small-ventura-vm small-monterey-vm
+orka3 vm list small-ventura-vm small-sonoma-vm
 
 # Print information in JSON format
 orka3 vm list --output json

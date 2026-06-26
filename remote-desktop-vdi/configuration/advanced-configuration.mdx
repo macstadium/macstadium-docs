@@ -1,0 +1,375 @@
+---
+title: "Advanced configuration"
+description: "Advanced MacStadium VDI setup: bridged networking, HDX tuning, resource allocation, Ansible extensions, CI/CD integration, and multi-tenant config."
+keywords: ["bridged networking", "HDX optimization", "multi-tenancy VDI", "image caching", "VM resource tuning", "advanced VDI configuration"]
+---
+
+This page covers advanced configuration topics for production MacStadium VDI environments. These are optional enhancements beyond the initial deployment. You don't need them to get started, but they unlock performance, scale, and automation capabilities.
+
+## Performance optimization
+
+### Bridged networking configuration
+
+When using bridged networking, VMs connect directly to your physical network as native devices, receiving their own IP address from your network's DHCP server. This enables direct communication with other network devices without NAT.
+
+**Requirements:**
+
+  * A working DHCP server on your network that can assign IPs to VMs
+  * Sufficient IP addresses in your subnet (one per VM)
+  * All existing VMs must be deleted before switching modes
+  * MacStadium VDI running Orka Engine 3.5+
+
+**Important limitations:**
+
+  * You cannot run NAT and bridged networking simultaneously
+  * All VMs in your cluster must use the same networking mode
+  * Switching modes requires deleting all VMs first
+
+<Note>
+  **CVAD (on-prem Citrix) deployments require bridge networking for VDA enrollment.** Without it, VMs receive NAT IPs (192.168.64.x) that the Citrix Delivery Controller cannot reach for enrollment, unless custom port-forwarding is configured on the customer side. For Citrix DaaS or Workspace/VDA testing without CVAD, NAT mode is sufficient.
+</Note>
+
+**Configuration:**
+
+Bridged networking is configured in your MacStadium VDI cluster configuration files before deploying VMs.
+
+**Step 1: Configure cluster-wide bridge mode**
+
+Edit `cluster.yml` on your MacStadium VDI management node:
+
+```yaml
+vm_network_mode: bridge
+```
+
+**Step 2: Configure host network interface**
+
+Specify which physical network interface on your Orka hosts connects to your DHCP-enabled network.
+
+Option A: Same interface on all hosts. Edit `nodes.yml`:
+
+```yaml
+osx_node_vm_network_interface: en0 # or vlan0, en1, etc.
+```
+
+Option B: Different interfaces per host. Edit your `hosts` inventory file:
+
+```ini
+[arm-nodes]
+10.221.188.30 osx_node_vm_network_interface=vlan0
+10.221.188.31 osx_node_vm_network_interface=vlan1
+10.221.188.32 osx_node_vm_network_interface=en0
+```
+
+To determine the correct interface, SSH to each Orka host and check:
+
+```bash
+ssh admin@10.221.188.30 "ifconfig | grep -E '^[a-z]|inet '"
+```
+
+Look for the interface with an IP in your corporate network range.
+
+**Step 3: Delete all existing VMs**
+
+<Warning>
+  You cannot switch networking modes with VMs running. Delete all VMs before proceeding.
+</Warning>
+
+```bash
+ansible-playbook -i inventory list.yml
+ansible-playbook -i inventory delete.yml -e "vm_name=<vm-name>"
+```
+
+_Run the delete command once for each VM._
+
+**Step 4: Apply configuration changes**
+
+```bash
+ansible-playbook -i inventory configure-hosts.yml
+```
+
+**Step 5: Deploy VMs with bridged networking**
+
+```bash
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.0"
+```
+
+**Step 6: Verify VMs received DHCP addresses**
+
+```bash
+ansible-playbook -i inventory list.yml
+```
+
+VMs should show IP addresses from your corporate network range, not `192.168.64.x`.
+
+**Troubleshooting bridged networking:**
+
+If VMs have `192.168.64.x` addresses instead of corporate IPs, bridge mode isn't configured correctly:
+
+1. Verify `vm_network_mode: bridge` is set in `cluster.yml`
+2. Verify `osx_node_vm_network_interface` is set correctly in `nodes.yml` or `hosts`
+3. Confirm the interface name is correct: SSH to host and run `ifconfig`
+4. Rerun host configuration: `ansible-playbook -i inventory configure-hosts.yml`
+5. Delete and redeploy affected VMs
+
+If VMs can't reach network services after getting DHCP addresses, verify your DHCP server provides valid gateway and DNS settings:
+
+```bash
+ssh admin@<vm-ip> "route -n get default"
+ssh admin@<vm-ip> "cat /etc/resolv.conf"
+```
+
+For complex bridged networking issues, contact [MacStadium Support](mailto:support@macstadium.com).
+
+---
+
+### HDX tuning for latency-sensitive workloads
+
+For users editing video, audio, or using graphics-intensive applications who report lag or stuttering:
+
+**1. Enable Adaptive Transport (Framehawk) for high-latency connections:**
+
+Citrix Cloud Console → Policies → Create new policy → HDX Adaptive Transport → set "Adaptive Transport" to "Preferred" → apply to affected Delivery Groups.
+
+**2. Adjust visual quality settings:**
+
+For users on high-bandwidth connections: Policies → Visual Display → Visual Quality → "Build to Lossless"
+
+For users on low-bandwidth connections: Policies → Visual Display → Visual Quality → "Medium"
+
+**3. Enable GPU acceleration (M4 Macs):**
+
+M4 Macs support GPU passthrough for VMs. Requirements: Orka 3.5+, macOS 15.5+ on the host, specific VM configuration.
+
+<Note>
+  GPU acceleration is not yet automated in the Orka Engine Ansible playbooks. Contact MacStadium support for GPU-enabled VM deployment guidance.
+</Note>
+
+**4. Test with Citrix HDX Monitor:**
+
+Download the [Citrix HDX Monitor tool](https://cis.citrix.com/hdx/download/) to identify bottlenecks: network latency, bandwidth constraints, and frame rate drops. Use results to fine-tune HDX policies further.
+
+---
+
+### Resource allocation (CPU, memory, storage)
+
+Default VM resources are inherited from the golden image, typically 4 CPU cores, 8 GB RAM, 90 GB storage.
+
+To change resources, modify the VM configuration and create a new golden image:
+
+```bash
+# SSH into the Orka node
+ssh admin@10.0.100.10
+
+# Stop the VM
+orka-engine vm stop <vm-name>
+
+# Resize (6 CPU cores, 16 GB memory)
+orka-engine vm resize <vm-name> --cpu 6 --memory 16
+
+# Start the VM
+orka-engine vm start <vm-name>
+```
+
+Then create a new golden image from the resized VM:
+
+```bash
+ansible-playbook -i inventory create_image.yml -e "vm_image=<resized-vm-name>" -e "remote_image_name=registry.example.com/citrix-vda/sonoma-highspec:v1.0"
+```
+
+Recommended high-spec configuration for power users: 8+ CPU cores, 32 GB RAM, 500 GB storage.
+
+<Warning>
+  Overprovisioning resources reduces VM density on hosts. Monitor host utilization to ensure you're not running fewer VMs than capacity allows.
+</Warning>
+
+---
+
+## Automation enhancements
+
+### Extending Ansible playbooks
+
+The [orka-engine-orchestration](https://github.com/macstadium/orka-engine-orchestration) playbooks provide core functionality. Common extensions include:
+
+**Automated image update workflow:**
+
+```yaml
+# update-golden-image.yml
+---
+- name: Automated image update workflow
+  hosts: localhost
+  tasks:
+    - name: Deploy test VM
+      command: >
+        ansible-playbook -i inventory deploy.yml
+        -e "vm_name=image-test-01"
+        -e "vm_image=[CURRENT_IMAGE]"
+
+    - name: Wait for VM to be ready
+      pause:
+        minutes: 3
+
+    # Note: OS update installation still requires manual intervention via VNC
+
+    - name: Create new golden image
+      command: >
+        ansible-playbook -i inventory create_image.yml
+        -e "vm_image=[CURRENT_IMAGE]"
+        -e "remote_image_name=[NEW_IMAGE]"
+        -e "registry_username=[REGISTRY_USER]"
+        -e "registry_password=[REGISTRY_PASS]"
+
+    - name: Clean up test VM
+      command: >
+        ansible-playbook -i inventory delete.yml
+        -e "vm_name=image-test-01"
+```
+
+**Scheduled capacity scaling:**
+
+```bash
+# Scale up at 7 AM weekdays
+0 7 * * 1-5 /path/to/scale-up.sh
+
+# Scale down at 7 PM weekdays
+0 19 * * 1-5 /path/to/scale-down.sh
+```
+
+**Health check automation:**
+
+```yaml
+# health-check.yml
+---
+- name: VM health check
+  hosts: hosts
+  tasks:
+    - name: Check VMs are running
+      shell: orka-engine vm list --format json
+      register: vm_list
+
+    - name: Alert if VMs are down
+      debug:
+        msg: "WARNING: [VM_LIST_STDOUT___FROM_JSON___SELECTATTR'] VMs are not running"
+      when: (vm_list.stdout | from_json | selectattr('status', 'ne', 'running') | list | length) > 0
+```
+
+Schedule this every 15 minutes and pipe output to your monitoring system.
+
+---
+
+### Integrating with CI/CD pipelines
+
+Automatically build and deploy updated golden images when application code changes.
+
+**Example: GitHub Actions workflow:**
+
+```yaml
+# .github/workflows/deploy-vdi-image.yml
+name: Deploy Updated VDI Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build application
+        run: ./build.sh
+
+      - name: Deploy test VM
+        run: |
+          ansible-playbook -i inventory deploy.yml -e "vm_name=image-test-01" -e "vm_image=registry.example.com/citrix-vda/dev-base:latest"
+
+      - name: Copy application to test VM
+        run: scp -r ./dist admin@<vm-ip>:/Applications/YourApp.app
+
+      - name: Run automated tests
+        run: ssh admin@<vm-ip> "./run-tests.sh"
+
+      - name: Create new golden image if tests pass
+        run: |
+          ansible-playbook -i inventory create_image.yml -e "vm_image=image-test-abc123" -e "remote_image_name=registry.example.com/citrix-vda/dev-tools:[GITHUB_SHA]" -e "registry_username=[SECRETS_REGISTRY_USER]" -e "registry_password=[SECRETS_REGISTRY_PASS]"
+
+      - name: Deploy to production
+        run: |
+          ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-dev-01" -e "vm_image=registry.example.com/citrix-vda/dev-tools:[GITHUB_SHA]"
+```
+
+---
+
+### Scheduled maintenance tasks
+
+Use this schedule as a baseline:
+
+| Frequency | Tasks |
+| --- | --- |
+| Daily | Capacity check, VM health check (VMs registered with Citrix) |
+| Weekly | Review capacity trends, check for macOS updates, review user feedback |
+| Monthly | Image security patches, Citrix policy review, backup verification |
+| Quarterly | Major application updates, Citrix VDA updates, DR test, host hardware maintenance |
+
+---
+
+## Multi-tenant considerations
+
+### Isolation strategies
+
+**Option 1: Delivery Group separation**
+Deploy all VMs from shared infrastructure. Separate users into different Citrix Delivery Groups with different policies per group. Simple and resource-efficient, but teams share hardware and one team's resource spike affects others.
+
+**Option 2: VM group separation**
+Deploy separate VM groups per tenant (`citrix-vda-finance`, `citrix-vda-engineering`), each with its own golden image. Groups still share Orka hosts.
+
+**Option 3: Host-level separation**
+Allocate specific Orka hosts to specific tenants:
+
+```ini
+[finance_hosts]
+mac-node-1 ansible_host=10.0.100.10
+mac-node-2 ansible_host=10.0.100.11
+
+[engineering_hosts]
+mac-node-3 ansible_host=10.0.100.12
+mac-node-4 ansible_host=10.0.100.13
+```
+
+Deploy tenant VMs only to their assigned hosts:
+
+```bash
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:latest" --limit finance_hosts
+```
+
+Complete resource isolation with no noisy-neighbor problems, but reduced flexibility and potential underutilization.
+
+---
+
+### Chargeback and cost allocation
+
+Track resources per tenant:
+
+```bash
+# Count finance VMs
+ansible-playbook -i inventory list.yml | grep citrix-vda-finance | wc -l
+
+# Count engineering VMs
+ansible-playbook -i inventory list.yml | grep citrix-vda-engineering | wc -l
+```
+
+Calculate per-VM cost: divide host cost (hardware + MacStadium hosting) by VMs per host, then multiply by VM count per tenant.
+
+---
+
+### Tenant-specific policies
+
+Apply different Citrix policies per tenant:
+
+1. Create separate Delivery Groups per tenant
+2. Create policies with appropriate settings per tenant (for example, Finance: no clipboard, no file transfer; Engineering: full access)
+3. Filter policies by Delivery Group name
+
+Each tenant gets appropriate controls without affecting others.

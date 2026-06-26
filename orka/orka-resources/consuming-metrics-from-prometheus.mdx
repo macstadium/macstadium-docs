@@ -113,3 +113,51 @@ group: 'arm'
 <Tip>
 As an alternative to the static config, you can use [file-based service discovery](https://prometheus.io/docs/guides/file-sd/) to scrape the targets.
 </Tip>
+
+## GitHub Actions integration metrics
+
+The [Orka GitHub Actions integration](https://github.com/macstadium/orka-github-actions-integration) can optionally expose Prometheus metrics for runner scale set statistics. This is opt-in and disabled by default.
+
+### Enable metrics
+
+Set the following environment variables when running the integration:
+
+| Variable | Default | Description |
+|---|---|---|
+| `ENABLE_METRICS` | `false` | Set to `true` to expose a `/metrics` endpoint. |
+| `METRICS_ADDR` | `:8080` | Address where the metrics endpoint listens. |
+| `METRICS_POLL_INTERVAL` | `30s` | How often runner scale set statistics are polled (e.g., `30s`, `1m`). |
+
+### Available metrics
+
+All metrics carry a `runner_name` label corresponding to the runner scale set name.
+
+| Metric | Description |
+|---|---|
+| `runner_scale_set_total_available_jobs` | Jobs available to be assigned to a runner |
+| `runner_scale_set_total_acquired_jobs` | Jobs acquired by a runner but not yet assigned |
+| `runner_scale_set_total_assigned_jobs` | Jobs assigned to a specific runner |
+| `runner_scale_set_total_running_jobs` | Jobs currently executing |
+| `runner_scale_set_total_registered_runners` | Runners registered with GitHub |
+| `runner_scale_set_total_busy_runners` | Runners currently processing a job |
+| `runner_scale_set_total_idle_runners` | Runners registered but not processing a job |
+
+### Scrape configuration
+
+Add a job to your `prometheus.yml` to scrape the integration:
+
+```yaml
+scrape_configs:
+  # ...
+
+  - job_name: 'orka/gha-runner'
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+    - targets: ['<GHA_RUNNER_HOST>:8080']
+      labels:
+        service: 'orka-gha-runner'
+```
+
+Replace `<GHA_RUNNER_HOST>` with the hostname or IP of the machine running the GitHub Actions integration. The port should match `METRICS_ADDR` (default `8080`).

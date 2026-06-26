@@ -1,0 +1,147 @@
+---
+title: "Networking requirements"
+description: "Port and firewall requirements, network topology, DNS, and VPN/connectivity requirements for MacStadium VDI, covering all three deployment models."
+---
+
+<Warning>
+  This page reflects current knowledge of MacStadium VDI networking requirements. It is pending engineering review for completeness and accuracy. If you encounter requirements not listed here, contact [support@macstadium.com](mailto:support@macstadium.com).
+</Warning>
+
+This page covers the network requirements for a MacStadium VDI deployment. Requirements differ by deployment model where noted.
+
+---
+
+## Port and firewall requirements
+
+### Citrix VDA and HDX traffic
+
+These rules apply to all deployment models.
+
+| Traffic | Source | Destination | Protocol / Port | Purpose |
+| --- | --- | --- | --- | --- |
+| HDX sessions | End-user clients | macOS VMs | TCP/UDP 1494 | ICA/HDX protocol |
+| HDX sessions (CGP) | End-user clients | macOS VMs | TCP/UDP 2598 | Session Reliability |
+| VDA → Citrix Cloud | macOS VMs | `[customer_ID].xendesktop.net` | TCP 443 | VDA registration and brokering |
+| VDA → Gateway Service | macOS VMs | `*.*.nssvc.net` | TCP/UDP 443 | Rendezvous protocol (HDX direct routing) |
+| VDA → Workspace API | macOS VMs | `*.citrixworkspacesapi.net` | TCP 443 | Gateway connectivity checks |
+| Cloud Connector | Cloud Connector VM | Citrix Cloud | TCP 443 | Connector heartbeat and communication |
+
+<Note>
+  If you're using Citrix Rendezvous protocol (recommended for MSDC-Hosted), ensure outbound TCP/UDP 443 from VMs to `*.*.nssvc.net` is permitted. Rendezvous routes HDX traffic directly to the Gateway Service without proxying through the Cloud Connector, improving performance.
+</Note>
+
+### Orka Engine and management plane
+
+| Traffic | Source | Destination | Protocol / Port | Purpose |
+| --- | --- | --- | --- | --- |
+| Ansible → Orka hosts | Ansible controller | Mac hosts | TCP 22 | SSH (playbook execution) |
+| Orka API | Ansible controller | Mac hosts | TCP 80, 443 | Orka Engine API |
+| VM → Host (jump proxy) | Ansible controller | Mac hosts → VMs | TCP 22 | VM management via host as jump proxy |
+| Management UI | Admin browser | Ansible controller | TCP 3000 | Web access to the management UI |
+
+### MDM traffic
+
+| Traffic | Source | Destination | Protocol / Port | Purpose |
+| --- | --- | --- | --- | --- |
+| Jamf Pro enrollment | macOS VMs | Jamf Pro server | TCP 443 | MDM enrollment and management |
+| Kandji enrollment | macOS VMs | Kandji cloud | TCP 443 | MDM enrollment and management |
+| Apple ADE (hosts) | Mac hosts | `gdmf.apple.com`, `deviceenrollment.apple.com` | TCP 443 | Automated Device Enrollment |
+| APNs | Mac hosts / VMs | `*.push.apple.com` | TCP 443, 5223 | Apple Push Notification service |
+
+### OCI registry
+
+| Traffic | Source | Destination | Protocol / Port | Purpose |
+| --- | --- | --- | --- | --- |
+| Image pull | Mac hosts | OCI registry (GHCR, Harbor, etc.) | TCP 443 | Pulling base and golden images |
+| Image push | Mac hosts | OCI registry | TCP 443 | Pushing custom golden images |
+
+---
+
+## Network topology by deployment model
+
+<Tabs>
+  <Tab title="MSDC-Hosted">
+    MacStadium manages the Mac hardware and data center network. Your responsibilities:
+
+    - Connect to your MacStadium environment via VPN (credentials and configuration provided by MacStadium)
+    - Your Ansible controller can be located anywhere with VPN access (on your corporate network, a cloud VM, or a MacStadium-hosted VM)
+    - MacStadium assigns static IPs to your Mac hosts; you don't configure host networking directly
+    - VMs use bridged networking by default, receiving IPs from your DHCP-enabled management VLAN
+
+    **VPN requirement:** Active VPN connection between your Ansible controller and the MacStadium network is required for all management operations. See [VPN Connection](/orka/networking-with-orka-at-macstadium/vpn-connection) for setup instructions.
+
+    **Citrix traffic:** VMs connect outbound to Citrix Cloud over the internet. Ensure the MacStadium firewall permits outbound TCP 443 from your VM subnet to Citrix Cloud endpoints in the Port and firewall requirements section.
+  </Tab>
+  <Tab title="Self-Hosted (On-Prem)">
+    You manage all hardware and network infrastructure.
+
+    - Assign static IPs to Mac hosts before installing Orka Engine (manual configuration or DHCP reservation)
+    - Place Mac hosts on a management VLAN with connectivity to your Ansible controller
+    - VMs use bridged networking: they receive IPs from your network's DHCP server and appear as native devices on your LAN
+    - Your corporate firewall must permit outbound traffic from VMs to Citrix Cloud and inbound HDX traffic from end users
+
+    **Recommended VLAN segmentation:**
+
+    | VLAN | Hosts | Purpose |
+    | --- | --- | --- |
+    | Management | Ansible controller, Orka hosts | Admin access only |
+    | VM | macOS VMs | VDA traffic, HDX sessions |
+    | User | End-user devices (if on same network) | HDX client traffic |
+  </Tab>
+  <Tab title="Self-Hosted (AWS)">
+    On-premises steps apply. AWS-specific considerations:
+
+    - Mac hosts on AWS use [EC2 Mac instances](https://aws.amazon.com/ec2/instance-types/mac/) in a Dedicated Host configuration
+    - Place Mac hosts in a VPC subnet with access to your Ansible controller
+    - Security groups must permit the same traffic as on-premises firewall rules
+    - For connectivity between AWS and on-premises or MacStadium: use Direct Connect or a site-to-site VPN tunnel. See [AWS networking with Orka](/orka/networking-with-orka-at-macstadium/aws-orka-connections) for VPN tunnel setup
+    - VMs on AWS bridged networking receive IPs from your VPC subnet DHCP
+
+    **Security group requirements for Mac hosts:**
+
+    | Rule | Direction | Port | Source / Destination |
+    | --- | --- | --- | --- |
+    | SSH from Ansible controller | Inbound | TCP 22 | Ansible controller IP/SG |
+    | Orka API from Ansible controller | Inbound | TCP 80, 443 | Ansible controller IP/SG |
+    | HDX to VMs | Inbound | TCP/UDP 1494, 2598 | End-user IPs or 0.0.0.0/0 |
+    | Citrix Cloud outbound | Outbound | TCP 443 | `*.xendesktop.net`, `*.nssvc.net` |
+    | Image registry outbound | Outbound | TCP 443 | Registry endpoint |
+  </Tab>
+</Tabs>
+
+---
+
+## DNS requirements
+
+All deployment models require DNS resolution for Citrix Cloud endpoints from your VM subnet:
+
+  * `[customer_ID].xendesktop.net`
+  * `*.nssvc.net`
+  * `*.citrixworkspacesapi.net`
+  * `gdmf.apple.com` (for macOS software updates)
+
+Configure DNS servers in your golden image or via DHCP. If VMs can't resolve these hostnames, VDA registration will fail.
+
+For Self-Hosted deployments, ensure your internal DNS doesn't block or intercept resolution of `*.xendesktop.net` and `*.nssvc.net`.
+
+---
+
+## Proxy considerations
+
+If your network requires a proxy for outbound internet access:
+
+  * Configure HTTP/HTTPS proxy settings in your golden image before deploying VMs
+  * Set `HTTP_PROXY` and `HTTPS_PROXY` environment variables at the system level
+  * Ensure the proxy does not perform TLS inspection on Citrix Cloud traffic. Citrix VDA uses certificate pinning and TLS inspection will break VDA registration
+  * Whitelist Citrix Cloud endpoints at the proxy level if deep inspection is required
+
+---
+
+## VPN and direct connect requirements (Self-Hosted)
+
+For Self-Hosted deployments where your Ansible controller is on a different network than your Mac hosts, a site-to-site VPN or Direct Connect is required.
+
+  * **AWS VPN tunnel:** See [AWS VPN setup](/orka/networking-with-orka-at-macstadium/1-aws-side-of-the-vpn-tunnel)
+  * **On-premises VPN:** Configure using your existing VPN infrastructure; ensure TCP 22 and TCP 443 are permitted between the Ansible controller and all Mac hosts
+
+For end users connecting to their VDI desktops remotely, a Citrix Gateway or equivalent is required for external access. Citrix Rendezvous protocol (outbound TCP/UDP 443 from VMs to `*.nssvc.net`) enables direct HDX routing without on-premises Gateway hardware.

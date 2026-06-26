@@ -1,0 +1,17 @@
+%%  MacStadium VDI — Image Management Lifecycle
+%%  Source of truth for images/image-lifecycle.svg
+%%  flowchart LR — left-to-right lifecycle view
+
+flowchart LR
+    B1["① Base Image\n(ghcr.io/macstadium/orka-images/tahoe:latest)\nVersion-pinned, pre-built\nNo config yet"]
+    B2["② Build Golden Image\n• Install VDA + apps & tools\n• MDM enrollment scripts\n• Security baseline & policies\n• macOS system config"]
+    B3["③ Version & Push to Registry\nHarbor / OCI\ntahoe-golden:v1.0\ntahoe-golden:v1.1\ntahoe-golden:v2.0 ← latest\nImmutable, versioned — rollback by pinning older tag"]
+    B4["④ Pull to Host\nOrka Engine pulls specified image version\npull_image.yml\nAuto-caches on all hosts"]
+    B5["⑤ VM Instantiated & In Use\nmacOS VM — VDI agent + user apps\nuser session via broker\n2 VMs per host (Apple EULA)\nFirst boot: MDM enrollment scripts run"]
+
+    B1 -->|"build"| B2
+    B2 -->|"push"| B3
+    B3 -->|"pull"| B4
+    B4 -->|"deploy"| B5
+
+    B5 -->|"security patch / app update / new macOS release / policy change\nModify golden image → bump version → re-push → delete VM → deploy from new tag"| B2

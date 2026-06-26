@@ -62,3 +62,119 @@ If your burst nodes are in the same namespace as your normal Orka nodes, move th
      * Graceful deletion: use a `preStop` hook to allow pods to clean up before `SIGTERM`.
      * Forced deletion: add `--force --grace-period=0` to the delete command.
   3. Confirm cleanup and reschedule your CI jobs once burst nodes are back online.
+
+# Automate burst via the Portal API
+
+For teams that manage CI/CD infrastructure programmatically, MacStadium provides a GraphQL API at `https://portal.macstadium.com/graphql` that gives you direct control over burst state. You can wire enable/disable into a pipeline trigger, a cron job, or a queue-depth-based scaler without anyone touching the portal.
+
+<Note>This API is actively used and supported. A formal versioning and stability commitment is on the roadmap — until then, the operations documented here are stable but the broader API surface may change.</Note>
+
+All examples use `curl`, but any HTTP client works: POST to `https://portal.macstadium.com/graphql` with the appropriate `Authorization` header and JSON body.
+
+## Get an API token
+
+You'll need a Portal user token with read/write access. To create one:
+
+1. Log in to the [MacStadium Admin Portal](https://portal.macstadium.com) with an admin account.
+2. Open the account menu and go to **Users**, then select the **Tokens** tab.
+3. Create a new token and set read/write permissions. Copy the token and store it as an environment variable or CI/CD secret — you'll use it as `$TOKEN` in all requests below.
+
+<Note>This token is separate from the Orka service account tokens you use with the `orka3` CLI. Service account tokens authenticate against your Orka cluster; Portal tokens authenticate against `portal.macstadium.com`.</Note>
+
+## Find your cluster ID
+
+The burst mutations require a cluster `id`, which is different from the human-readable `displayId`. Run this once to look it up:
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"query":"{ viewer { account { orkaServices(pagination:{offset:0,limit:50}) { edges { node { id displayId } } } } } }"}'
+```
+
+The response lists all clusters on your account. The `displayId` is the human-readable name you recognize from the portal; the `id` is the opaque identifier you'll use in all subsequent requests.
+
+```json
+{
+  "data": {
+    "viewer": {
+      "account": {
+        "orkaServices": {
+          "edges": [
+            {
+              "node": {
+                "id": "<ORKA_SERVICE_ID>",
+                "displayId": "my-orka-cluster"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+## Check burst status
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "query": "query GetOrkaServiceById($id: ID!) { node(id: $id) { ... on OrkaService { id displayId name status hasBurst burstEnabled burstLastTime actions { canUpdate cannotUpdateReasons } } } }",
+    "variables": { "id": "<ORKA_SERVICE_ID>" }
+  }'
+```
+
+Key fields in the response:
+
+| Field | Description |
+|-------|-------------|
+| `hasBurst` | Whether the cluster is provisioned with burst nodes |
+| `burstEnabled` | Current burst state |
+| `burstLastTime` | Timestamp of the last burst state change |
+| `canUpdate` | Whether burst can be toggled right now |
+| `cannotUpdateReasons` | If `canUpdate` is false, the reason |
+
+Check `canUpdate` before firing a mutation. A cluster mid-transition or in an error state will return `canUpdate: false`, and the mutation will fail if you don't check first.
+
+## Enable burst
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "query": "mutation UpdateOrkaBurst($input: UpdateOrkaBurstInput!) { updateOrkaBurst(input: $input) { service { id displayId burstEnabled burstLastTime } } }",
+    "variables": { "input": { "id": "<ORKA_SERVICE_ID>", "state": true } }
+  }'
+```
+
+A successful response returns the updated `burstEnabled: true` and a new `burstLastTime`. Burst nodes are typically available within 15 minutes.
+
+## Disable burst
+
+<Warning>Burst has no visibility into running workloads. Disabling burst while jobs are executing on burst nodes will cause those jobs to fail and require rescheduling. Review the workload drain steps in the [Enable/Disable Burst](#enabledisable-burst) section above before triggering a disable, especially from automation where no human is reviewing cluster state.</Warning>
+
+```bash
+curl -X POST https://portal.macstadium.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "query": "mutation UpdateOrkaBurst($input: UpdateOrkaBurstInput!) { updateOrkaBurst(input: $input) { service { id displayId burstEnabled burstLastTime } } }",
+    "variables": { "input": { "id": "<ORKA_SERVICE_ID>", "state": false } }
+  }'
+```
+
+## Automation patterns
+
+**Pipeline trigger**: Call the enable mutation at the start of a heavy CI workflow and the disable mutation in a cleanup job at the end, after completing the [workload drain steps](#disable-orka-burst). This fits naturally as a wrapper job in GitHub Actions or GitLab CI that bookends your build runs.
+
+**Off-peak scheduler**: Run a cron job that disables burst during known low-utilization windows and re-enables it before peak hours. Pull `canUpdate` from the status query before each mutation so the job skips safely if the cluster isn't ready to toggle.
+
+**Queue-depth scaler**: Watch your CI queue depth and fire the enable mutation when pending jobs pass a threshold. If you're already tracking runner utilization, the burst toggle is a short hop from there.
+
+## Monitoring burst consumption
+
+`burstLastTime` tells you when burst state last changed. If you need to track consumption against a pre-paid credit balance, contact [support@macstadium.com](mailto:support@macstadium.com) and your CSM can pull current usage data for your account.

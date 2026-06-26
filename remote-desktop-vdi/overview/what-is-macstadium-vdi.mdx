@@ -1,0 +1,62 @@
+---
+title: "What is MacStadium VDI"
+description: "MacStadium VDI delivers cloud-hosted macOS virtual desktops on Apple silicon hardware, accessible from anywhere via your VDI client."
+keywords: ["macOS VDI", "virtual desktop infrastructure", "macOS virtual machines", "Apple silicon VDI", "Citrix macOS", "remote macOS desktop", "Orka Engine"]
+---
+
+MacStadium VDI is a virtual desktop infrastructure solution built on genuine Apple silicon hardware. It lets organizations provision, manage, and deliver macOS virtual desktops to users anywhere, without shipping physical Macs or managing on-site hardware.
+
+Each virtual desktop runs as a macOS VM on a bare metal Mac host, orchestrated through Orka Engine and automated via [Ansible](https://docs.ansible.com). Users connect through the VDI client of your choice. MacStadium provides primary support for [Citrix DaaS](https://docs.citrix.com/en-us/citrix-daas), but the architecture works with any compatible VDI tool.
+
+## How it works
+
+MacStadium VDI is built on four layers:
+
+**Apple silicon hosts**
+Each macOS VM runs on a physical Mac. Apple's EULA limits each host to two concurrent macOS VMs, so the host count scales directly with your user count.
+
+**Orka Engine**
+Orka Engine is MacStadium's virtualization layer for Mac hardware. It manages VM lifecycle: provisioning, starting, stopping, and deleting macOS VMs on each host.
+
+**Ansible-based orchestration**
+A set of Ansible playbooks handles everything from engine installation to VM deployment to image management. IT admins interact with these playbooks through a web-based management UI, which provides a browser interface for running and monitoring operations without CLI access.
+
+**VDI software**
+A VDI agent (such as [Citrix VDA for macOS](https://docs.citrix.com/en-us/mac-vda)) is installed on each VM and registered with your delivery controller. End users connect through the corresponding client app. MacStadium provides guides and validated configurations for Citrix DaaS; other VDI tools that support macOS can also work with this architecture.
+
+![MacStadium VDI overview showing end users connecting through a VDI broker to macOS VMs managed by the MacStadium VDI control plane](/images/vdi-overview.svg)
+
+See [Architecture](/remote-desktop-vdi/overview/architecture) for a visual breakdown of how the layers connect across deployment models.
+
+## Key capabilities
+
+- **Instant provisioning:** Deploy macOS VMs in minutes from the management UI or CLI
+- **Centralized management:** Manage VMs, images, and users from a single orchestration layer across all hosts
+- **Data sovereignty:** All data stays on the host infrastructure; no local storage on end-user devices
+- **<Tooltip tip="Mobile Device Management: software for enrolling and managing device configuration, policies, and apps across a fleet. Common options: Jamf, Kandji, Intune.">MDM</Tooltip> enrollment support:** MacStadium provides enrollment workflows for Jamf, Kandji, and Intune.
+- **Scalability:** Add hosts to increase capacity without re-architecting your deployment
+- **Android AVD support:** Run Android Virtual Devices alongside macOS VMs for mobile development workflows
+
+## Deployment models
+
+MacStadium VDI supports three deployment models:
+
+- **MSDC-Hosted (MacStadium Data Centers):** MacStadium owns and operates the Mac hosts in its data centers. You manage VMs and users; MacStadium manages the hardware.
+- **Self-Hosted (On-Premises):** You own the Mac hosts and run them in your own facility. MacStadium provides the software and support.
+- **Self-Hosted (AWS):** You run Mac hosts on AWS EC2 Mac instances. Setup follows the on-premises path with AWS-specific networking considerations.
+
+Not sure which model fits your situation? See [Choose Your Deployment Model](/remote-desktop-vdi/overview/choose-your-deployment-model).
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Architecture" icon="diagram-project" href="/remote-desktop-vdi/overview/architecture">
+    See how the layers connect and review deployment model diagrams
+  </Card>
+  <Card title="Prerequisites" icon="clipboard-check" href="/remote-desktop-vdi/overview/prerequisites">
+    Hardware, licensing, network, and account requirements before you start
+  </Card>
+  <Card title="Choose Your Deployment Model" icon="code-branch" href="/remote-desktop-vdi/overview/choose-your-deployment-model">
+    Compare MSDC-Hosted and Self-Hosted options side by side
+  </Card>
+</CardGroup>
