@@ -1,0 +1,230 @@
+---
+title: "Upgrading Orka on AWS"
+description: "Upgrade your Orka cluster on AWS from 3.5 to 3.6. Covers the Orka services upgrade and the new Ansible-based in-place tooling upgrade for ARM Mac nodes, including SSH and SSM requirements."
+---
+
+Orka on AWS upgrades are self-service. You run the upgrade using the same CodeBuild project used for installation, pointed at the Orka 3.6 Ansible image. There are two parts:
+
+- **Services upgrade:** upgrades the Orka Kubernetes services on EKS.
+- **Node tooling upgrade:** updates the Virtual Kubelet and Orka Engine on your ARM Mac nodes in place.
+
+Review the [3.6 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) before upgrading.
+
+## Before you upgrade
+
+### Verify your node tags
+
+The upgrade uses a dynamic Ansible inventory to identify your ARM nodes. Each ARM EC2 Mac instance must have the EC2 tag:
+
+* **Key:** `role`
+* **Value:** `orka-arm`
+
+Instances without this tag will not be selected by the inventory and will be skipped. Verify this tag is applied to all ARM nodes before proceeding.
+
+### Check your ARM node SSH configuration
+
+Starting with the 3.5 to 3.6 upgrade, ARM node tooling is updated in place using Ansible rather than replacing the AMI. For this to work, your ARM EC2 Mac instances must accept SSH connections on port 22 for the `ec2-user` account using key-based authentication. EC2 Mac instances launched with a key pair have this enabled by default. Your security group must allow inbound TCP port 22 from your CodeBuild subnets.
+
+If your nodes cannot accept SSH, the upgrade can run over SSM instead. SSM upgrades require an S3 bucket in the same region as your ARM nodes for Ansible file transfer, and can take significantly longer (up to 4 hours). SSH is strongly recommended.
+
+### Enabling SSH on nodes launched without a key pair
+
+If your nodes were not launched with a key pair and do not accept SSH connections, you can use SSM to install a public SSH key first, then proceed with the faster SSH upgrade path. This requires your instances to be SSM-managed: the `AmazonSSMManagedInstanceCore` policy must be attached to the instance profile.
+
+To set this up:
+
+1. Generate an SSH key pair (ed25519 or RSA).
+2. Run the following SSM command to install the public key on all tagged ARM nodes:
+
+    ```shell
+    aws ssm send-command \
+      --document-name "AWS-RunShellScript" \
+      --targets "Key=tag:role,Values=orka-arm" \
+      --parameters '{"commands":[
+        "mkdir -p /Users/ec2-user/.ssh",
+        "echo \"<your-public-key>\" >> /Users/ec2-user/.ssh/authorized_keys",
+        "chmod 700 /Users/ec2-user/.ssh",
+        "chmod 600 /Users/ec2-user/.ssh/authorized_keys",
+        "chown -R ec2-user /Users/ec2-user/.ssh"
+      ]}'
+    ```
+
+    The identity running `send-command` requires `ssm:SendCommand` on the target instances and on the `AWS-RunShellScript` document, plus `ssm:GetCommandInvocation`.
+
+3. Store the private key in AWS Secrets Manager as a plaintext secret.
+4. Grant your CodeBuild service role permission to read the secret:
+
+    ```json
+    {
+      "Effect": "Allow",
+      "Action": "secretsmanager:GetSecretValue",
+      "Resource": "arn:aws:secretsmanager:*:*:secret:<your-secret-name>*"
+    }
+    ```
+
+5. Ensure your security group allows inbound TCP port 22 from your CodeBuild subnets.
+
+Once the key is installed, proceed with the SSH upgrade path below.
+
+To rotate the stored SSH key pair automatically, see [How to use AWS Secrets Manager to securely store and rotate SSH key pairs](https://aws.amazon.com/blogs/security/how-to-use-aws-secrets-manager-securely-store-rotate-ssh-key-pairs/).
+
+### Multi-region deployments
+
+The upgrade discovers ARM nodes in the region set by `AWS_DEFAULT_REGION` on the CodeBuild project, defaulting to `us-east-1`. If your ARM nodes span multiple AWS regions, you can either configure multiple steps in a single CodeBuild project (one per region), or trigger separate runs with a region override:
+
+```shell
+aws codebuild start-build --project-name <project-name> \
+  --environment-variables-override name=AWS_DEFAULT_REGION,value=us-west-2,type=PLAINTEXT
+```
+
+## Upgrading the Orka services
+
+The Orka Kubernetes services are upgraded the same way they were installed: run the CodeBuild project pointed at the Orka 3.6 Ansible image. For setup details, see [Getting started with Orka on AWS](/orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started). No additional configuration is required.
+
+## Upgrading ARM node tooling
+
+### Over SSH (recommended)
+
+Store your SSH private key in AWS Secrets Manager as a plaintext secret. Give your CodeBuild service role permission to read it:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": "secretsmanager:GetSecretValue",
+  "Resource": "arn:aws:secretsmanager:*:*:secret:<your-secret-name>*"
+}
+```
+
+Update your CodeBuild buildspec to pull the key and run the upgrade playbook:
+
+```yaml
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    AWS_DEFAULT_REGION: "us-east-1"
+  secrets-manager:
+    SSH_PRIVATE_KEY: "<your-secret-name>"
+
+phases:
+  install:
+    commands:
+      - apt-get update
+      - apt-get install -y openssh-client
+      - mkdir -p ~/.ssh
+      - printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-keygen -y -f ~/.ssh/id_rsa >/dev/null
+  build:
+    commands:
+      - ansible-playbook -i arm.ssh.aws_ec2.yml configure-arm.yml --private-key ~/.ssh/id_rsa
+```
+
+Start the CodeBuild project. Ansible runs nodes in parallel; a typical deployment completes in under 10 minutes. For large numbers of nodes, timing scales with node count.
+
+### Over SSM
+
+Use this method only if SSH cannot be enabled. SSM upgrades may take up to 4 hours per run.
+
+Requirements:
+
+1. Instances are SSM-managed (`AmazonSSMManagedInstanceCore` policy attached to the instance profile).
+2. An S3 bucket in the same region as your ARM nodes. Set the `ANSIBLE_AWS_SSM_BUCKET` environment variable on the CodeBuild project to the bucket name.
+3. CodeBuild service role permissions for Session Manager:
+
+    ```json
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:StartSession",
+        "ssm:TerminateSession",
+        "ssm:ResumeSession",
+        "ssm:DescribeSessions",
+        "ssm:GetConnectionStatus"
+      ],
+      "Resource": [
+        "arn:aws:ec2:<region>:<account-id>:instance/*",
+        "arn:aws:ssm:<region>:<account-id>:document/SSM-SessionManagerRunShell",
+        "arn:aws:ssm:<region>:<account-id>:session/*"
+      ]
+    }
+    ```
+
+4. CodeBuild service role permissions on the S3 bucket:
+
+    ```json
+    [
+      {
+        "Effect": "Allow",
+        "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
+        "Resource": "arn:aws:s3:::bucket-name/*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": ["s3:ListBucket", "s3:GetBucketLocation"],
+        "Resource": "arn:aws:s3:::bucket-name"
+      }
+    ]
+    ```
+
+Run the upgrade playbook:
+
+```shell
+ansible-playbook -i arm.ssm.aws_ec2.yml configure-arm.yml
+```
+
+## Changing node values
+
+By default, all configuration is read from the running node and reapplied automatically. You can also run the playbook independently to change a value without a full upgrade, for example to rename a node. Pass the value as an extra variable:
+
+| Value | Variable |
+|-------|----------|
+| Node hostname | `-e override_node_hostname=<new-name>` |
+| License key | `-e override_orka_engine_license_key=<key>` |
+
+Example:
+
+```shell
+ansible-playbook -i arm.ssh.aws_ec2.yml configure-arm.yml --private-key ~/.ssh/id_rsa -e override_node_hostname=arm-node-1
+```
+
+## What changes in 3.5 to 3.6
+
+### ARM node tooling updates no longer require provisioning a new EC2 Mac instance
+
+Previously, updating tooling on ARM nodes required replacing the EC2 Mac AMI: the instance had to be deleted, a new one provisioned (a process that takes approximately 2 hours), and the node's name, namespace, and custom tags had to be manually reapplied.
+
+Starting with the 3.5 to 3.6 upgrade path, ARM node tooling is updated in place using Ansible over SSH. Ansible runs nodes in parallel; a typical deployment completes in under 10 minutes. The following are read from the running node and reapplied automatically: node name, node IP, cluster registration, license key, VM quota, and storage layout (including data volumes on instances with local NVMe). Running VMs are not interrupted.
+
+AMI replacement is still required when the host operating system needs to be upgraded. Release notes will call this out explicitly when it applies.
+
+### Upgrade Service is installed
+
+As part of the 3.6 upgrade, the Orka Upgrade Service is deployed to your cluster. This will enable smoother tooling updates in future Orka releases without requiring you to provision new EC2 Mac instances.
+
+### AWS credentials no longer required for artifact distribution
+
+Orka binaries and container images are now distributed publicly via CloudFront. You no longer need AWS credentials configured to pull Orka artifacts during upgrades or deployments.
+
+### cert-manager behavior change
+
+Orka no longer installs its own cert-manager when configured to skip the bundled installation. This is not auto-detected: if you want Orka to skip cert-manager, configure the installation explicitly. If your cluster runs its own cert-manager and you previously experienced version or configuration conflicts with Orka's bundled installation, those conflicts can now be avoided by opting out.
+
+If your automation or tooling depends on Orka's cert-manager specifically, verify your setup before upgrading.
+
+
+## Hybrid deployments (EKS control plane + on-premises Mac nodes)
+
+If your Orka deployment combines an EKS control plane on AWS with Mac nodes on-premises, the upgrade follows the same pattern as installation: each component is upgraded using the workflow for where it runs.
+
+- **EKS control plane and AWS services**: Follow the AWS upgrade flow in this guide.
+- **On-premises Mac nodes**: Follow the on-premises upgrade flow using your on-premises Ansible installation. SSH access to the nodes must be available via the same network path used during installation.
+
+The Orka Upgrade Service deploys identically regardless of whether nodes are on AWS or on-premises.
+
+For on-premises installation and upgrade prerequisites, see [Getting started with Orka on-premises](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started).
+
+## After the upgrade
+
+[Download and install](/orka/orka-overview/tools-integrations) the Orka 3.6 CLI if you haven't already.

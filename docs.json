@@ -277,6 +277,7 @@
             "group": "Upgrade Guides",
             "pages": [
               "orka/orka-upgrades-and-release-notes/orka-upgrades",
+              "orka/orka-upgrades-and-release-notes/upgrading-orka-on-aws",
               "orka/orka-upgrades-and-release-notes/kubernetes-upgrade-guide"
             ]
           },
