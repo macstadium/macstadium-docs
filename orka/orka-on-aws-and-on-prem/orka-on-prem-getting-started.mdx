@@ -26,7 +26,7 @@ Key elements in the architecture include:
 
 ## Networking Considerations
 
-The Orka VMs use the 192.168.64.0/24 network. This is a virtual network on each of the host and it is not directly accessible.
+The Orka VMs use the 192.168.64.0/24 network. This is a virtual network on each of the hosts and it is not directly accessible.
 
 You might experience issues if your Orka VMs need to access services that are in a network that overlaps with their virtual network.
 
@@ -285,7 +285,7 @@ Note - you need to remove some metadata from these resources. To do that, run th
      kubectl get "$resource" -n "$namespace" -o yaml \
         yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
 ```
-These resources can be stored in an yml file, which you can archive and store somewhere.
+These resources can be stored in a yml file, which you can archive and store somewhere.
 
 # Logging, Monitoring, and Alerting
 
