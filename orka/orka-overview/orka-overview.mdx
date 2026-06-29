@@ -39,7 +39,7 @@ An Orka deployment typically consists of:
 
 An Orka environment can start with as few as two nodes and can scale to hundreds of nodes if needed. The MacStadium team can help confirm the size and scaling.
 
-This document will focus on using k8s as the control plane for Orka. For details on managing an Orka environment with the Ansible-based control plane, see [MacStadium VDI](/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture).
+This document will focus on using k8s as the control plane for Orka. For details on managing an Orka environment with the Ansible-based control plane, see [MacStadium VDI](/remote-desktop-vdi/getting-started/self-hosted).
 
 ## Key Concepts
 
@@ -53,11 +53,11 @@ This document will focus on using k8s as the control plane for Orka. For details
 
 ## Terminology
 
-  * **API Server** : Provides access to the cluster from the CLI, API or CI integrations. The API Server must be accessible to the CLI, API or CI Integrations controlling the Orka instance.
-  * **Bare Metal Macs** : MacStadium has a variety of standard Mac models that run the virtualization software to manage and use the macOS compute resources
-  * **Control Plane** : Facilitates the orchestration activities, which includes provisioning and de-provisioning of VMs across the fleet of hosts that are running virtualization interfaces to macOS compute resources. This runs natively inside of Kubernetes for optimal performance and scale. (This is abstracted away from you, so you never need to interface with Kubernetes unless you want to.)
-  * **Host (or Node)** : A physical computer with a host macOS and an installation of Orka Virtualization software
-  * **Image (or OCI Image)** : Bits on disk that represent VM storage. Images can be deployed as a VM in an Orka and provide the OS, file system, and built-in storage used by the VM.
+  * **API Server**: Provides access to the cluster from the CLI, API or CI integrations. The API Server must be accessible to the CLI, API or CI Integrations controlling the Orka instance.
+  * **Bare Metal Macs**: MacStadium has a variety of standard Mac models that run the virtualization software to manage and use the macOS compute resources
+  * **Control Plane**: Facilitates the orchestration activities, which includes provisioning and de-provisioning of VMs across the fleet of hosts that are running virtualization interfaces to macOS compute resources. This runs natively inside of Kubernetes for optimal performance and scale. (This is abstracted away from you, so you never need to interface with Kubernetes unless you want to.)
+  * **Host (or Node)**: A physical computer with a host macOS and an installation of Orka Virtualization software
+  * **Image (or OCI Image)**: Bits on disk that represent VM storage. Images can be deployed as a VM in an Orka and provide the OS, file system, and built-in storage used by the VM.
     * **OCI** refers to the standard format that the image is packaged with. Images are stored in any OCI-compliant registry. Starting with Orka 3.2, MacStadium has begun storing OCI-compliant images for various versions of the macOS in our public GitHub registry viewable at GitHub - macstadium/orka-images: Public images for Apple silicon-based Orka virtual machines
   * A **VM** is a virtual machine runtime on top of the macOS host. The VM runs a guest OS image and macOS supports up to 2 running VMs per host.
 
@@ -66,7 +66,7 @@ This document will focus on using k8s as the control plane for Orka. For details
 Bare Metal Mac Nodes:
 
   * Apple silicon Support: Apple M1+ with 16GB RAM and 512GB disk space. (MacStadium recommends 1TB disk space); macOS X 13.0+ (Ventura)
-  * Apple Intel Support: Mac Intel with 16GB RAM and 1TB disk space; macOS 10.14 (Mojave)+
+  * Apple Intel Support: Mac Intel with 16GB RAM and 1TB disk space; macOS 13.0 (Ventura)+
 
 Kubernetes:
 
@@ -157,7 +157,7 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
 ## 3. Learn the 3 Main Objects
 
-**Nodes** , **images** , and **VMs**
+**Nodes**, **images**, and **VMs**
 
   * Use `orka3 node list` to see a list of nodes or hosts in the cluster. Use the `-o wide` option to see more information about the nodes
   * Use `orka3 image list` to see information about the images available to the cluster for running as VMs
@@ -167,7 +167,7 @@ orka3 is the CLI to interface with the Orka. Once connected to the VPN or mesh n
 
   * Launch a VM from a base image, including options to load from the OCI registry.
   * For legacy users, there is a demonstrated loading from an NFS mount.
-  * Access the VM via **SSH** , **VNC** , or **Apple Screen Sharing**.
+  * Access the VM via **SSH**, **VNC**, or **Apple Screen Sharing**.
 
 <Note>
   To deploy a VM, an image is required. Check the MacStadium registry on ghcr.io and pull an image, if the local image list is empty, or use an image from an OCI-compatible registry. Check [https://github.com/macstadium/orka-images](https://github.com/macstadium/orka-images) for the latest available OCI-compatible images provided by MacStadium. The images available out-of-the-box provide a pre-configured disk size and a pre-installed OS.

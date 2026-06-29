@@ -20,7 +20,7 @@ Your Orka cluster sits behind a dedicated Cisco ASAv firewall. VMs and the Orka 
 | SSH into a VM | Yes |
 | VNC / Screen Sharing into a VM | Yes |
 | CI/CD runner already inside your corporate network (routed through VPN) | Depends on your network topology |
-| VDI end-user sessions via Citrix Workspace app | No — Citrix proxies the session over outbound TCP 443 |
+| VDI end-user sessions via Citrix Workspace app | No (Citrix proxies the session over outbound TCP 443) |
 
 <Note>
   VDI end users do not need a VPN client. Citrix Workspace app establishes the session outbound through Citrix Cloud. VPN is only required for administrators managing the Orka cluster itself.
@@ -36,7 +36,7 @@ MacStadium has pre-configured the firewall and has enabled VPN access. All you n
 
 #### **Why OpenConnect?**
 
-If you are a pre-dominantly CLI user, you might want to use [OpenConnect](https://www.infradead.org/openconnect/index.html) \- an open-source VPN client available from the command line.
+If you are a predominantly CLI user, you might want to use [OpenConnect](https://www.infradead.org/openconnect/index.html) \- an open-source VPN client available from the command line.
 
 ### Download and Install OpenConnect
 

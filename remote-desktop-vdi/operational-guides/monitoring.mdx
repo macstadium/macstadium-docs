@@ -1,0 +1,177 @@
+---
+title: "Monitoring and observability"
+description: "Monitor MacStadium VDI VM health, host utilization, and user session state, and integrate metrics and logs with external observability and alerting tools."
+keywords: ["VDI monitoring", "Orka metrics", "Citrix Cloud monitoring", "alerting VDI", "observability macOS VDI"]
+---
+
+This page covers monitoring and observability for a production MacStadium VDI environment: what data is available, how to collect it, and how to integrate with external tools.
+
+---
+
+## What the platform exposes
+
+### Orka Engine
+
+Orka Engine exposes VM state and host utilization through the CLI and Ansible playbooks. There is no built-in metrics endpoint; monitoring is done by querying Orka through Ansible or the `orka-engine` CLI.
+
+**VM state:**
+
+```bash
+# List all VMs and their status
+ansible-playbook -i inventory list.yml
+
+# Check a specific VM
+ansible-playbook -i inventory list.yml -e "vm_name=<vm-name>"
+```
+
+Output includes VM name, IP address, host assignment, and running state.
+
+**Host utilization:**
+
+```bash
+# CPU and memory on all hosts
+ansible hosts -i inventory -m shell -a "top -l 1 | grep -E 'CPU|PhysMem'"
+
+# Disk space on all hosts
+ansible hosts -i inventory -m shell -a "df -h /Users/<host_username>/.local/share/orka/data"
+
+# Orka Engine version (confirms service is running)
+ansible hosts -i inventory -m shell -a "orka-engine --version"
+```
+
+**Orka Engine logs:**
+
+Located at `/var/log/orka-engine.log` on each Mac host.
+
+```bash
+# Recent errors across all hosts
+ansible hosts -i inventory -m shell -a "sudo grep -i error /var/log/orka-engine.log | tail -20"
+
+# Tail logs on a specific host
+ansible hosts -i inventory -m shell -a "sudo tail -100 /var/log/orka-engine.log" --limit mac-node-1
+```
+
+### Management UI
+
+The management UI provides task execution history, playbook run logs, and basic job status. All playbook runs are logged with timestamps, operator name, and output.
+
+Access at `http://localhost:3000` on your Ansible controller (or wherever you deployed it).
+
+### Citrix Cloud Console
+
+Citrix Cloud provides the most complete view of session and <Tooltip tip="Virtual Delivery Agent: software installed on each macOS VM that registers with the Delivery Controller and handles the remoting protocol session.">VDA</Tooltip> health. Key monitoring areas:
+
+| Location | What to check |
+| --- | --- |
+| Monitor → Machines | VDA registration state, power state, faults |
+| Monitor → Sessions | Active sessions, session quality, launch success rate |
+| Monitor → Cloud Connectors | Connector status and heartbeat |
+| Monitor → Trends | Historical session launch times, session quality trends |
+| Monitor → User Activity | Per-user session history and connection attempts |
+
+**Target metrics (baseline):**
+- Unregistered machines: 0
+- Session launch success rate: >95%
+- Average session launch time: under 30 seconds
+- Cloud Connectors: all "Up"
+
+### Citrix VDA logs (on VMs)
+
+Located at `/Library/Application Support/Citrix/VDA/Logs/` on each macOS VM.
+
+Key files:
+  * `vda.log`: main VDA service log (registration events, errors)
+  * `registration.log`: registration-specific events
+  * `broker.log`: communication with Citrix Cloud
+
+```bash
+# Access via Ansible through host jump proxy
+ansible hosts -i inventory -m shell -a "sudo tail -50 /Library/Application\ Support/Citrix/VDA/Logs/vda.log" --limit <host-ip>
+```
+
+---
+
+## Setting up monitoring
+
+### Basic: Ansible-based capacity polling
+
+A cron job on the Ansible controller captures daily capacity snapshots:
+
+```bash
+# Add to crontab on the Ansible controller
+crontab -e
+
+# Daily capacity log at 6 AM
+0 6 * * * ansible-playbook -i /path/to/inventory list.yml > /var/log/orka-capacity-$(date +\%Y\%m\%d).log
+
+# Daily disk space check
+30 6 * * * ansible hosts -i /path/to/inventory -m shell -a "df -h /Users/<host_username>/.local/share/orka/data" >> /var/log/orka-disk-$(date +\%Y\%m\%d).log
+```
+
+Review these logs weekly to spot trends before they become incidents.
+
+### Health check automation
+
+Run `list.yml` on a schedule and scan its output for unexpected VM states. Pipe the output through your alerting system's ingest endpoint (most support a simple `curl` POST to a webhook). Schedule via cron every 15 minutes and treat any non-zero exit code or missing VM name as an alert condition.
+
+---
+
+## Integration with external monitoring tools
+
+MacStadium VDI doesn't expose a native metrics API. The general integration pattern is to run Ansible playbooks on a schedule, capture their output to log files, and forward those logs to your monitoring platform using its standard log ingestion agent.
+
+For example, with Datadog: install the Datadog Agent on your Ansible controller, configure a log collection rule pointing at your capacity log files (for example, `/var/log/orka-capacity-*.log`), and create a monitor based on log content. The approach is the same for CloudWatch Logs, Grafana Loki, or any other log-based monitoring platform. The log files are the integration point, not a metrics API.
+
+For alerting, most platforms support webhook-based notifications. Pipe playbook output through your alerting system's ingest endpoint from your cron jobs. Consult your monitoring platform's documentation for the specific agent configuration and webhook format.
+
+---
+
+## Alerting recommendations
+
+### Critical (page immediately)
+
+| Condition | Detection method |
+| --- | --- |
+| VDA registration drops below 80% of expected | Citrix Cloud Console → Monitor → Machines |
+| All VMs in a Delivery Group unavailable | Citrix Cloud Console → Monitor → Machines |
+| Host disk usage >90% | `df -h /Users/<host_username>/.local/share/orka/data` via Ansible |
+| Orka Engine service not responding | `orka-engine --version` fails via Ansible |
+
+### Warning (respond within 4 hours)
+
+| Condition | Detection method |
+| --- | --- |
+| >10% of session launches failing over 15 minutes | Citrix Cloud Console → Monitor → Trends |
+| Host CPU >80% sustained | `top` via Ansible |
+| Host disk usage >75% | `df -h /Users/<host_username>/.local/share/orka/data` via Ansible |
+| Session launch time exceeds 30-second baseline by 50% | Citrix Cloud Console → Monitor → Trends |
+
+### Informational (review daily)
+
+| Condition | Detection method |
+| --- | --- |
+| New "Unregistered" VMs appear | Citrix Cloud Console → Monitor → Machines |
+| VM count per host near `max_vms_per_host` | `list.yml` output |
+| Image versions on hosts are inconsistent | `orka-engine image list` via Ansible |
+
+---
+
+## MSDC-Hosted vs. Self-Hosted differences
+
+<Tabs>
+  <Tab title="MSDC-Hosted">
+    MacStadium monitors physical host health, hardware, and data center infrastructure. You don't have access to hardware-level metrics directly.
+
+    - For host hardware alerts (disk failure, hardware fault), MacStadium's monitoring will detect these and notify you.
+    - For Orka Engine and VM-layer monitoring, use the Ansible-based approach described on this page.
+    - MacStadium can provide infrastructure-level metrics on request. Contact your account representative.
+  </Tab>
+  <Tab title="Self-Hosted">
+    You own full-stack observability, from hardware to VDA. In addition to the Ansible-based monitoring described on this page:
+
+    - Install your standard server monitoring agent (Datadog, New Relic, Prometheus Node Exporter) on each Mac host
+    - Monitor macOS system metrics: CPU, memory, disk I/O, network throughput
+    - Set up hardware health monitoring for disk failures and memory errors
+    - For AWS EC2 Mac instances, use CloudWatch metrics for instance-level monitoring
+  </Tab>
+</Tabs>

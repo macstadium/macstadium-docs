@@ -1,0 +1,38 @@
+%%  MSDC-Hosted Bare Metal Architecture
+%%  VDI directly on Bare Metal Mac Macs — no Orka, no VMs
+%%  Source of truth for images/msdc-baremetal-arch.svg
+%%  flowchart LR — left-to-right architecture view
+
+flowchart LR
+    admin(["IT Admin"])
+    subgraph users["End users (any device, anywhere)"]
+        laptop["Laptop / Desktop"]
+        tablet["Tablet"]
+        thin["Thin client (CWA)"]
+    end
+    subgraph broker["VDI broker / gateway\ne.g., Citrix DaaS / HP Anyware"]
+        dc["Delivery Controller\n(brokers sessions, SSO/MFA)"]
+    end
+    identity["Identity\nActive Directory /\nEntra ID / Okta"]
+
+    subgraph msdc["MacStadium Data Center (managed hosting)"]
+        subgraph shared["Shared services (customer-managed)"]
+            rmm["RMM / remote management"]
+            storage["Network storage (MacStadium or BYO)"]
+            mon["Monitoring & logging"]
+            dns["DNS / DHCP / NTP"]
+        end
+        subgraph hosts["Apple silicon Bare Metal Mac hosts (Mac mini / Mac Studio)"]
+            h1["Host 1\nVDI agent + user apps\n(user A)"]
+            h2["Host 2\nVDI agent + user apps\n(user B)"]
+            hN["Host N (scale out)\n1 user per host"]
+        end
+        net["MacStadium firewall • managed network fabric • bridged tenant network • static IPs"]
+    end
+
+    admin -->|"MDM / RMM"| shared
+    laptop -->|"remoting protocol"| dc
+    dc -->|"remoting protocol"| laptop
+    broker --> identity
+    dc --> hosts
+    shared -->|"manages"| hosts

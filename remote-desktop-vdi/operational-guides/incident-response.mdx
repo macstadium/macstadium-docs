@@ -1,0 +1,399 @@
+---
+title: "Incident response and change management"
+description: "Incident triage, escalation procedures, post-incident reviews, change management checklists, communication templates, KPIs, and compliance for MacStadium VDI."
+---
+
+This page covers incident response, change management, reporting, and compliance for production MacStadium VDI environments. For day-to-day operational tasks, see the [Day-2 Operations Guide](/remote-desktop-vdi/operational-guides/day-2-operations-guide). For troubleshooting specific symptoms, see [Troubleshooting Quick Reference](/remote-desktop-vdi/reference/troubleshooting-quick-reference).
+
+---
+
+## Incident response
+
+### Recognizing common failure modes
+
+**Symptom: User can't connect to desktop**
+
+Possible causes: VM not running, VDA not registered with Citrix, network connectivity issue, Citrix Cloud issue.
+
+```bash
+# Verify VM is running
+ansible-playbook -i inventory list.yml | grep <vm-name>
+
+# SSH to host and check VDA status
+ssh admin@<host-ip>
+
+# VNC into VM to check VDA registration
+open vnc://<host-ip>:6000
+```
+
+**Symptom: Desktop is slow or unresponsive**
+
+Possible causes: Host overloaded (too many VMs), VM resource starvation, network latency.
+
+```bash
+# Check host CPU/memory
+ansible hosts -i inventory -m shell -a "top -l 1 | head -20"
+
+# Check VM count per host
+ansible-playbook -i inventory list.yml
+```
+
+**Symptom: VMs fail to deploy**
+
+Possible causes: Host out of disk space, image pull failure, Orka Engine error.
+
+```bash
+# Check disk space
+ansible hosts -i inventory -m shell -a "df -h /var/orka"
+
+# Test image pull manually
+ansible-playbook -i inventory pull_image.yml -e "remote_image_name=<image-name>" -v
+```
+
+**Symptom: All VMs down after host reboot**
+
+Cause: VMs don't auto-start after host reboot by default.
+
+```bash
+# Start all VMs on affected host
+ansible-playbook -i inventory list.yml | grep [HOST-NAME] | awk '{print $1}' | xargs -I {} ansible-playbook -i inventory vm.yml -e "vm_name={}" -e "desired_state=running"
+```
+
+Consider scripting auto-start behavior or coordinating with MacStadium to enable auto-start features.
+
+---
+
+### Triage decision tree
+
+```
+User reports issue
+↓
+Can OTHER users connect?
+├─ NO → Check Citrix Cloud status, Cloud Connectors, network
+└─ YES → Issue is specific to this user or their VM
+↓
+Can user connect to OTHER desktops?
+├─ NO → User account issue, check Citrix permissions
+└─ YES → Issue is specific to this user's assigned VM
+↓
+Is VM running?
+├─ NO → Start VM, check why it stopped
+└─ YES → Check VDA registration
+↓
+Is VDA registered?
+├─ NO → Restart VDA service or restart VM
+└─ YES → Performance or application issue
+↓
+Check host resources, VM resources, HDX settings
+```
+
+---
+
+### Escalation procedures
+
+| Level | Who | When |
+| --- | --- | --- |
+| **Level 1:** Team Lead / Senior Admin | Handle yourself | Single user issues, VM restarts, minor performance tuning, user account management |
+| **Level 2:** Infrastructure Team | Escalate | Multiple users affected, suspected host hardware failure, network infrastructure involved, capacity planning needed |
+| **Level 3:** MacStadium Support | Escalate | Orka Engine failures, host hardware failures, datacenter network failures, new host provisioning |
+| **Level 4:** Citrix Support | Escalate | Citrix Cloud outage, VDA registration failures across all VMs, HDX protocol issues, Citrix policy problems |
+
+**Escalation email template:**
+
+```
+Subject: [URGENT] VDI Issue: [BRIEF_DESCRIPTION]
+
+Impact:
+- Users affected: X
+- Severity: High / Medium / Low
+- Business impact: [DESCRIPTION]
+
+Problem: [CLEAR_DESCRIPTION]
+
+Steps taken:
+1. [WHAT_YOUVE_TRIED]
+2. [TROUBLESHOOTING_DONE]
+3. [RESULTS]
+
+Next steps needed: [WHAT_YOU_NEED_FROM_THE_ESCALATION_TEAM]
+
+Contact: [YOUR_NAME], [PHONE], [EMAIL]
+```
+
+---
+
+### Post-incident review template
+
+Complete this for any incident affecting more than 10 users or lasting more than an hour.
+
+```
+Incident Summary
+- Date/Time:
+- Duration:
+- Users impacted:
+- Services affected:
+
+Timeline
+- Issue first reported:
+- Investigation started:
+- Root cause identified:
+- Resolution implemented:
+- Service restored:
+
+Root Cause: (What caused the issue)
+
+Resolution: (What fixed it)
+
+Preventative Measures:
+- Short-term (this week):
+- Long-term (this month):
+
+Action Items
+- Task 1: Assigned to [NAME], Due [DATE]
+- Task 2: Assigned to [NAME], Due [DATE]
+```
+
+Store post-incident reviews in your documentation repository for future reference.
+
+---
+
+## Change management
+
+### Pre-change checklists
+
+Before any production change, verify:
+
+- [ ] Change window scheduled and communicated to users
+- [ ] Backup/snapshot of current image state available
+- [ ] Rollback plan documented and tested
+- [ ] Testing completed in a non-production environment
+- [ ] Required approvals obtained
+- [ ] Monitoring in place to detect issues
+- [ ] Team available for the duration of the change
+
+For image updates specifically:
+
+- [ ] New golden image tested on at least one VM
+- [ ] Citrix VDA registration verified
+- [ ] HDX features tested (clipboard, file transfer, USB)
+- [ ] Applications tested and functional
+- [ ] Pilot group identified
+- [ ] Previous image version retained for rollback
+
+---
+
+### Testing procedures
+
+For new golden images:
+
+1. **Deployment test:** Deploy one VM, verify it boots within 3 minutes and gets network connectivity.
+2. **VDA registration test:** Check System Preferences → Citrix VDA shows "Registered"; verify VM appears as "Available" in Citrix Cloud Console.
+3. **User connectivity test:** Assign a test user, launch desktop from Citrix Workspace, verify connection.
+4. **HDX feature test:** Test clipboard, file transfer (if enabled), printing (if enabled), application launching.
+5. **Application functionality test:** Launch each business-critical application, perform a basic workflow, check for errors.
+6. **Performance test:** Measure login time (target: under 30 seconds), check CPU/memory at idle, check responsiveness during typical tasks.
+
+Document results with image name, test date, tester name, and pass/fail for each item.
+
+---
+
+### Rollback plans
+
+Write rollback procedures _before_ starting any change.
+
+**Example: Image update rollback**
+
+If a new image causes issues within the first 24 hours:
+
+1. Stop new deployments immediately.
+2. Revert affected VMs:
+
+```bash
+# Delete new VMs
+ansible-playbook -i inventory delete.yml -e "vm_name=citrix-vda-finance-01"
+
+# Redeploy with previous version
+ansible-playbook -i inventory deploy.yml -e "vm_name=citrix-vda-finance-01" -e "vm_image=registry.example.com/citrix-vda/sonoma-finance:v2.1"
+```
+
+3. Verify users can connect to rolled-back VMs.
+4. Document what went wrong for post-incident review.
+
+Estimated rollback time: 30-45 minutes for 10 VMs.
+
+**Example: Citrix policy change rollback**
+
+1. Revert the policy in Citrix Cloud Console: Policies → Select policy → Edit → Restore previous settings.
+2. Force policy refresh: have users log out and back in, or wait 30 minutes for automatic refresh.
+
+Estimated rollback time: 5-10 minutes.
+
+---
+
+### Communication templates
+
+**Planned maintenance (send 3-5 business days in advance):**
+
+```
+Subject: Scheduled VDI Maintenance
+
+We will be performing maintenance on the macOS virtual desktop environment on
+[DATE] from [START_TIME] to [END_TIME] [TIMEZONE].
+
+What to expect:
+- Brief interruption to desktop access (approximately 15 minutes)
+- You may need to reconnect through Citrix Workspace after maintenance
+- All data stored on network drives will be unaffected
+
+What we're doing:
+- Installing macOS security updates
+- Updating desktop images with latest applications
+
+Questions? Contact [SUPPORT_EMAIL].
+
+IT Team
+```
+
+**Emergency maintenance (send immediately when issue detected):**
+
+```
+Subject: URGENT: VDI Service Interruption
+
+We are currently experiencing an issue with the macOS virtual desktop service.
+Some users may be unable to connect or experiencing poor performance.
+
+Current status:
+- Issue first detected: [TIME]
+- Users impacted: [ESTIMATED_NUMBER]
+- IT team actively working on resolution
+
+Workaround (if available): [ANY_TEMPORARY_WORKAROUND]
+
+We will send updates every 30 minutes until resolved. Next update: [TIME]
+
+IT Team
+```
+
+**Resolution notification:**
+
+```
+Subject: RESOLVED: VDI Service Restored
+
+The macOS virtual desktop service issue has been resolved. All services are
+now operating normally.
+
+Summary:
+- Issue duration: [START_TIME] to [END_TIME]
+- Root cause: [BRIEF__NON_TECHNICAL_EXPLANATION]
+- Resolution: [WHAT_WAS_DONE]
+
+If you continue to experience issues, contact [SUPPORT_EMAIL].
+
+Thank you for your patience,
+IT Team
+```
+
+---
+
+## Metrics and reporting
+
+### Key performance indicators
+
+| KPI | Target | Measurement |
+| --- | --- | --- |
+| Availability | 99.5% uptime during business hours | % of time VMs are registered and available in Citrix |
+| Login time | under 30 seconds | Desktop launch to usable desktop |
+| Session latency | under 100ms round-trip | HDX session latency |
+| Frame rate | 30 FPS for typical office workloads | HDX session frame rate |
+| Capacity utilization | 70–80% at peak | VMs in use / total VMs |
+| Capacity headroom | 20–30% spare | Spare VMs / total VMs |
+| Support ticket volume | Track trend | VDI-related tickets per month |
+| User satisfaction | 4.0/5.0+ | Quarterly survey |
+| Cost per user | Track trend | Total infrastructure cost / active users |
+
+---
+
+### User satisfaction tracking
+
+Quarterly survey questions:
+
+1. Rate your overall satisfaction with the macOS virtual desktop (1–5)
+2. How often do you experience connectivity issues? (Never / Rarely / Sometimes / Often)
+3. How would you rate desktop performance for your daily tasks? (Poor / Fair / Good / Excellent)
+4. What applications or features would improve your experience?
+5. Any other feedback?
+
+Review support tickets weekly for recurring issues, patterns by user group, and correlation with recent changes. Address patterns before they become widespread.
+
+---
+
+### Cost analysis and optimization
+
+Review quarterly:
+
+1. **Right-size VMs:** Are all users on high-spec VMs when they only need basic?
+2. **Eliminate unused capacity:** VMs deployed but not assigned to users?
+3. **Image efficiency:** Unnecessary applications in golden images? Can you consolidate?
+4. **Licensing:** Citrix licenses for inactive users? Remove inactive accounts quarterly.
+
+---
+
+### Quarterly business review outline
+
+Present to leadership/stakeholders each quarter:
+
+1. **Service overview:** Total users, total VMs, uptime %, support ticket trend
+2. **Highlights:** Major improvements, issues resolved, user feedback summary
+3. **Challenges:** Pain points, resource constraints, technical debt
+4. **Roadmap:** Upcoming improvements, capacity planning, technology upgrades
+5. **Financials:** Cost per user, budget vs. actual, cost optimization initiatives
+
+Keep it business-focused. Leadership cares about user satisfaction, costs, and risks, not Ansible commands.
+
+---
+
+## Reference
+
+### Vendor contacts
+
+| Vendor | Purpose | Contact | SLA |
+| --- | --- | --- | --- |
+| MacStadium | Host hardware, Orka Engine, network | [support@macstadium.com](mailto:support@macstadium.com) | 1 business day response |
+| Citrix Support | Citrix Cloud, VDA, licensing | [support.citrix.com](https://support.citrix.com) (1-800-424-8749) | Varies by license tier |
+
+**Contact MacStadium when:** host is down, Orka Engine failures, new host provisioning, datacenter network issues.
+
+**Contact Citrix when:** VDA registration failures, Cloud Connector issues, licensing problems, HDX protocol issues.
+
+---
+
+### Compliance checklist
+
+Review quarterly.
+
+**Security:**
+- [ ] VMs patched monthly (macOS updates)
+- [ ] Citrix VDA is current (or within 2 releases)
+- [ ] Access logging enabled in Citrix Cloud
+- [ ] User access reviewed quarterly, inactive users offboarded
+- [ ] Network segmentation enforced
+- [ ] Registry credentials rotated every 90 days
+
+**Data protection:**
+- [ ] User data not stored on VMs (network storage only)
+- [ ] Golden images backed up (at least 3 versions retained)
+- [ ] Disaster recovery plan documented and tested annually
+- [ ] VM deletion policy enforced (no orphaned VMs)
+
+**Operational:**
+- [ ] Capacity headroom maintained (20–30% spare VMs)
+- [ ] Monitoring in place for VM availability
+- [ ] Change management process followed for all production changes
+- [ ] Post-mortems completed for major outages
+- [ ] Documentation kept current
+
+**Financial:**
+- [ ] Chargeback reporting in place (if multi-tenant)
+- [ ] Monthly cost tracking vs. budget
+- [ ] Unused licenses identified and reclaimed
+- [ ] Quarterly cost optimization review

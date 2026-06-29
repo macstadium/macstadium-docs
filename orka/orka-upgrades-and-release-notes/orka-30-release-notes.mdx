@@ -100,11 +100,11 @@ Orka's virtualization and orchestration layer now runs on Kubernetes 1.27. If yo
 
 To update your custom pods, review the official Kubernetes guides on how to upgrade between versions.
 
-### The new Orka 3.0.0 API is more straightforward and more powerful
+### The new Orka 3.0.0 API is more straightforward and capable
 
-Orka 3.0.0 now provides a more unrestrained and powerful API to manage your cluster. All endpoints are organized in a more streamlined method and follow enterprise industry standards.
+Orka 3.0.0 now provides a more unrestrained and capable API to manage your cluster. All endpoints are organized in a clearer way and follow enterprise industry standards.
 
-In addition, Orka 3.0.0 now provides a Swagger UI, which lets you use the Orka3 API straight from your cluster. Navigate to `http://<ORKA_API_URL>/api/v1/swagger`, provide an authentication token, and start utilizing the new Orka3.0.0 API.
+In addition, Orka 3.0.0 now provides a Swagger UI, which lets you use the Orka3 API straight from your cluster. Navigate to `http://<ORKA_API_URL>/api/v1/swagger`, provide an authentication token, and start utilizing the new Orka 3.0.0 API.
 
 ### The new Orka 3.0.0 CLI is automation-friendly and kubectl-inspired
 
@@ -176,13 +176,13 @@ Images and ISOs now have an extra field - description. You can use it to provide
 
 ### Orka 2.x API
 
-Orka 2.x API and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
+Orka 2.x API and earlier versions are now **deprecated**, and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x API, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
 ### Orka 2.x CLI
 
-Orka 2.x CLI and earlier versions are now **deprecated** , and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
+Orka 2.x CLI and earlier versions are now **deprecated**, and backward compatibility will be removed in a future release. You must migrate your custom Orka functionality to use the new Orka3 API or the new Orka3 CLI instead. See [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping).
 
 If you need help moving away from the Orka 2.x CLI, contact the support team through the [MacStadium portal](https://portal.macstadium.com/).
 
@@ -243,7 +243,7 @@ I/O Boost is now always enabled. You **will not be able** to work with VMs runni
 
 ## Improvements
 
-Orka 3.0.0. introduces the following improvements:
+Orka 3.0.0 introduces the following improvements:
 
   * The caching of Apple silicon-based images is now improved to reduce deployment and boot times.
   * Apple silicon-based images now take up significantly less space (on average) on your cluster's storage. Existing images in the local cluster storage are not automatically converted to the new format. You must save or commit your existing images from a newly deployed VM to take advantage of this benefit.
@@ -295,7 +295,7 @@ Orka 3.0.0. introduces the following improvements:
 Once you're done with your current OS configuration, [commit the changes or save a new image](/orka/orka3-cli-reference/image-management) from the VM. Use the image to create and deploy macOS Ventura VMs.
   * Intel-based Ventura VMs created with the Orka Web UI might not work as expected. This occurs because the **Net Boost** option is disabled by default when creating new VM configs in the Web UI. However, Intel-based Ventura VMs require **Net Boost** to be enabled to work properly.  
 **Workaround:** Select the **Net Boost** checkbox when creating Intel-based Ventura VMs.
-  * You cannot access your shared VM storage after you update your Orka VM Tools from 2.3.x or earlier to 2.4.0 or later on an existing Monterey VM. The storage will still be listed under the /Volumes/orka`but you will not be able to access any content on it.<br/>**Workaround:**`Commit`or`save`the base image with the updated Orka VM Tools and re-create your Monterey VMs. Alternatively, use the latest default`.orkasi` image to re-create your VMs.
+  * You cannot access your shared VM storage after you update your Orka VM Tools from 2.3.x or earlier to 2.4.0 or later on an existing Monterey VM. The storage will still be listed under `/Volumes/orka` but you will not be able to access any content on it.<br/>**Workaround:** `Commit` or `save` the base image with the updated Orka VM Tools and re-create your Monterey VMs. Alternatively, use the latest default `.orkasi` image to re-create your VMs.
   * If you set the default output to JSON, you can no longer use the Orka CLI in interactive mode.  
 **Workaround:** Use direct mode with the `-y` flag instead.
   * You can simultaneously start multiple **pull remote image** or **copy image** operations in the Orka Web UI. This might cause Orka to become unresponsive until all operations are complete. You cannot use Orka with any Orka tools and integrations during that time.  
@@ -334,5 +334,5 @@ xattr -d com.apple.quarantine '/Applications/Xcode.app'
 
   1. Submit a ticket through the [MacStadium portal](https://portal.macstadium.com/).
   2. Schedule a time for the maintenance window that works for you through the link provided in the ticket.  
-The suggested time(s) must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)** , depending on MacStadium Global Operations calendar availability.
+The suggested time(s) must be **Monday through Thursday, 6 am or 10 pm PST (9 am or 1 pm EST)**, depending on MacStadium Global Operations calendar availability.
   3. Follow [this migration guide](/orka/orka-cluster-migration-from-24-3x/24x-to-300-after-the-migration) to configure your cluster and tools after the migration. If you have any CLI-based or API-based custom automation, review the [2.4.x to 3.0.0: CLI Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) and [2.4.x to 3.0.0: API Mapping](/orka/orka-cluster-migration-from-24-3x/24x-to-300-cli-mapping) to decide how to migrate it.

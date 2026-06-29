@@ -12,7 +12,7 @@ With Orka (also referred to as Orka Cluster) on AWS, you can integrate macOS dev
 
 The diagram below illustrates the architecture of an Orka Cluster on AWS, detailing how it integrates with Amazon EC2 Mac instances, Amazon EKS (Elastic Kubernetes Service), and Amazon ECR (Elastic Container Registry) within a customer’s AWS account.
 
-![Orka Cluster on AWS architecture diagram showing EC2 Mac, EKS, and ECR integration](/images/attachments/44003706780059.png)
+![Orka Cluster on AWS architecture diagram showing EC2 Mac, EKS, ECR, and Orka components within a customer's AWS account](/images/orka-aws-arch.webp)
 The EC2 Mac hosts are set up with Orka AMIs, which provide a stable runtime for virtual machines. Each VM is deployed on the host using an OCI image, which can be fetched from Amazon ECR or an external OCI Registry. The use of OCI images enables rapid deployment (within a few minutes) of different macOS versions, pre-configured with various tools and optionally with SIP (System Integrity Protection) disabled. This addresses challenges that typically exist on Mac EC2 without Orka VMs. An EKS cluster will integrate with CI tools, CLI, or API, and orchestrate workloads, including spin-up and tear-down of VMs, and scheduled caching of images as needed.
 
 Key elements in the architecture include:
@@ -97,11 +97,11 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
   1. Orka must be deployed in a dedicated EKS cluster for running v1.35.
      1. Orka limits certain cluster operations (such as what namespaces can be created and what pods can be deployed), and user management is restrictive.
      2. To set up the cluster, follow the AWS guidelines for [EKS Auto Mode](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-automode.html) or the [EKS QuickStart](https://docs.aws.amazon.com/eks/latest/userguide/quickstart.html).
-  2. **Recommendations** :
+  2. **Recommendations**:
      1. Select the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
-  3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
+  3. **Note down the ARN of the** [**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
   4. **Optional:**
      1. Set Cluster endpoint access to “Private” to restrict access to your cluster API from the Internet.
         1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
@@ -120,7 +120,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. To set up a CodeBuild project as an Ansible runner:
 
-  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role — you will need to share the ARN with MacStadium and modify the role later.**
+  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role; you will need to share the ARN with MacStadium and modify the role later.**
   2. Select the following options:
      1. Project type - Default project
      2. Source - no source
@@ -168,7 +168,7 @@ Click `Next → Create`.
 
 
 
-Please capture your `EKS cluster name`and `EKS cluster VPC region`for use in bootstrap script needed for Configuring EC2 Macs.
+Please capture your `EKS cluster name` and `EKS cluster VPC region` for use in bootstrap script needed for Configuring EC2 Macs.
 
 ### OIDC Provider Setup
 
@@ -360,8 +360,9 @@ If you prefer to use CloudWatch, you can reference [AWS documentation for consum
 
 What | Resource | Accessing | Purpose
 ---|---|---|---
-Virtual Kubelet Logs | Mac EC2 Node | Via promtail: `/usr/local/virtual-kubelet/vk.log` | Interactions between EKS and worker node for managing virtualization.
-Orka VM Logs | Mac EC2 Node | Via promtail: `/Users/administrator/.local/state/virtual-kubelet/vm-logs/*` | Logs pertaining to the lifecycle of a specific VM
+Virtual Kubelet Logs | Mac EC2 Node | Via promtail: `/var/log/virtual-kubelet/vk.log` | Interactions between EKS and worker node for managing virtualization.
+Orka Engine Server Logs | Mac EC2 Node | Via promtail: `/opt/orka/logs/com.macstadium.orka-engine.server.managed.log` | Orka Engine process lifecycle, VM start/stop events, and errors.
+Orka VM Logs | Mac EC2 Node | Via promtail: `/opt/orka/logs/vm/` | Per-VM runtime logs.
 Pod Logs | EKS | Kubernetes Client, Kubernetes Dashboard, Helm Chart further exposing logs to a secondary service | All Kubernetes-level behavior
 
 #### Key Metrics

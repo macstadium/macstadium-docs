@@ -1,0 +1,59 @@
+---
+title: "VDI on bare metal Mac"
+description: "Run VDI software directly on physical Mac hardware co-located in a MacStadium data center, without the MacStadium VDI orchestration layer."
+keywords: ["bare metal Mac VDI", "Citrix macOS bare metal", "physical Mac desktop", "non-virtualized macOS"]
+---
+
+Bare Metal Mac is an alternative to MacStadium VDI for organizations that want to run VDI software directly on physical Mac hardware. There are no virtual machines, no Orka Engine, and no MacStadium VDI control plane. You install your VDI agent directly on the macOS host, and each host serves one user.
+
+MacStadium co-locates and manages the hardware, provides the network fabric, and handles physical connectivity. You manage everything at the software level.
+
+![Bare Metal Mac VDI architecture showing end users connecting through a VDI broker to bare metal Mac hosts in a MacStadium data center](/images/msdc-baremetal-arch.svg)
+
+## How it works
+
+Each Mac host runs macOS directly with your VDI agent installed (such as Citrix VDA for macOS). When a user connects, your VDI broker assigns them to a host and the remoting protocol session runs on bare metal. There is no hypervisor layer between the user and the hardware.
+
+Because there are no VMs, there is also no golden image workflow, no Orka Engine, and no management UI or Ansible playbooks. You manage the hosts using your existing tooling: MDM (Jamf, Kandji, or Intune), <Tooltip tip="Remote Monitoring and Management: software for monitoring device health and managing endpoints remotely, typically used by IT teams for fleet oversight and remote access.">RMM</Tooltip>, and direct SSH access.
+
+## When to choose Bare Metal Mac
+
+Bare Metal Mac is a good fit if:
+
+- Your workflow depends on full hardware GPU access or other capabilities that macOS VMs don't expose.
+- You want to run VDI on Mac hardware without adopting the MacStadium VDI orchestration layer.
+- You already have tooling (MDM, RMM) for managing macOS at scale and don't need VM lifecycle automation.
+- You're evaluating Mac VDI and want to start with a simpler setup before committing to a full MacStadium VDI deployment.
+
+It's less suited to environments that need to scale quickly, provision desktops on demand, or manage large numbers of per-user configurations centrally. For those use cases, [MacStadium VDI](/remote-desktop-vdi/overview/what-is-macstadium-vdi) is a better fit.
+
+## What MacStadium provides
+
+| MacStadium manages | You manage |
+|---|---|
+| Mac hardware (Mac mini / Mac Studio) | macOS and software configuration |
+| Physical co-location and racking | VDI agent installation and updates |
+| Managed network fabric and firewall | VDI broker |
+| Static IP assignment and connectivity | MDM and device management |
+| Hardware replacement and maintenance | Monitoring and logging |
+| | RMM and remote access tooling |
+| | Identity and access |
+| | Network storage (optionally MacStadium-provided) |
+
+## Getting started
+
+Contact your MacStadium account team to discuss hardware options, capacity, and co-location requirements for a Bare Metal Mac deployment. There is no self-service onboarding for this option.
+
+## Learn more
+
+<CardGroup cols={3}>
+  <Card title="Bare Metal Mac host options" icon="computer" href="/iaas/bare-metal-macs/bare-metal-hosts">
+    Mac mini and Mac Studio specs, benchmarks, and hardware options available from MacStadium.
+  </Card>
+  <Card title="Connecting to your Mac" icon="plug" href="/iaas/bare-metal-macs/connecting-to-your-mac-for-the-first-time">
+    How to connect via Screen Sharing, VNC, or SSH when you first receive your hardware.
+  </Card>
+  <Card title="IaaS networking overview" icon="network-wired" href="/iaas/networking/networking-overview">
+    VPN access, site-to-site tunnels, firewall configuration, and IP management for MacStadium infrastructure.
+  </Card>
+</CardGroup>

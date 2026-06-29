@@ -4,9 +4,9 @@ description: "My Cloud in the MacStadium Portal shows your environment by data c
 zendesk_id: 28230867289883
 ---
 
-The **My Cloud** page in the MacStadium Portal is where you see the networking and access details for your environment — VPN credentials, network ranges, firewall public IPs, and the IP assignments for your servers.
+The **My Cloud** page in the MacStadium Portal is where you see the networking and access details for your environment, including VPN credentials, network ranges, firewall public IPs, and the IP assignments for your servers.
 
-> My Cloud replaces the IP Plan spreadsheet that was previously distributed. Other MacStadium docs may still refer to this information as "your IP Plan"; this is now under My Cloud.
+<Note>My Cloud replaces the IP Plan spreadsheet that was previously distributed. Other MacStadium docs may still refer to this information as "your IP Plan"; this is now under My Cloud.</Note>
 
 ## Open My Cloud
 
@@ -18,13 +18,13 @@ The **My Cloud** page in the MacStadium Portal is where you see the networking a
 
 My Cloud groups your environment by data center. For each data center you'll see:
 
-- **Public Servers** — servers reachable on the public internet, with their public IPs and hostnames.
-- **Firewalls** — each dedicated firewall has its own section, containing:
-  - **IP Allocation** — the networks behind the firewall, with subnet (CIDR), range, mask, and gateway.
-  - **Credentials** — username and password for [connecting to the environment via VPN](/orka/networking-with-orka-at-macstadium/vpn-connection), and (where provisioned) for **Harbor OCI Storage** and **Private Cloud**. Select **Show** to reveal, then copy.
-  - **Host Assignments** — servers assigned to each network, with their private IPs and (where applicable) public NAT IPs.
+- **Public Servers**: servers reachable on the public internet, with their public IPs and hostnames.
+- **Firewalls**: each dedicated firewall has its own section, containing:
+  - **IP Allocation**: the networks behind the firewall, with subnet (CIDR), range, mask, and gateway.
+  - **Credentials**: username and password for [connecting to the environment via VPN](/orka/networking-with-orka-at-macstadium/vpn-connection), and (where provisioned) for **Harbor OCI Storage** and **Private Cloud**. Select **Show** to reveal, then copy.
+  - **Host Assignments**: servers assigned to each network, with their private IPs and (where applicable) public NAT IPs.
 
-The firewall's public IP is the address you use as the VPN server address and as the on-prem peer when configuring a site-to-site VPN tunnel — see the setup guides for [AWS](/orka/networking-with-orka-at-macstadium/aws-orka-connections), [GCP](/orka/networking-with-orka-at-macstadium/gcp-orka-connections), or [Azure](/iaas/azure/site-to-site-vpn-configuration-with-azure).
+The firewall's public IP is the address you use as the VPN server address and as the on-prem peer when configuring a site-to-site VPN tunnel. See the setup guides for [AWS](/orka/networking-with-orka-at-macstadium/aws-orka-connections), [GCP](/orka/networking-with-orka-at-macstadium/gcp-orka-connections), or [Azure](/iaas/azure/site-to-site-vpn-configuration-with-azure).
 
 ## Working with servers
 
@@ -49,4 +49,4 @@ Other MacStadium docs refer to legacy field names from the old IP Plan spreadshe
 | VPN username and password | **Credentials** for that firewall |
 | The `Private-1` network (or any internal network) | A row in the firewall's **IP Allocation** table. The **Subnet ID** column is the CIDR you'll need for VPN tunnels. |
 
-> Network names vary by environment. If your environment was provisioned with custom network names, use the **IP Allocation** table to identify the equivalent networks.
+<Note>Network names vary by environment. If your environment was provisioned with custom network names, use the **IP Allocation** table to identify the equivalent networks.</Note>

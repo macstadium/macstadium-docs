@@ -6,12 +6,9 @@ zendesk_id: 28400298949147
 
 How to configure the GCP side of your VPN tunnel between GCP and Orka.
 
-> #### **You need:**
-> 
->   * The IP address for the `FW1-Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
->   * The [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan.](/macstadium/macstadium-overview/ip-plan)
->   * . Most likely: `10.221.188.0/24` or `10.10.10.0/24`.
-> 
+<Note>
+**Before you begin:** You need the IP address for `FW1-Outside` and the CIDR range for `Private-1` (most likely `10.221.188.0/24` or `10.10.10.0/24`) from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+</Note>
 
 
 To establish a stable, persistent connection between a Google Cloud Platform (GCP) private cloud and your Orka environment, you need to configure a policy-based IPsec site-to-site VPN between the two clouds.
@@ -46,24 +43,24 @@ If you don't have a classic VPN gateway that you want to use, complete the follo
   3. Select **Classic VPN** and click **Continue**.  
 The **High-availability (HA) VPN** is currently not supported as an option. For more information about the available options, see [Google Cloud Documentation: Choosing a VPN option](https://cloud.google.com/vpn/docs/how-to/choosing-a-vpn).
   4. In the  _Google Compute Engine VPN gateway_ section, provide **Name** and **Description**.
-  5. For **Network** , select the GCP network that needs to be able to access Orka.
+  5. For **Network**, select the GCP network that needs to be able to access Orka.
   6. Select **Region**.  
 For more information about this setting, see [Google Cloud Documentation: Regions and Zones](https://cloud.google.com/compute/docs/regions-zones).
   7. Select or create a reserved IP address for the connection.  
 You will need this IP address when you configure the Orka side of the tunnel.
   8. In the **Tunnels** section, provide **Name** and **Description**.
-  9. For **Remote peer IP address** , provide the IP address for the `FW1-Outside` network from your[ IP Plan](/macstadium/macstadium-overview/ip-plan).
-  10. For **IKE version** , verify that **IKEv2** is selected.
+  9. For **Remote peer IP address**, provide the IP address for the `FW1-Outside` network from your[ IP Plan](/macstadium/macstadium-overview/ip-plan).
+  10. For **IKE version**, verify that **IKEv2** is selected.
   11. Provide or generate an **IKE pre-shared key**.
 
 
 
-> #### **IMPORTANT**
-> 
-> Keep a record of the pre-shared key. You will need it later.
+<Warning>
+Keep a record of the pre-shared key. You will need it later.
+</Warning>
 
-  12. For **Routing options** , select **Policy-based**.
-  13. For **Remote network IP ranges** , provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+  12. For **Routing options**, select **Policy-based**.
+  13. For **Remote network IP ranges**, provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
   14. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your Orka private cloud.  
 For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
   15. (Optional) Provide one or more IP ranges within your GCP local network that needs to access Orka.
@@ -94,24 +91,24 @@ If you have an existing classic VPN gateway that you want to use for the connect
 
 
 
-> #### **IMPORTANT**
-> 
-> Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
+<Warning>
+Make sure that you have selected a classic VPN gateway. High-availability gateways are not supported.
+</Warning>
 
   3. Provide **Name**.
   4. (Optional) Provide **Description**.
-  5. For **Remote peer IP address** , provide the IP address for the `FW1-Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
-  6. For **IKE version** , verify that **IKEv2** is selected.
+  5. For **Remote peer IP address**, provide the IP address for the `FW1-Outside` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+  6. For **IKE version**, verify that **IKEv2** is selected.
   7. Provide or generate an **IKE pre-shared key**.
 
 
 
-> #### **IMPORTANT**
-> 
-> Keep a record of the pre-shared key. You will need it later.
+<Warning>
+Keep a record of the pre-shared key. You will need it later.
+</Warning>
 
-  8. For **Routing options** , select **Policy-based**.
-  9. For **Remote network IP ranges** , provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
+  8. For **Routing options**, select **Policy-based**.
+  9. For **Remote network IP ranges**, provide the IP range in [CIDR notation](https://www.digitalocean.com/community/tutorials/understanding-ip-addresses-subnets-and-cidr-notation-for-networking#cidr-notation) for the `Private-1` network from your [IP Plan](/macstadium/macstadium-overview/ip-plan).
   10. (Optional) Select one or more GCP subnetworks to reduce latency between your GCP private cloud and your Orka environment.  
 For more information, see [Google Cloud Documentation: Networks and subnets](https://cloud.google.com/vpc/docs/vpc#vpc_networks_and_subnets).
   11. (Optional) Provide one or more IP ranges within your GCP local network that needs to access Orka.

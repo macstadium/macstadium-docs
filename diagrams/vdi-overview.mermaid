@@ -1,0 +1,33 @@
+%%  MacStadium VDI — Overview
+%%  Simple 4-layer conceptual diagram for the "What is MacStadium VDI" page
+%%  Source of truth for images/vdi-overview.svg
+%%  flowchart LR — left-to-right overview
+
+flowchart LR
+    user(["End User"])
+
+    subgraph broker["VDI Broker / Gateway\ne.g., Citrix DaaS / HP Anyware\nsession brokering · SSO / MFA"]
+    end
+
+    identity["Identity\nActive Directory / Entra ID / Okta\nuser groups · authentication"]
+
+    subgraph ms["MacStadium VDI"]
+        cp["Control Plane\nOrka Engine orchestration\nVM lifecycle · image management\nManagement UI + Ansible CLI"]
+        subgraph h1["Mac Host 1 (Apple silicon)"]
+            orka1["Orka Engine"]
+            vm1a["macOS VM — VDI agent + user apps (user A)"]
+            vm1b["macOS VM — VDI agent + user apps (user B)"]
+        end
+        subgraph h2["Mac Host 2 (Apple silicon)"]
+            orka2["Orka Engine"]
+            vm2a["macOS VM — VDI agent + user apps (user C)"]
+            vm2b["macOS VM — VDI agent + user apps (user D)"]
+        end
+    end
+
+    user -->|"remoting protocol"| broker
+    broker -->|"remoting protocol"| user
+    broker -->|"auth"| identity
+    broker -->|"session"| ms
+    cp -->|"manages"| h1
+    cp -->|"manages"| h2

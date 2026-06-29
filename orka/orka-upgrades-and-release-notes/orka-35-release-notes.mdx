@@ -26,7 +26,7 @@ The Orka AMI now supports automatic setup of VM shared attached disks during ins
 
   * Instance-level disk sizing: Specify shared disk size for each Mac instance via user data script (AWS) or via Ansible (on-prem)
 
-  * Consistent VM storage: When enabled, all VMs deployed from the instance will automatically use the shared attached disk, ensuring standardized storage configuration across your infrastructure. On Apple silicon nodes, only one VM may run per node at a time when this feature is enabled — see [Critical limitation for Apple silicon](#technical-requirements) below.
+  * Consistent VM storage: When enabled, all VMs deployed from the instance will automatically use the shared attached disk, ensuring standardized storage configuration across your infrastructure. On Apple silicon nodes, only one VM may run per node at a time when this feature is enabled. See [Critical limitation for Apple silicon](#technical-requirements) below.
 
 
 
@@ -227,7 +227,7 @@ We are excited to announce the latest Orka release, which brings with it signifi
 
 ### Bridged networking support:
 
-> Note: Customers must configure their own DHCP server on the network infrastructure. Static IP configuration through Orka is not currently supported.
+<Note>Customers must configure their own DHCP server on the network infrastructure. Static IP configuration through Orka is not currently supported.</Note>
 
 The release of Orka 3.5.0 brings with it new support for bridged networking for customers running [Orka On-Prem](/orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started), enabling seamless connectivity from a virtual environment to a physical network environment.
 

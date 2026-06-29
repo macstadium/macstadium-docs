@@ -62,10 +62,10 @@ orka3 config set --api-url ORKA_SERVICE_URL [flags]
 ```
 **Determining Your Service URL:**
 
-  * For environments initially deployed with **Orka 2.1 or later** : typically `http://10.221.188.20`
-  * For environments initially deployed **before Orka 2.1** : typically `http://10.221.188.100`
+  * For environments initially deployed with **Orka 2.1 or later**: typically `http://10.221.188.20`
+  * For environments initially deployed **before Orka 2.1**: typically `http://10.221.188.100`
 
-
+If your cluster has public NAT IPs or a custom domain configured for the Orka API, use your public URL instead of the internal IP address. Using the internal IP on a cluster with public API access will result in connection timeouts.
 
 You can also use the built-in Orka domain (COMPANY.orka.app) or an external custom domain if configured.
 

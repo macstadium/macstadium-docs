@@ -10,7 +10,7 @@ zendesk_id: 30115530131355
 
 # About
 
-Image Caching lets you download Orka images ahead of time to any node in the Orka cluster if you have admin privileges. Pre-caching images provides faster and more reliable VM deployments by reducing delays caused by network bandwidth issues. Without Image Caching, automated CI jobs pull new images from a remote OCI registry or the local cluster datastore (NFS) during CI runtime, which can cause delays.
+Image Caching lets you download Orka images ahead of time to any node in the Orka cluster. Pre-caching images provides faster and more reliable VM deployments by reducing delays caused by network bandwidth issues. Without Image Caching, automated CI jobs pull new images from a remote OCI registry or the local cluster datastore (NFS) during CI runtime, which can cause delays.
 
 # System Requirements
 
@@ -32,7 +32,7 @@ The cluster knows which nodes have necessary images cached, greatly reducing ima
 
   * Image Caching allows preemptive copying of an Orka VM image on any cluster node member, to avoid delays caused by network bandwidth when images are pulled from an OCI registry or the cluster NFS datastore.
   * An image is the bits on disk representing a VM that can be used for saving state and sharing modifications.
-  * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](https://ghcr.io/macstadium/orka-images/) with user credentials user/pwd: **admin/admin** , have Homebrew package manager installed, orka-vm-tools installed, and have screen sharing enabled and SSH access enabled.
+  * MacStadium base VM Orka images are macOS OCI compliant VM images stored in our public GitHub registry [ghcr.io/macstadium/orka-images/](https://ghcr.io/macstadium/orka-images/) with user credentials user/pwd: **admin/admin**, have Homebrew package manager installed, orka-vm-tools installed, and have screen sharing enabled and SSH access enabled.
   * Cluster local storage is an NFS mounted filesystem for storing images locally (local registry service). NFS is a legacy storage path. For clusters on Orka 3.5 or later, OCI-based storage via Harbor is recommended. See [Migrating NFS images to OCI with Harbor](/orka/oci-images/orka-self-service-migrating-nfs-images-to-oci-with-harbor).
   * A VM is a virtual runtime on top of the macOS host. The VM runs a guest OS image and macOS supports up to 2 running VMs per cluster node.
   * Sequoia refers to macOS 15 (the latest Sequoia release available from Apple’s servers). macOS 26 Tahoe is also available as a guest OS starting in Orka 3.5.
@@ -79,7 +79,7 @@ General information and guidance on Scheduled Caching
   * **Does caching have an impact on cluster performance?**
     * The Orka scheduler may experience increased latency on any node running active caching operations.
   * **Can I delete images from a cluster node cache?**
-    * Orka’s Kubernetes control plane automatically manages node caches. There is no manual “remove” command. To update an image, cache a new copy under the same name or with an updated OCI tag.
+    * Yes, in early access. Use `orka3 imagecache remove IMAGE_NAME --nodes NODE_NAME` to remove a cached image from a specific node, `--all` to remove from every node in the namespace, or `--tags` to target nodes by tag. This also covers images that were cached automatically when a VM was deployed. Removal is asynchronous; run `orka3 imagecache info IMAGE_NAME` to check the status. See [orka3 imagecache remove](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove) for the full reference. Contact [support@macstadium.com](mailto:support@macstadium.com) to have it enabled on your cluster.
 
 <Note>
   **Orka 3.5.1 fix:** `orka3 ic add` previously failed silently when caching images to nodes in custom namespaces. This is resolved in Orka 3.5.1. If you cache images to non-default namespaces, upgrade to 3.5.1 or later and re-cache any previously failed images.

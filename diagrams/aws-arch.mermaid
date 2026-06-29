@@ -1,0 +1,51 @@
+%%  AWS Self-Hosted Architecture
+%%  Source of truth for images/aws-arch.svg
+%%  flowchart LR — left-to-right architecture view
+
+flowchart LR
+    admin(["IT Admin"])
+    subgraph users["End users (any device, anywhere)"]
+        laptop["Laptop / Desktop"]
+        tablet["Tablet"]
+        thin["Thin client (CWA)"]
+    end
+    subgraph broker["VDI broker / gateway\ne.g., Citrix DaaS / HP Anyware"]
+        dc["Delivery Controller\n(brokers sessions, SSO/MFA)"]
+    end
+    identity["Identity\nActive Directory /\nEntra ID / Okta"]
+
+    subgraph aws["Customer AWS Account — EC2 Mac (region / VPC)"]
+        subgraph cp["MacStadium VDI control plane\n(Runs on EC2 — customer AWS)"]
+            orch["Orka Engine orchestration"]
+            prov["Ansible (CLI) / Management UI (web)"]
+            lifecycle["VM lifecycle · images · API"]
+        end
+        subgraph shared["Shared services (customer-managed, AWS-native or BYO)"]
+            registry["Image registry (ECR / S3 / OCI)"]
+            mdm["MDM (Jamf / Kandji)"]
+            storage["Backup (S3 / EBS snapshots)"]
+            mon["Monitoring (CloudWatch / BYO)"]
+            dns["DNS (Route 53) / DHCP / NTP"]
+        end
+        subgraph hosts["EC2 Mac dedicated hosts (mac2 / mac2-m2 / mac2-m2pro)"]
+            subgraph h1["EC2 Mac host 1 (dedicated)"]
+                vm1a["macOS VM — VDI agent + user apps (user A)"]
+                vm1b["macOS VM — VDI agent + user apps (user B)"]
+            end
+            subgraph h2["EC2 Mac host 2 (dedicated)"]
+                vm2a["macOS VM — VDI agent + user apps (user C)"]
+                vm2b["macOS VM — VDI agent + user apps (user D)"]
+            end
+            subgraph hN["EC2 Mac host N\n(24h min. allocation · 2 VMs/host)"]
+                vmN["…"]
+            end
+        end
+        net["AWS VPC · subnets · security groups · IGW / NAT · static private IPs\n(customer-owned AWS networking)"]
+    end
+
+    admin --> cp
+    laptop -->|"remoting protocol"| dc
+    dc -->|"remoting protocol"| laptop
+    broker --> identity
+    dc --> hosts
+    cp -->|"manages"| hosts

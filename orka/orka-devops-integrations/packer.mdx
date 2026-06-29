@@ -14,11 +14,64 @@ Tired of manually configuring and building your Orka images? The Orka Packer plu
 Orka 3.1.x and above requires version [3.0.0+](https://github.com/macstadium/packer-plugin-macstadium-orka/releases/tag/v3.0.1) of the plugin.
 </Warning>
 
-## Working with the Plugin
+## Before You Begin
+
+### VPN connectivity
 
 <Warning>
 Make sure that your local environment is connected to your Orka environment through VPN. You can use a [VPN client](/orka/networking-with-orka-at-macstadium/vpn-connection) to establish temporary connectivity, or you can create a [site-to-site VPN tunnel](/orka/networking-with-orka-at-macstadium/aws-orka-connections) to keep the connection alive at all times.
 </Warning>
+
+### Service account token
+
+The plugin requires an `orka_auth_token` to authenticate with your Orka cluster. This **must** be a service account token. Personal user tokens expire after one hour, which is typically not enough time for a full image build, and will cause builds to fail mid-run.
+
+**Step 1: Create a service account**
+
+```bash
+orka3 sa create packer-sa
+```
+
+You only need to do this once. Use a descriptive name that makes the purpose of the account clear.
+
+**Step 2: Generate a token**
+
+```bash
+orka3 sa token packer-sa
+```
+
+By default, service account tokens are valid for one year. Copy the token value from the output.
+
+**Step 3: Store the token as a secret**
+
+Store the token in your CI/CD platform's secret manager (for example, GitHub Actions secrets, GitLab CI/CD variables, or Jenkins credentials). Name it `ORKA_AUTH_TOKEN`.
+
+Never commit the token value to your repository.
+
+**Step 4: Reference the token in your Packer template**
+
+Declare the variable so Packer reads it from your environment at build time:
+
+```hcl
+variable "orka_auth_token" {
+  default = env("ORKA_AUTH_TOKEN")
+}
+
+source "macstadium-orka" "image" {
+  orka_auth_token = var.orka_auth_token
+  # ...
+}
+```
+
+Then pass the variable when running builds locally:
+
+```bash
+ORKA_AUTH_TOKEN=<your-token> packer build template.pkr.hcl
+```
+
+In CI/CD, the secret is injected automatically as an environment variable, so no extra steps are needed if you've named it `ORKA_AUTH_TOKEN`.
+
+## Working with the Plugin
 
 For latest information on installing the plugin, please visit **[Orka Packer Plugin Installation](https://github.com/macstadium/packer-plugin-macstadium-orka/blob/main/README.md)**
 
@@ -27,7 +80,7 @@ For latest information on using the plugin, please visit **[Orka Packer Plugin U
 For latest information on configuring the plugin, please visit **[Orka Packer Plugin Configuration](https://github.com/macstadium/packer-plugin-macstadium-orka/blob/main/docs/builders/config.mdx)**
 
 <Tip>
-Looking for a working starting point? Ready-to-use Packer templates are available on [OrkaHub](https://orkahub.com) — find them in the [packer-plugin-macstadium-orka](https://github.com/macstadium/packer-plugin-macstadium-orka) repository and copy or adapt them for your own image builds.
+Looking for a working starting point? Ready-to-use Packer templates are available on [OrkaHub](https://orkahub.com). Find them in the [packer-plugin-macstadium-orka](https://github.com/macstadium/packer-plugin-macstadium-orka) repository and copy or adapt them for your own image builds.
 </Tip>
 
 <Note>

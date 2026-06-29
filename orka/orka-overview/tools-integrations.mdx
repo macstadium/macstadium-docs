@@ -12,7 +12,8 @@ Visit the links below to download a version of the Orka CLI binary that matches 
 
 | Release | Notes | macOS ARM | macOS AMD | Linux | Windows |
 |---------|-------|-----------|-----------|-------|---------|
-| Orka3 CLI v3.6.1 *(Latest)* | [What's new](#orka3-cli-v361) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/windows/amd64/orka3.exe) |
+| Orka3 CLI v3.6.2 *(Latest)* | [What's new](#orka3-cli-v362) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.2/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.2/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.2/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.2/orka3/windows/amd64/orka3.exe) |
+| Orka3 CLI v3.6.1 | [What's new](#orka3-cli-v361) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.1/orka3/windows/amd64/orka3.exe) |
 | Orka3 CLI v3.6.0 | [Release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.6.0/orka3/windows/amd64/orka3.exe) |
 | Orka3 CLI v3.5.2 | [Release notes](/orka/orka-upgrades-and-release-notes/orka-35-release-notes) | [Download](https://cli-builds-public.s3.amazonaws.com/official/3.5.2/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.amazonaws.com/official/3.5.2/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.2/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.2/orka3/windows/amd64/orka3.exe) |
 | Orka3 CLI v3.5.1 | [Release notes](/orka/orka-upgrades-and-release-notes/orka-35-release-notes) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/macos/arm64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/macos/amd64/orka3.pkg) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/linux/amd64/orka3.tar.gz) | [Download](https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/3.5.1/orka3/windows/amd64/orka3.exe) |
@@ -34,6 +35,10 @@ Complete the installation
 
 
 <Tip>Using Homebrew? Try `brew install --cask orka3`.</Tip>
+
+### Orka3 CLI v3.6.2
+
+CLI help text image references have been updated. For the full list of changes in this release, see the [Orka 3.6.2 release notes](/orka/orka-upgrades-and-release-notes/orka-36-release-notes#orka-362).
 
 ### Orka3 CLI v3.6.1
 
@@ -67,11 +72,9 @@ MacStadium is constantly working on expanding the list of Orka integrations with
 
 <Warning>Always run matching versions across your Orka cluster, Orka CLI, Orka VM Tools, and any CI/CD integrations. A version mismatch can cause deployment failures, broken image caching, and unexpected behavior. For example, if your cluster runs 3.5.x, your CLI and VM Tools should also run 3.5.x.</Warning>
 
-> **TIP: Using Homebrew?**
-> 
-> Try `brew install orka-vm-tools` for a fresh install on a newly deployed VM.
-> 
-> Try `brew upgrade orka-vm-tools` to update any existing installation. Make sure to `commit` or `save` the changes to the base image and redeploy any existing VMs.
+<Tip>
+**Using Homebrew?** Run `brew install orka-vm-tools` for a fresh install. To update an existing installation, run `brew upgrade orka-vm-tools`. Make sure to `commit` or `save` the changes to the base image and redeploy any existing VMs.
+</Tip>
 
 Orka VM Tools are guest tools installed on your ARM-based VMs. They enable features like Disk Image Resize and VM Metadata.
 

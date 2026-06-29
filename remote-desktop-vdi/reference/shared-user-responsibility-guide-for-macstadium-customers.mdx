@@ -1,0 +1,117 @@
+---
+title: "Shared responsibility guide"
+description: "Shared responsibility model for MacStadium VDI: what MacStadium, the customer, and any Citrix Service Provider own across the three deployment models."
+zendesk_id: 41205907064603
+---
+
+MacStadium VDI is a shared responsibility model. MacStadium manages the infrastructure layer; you manage the orchestration, user access, and application layer. Where you've engaged a [Citrix Service Provider (CSP)](https://www.citrix.com/partner-programs/), some customer responsibilities may transfer to that partner.
+
+This guide defines responsibilities across all three deployment models:
+
+- **MSDC-Hosted:** MacStadium manages the Mac hardware and data center infrastructure.
+- **Self-Hosted (On-Prem):** You manage your own hardware, on your premises.
+- **Self-Hosted (AWS):** You manage Mac hardware on AWS (via EC2 Mac instances or a colocation partner).
+
+---
+
+## Responsibility matrix
+
+| Symbol | Meaning |
+| --- | --- |
+| **MS** | MacStadium |
+| **Customer** | You (or your Citrix Service Provider, where noted) |
+| **Shared** | Both parties have responsibilities in this area |
+
+| Area | MSDC-Hosted | Self-Hosted (On-Prem) | Self-Hosted (AWS) |
+| --- | --- | --- | --- |
+| Physical hardware provisioning | **MS** | **Customer** | **Customer** |
+| Data center facilities (power, cooling, physical security) | **MS** | **Customer** | **Customer** / AWS |
+| macOS installation on hosts | **MS** | **Customer** | **Customer** |
+| Network infrastructure (switches, uplinks, VLANs) | **MS** | **Customer** | **Customer** / AWS |
+| VPN connectivity to infrastructure | **Shared** | **Customer** | **Customer** |
+| Static IP assignment and DHCP | **MS** | **Customer** | **Customer** |
+| Orka Engine installation and licensing | **Shared** | **Customer** | **Customer** |
+| Orka Engine upgrades | **Shared** | **Customer** | **Customer** |
+| Ansible controller setup and maintenance | **Customer** | **Customer** | **Customer** |
+| Orchestration playbook configuration | **Customer** | **Customer** | **Customer** |
+| Management UI setup | **Customer** | **Customer** | **Customer** |
+| Golden image creation and maintenance | **Customer** | **Customer** | **Customer** |
+| VM deployment and lifecycle | **Customer** | **Customer** | **Customer** |
+| Citrix VDA installation and registration | **Customer** | **Customer** | **Customer** |
+| Citrix Cloud account and licensing | **Customer** | **Customer** | **Customer** |
+| Delivery group and policy configuration | **Customer** | **Customer** | **Customer** |
+| End-user access and entitlements | **Customer** | **Customer** | **Customer** |
+| MDM enrollment (hosts) | **Shared** | **Customer** | **Customer** |
+| MDM enrollment (VMs) | **Customer** | **Customer** | **Customer** |
+| Hardware replacement | **MS** | **Customer** | **Customer** / AWS |
+| Remote hands (KVM, hard reset, disk reimaging) | **MS** | **Customer** | **Customer** |
+| Host OS updates (macOS) | **Customer** | **Customer** | **Customer** |
+| Security patching (VMs and golden images) | **Customer** | **Customer** | **Customer** |
+| SSH key rotation | **Customer** | **Customer** | **Customer** |
+| Audit logging and compliance | **Shared** | **Customer** | **Customer** |
+| Capacity planning | **Shared** | **Customer** | **Customer** |
+
+---
+
+## Detail by area
+
+### Infrastructure
+
+**MSDC-Hosted:** MacStadium owns and operates the data center, network, and Mac hardware. Your fleet is provisioned and networked before you receive access. MacStadium handles hardware failures, drive reimaging, and physical support through its Data Center Technician (DCT) team.
+
+**Self-Hosted:** You own and operate all hardware and facilities. MacStadium provides software (Orka Engine) and support, but has no visibility into or control over your infrastructure.
+
+### Orka Engine
+
+MacStadium provides the Orka Engine license key, installer URL, and version updates. You run the `install_engine.yml` playbook to install and upgrade Orka Engine on your hosts.
+
+For MSDC-Hosted deployments, MacStadium can assist with installation if needed. Contact [support@macstadium.com](mailto:support@macstadium.com) for help.
+
+### Orchestration and VM management
+
+You are responsible for the orchestration layer across all deployment models. This includes:
+
+- The Ansible controller machine
+- The `orka-engine-orchestration` repository configuration (inventory, group vars, playbooks)
+- The management UI
+- All VM deployments, image management, and lifecycle operations
+
+### Citrix integration
+
+You are responsible for your Citrix Cloud account, licensing, VDA installation, machine catalog setup, delivery groups, and policies. MacStadium does not have access to your Citrix environment.
+
+<Note>
+  If you're working with a **Citrix Service Provider (CSP)**, your CSP typically manages the Citrix layer on your behalf, including VDA installation, SSO setup, HDX policy tuning, and session troubleshooting. MacStadium currently partners with [Whitehat Virtual](https://whitehatvirtual.com/) for CSP services. Confirm the scope of your CSP's responsibilities before deployment. MacStadium's support boundary ends at the infrastructure layer regardless of whether you use a CSP.
+</Note>
+
+### MDM enrollment
+
+Mac hosts support <Tooltip tip="Automated Device Enrollment">ADE</Tooltip> via [Apple Business Manager (ABM)](https://support.apple.com/guide/apple-business-manager). MacStadium can assist with host enrollment for MSDC-Hosted customers.
+
+macOS VMs cannot be registered with ABM directly. MacStadium provides scripts and guidance for automated user-driven MDM enrollment instead. Supported MDM tools include Jamf, Kandji, and Intune. See [Apple Business Manager and MDM with MacStadium](/remote-desktop-vdi/configuration/apple-business-manager-and-mobile-device-management-with-macstadium) for details.
+
+### Security and compliance
+
+Both MacStadium and you share responsibility for security:
+
+- **MacStadium:** Physical security, data center access controls, network infrastructure security (MSDC-Hosted), hardware-level audit logs.
+- **You:** SSH key management, VM and image security patching, Citrix policy configuration, application-level access controls, and compliance with your organization's regulatory requirements (GDPR, HIPAA, SOC 2, etc.).
+
+For MSDC-Hosted customers, MacStadium can provide data center compliance documentation on request. Contact your account representative.
+
+---
+
+## Support boundaries
+
+| Issue | Who to contact |
+| --- | --- |
+| Hardware failure (MSDC-Hosted) | [MacStadium Support](mailto:support@macstadium.com) |
+| Network connectivity to MSDC infrastructure | [MacStadium Support](mailto:support@macstadium.com) |
+| Orka Engine errors or crashes | [MacStadium Support](mailto:support@macstadium.com) |
+| Orchestration playbook issues | [MacStadium Support](mailto:support@macstadium.com) or [GitHub](https://github.com/macstadium/orka-engine-orchestration) |
+| Citrix VDA registration or session issues | Your Citrix administrator or CSP |
+| Citrix Cloud account or licensing | [Citrix Support](https://support.citrix.com) |
+| End-user application issues | Your IT team or CSP |
+| MDM configuration | Your MDM administrator or CSP |
+
+When contacting MacStadium Support, include your account ID, affected host IPs or VM names, a description of the issue, and any relevant log excerpts.

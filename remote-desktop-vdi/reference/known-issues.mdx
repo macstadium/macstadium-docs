@@ -1,0 +1,86 @@
+---
+title: "Known issues and limitations"
+description: "Current known issues and platform limitations for MacStadium VDI, including macOS version constraints, VM capacity limits, and enrollment restrictions."
+---
+
+This page lists known issues and platform limitations that affect MacStadium VDI deployments. Issues are documented as confirmed and will be updated when resolved or when a workaround becomes available.
+
+## macOS Tahoe guest: video and media playback fails
+
+**Status:** Open (no fix available as of macOS 26.5.1)
+
+**Affects:** All macOS Tahoe (26.x) guest VMs, regardless of VDI remoting protocol (Citrix HDX, HP Anyware, or direct VNC)
+
+### Summary
+
+Video and media content does not render inside macOS Tahoe guest VMs. This includes web-based video, streaming apps, QuickTime Player, and any application that uses platform media frameworks. The desktop shell and static UI render correctly, but video frames are never displayed.
+
+### Root cause
+
+This is a confirmed bug in Apple's Virtualization.framework compositor in macOS Tahoe. Inside a Tahoe guest VM, application windows are registered with the window server but are never assigned a pixel backing store. The `kCGWindowMemoryUsage` value for affected windows is approximately 2368 bytes, which is significantly less than the 1.2 MB expected for a window with an active framebuffer. Window sharing state (`kCGWindowSharingState`) is 0, which means the window server reports no capturable content.
+
+The result is that VNC-based screen capture (the mechanism underlying all remote desktop protocols) only sees the desktop shell. Video content layers are composited at the driver level but never reach the framebuffer that the screen capture API reads from.
+
+This issue is not specific to any VDI remoting protocol, Citrix VDA version, or MacStadium configuration. It is a guest OS behavior that affects all screen-capture-based remote access on Tahoe VMs.
+
+### Workaround
+
+Use macOS Sequoia (15.x) guest VMs. Video and media playback is confirmed working on Sequoia guests running on Apple silicon hosts.
+
+<Warning>
+  Do not qualify macOS Tahoe for production VDI deployments that require video playback, media applications, or any workloads that use macOS platform media frameworks. These workloads are not supported on Tahoe guests until Apple resolves the Virtualization.framework compositor bug.
+</Warning>
+
+---
+
+## Maximum of 2 macOS VMs per Apple silicon host
+
+**Status:** Permanent (Apple software license restriction)
+
+**Affects:** All MacStadium VDI deployments using macOS virtual desktops
+
+### Summary
+
+Apple's macOS software license limits each Apple silicon host to a maximum of 2 concurrently running macOS VMs. This is a hard constraint enforced at the platform level and applies regardless of the host's hardware specifications, RAM, or CPU capacity.
+
+This limit governs how many virtual desktops a single host node can deliver. Capacity planning for MacStadium VDI must account for this constraint.
+
+<Note>
+  See [Prerequisites](/remote-desktop-vdi/overview/prerequisites) for capacity planning guidance and the hardware requirements that follow from this limit.
+</Note>
+
+---
+
+## VMs cannot be enrolled via Apple Business Manager
+
+**Status:** Permanent (Apple platform restriction)
+
+**Affects:** Organizations using Apple Business Manager (ABM) for device management
+
+### Summary
+
+Orka-provisioned macOS VMs cannot be enrolled in <Tooltip tip="Apple Business Manager: Apple's web-based portal for device enrollment, app distribution, and managed Apple Account creation.">ABM</Tooltip>. ABM device enrollment relies on Apple's Automated Device Enrollment (ADE) program, which is tied to hardware serial numbers assigned at manufacturing. VMs do not receive ABM-eligible serial numbers and therefore cannot be enrolled through ADE.
+
+Only physical Mac host machines can be enrolled in ABM. MDM profiles can still be deployed to VMs through supported MDM providers using golden image-based enrollment.
+
+<Note>
+  See [Apple Business Manager and MDM with MacStadium](/remote-desktop-vdi/configuration/apple-business-manager-and-mobile-device-management-with-macstadium) for supported MDM enrollment workflows for VMs.
+</Note>
+
+---
+
+## Nested virtualization is not supported
+
+**Status:** Permanent (Apple platform restriction)
+
+**Affects:** Workloads that require running virtual machines inside macOS VMs
+
+### Summary
+
+Running virtual machines inside MacStadium VDI macOS guests is not supported. Apple's Virtualization.framework does not expose the hardware virtualization extensions (VT-x/AMD-V equivalents) to guest VMs, which means hypervisors cannot run inside a guest.
+
+Workloads that require nested virtualization, such as Android emulators run inside VMs, are not compatible with macOS VM guests. Android Virtual Devices (AVDs) must run directly on a bare metal Apple silicon host node.
+
+<Note>
+  See [Android Virtual Devices](/remote-desktop-vdi/configuration/android-virtual-devices) for information on running Android emulators alongside VDI on bare metal host nodes.
+</Note>

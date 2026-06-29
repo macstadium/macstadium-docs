@@ -16,7 +16,6 @@ macOS 26 Tahoe | 3.5 | 3.5+ | MacOS 15.5+
 macOS 15 Sequoia | 3.5 | 3.0+ | MacOS 15+  
 macOS 14 Sonoma | 3.5 | 3.0+ | MacOS 14+  
 macOS 13 Ventura | 3.5 | 2.4+ | MacOS 13+  
-macOS 12 Monterey | Not supported | Not supported | Not supported  
   
 ## M4 Compatibility Requirements
 
@@ -41,10 +40,6 @@ VM OS Version | Recommended Orka Cluster Version | Required Orka Cluster Version
 macOS 15 (Sequoia) | 3.5+ | 3.2+  
 macOS 14 (Sonoma) | 3.5+ | 3.0+  
 macOS 13 (Ventura) | 3.5+ | 2.4+  
-macOS 12 (Monterey) | 3.2+ | 2.4+  
-macOS 11 (Big Sur) | 3.2+ | 2.4+  
-macOS 10.15 (Catalina) | 3.2+ | 2.4+  
-macOS 10.14 (Mojave) | 3.2+ | 2.4+  
   
   * Note: macOS 26 (Tahoe) will not be supported on Intel.
 
@@ -61,15 +56,7 @@ Intel images are available through a remote network storage mount within MacStad
 macOS version | I/O boost | Network boost | GPU passthrough  
 ---|---|---|---  
 macOS 14 (Sonoma) | ✅* | ✅ | Available ***  
-macOS 13 (Ventura) | ✅ | ✅ | Available ***  
-macOS 12 (Monterey) | ✅ | ✅ | Available ***  
-macOS 11 (Big Sur) | ✅ | ✅ | Available ***  
-macOS 10.15 (Catalina) | ✅ | Not supported | Available ***  
-macOS 10.14 (Mojave) | ✅ (10.14.5+) | Not supported | Available ***  
+macOS 14 (Sonoma) | ✅ | ✅ | Available *  
+macOS 13 (Ventura) | ✅ | ✅ | Available *  
   
-  
-* I/O boost is supported on macOS 10.14.5 and later.
-
-** Network boost is not supported on macOS 10.14 and 10.15 for Intel-based VMs. Always disable this feature for these versions.
-
-*** By default, GPU passthrough is disabled for VM configurations and VMs. When you enable GPU passthrough for an Intel VM, this automatically disables VNC for the VM. Make sure that you will be able to access the VM by SSH or Apple Screen Sharing before enabling GPU passthrough.
+* By default, GPU passthrough is disabled for VM configurations and VMs. When you enable GPU passthrough for an Intel VM, this automatically disables VNC for the VM. Make sure that you will be able to access the VM by SSH or Apple Screen Sharing before enabling GPU passthrough.
