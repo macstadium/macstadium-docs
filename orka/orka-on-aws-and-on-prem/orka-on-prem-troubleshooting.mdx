@@ -116,7 +116,7 @@ Stop the Virtual Kubelet before running a VM directly. If both are running simul
 # Stop the Virtual Kubelet
 sudo launchctl bootout system /Library/LaunchDaemons/orka.virtual.kubeletd.plist
 
-# Run the VM — attached mode streams logs to the terminal
+# Run the VM (attached mode streams logs to the terminal)
 orka-engine vm run --image <image> foo
 
 # For detached mode, logs go to /opt/orka/logs/vm/<vm-name>

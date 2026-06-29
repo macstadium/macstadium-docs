@@ -101,7 +101,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
      1. Select the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
-  3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
+  3. **Note down the ARN of the** [**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
   4. **Optional:**
      1. Set Cluster endpoint access to “Private” to restrict access to your cluster API from the Internet.
         1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
@@ -120,7 +120,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. To set up a CodeBuild project as an Ansible runner:
 
-  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role — you will need to share the ARN with MacStadium and modify the role later.**
+  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role; you will need to share the ARN with MacStadium and modify the role later.**
   2. Select the following options:
      1. Project type - Default project
      2. Source - no source
@@ -168,7 +168,7 @@ Click `Next → Create`.
 
 
 
-Please capture your `EKS cluster name`and `EKS cluster VPC region`for use in bootstrap script needed for Configuring EC2 Macs.
+Please capture your `EKS cluster name` and `EKS cluster VPC region` for use in bootstrap script needed for Configuring EC2 Macs.
 
 ### OIDC Provider Setup
 
