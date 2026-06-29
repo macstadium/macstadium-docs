@@ -311,7 +311,7 @@ orka3 imagecache list --output json
 
 Remove a cached image from one or more nodes. Use this to free disk space on specific nodes, rotate stale images, or remove images that were cached automatically when a VM was deployed.
 
-Removal is asynchronous — the command initiates the operation and returns immediately. Run `orka3 imagecache info IMAGE_NAME` to check the status.
+Removal is asynchronous: the command initiates the operation and returns immediately. Run `orka3 imagecache info IMAGE_NAME` to check the status.
 
 The `--nodes`, `--tags`, and `--all` flags are mutually exclusive. Exactly one is required.
 

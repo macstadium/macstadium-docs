@@ -142,7 +142,7 @@ ansible-playbook site.yml
 To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins).
 
 <Note>
-`orka3 vm push` requires an Orka API token — run `orka3 login` or `orka3 user set-token` before pushing images.
+`orka3 vm push` requires an Orka API token. Run `orka3 login` or `orka3 user set-token` before pushing images.
 </Note>
 
 On-prem deployments commonly use certificate-based kubeconfig authentication, which is not sufficient for `vm push`. If you encounter an `Unauthorized` error from `vm push`, this indicates a missing Orka API token, not an OCI registry issue.

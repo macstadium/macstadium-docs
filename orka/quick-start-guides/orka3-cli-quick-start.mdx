@@ -104,7 +104,7 @@ orka3 login
 ```
 Orka will launch a new browser tab (or window) and let you log in via the provided form. After you log in, you can return to the command line and run additional `orka3` commands. Your token is stored locally in the `~/.kube/config` file. Personal tokens (SSO login) are valid for one hour. Afterward, you must log in again to obtain a new token.
 
-For CI/CD automation, use a service account token instead — service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
+For CI/CD automation, use a service account token instead. Service account tokens are valid for one year by default and don't require browser-based login. See [CI/CD Integrations Quick Start](/orka/quick-start-guides/cicd-integrations-quick-start) for details.
 
 ## 4. Create and Deploy Your First VM Instance
 
@@ -130,7 +130,7 @@ This command lists all VM instances in the `orka-default` namespace. If nothing 
 ```bash
 orka3 image list
 ```
-MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually — you can deploy directly from the registry in the next step.
+MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually; you can deploy directly from the registry in the next step.
 
   4. Deploy a VM:
 
@@ -150,7 +150,7 @@ orka3 vm list
 
 You should now see your VM in the list.
 
-For more detailed output, run `orka3 vm list --output wide` — it shows architecture, base image, CPU, memory, and connection ports. Note that `Screenshare` and `SSH` ports are always listed, but you won't be able to use them unless the respective connection type is enabled in macOS. To filter by name, use `orka3 vm list <VM_NAME>`.
+For more detailed output, run `orka3 vm list --output wide`, which shows architecture, base image, CPU, memory, and connection ports. Note that `Screenshare` and `SSH` ports are always listed, but you won't be able to use them unless the respective connection type is enabled in macOS. To filter by name, use `orka3 vm list <VM_NAME>`.
 
 ## 5. Experience Your VM Instance
 
@@ -204,7 +204,7 @@ orka3 regcred <SERVER> --username <USER> --password <PASSWORD> [--allow-insecure
 orka3 vm push <VM_NAME> <IMAGE[:TAG]>
 ```
 
-You can get the `<VM_NAME>` from `orka3 vm list`. Registry credentials are required — run `orka3 regcred --help` for more information.
+You can get the `<VM_NAME>` from `orka3 vm list`. Registry credentials are required; run `orka3 regcred --help` for more information.
 
 <Note>
 If you are on Intel or need to write to NFS local cluster storage instead of an OCI registry, use `vm commit` (overwrites the original base image) or `vm save` (creates a new image). NFS local storage is being phased out in favor of OCI. Run `orka3 vm commit --help` or `orka3 vm save --help` for details.

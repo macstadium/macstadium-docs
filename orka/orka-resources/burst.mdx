@@ -67,7 +67,7 @@ If your burst nodes are in the same namespace as your normal Orka nodes, move th
 
 For teams that manage CI/CD infrastructure programmatically, MacStadium provides a GraphQL API at `https://portal.macstadium.com/graphql` that gives you direct control over burst state. You can wire enable/disable into a pipeline trigger, a cron job, or a queue-depth-based scaler without anyone touching the portal.
 
-<Note>This API is actively used and supported. A formal versioning and stability commitment is on the roadmap — until then, the operations documented here are stable but the broader API surface may change.</Note>
+<Note>This API is actively used and supported. A formal versioning and stability commitment is on the roadmap. Until then, the operations documented here are stable but the broader API surface may change.</Note>
 
 All examples use `curl`, but any HTTP client works: POST to `https://portal.macstadium.com/graphql` with the appropriate `Authorization` header and JSON body.
 
@@ -77,7 +77,7 @@ You'll need a Portal user token with read/write access. To create one:
 
 1. Log in to the [MacStadium Admin Portal](https://portal.macstadium.com) with an admin account.
 2. Open the account menu and go to **Users**, then select the **Tokens** tab.
-3. Create a new token and set read/write permissions. Copy the token and store it as an environment variable or CI/CD secret — you'll use it as `$TOKEN` in all requests below.
+3. Create a new token and set read/write permissions. Copy the token and store it as an environment variable or CI/CD secret; you'll use it as `$TOKEN` in all requests below.
 
 <Note>This token is separate from the Orka service account tokens you use with the `orka3` CLI. Service account tokens authenticate against your Orka cluster; Portal tokens authenticate against `portal.macstadium.com`.</Note>
 

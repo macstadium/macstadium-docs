@@ -145,7 +145,7 @@ MacStadium hosts use wired Ethernet. If any nodes in your cluster are on Wi-Fi, 
 **HP Anyware plist directives** (set before sealing, or push via MDM config profile):
 
 ```bash
-# Bandwidth ceiling in kbps (default: 900000 — effectively uncapped)
+# Bandwidth ceiling in kbps (default: 900000, effectively uncapped)
 sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.max_link_rate -int 25000
 
 # Image quality floor/ceiling, 0-100 (defaults: 40 / 80)
