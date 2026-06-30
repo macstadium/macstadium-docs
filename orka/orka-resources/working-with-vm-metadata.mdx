@@ -1,6 +1,6 @@
 ---
-title: "Working with VM Metadata"
-description: "When you deploy a VM, Orka assigns default metadata to the VM. You can also add your own custom metadata during deployment via the Orka CLI or API."
+title: "Working with Orka VM metadata and custom tags"
+description: "Read default Orka VM metadata and attach custom key-value tags at deployment using the Orka3 CLI or API to track environment, owner, or build context."
 zendesk_id: 39459015068699
 ---
 
@@ -34,7 +34,7 @@ Default metadata key | Description
 ## Limitations to working with VM metadata
 
   * You cannot override the default VM metadata.
-  * You can set custom VM metadata only at deploy time — not after the VM is running.
+  * You can set custom VM metadata only at deploy time, not after the VM is running.
   * You cannot store the VM metadata for use from other VMs with the `vm save` and `vm commit` operations.
   * You cannot reset your VM metadata with the `vm revert` operation. This operation does not affect VM metadata.
   * The custom VM metadata applies only to the VM instance for which it was specified.
@@ -88,6 +88,14 @@ The server returns the metadata in a JSON format.
 curl http://169.254.169.254/metadata/
 ```
 The IP address `169.254.169.254` is a [link-local address](https://en.wikipedia.org/wiki/Link-local_address) and is accessible only from within the VM. All metadata values are defined as sub-paths below this root URL.
+
+<Note>
+  The metadata endpoint is served by the Orka VM Tools launchd agent, which may take a few seconds to bind after the VM boots. If you're querying the endpoint from a startup script, gate on readiness before proceeding to avoid intermittent timeouts:
+
+  ```bash
+  until curl -fs --max-time 2 http://169.254.169.254/metadata/ >/dev/null; do sleep 1; done
+  ```
+</Note>
 
   4. To retrieve a specific VM metadata value for a specific key, pass the following request:
 

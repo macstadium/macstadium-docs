@@ -25,6 +25,10 @@ When using bridged networking, VMs connect directly to your physical network as 
   * All VMs in your cluster must use the same networking mode
   * Switching modes requires deleting all VMs first
 
+<Note>
+  **CVAD (on-prem Citrix) deployments require bridge networking for VDA enrollment.** Without it, VMs receive NAT IPs (192.168.64.x) that the Citrix Delivery Controller cannot reach for enrollment, unless custom port-forwarding is configured on the customer side. For Citrix DaaS or Workspace/VDA testing without CVAD, NAT mode is sufficient.
+</Note>
+
 **Configuration:**
 
 Bridged networking is configured in your MacStadium VDI cluster configuration files before deploying VMs.

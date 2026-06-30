@@ -249,15 +249,18 @@
           {
             "group": "Engine",
             "pages": [
-              "orka/orka-engine/orka-engine-30"
+              "orka/orka-engine/orka-engine-30",
+              "orka/orka-engine/managing-your-orka-license"
             ]
           },
           {
             "group": "On AWS and On-Prem",
             "pages": [
               "orka/orka-on-aws-and-on-prem/orka-on-aws-getting-started",
+              "orka/orka-on-aws-and-on-prem/orka-on-aws-vpc-access",
               "orka/orka-on-aws-and-on-prem/risk-assessment-and-mitigation-plan-for-orka-on-aws",
               "orka/orka-on-aws-and-on-prem/orka-on-prem-getting-started",
+              "orka/orka-on-aws-and-on-prem/orka-on-prem-troubleshooting",
               "orka/orka-on-aws-and-on-prem/using-bridge-networking-with-orka-350"
             ]
           },
@@ -275,6 +278,7 @@
             "group": "Upgrade Guides",
             "pages": [
               "orka/orka-upgrades-and-release-notes/orka-upgrades",
+              "orka/orka-upgrades-and-release-notes/upgrading-orka-on-aws",
               "orka/orka-upgrades-and-release-notes/kubernetes-upgrade-guide"
             ]
           },
@@ -764,7 +768,7 @@
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/deployment-guide",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/overview-architecture"
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/ansible-playbook-implementation",
@@ -832,7 +836,7 @@
     },
     {
       "source": "/docs/ansible",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
     },
     {
       "source": "/docs/:path*",
@@ -2092,11 +2096,11 @@
     },
     {
       "source": "/v1.0/docs/ansible",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
     },
     {
       "source": "/edit/ansible",
-      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/deployment-guide"
+      "destination": "/remote-desktop-vdi/macstadium-vdi-deployment/ansible-playbook-implementation"
     },
     {
       "source": "/edit/private-cloud",
