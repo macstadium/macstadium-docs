@@ -1,5 +1,5 @@
 ---
-title: "Orka3 API Quick Start"
+title: "Deploy your first VM with the Orka3 REST API"
 description: "Get started with the Orka3 REST API: authenticate with a CLI token, deploy VMs, manage images, and build custom integrations with your Orka cluster."
 zendesk_id: 28349313921563
 ---
@@ -69,7 +69,7 @@ The full API reference, including all endpoints, request bodies, and response sc
 
 
 
-<Warning>All sample API calls from this point use generic placeholder values. Replace the Orka API URL, token, and any other placeholders with values from your environment. Sample responses are piped through a JSON formatter — yours may look different.</Warning>
+<Warning>All sample API calls from this point use generic placeholder values. Replace the Orka API URL, token, and any other placeholders with values from your environment. Sample responses are piped through a JSON formatter, so yours may look different.</Warning>
 
 ## Get a Token from the Orka3 CLI
 
@@ -178,7 +178,7 @@ curl -X 'GET' \
 -H 'accept: application/json' \
 -H 'Authorization: Bearer <TOKEN>'
 ```
-MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually — you can deploy directly from the registry in the next step.
+MacStadium maintains a public OCI registry at `ghcr.io/macstadium/orka-images` with pre-built macOS images. You don't need to pull images manually; you can deploy directly from the registry in the next step.
 
   4. Deploying a VM requires only a base image. Run:
 

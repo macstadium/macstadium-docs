@@ -88,15 +88,9 @@ Alternatively, you could also add these manually as ApiServer arguments by editi
 
 ### Obtaining an Orka License Key
 
-Orka Engine requires a valid license key to operate. To request a license key:
+Your license key is included in your order confirmation from MacStadium. If you don't have it, retrieve it from the [customer portal](https://macstadium.users.licensespring.com) or contact [support@macstadium.com](mailto:support@macstadium.com). For portal access and credential details, see [Managing your Orka license](/orka/orka-engine/managing-your-orka-license).
 
-1. Contact your MacStadium account representative
-
-2. Provide your organization name, deployment details, and use case
-
-3. Your account representative will submit your information to our licensing team for provisioning
-
-4. Receive license key via email (Est. 24 hour turnaround time)
+Add your license key to `cluster.yml` under `orka_engine_license_key` before running the installer (see below).
 
 ### Installing the Orka Cluster Services
 
@@ -142,7 +136,7 @@ ansible-playbook site.yml
 To use the CLI, you need access to the Orka API service, which is also utilized by some integrations (e.g., Jenkins).
 
 <Note>
-`orka3 vm push` requires an Orka API token — run `orka3 login` or `orka3 user set-token` before pushing images.
+`orka3 vm push` requires an Orka API token. Run `orka3 login` or `orka3 user set-token` before pushing images.
 </Note>
 
 On-prem deployments commonly use certificate-based kubeconfig authentication, which is not sufficient for `vm push`. If you encounter an `Unauthorized` error from `vm push`, this indicates a missing Orka API token, not an OCI registry issue.
@@ -283,7 +277,7 @@ Note - you need to remove some metadata from these resources. To do that, run th
 
 ```
      kubectl get "$resource" -n "$namespace" -o yaml \
-        yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
+        | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
 ```
 These resources can be stored in a yml file, which you can archive and store somewhere.
 

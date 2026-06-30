@@ -14,7 +14,7 @@ Starting with Orka 3.0, all VM disks are OCI-compatible. So, even if you have de
 
 Before you can push an image to an OCI-compatible registry, you need to have the [registry credentials configured in the respective namespace](/orka/oci-images/oci-images-manage-registry-credentials) before attempting to push the changes.
 
-Unlike most `orka3` commands, `vm push` routes through the Orka API server rather than the Kubernetes API. This means a kubeconfig obtained via certificate-based authentication — common in AWS and on-prem deployments — is not sufficient on its own. If you run `vm push` without a valid Orka API token, you will receive an `Unauthorized` error; this error comes from the Orka API server, not the OCI registry, even if it appears registry-related.
+Unlike most `orka3` commands, `vm push` routes through the Orka API server rather than the Kubernetes API. This means a kubeconfig obtained via certificate-based authentication (common in AWS and on-prem deployments) is not sufficient on its own. If you run `vm push` without a valid Orka API token, you will receive an `Unauthorized` error; this error comes from the Orka API server, not the OCI registry, even if it appears registry-related.
 
 <Warning>
 Before running `vm push`, authenticate with `orka3 login` or `orka3 user set-token` to obtain an Orka API token.

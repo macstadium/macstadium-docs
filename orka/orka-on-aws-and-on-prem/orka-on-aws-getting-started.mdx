@@ -101,7 +101,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
      1. Select the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
-  3. **Note down the ARN of the**[**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
+  3. **Note down the ARN of the** [**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
   4. **Optional:**
      1. Set Cluster endpoint access to “Private” to restrict access to your cluster API from the Internet.
         1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
@@ -116,11 +116,11 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 
 
-### Setup a CodeBuild project to run Orka Installation into the EKS Cluster
+### Set up a CodeBuild project to run Orka Installation into the EKS Cluster
 
 MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. To set up a CodeBuild project as an Ansible runner:
 
-  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role — you will need to share the ARN with MacStadium and modify the role later.**
+  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role; you will need to share the ARN with MacStadium and modify the role later.**
   2. Select the following options:
      1. Project type - Default project
      2. Source - no source
@@ -136,7 +136,7 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
      2. Select the VPC where your cluster is deployed
      3. Select the subnets which EKS uses
      4. Select a security group that has access to the EKS API
-  5. In the BuildSpec, add the following commands:
+  4. In the BuildSpec, add the following commands:
 
 ```
      - aws eks update-kubeconfig --name {cluster_name} --region {region}
@@ -148,8 +148,8 @@ Where:
 `{k8s_api_address}` - the K8s API address of your cluster
 `{kube_oidc_client_id}` - the OIDC client ID provided by MacStadium
 
-  6. Save the configuration.
-  7. Next, Configure CodeBuild to manage the EKS cluster:
+  5. Save the configuration.
+  6. Next, Configure CodeBuild to manage the EKS cluster:
      1. Manage the EKS cluster. To enable CodeBuild to manage the EKS cluster, complete the following steps:
         1. The IAM Role needs a policy to manage EKS. To do this:
 Navigate to the IAM role.
@@ -164,11 +164,11 @@ Click Next.
 Select `AmazonEKSClusterAdminPolicy` with `Cluster` scope.
 Click `Add Policy`.
 Click `Next → Create`.
-  8. Once all permissions are configured, you can run CodeBuild, which will install the Orka services within the cluster.
+  7. Once all permissions are configured, you can run CodeBuild, which will install the Orka services within the cluster.
 
 
 
-Please capture your `EKS cluster name`and `EKS cluster VPC region`for use in bootstrap script needed for Configuring EC2 Macs.
+Please capture your `EKS cluster name` and `EKS cluster VPC region` for use in bootstrap script needed for Configuring EC2 Macs.
 
 ### OIDC Provider Setup
 
@@ -247,17 +247,13 @@ You must attach a security group to allow traffic between the managed Kubernetes
 
 ## Obtaining an Orka License Key
 
-Orka Engine requires a valid license key to operate. To request a license key:
+Your license key is included in your order confirmation from MacStadium. If you don't have it, retrieve it from the [customer portal](https://macstadium.users.licensespring.com) or contact [support@macstadium.com](mailto:support@macstadium.com). For portal access and credential details, see [Managing your Orka license](/orka/orka-engine/managing-your-orka-license).
 
-1. Contact your MacStadium account representative
+Activate your license:
 
-2. Provide your organization name, deployment details, and use case
-
-3. Your account representative will submit your information to our licensing team for provisioning
-
-4. Receive license key via email (Est. 24 hour turnaround time)
-
-5. Activate: `orka-engine license set --key YOUR_KEY`
+```
+orka-engine license set --key YOUR_KEY
+```
 
 You can also download Orka Engine directly from MacStadium. Contact your account representative for the current installer link.
 
@@ -383,7 +379,7 @@ Unfortunately, Orka Cluster does not support Intel Nodes on AWS. While the 3.x v
 
 ### How is macOS 15 Sequoia supported on AWS?
 
-macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the [Apple Virtualization documentation](https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines). Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result we have two options for macOS 15 support:
+macOS 15 Sequoia guest OSes (VMs) will not work out of the box on AWS EC2 Mac. This is due to the newly required Apple ID guest functionality in Sequoia guest OS images which requires the host user that starts the VM to have a login keychain, even if they do not intend to use the Apple ID guest functionality. This is discussed in the [Apple Virtualization documentation](https://developer.apple.com/documentation/virtualization/using-icloud-with-macos-virtual-machines). Unfortunately, Marketplace security requirements do not allow the setup of any credentials on the host OS. As a result, we have two options for macOS 15 support:
 
   1. After setting up your EC2 Mac, you will need to set up a login keychain on the host OS before running the Sequoia OS Orka VM image.
   2. MacStadium will supply a Sequoia OCI image that is upgraded from a Sonoma image rather than created from a Sequoia IPSW on Sequoia host. This will run without the Apple ID functionality in guest.
