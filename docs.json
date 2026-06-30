@@ -338,9 +338,10 @@
               "remote-desktop-vdi/it-admin-onboarding-guide",
               "remote-desktop-vdi/operations/validation-and-testing",
               "remote-desktop-vdi/operations/production-rollout",
-              "remote-desktop-vdi/operational-guides/day-2-operations-guide",
-              "remote-desktop-vdi/operational-guides/monitoring",
-              "remote-desktop-vdi/operational-guides/incident-response",
+              "remote-desktop-vdi/operations/day-2-operations-guide",
+              "remote-desktop-vdi/operations/monitoring",
+              "remote-desktop-vdi/operations/incident-response",
+              "remote-desktop-vdi/operations/bulk-vm-lifecycle",
               "remote-desktop-vdi/operations/deprovision-and-recover-mac-hosts"
             ]
           },
@@ -867,6 +868,21 @@
       "permanent": true
     },
     {
+      "source": "/remote-desktop-vdi/operational-guides/day-2-operations-guide",
+      "destination": "/remote-desktop-vdi/operations/day-2-operations-guide",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/operational-guides/monitoring",
+      "destination": "/remote-desktop-vdi/operations/monitoring",
+      "permanent": true
+    },
+    {
+      "source": "/remote-desktop-vdi/operational-guides/incident-response",
+      "destination": "/remote-desktop-vdi/operations/incident-response",
+      "permanent": true
+    },
+    {
       "source": "/remote-desktop-vdi/operational-guides/ansible-quick-reference",
       "destination": "/remote-desktop-vdi/reference/ansible-quick-reference",
       "permanent": true
@@ -1238,7 +1254,7 @@
     },
     {
       "source": "/hc/en-us/articles/44261455694619-Day-2-Operations-Guide",
-      "destination": "/remote-desktop-vdi/operational-guides/day-2-operations-guide",
+      "destination": "/remote-desktop-vdi/operations/day-2-operations-guide",
       "permanent": true
     },
     {

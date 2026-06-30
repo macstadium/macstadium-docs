@@ -1,0 +1,166 @@
+---
+title: "Bulk VM lifecycle management"
+description: "Deploy, manage, and delete groups of macOS VMs in your MacStadium VDI deployment using the bulk VM lifecycle script."
+---
+
+The `semaphore/bulk_vm_lifecycle.py` script drives the management UI REST API to act on groups of macOS VMs that share a common name prefix. Use it when you need to provision, configure, manage, or tear down many VMs at once without running a separate management UI task for each one.
+
+For individual VM operations, see the [Day-2 operations guide](/remote-desktop-vdi/operations/day-2-operations-guide).
+
+## Before you begin
+
+- Your MacStadium VDI deployment is complete and the management UI is configured. This page assumes you have a working deployment with active VMs.
+- [`uv`](https://docs.astral.sh/uv/) is installed on the workstation where you'll run the script.
+- You have admin credentials for the management UI.
+- To use `install-citrix`, you'll need a download URL for the Citrix VDA `.dmg` (for example, an S3 presigned URL) and your domain's hostname suffix.
+
+## Configure credentials
+
+The script reads credentials from flags, environment variables, or a `semaphore/.env` file. The env file approach keeps credentials out of your shell history:
+
+```
+SEMAPHORE_URL=http://[MANAGEMENT_UI_HOST]:3000
+SEMAPHORE_ADMIN=[ADMIN_USERNAME]
+SEMAPHORE_ADMIN_PASSWORD=[ADMIN_PASSWORD]
+```
+
+You can also supply these values as flags on any subcommand: `--semaphore-url`, `--semaphore-admin`, and `--semaphore-password`.
+
+## Deploy a group of VMs
+
+The `deploy` subcommand provisions VMs in parallel, each named with your prefix followed by a random 8-character hex suffix (for example, `demo-a1b2c3d4`). It writes the generated names to a manifest at `semaphore/.bulk_vms_[PREFIX].json` for use by later subcommands.
+
+```bash
+uv run semaphore/bulk_vm_lifecycle.py deploy --prefix [PREFIX] --count [COUNT] --vm-image [IMAGE_URL] --cpu [VCPUS] --memory [MEMORY_MB]
+```
+
+Running `deploy` again with the same prefix merges new names into the existing manifest rather than overwriting it.
+
+<Tip>
+  If the OCI image requires authentication, pass `--private-image` to use the credentials stored in the `OCI Credentials` environment. To attach a host network interface instead of NAT, pass `--network-interface en0`.
+</Tip>
+
+## List the group
+
+The `list` subcommand runs the List VMs template with `vm_name` set to your prefix. The underlying playbook treats `vm_name` as a regex anchor, returning every VM whose name starts with the prefix.
+
+```bash
+uv run semaphore/bulk_vm_lifecycle.py list --prefix [PREFIX]
+```
+
+## Start and stop the group
+
+The `manage` subcommand sets every VM matching the prefix to `running`, `stopped`, or `absent`. Each call is a single management UI task: the playbook loops over all matching VMs inside one Ansible run.
+
+To stop the group:
+
+```bash
+uv run semaphore/bulk_vm_lifecycle.py manage --prefix [PREFIX] --state stopped
+```
+
+To start it again:
+
+```bash
+uv run semaphore/bulk_vm_lifecycle.py manage --prefix [PREFIX] --state running
+```
+
+## Provision a user across the group
+
+The `provision-user` subcommand reads the manifest and submits one parallel task per VM. The underlying playbook requires an exact VM name match, so the manifest must exist before you run this subcommand.
+
+```bash
+uv run semaphore/bulk_vm_lifecycle.py provision-user --prefix [PREFIX] --username [USERNAME] --password [PASSWORD]
+```
+
+If you need to target a set of VMs that differs from the manifest, pass `--vm-names [VM_NAME_1],[VM_NAME_2]` instead.
+
+## Install the Citrix VDA across the group
+
+The `install-citrix` subcommand reads the manifest and submits one parallel task per VM, installing the Citrix <Tooltip tip="Virtual Delivery Agent — software installed on each macOS VM that registers with the Delivery Controller.">VDA</Tooltip> on each one.
+
+<Steps>
+  <Step title="Run install-citrix">
+    ```bash
+    uv run semaphore/bulk_vm_lifecycle.py install-citrix --prefix [PREFIX] --citrix-installer-url [INSTALLER_URL] --hostname-suffix [HOSTNAME_SUFFIX]
+    ```
+
+    Each task installs developer tools and .NET prerequisites, sets the VM hostname to `[VM_NAME][HOSTNAME_SUFFIX]`, installs the VDA, and reboots the VM to complete installation.
+
+    <Note>
+      Each VM reboots at the end of its task. If your hosts can't handle every VM rebooting simultaneously, lower `--concurrency` to spread the load. The default task timeout is 1800 seconds; raise it with `--task-timeout [SECONDS]` if your installer download is slow.
+    </Note>
+  </Step>
+  <Step title="Register each VM with the Delivery Controller">
+    After installation, register each VM using the `VDI | Register Citrix VDA` template in the management UI. The script doesn't handle enrollment tokens, which are issued per machine and must be applied individually.
+
+    See [Citrix DaaS configuration](/remote-desktop-vdi/configuration/citrix-daas-configuration) for registration steps.
+  </Step>
+</Steps>
+
+## Delete the group
+
+The `delete` subcommand is a convenience wrapper for `manage --state absent`. It prompts for confirmation before submitting and removes the manifest once every task succeeds. If any task fails, the manifest is kept so you can re-run.
+
+<Warning>
+  Deleting VMs is irreversible. Run `list` first to confirm the prefix matches only the VMs you intend to remove.
+</Warning>
+
+```bash
+uv run semaphore/bulk_vm_lifecycle.py delete --prefix [PREFIX]
+```
+
+Pass `--yes` to skip the confirmation prompt in non-interactive environments such as CI pipelines.
+
+## Common flags
+
+The following flags apply to every subcommand.
+
+| Flag | Default | Purpose |
+| --- | --- | --- |
+| `--semaphore-url` | `http://localhost:3000` or `$SEMAPHORE_URL` | Management UI base URL |
+| `--semaphore-admin` | `$SEMAPHORE_ADMIN` or `admin` | Admin username |
+| `--semaphore-password` | `$SEMAPHORE_ADMIN_PASSWORD` or `changeme` | Admin password |
+| `--project-name` | `Orka Engine Orchestration` | Project that owns the templates |
+| `--wait` / `--no-wait` | `--wait` | Poll until terminal state, or return immediately after submission |
+| `--poll-interval` | `3.0` | Seconds between status polls |
+| `--task-timeout` | `1800.0` | Per-task timeout in seconds |
+| `--concurrency` | `5` | Parallel task submissions for `deploy`, `provision-user`, and `install-citrix` |
+
+## The VM manifest
+
+When `deploy` runs, it writes a manifest at `semaphore/.bulk_vms_[PREFIX].json` recording the VM names it created. The `provision-user` and `install-citrix` subcommands read this file to fan out per-VM tasks, because their underlying playbooks require exact name matches.
+
+```json
+{
+  "prefix": "demo",
+  "created_at": "2026-06-04T18:00:00+00:00",
+  "vm_names": [
+    "demo-a1b2c3d4",
+    "demo-e5f6a7b8"
+  ]
+}
+```
+
+The manifest is a local file on your workstation. You can delete it by hand to start fresh; subsequent `manage` and `delete` calls fall back to server-side prefix matching when no manifest is present. The `delete` subcommand removes the manifest automatically once every task succeeds.
+
+## Operational notes
+
+### Prefix constraints
+
+Prefixes must start and end with a lowercase letter or digit and contain only lowercase letters, digits, and hyphens. The maximum length is 32 characters. Prefixes that don't meet these constraints will produce invalid VM names and cause the deploy task to fail.
+
+### Concurrency
+
+`deploy`, `provision-user`, and `install-citrix` parallelize through a thread pool. The default `--concurrency 5` works well for most deployments. Lower it if the management UI or the underlying hosts become saturated.
+
+`manage` and `delete` are single management UI tasks. Their runtime scales with the number of matched VMs because the playbook loops over them inside one Ansible run.
+
+### Scheduling cleanup
+
+For routine teardown, you can automate `delete` in a cron job or CI pipeline. The following cron entry runs a delete every Friday at 10 PM:
+
+```
+0 22 * * 5 uv run /path/to/semaphore/bulk_vm_lifecycle.py delete --prefix [PREFIX] --yes --no-wait
+```
+
+For related CLI operations, see the [Ansible quick reference](/remote-desktop-vdi/reference/ansible-quick-reference).
