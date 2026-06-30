@@ -4,7 +4,7 @@ description: "IT admin guide for MacStadium VDI. Covers Ansible, Citrix Cloud, a
 zendesk_id: 44260623061915
 ---
 
-This guide introduces IT administrators to managing a deployed MacStadium VDI environment. Once you've completed the initial deployment following the [MacStadium VDI deployment guide](/remote-desktop-vdi/getting-started/self-hosted) this document covers ongoing operations, user management, and system maintenance.
+This guide introduces IT administrators to managing a deployed MacStadium VDI environment. Once you've completed the initial deployment following the [MacStadium VDI deployment guide](/remote-desktop-vdi/getting-started/self-hosted), this document covers ongoing operations, user management, and system maintenance.
 
 **What this guide covers:**
 
@@ -462,7 +462,7 @@ Always run `--tags plan` first:
   
 `ansible-playbook -i dev/inventory deploy.yml \ -e "vm_group=citrix-vda-finance \ desired_vms=11" \ --tags plan`  
   
-This show the current VM count per host, where new VMs will be deployed, which host has available capacity, and **does not** create VMs (dry run only.) When reviewing the plan output, you will want to verify that the new VM will deploy to a host with capacity, the correct golden image will be used, and that the network configuration looks correct.  
+This shows the current VM count per host, where new VMs will be deployed, which host has available capacity, and **does not** create VMs (dry run only). When reviewing the plan output, you will want to verify that the new VM will deploy to a host with capacity, the correct golden image will be used, and that the network configuration looks correct.  
   
 Next, you will want to execute the deployment:  
   
@@ -845,7 +845,7 @@ Remove user:
 
 Typically, you cannot change an existing Delivery Group's assignment type. Instead, you can do the following:
 
-  1. Create new a Delivery Group with the desired assignment type
+  1. Create a new Delivery Group with the desired assignment type
 
   2. Migrate your users to the new group
 
@@ -1098,7 +1098,7 @@ To recreate VMs in a batch, see the following example:
 
 To recreate an estimated 10 VMs, this playbook will take 30-60 minutes to run. User impact will vary depending on if VMs are pooled or dedicated. If a VM is pooled, user impact should be minimal if recreation is done during off-hours. If a VM is assigned to a dedicated user, that user will lose their local data unless it is backed up upon VM recreation. It is considered a best practice to schedule VM reconfiguration during specific maintenance windows, and to notify users in advance.
 
-When considering the VM deprovisioning and cleanup process, you will want to remove desktop access when a users leaves your organization, or a VM is no longer needed.
+When considering the VM deprovisioning and cleanup process, you will want to remove desktop access when a user leaves your organization, or a VM is no longer needed.
 
 To remove users from a Citrix Delivery Group:
 
@@ -1156,9 +1156,9 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
      1. Target: >95% success rate.
 
-     2. If Users Activity is &lt;95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
+     2. If User Activity is &lt;95%: Review failed connection attempts, identify any patterns to help determine the cause (specific users, times issues occur, VMs impacted)
 
-  3. Host capacity. This can be checked by running: `ansible-playbook -i dev/inventory list.yml`and verifying:
+  3. Host capacity. This can be checked by running: `ansible-playbook -i dev/inventory list.yml` and verifying:
 
      1. Host capacity: Check and confirm there are no hosts at 2/2 VM capacity.
 
@@ -1208,7 +1208,7 @@ To delete an entire VM group and bulk-deprovision the VMs, run the following Ans
 
   3. Security review
 
-     1. Verify if enrollment tokens been rotated in the last 90 days
+     1. Verify whether enrollment tokens have been rotated in the last 90 days
 
      2. Confirm SSH keys are up-to-date
 

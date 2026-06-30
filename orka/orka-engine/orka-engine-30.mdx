@@ -79,7 +79,7 @@ The following commands will quickly introduce basic features of the Orka Engine 
     * `orka-engine vm run latest-sonoma --image ghcr.io/macstadium/orka-images/sonoma:latest`
   * Pulling remote images locally using `orka-engine image pull`
   * Starting a VM in the stopped state with `orka-engine vm start`
-  * Pushing a configured CI/CD customized VM to a OCI container registry `orka-engine image push`
+  * Pushing a configured CI/CD customized VM to an OCI container registry `orka-engine image push`
 
 
 
@@ -93,7 +93,7 @@ The `orka-engine --help` command lists the three subcommands, `vm`to manage VMs,
 
 `orka-engine vm --help` provides a list of operations that can be taken on VMs, such as `run`, `list`, `save`, and `start`
 
-`orka-engine vm run --help` provides details on all the options that can provided when taking the `vm run` operation.
+`orka-engine vm run --help` provides details on all the options that can be provided when taking the `vm run` operation.
 
 ## Running a VM Based on the Latest IPSW File
 
@@ -172,7 +172,7 @@ Stop a headless VM or VM with a display console enter **ctrl-c**(from the termin
 
 ## Running a VM Based on a MacStadium Hosted Image
 
-MacStadium hosts a number of Sequoia, Sonoma, and Ventura images on [GitHub - macstadium/orka-images: Public images for Apple silicon-based Orka virtual machines](https://github.com/macstadium/orka-images/) In `orka-engine vm ,` specify an `--image` option to be the URL of an image coming from an OCI registry, 
+MacStadium hosts a number of Sequoia, Sonoma, and Ventura images on [GitHub - macstadium/orka-images: Public images for Apple silicon-based Orka virtual machines](https://github.com/macstadium/orka-images/). In `orka-engine vm`, specify an `--image` option to be the URL of an image coming from an OCI registry. 
 
 ```bash
 orka-engine vm run sonoma-latest --image ghcr.io/macstadium/orka-images/sonoma:latest
@@ -229,7 +229,7 @@ In previous examples, `orka-engine vm run` was used to both _pull_ (or download)
 
 `Image pull progress: 100%`
 
-When the images pull is complete, it is available in `orka-engine image list` and usable with `orka-engine vm run --image <imagename>`. 
+When the image pull is complete, it is available in `orka-engine image list` and usable with `orka-engine vm run --image <imagename>`. 
 
 ## Pushing local Images to Registry
 
