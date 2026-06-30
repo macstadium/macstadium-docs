@@ -284,7 +284,7 @@ Quick diagnostic:
 
   1. Verify the user is in the correct Delivery Group by navigating to Citrix Cloud Console → Manage → Delivery Groups → Search for the user
 
-  2. Check that the VM is actually in an "Available" state by navigating to Monitor → Machines → and checking the ‘Status’ column. This should show "Available" not "In Use" or "Maintenance".
+  2. Check that the VM is actually in an "Available" state by navigating to Monitor → Machines → and checking the "Status" column. This should show "Available" not "In Use" or "Maintenance".
 
   3. Test the connection yourself with a test account by launching a desktop from Citrix Workspace.
 
@@ -439,7 +439,7 @@ Server-side firewall | Server blocks VM IPs | Update server firewall to allow VM
 ACL blocking traffic | Traffic dropped at switch/router | Update ACLs to permit VM traffic  
 Split-tunnel VPN required | Services only accessible via VPN | Configure VPN on VMs or route through VPN gateway  
   
-Most common fix: Your firewall rules don't include the VM subnet. Work with your network team to add the appropriate `‘allow’` rules.
+Most common fix: Your firewall rules don't include the VM subnet. Work with your network team to add the appropriate `allow` rules.
 
 ### Symptom: Bridged Mode VMs Getting Wrong IPs (192.168.64.x)
 
@@ -1061,7 +1061,7 @@ Likely causes and solutions:
 
 **Cause** |  **How to verify** |  **Solution**  
 ---|---|---  
-SSO not enabled in Citrix Workspace | Workspace preferences show SSO disabled | Enable SSO in Citrix Workspace settings under ‘Account preferences’  
+SSO not enabled in Citrix Workspace | Workspace preferences show SSO disabled | Enable SSO in Citrix Workspace settings under "Account preferences"  
 Gateway pass-through not configured | Citrix Gateway shows no SSO/pass-through config | Configure pass-through authentication on Citrix Gateway; enable domain pass-through  
 User on non-domain computer | Computer not joined to corporate domain | Join computer to domain or use manual credential entry  
 Certificate authentication issue | SSO uses cert auth; certificate is invalid/expired | Renew user certificate; reinstall certificate; verify cert trust chain  
@@ -1243,7 +1243,7 @@ What you see: The playbook starts successfully, but fails on a specific task
 
 Quick diagnostic:
 
-  1. Run the playbook with verbose output to see the exact error: a`nsible-playbook -i dev/inventory <playbook> -vvv`
+  1. Run the playbook with verbose output to see the exact error: `ansible-playbook -i dev/inventory <playbook> -vvv`
 
   2. Check the specific task that failed, reviewing the error logs carefully
 
