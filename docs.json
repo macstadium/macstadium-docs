@@ -591,7 +591,7 @@
     },
     {
       "source": "/remote-desktop-vdi/macstadium-vdi-deployment/troubleshooting-common-issues",
-      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
+      "destination": "/remote-desktop-vdi/reference/troubleshooting-quick-reference",
       "permanent": true
     },
     {
@@ -800,7 +800,7 @@
     },
     {
       "source": "/remote-desktop-vdi/orka-for-vdi-deployment/troubleshooting-common-issues",
-      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference"
+      "destination": "/remote-desktop-vdi/reference/troubleshooting-quick-reference"
     },
     {
       "source": "/getting-started/creating-your-first-node",
@@ -1369,7 +1369,7 @@
     },
     {
       "source": "/hc/en-us/articles/44261906056859-Troubleshooting-Quick-Reference",
-      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
+      "destination": "/remote-desktop-vdi/reference/troubleshooting-quick-reference",
       "permanent": true
     },
     {
@@ -1819,7 +1819,7 @@
     },
     {
       "source": "/hc/en-us/articles/44333132574107-Troubleshooting-Common-Issues",
-      "destination": "/remote-desktop-vdi/operational-guides/troubleshooting-quick-reference",
+      "destination": "/remote-desktop-vdi/reference/troubleshooting-quick-reference",
       "permanent": true
     },
     {
