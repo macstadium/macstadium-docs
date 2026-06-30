@@ -277,7 +277,7 @@ Note - you need to remove some metadata from these resources. To do that, run th
 
 ```
      kubectl get "$resource" -n "$namespace" -o yaml \
-        yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
+        | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
 ```
 These resources can be stored in a yml file, which you can archive and store somewhere.
 
