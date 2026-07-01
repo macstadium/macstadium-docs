@@ -85,6 +85,23 @@ On macOS 15 (Sequoia), admin users can remove system extensions via System Setti
 
 Citrix also installs background services under `/Library/LaunchAgents` and `/Library/LaunchDaemons`. On Ventura and later, users see a "Background Items Added" notification on first login. This is expected. Do not suppress or disable these services.
 
+### Apple Firewall and HP Anyware PCoIP
+
+MDM solutions typically enforce the Apple Firewall on a recurring check-in schedule (every 30 minutes with some platforms). Disabling the firewall manually does not hold if your MDM profile re-enables it on check-in.
+
+Add PCoIP application exceptions instead of disabling the firewall. Application exceptions survive MDM check-ins:
+
+```bash
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add "/Applications/PCoIP Agent/pcoip-agent"
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp "/Applications/PCoIP Agent/pcoip-agent"
+```
+
+To verify the exception is set:
+
+```bash
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --listapps | grep -i pcoip
+```
+
 ### MDM platform notes
 
 | Platform | PPPC | System Extensions | Notes |
@@ -170,9 +187,17 @@ Changes take effect after the PCoIP agent service restarts or the VM reboots.
 
 ---
 
+## HP Anyware session management
+
+Train users to end PCoIP sessions by closing the HP Anyware client window. Using the macOS **Log Out** option from within an active PCoIP session breaks the remote display state and prevents future connections until the host is rebooted. This applies to all macOS versions running the HP Anyware Graphics Agent.
+
+If a host is in a broken display state due to a macOS logout within a session, a reboot is required to restore access. Reboots can be performed via SSH or Screen Share.
+
+---
+
 ## Management and policy
 
-Define MDM policies before sealing your golden image. A baseline for MacStadium VDI:
+Define MDM policies before sealing your golden image. A baseline for Orka VDI:
 
 | Category | Policies |
 |---|---|
