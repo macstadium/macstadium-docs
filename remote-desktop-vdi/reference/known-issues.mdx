@@ -5,6 +5,24 @@ description: "Current known issues and platform limitations for MacStadium VDI, 
 
 This page lists known issues and platform limitations that affect MacStadium VDI deployments. Issues are documented as confirmed and will be updated when resolved or when a workaround becomes available.
 
+## HP Anyware agent 26.01.0: first connection after reboot always fails
+
+**Status:** Fixed in 26.01.1
+
+**Affects:** Hosts running HP Anyware Graphics Agent version 26.01.0
+
+### Summary
+
+Version 26.01.0 contains a bug where the first PCoIP connection attempt after any host reboot fails with a 6405 error. Retrying the connection immediately succeeds. The session itself is unaffected once connected.
+
+### Resolution
+
+Upgrade to HP Anyware agent 26.01.1 or later. The current recommended release is 26.05.1. Download from [HP Anyware](https://anyware.hp.com/).
+
+If an upgrade is not yet possible, inform users that a single retry after a reboot will succeed.
+
+---
+
 ## macOS Tahoe guest: video and media playback fails
 
 **Status:** Open (no fix available as of macOS 26.5.1)

@@ -55,6 +55,8 @@ If performance remains unstable after checking these items, record the time of t
 
 **Goal:** Avoid unplanned session interruptions or idle timeouts.
 
+  * To end your session, close the HP Anyware client window. Do not use the macOS **Log Out** option from within the session. Logging out of macOS breaks the remote display state and prevents future PCoIP connections until the host is rebooted.
+
   * Stay active within your session; extended inactivity may trigger an automatic disconnect.
 
   * If disconnected unexpectedly, reconnect within one to two minutes; your macOS session usually remains active.
@@ -70,7 +72,7 @@ If performance remains unstable after checking these items, record the time of t
 
 **Goal:** Maintain compatibility between the HP Anyware Client and the macOS agent.
 
-  * Download the latest Client for your platform at https://anyware.hp.com/downloads.
+  * Download the latest Client for your platform at https://www.hpanyware.com/downloads.
 
   * Avoid beta or outdated versions; macOS agents are maintained on current release tracks.
 
@@ -95,6 +97,7 @@ Image quality drops or becomes blocky | Network congestion or limited bandwidth 
 Repeated disconnects | VPN or firewall interference | Try wired Ethernet or temporarily disable VPN  
 Session ends after idle time | Broker timeout policy | Reconnect and report if the timeout seems unusually short  
 “Unable to connect to agent” | macOS host agent service offline | Contact Support with the timestamp and error text  
+Error 6405 | PCoIP agent failed to launch remote session | Reboot the host; if the error followed a macOS logout within the session, a reboot is required to restore access. See [Cloud Access Troubleshooting](/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting)  
   
 ### When to Contact MacStadium Support
 
@@ -120,6 +123,8 @@ MacStadium Support must intervene on the macOS host side for the following:
   * Any error messages shown in the HP Anyware Client
 
   * Your Client OS and version
+
+  * A screenshot of the HP Anyware session statistics panel — open it from **Connection > Show Statistics** in the client (Windows: Shift+Ctrl+Alt+S, Mac: Shift+Cmd+Alt+S). It shows real-time RTT, packet loss, and bandwidth and helps Support diagnose whether the issue is on the network path or the host.
 
   * A short description of what you were doing when the issue occurred
 
@@ -148,3 +153,5 @@ MacStadium Support can then inspect host logs, restart services, or re-establish
 Email [support@macstadium.com](mailto:support@macstadium.com) to open a ticket or visit [docs.macstadium.com](https://docs.macstadium.com) for additional MacStadium Cloud Access documentation.
 
 Support can verify macOS host availability, check agent health, and ensure your Cloud Access environment is running as expected.
+
+For host-side configuration, error code reference, and latency diagnostics, see [Cloud Access Troubleshooting](/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting).
