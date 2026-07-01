@@ -7,7 +7,7 @@ zendesk_id: 40640583440539
 
 ## Overview
 
-These are recommended best practices for deploying Citrix HDX and HP Anyware PCoIP on MacStadium infrastructure. This document provides generalized guidance on MDM enrollment, permissions, networking, and performance tuning.
+These are recommended best practices for deploying Citrix HDX and HP Anyware PCoIP on MacStadium infrastructure. This document provides guidance on MDM enrollment, permissions, networking, and performance tuning. Sections that differ by protocol use tabs.
 
 ---
 
@@ -43,64 +43,89 @@ For image build and versioning guidance, see [VDI Golden Image Management](/remo
 
 Configure and test these before sealing your golden image. Some permissions cannot be pre-approved via MDM, so they need to be granted manually on a clean VM before the image is sealed.
 
-### Privacy preferences (PPPC / TCC)
+<Tabs>
+  <Tab title="Citrix HDX">
+    ### Privacy preferences (PPPC / TCC)
 
-| Permission | Citrix HDX | HP Anyware PCoIP | MDM pre-approvable? |
-|---|---|---|---|
-| Accessibility | Required | Required | Yes |
-| Screen Recording | Required | Required | No (grant manually before sealing) |
-| Microphone | Optional (audio redirect) | Optional | No (user-controlled) |
-| Camera | Optional (webcam redirect) | Optional | No (user-controlled) |
+    | Permission | Required? | MDM pre-approvable? |
+    |---|---|---|
+    | Accessibility | Required | Yes |
+    | Screen Recording | Required | No (grant manually before sealing) |
+    | Microphone | Optional (audio redirect) | No (user-controlled) |
+    | Camera | Optional (webcam redirect) | No (user-controlled) |
 
-**Bundle IDs for PPPC profiles:**
+    **Bundle IDs for PPPC profiles:**
 
-| Application | Bundle ID | Team ID |
-|---|---|---|
-| Citrix Workspace / VDA | `com.citrix.ctxism` | `S272Y5R93J` |
-| HP Anyware Client | `com.teradici.swiftclient` | Not published by HP |
-| HP Anyware User Agent | `com.teradici.pcoip-user-agent` | Not published by HP |
+    | Application | Bundle ID | Team ID |
+    |---|---|---|
+    | Citrix Workspace / VDA | `com.citrix.ctxism` | `S272Y5R93J` |
 
-HP does not document Team ID information for HP Anyware. To generate a code requirement string for use in a PPPC payload, run this against the installed host agent:
+    ### System extensions
 
-```bash
-# Locate the agent
-mdfind "kMDItemCFBundleIdentifier == 'com.teradici.pcoip-user-agent'"
+    Citrix VDA installs system extensions for camera and USB redirection. Pre-approve these to prevent user-facing prompts.
 
-# Generate the code requirement string
-codesign -dr - /path/to/PCoIPAgent.app
-```
+    | Extension | Bundle ID | Type | Team ID |
+    |---|---|---|---|
+    | Camera extension | `com.citrix.mvda.vdacfg.cameraextension` | System extension | `S272Y5R93J` |
+    | USB redirection | `com.citrix.kext.gusb` | Kernel extension | `S272Y5R93J` |
 
-Paste the `designated =>` line from the output into the Code Requirement field of your MDM's PPPC payload.
+    On macOS 15 (Sequoia), admin users can remove system extensions via System Settings. Jamf Pro 11.9.1+ and Kandji 3.x both support marking extensions as non-removable.
 
-### System extensions (Citrix only)
+    Citrix also installs background services under `/Library/LaunchAgents` and `/Library/LaunchDaemons`. On Ventura and later, users see a "Background Items Added" notification on first login. This is expected. Do not suppress or disable these services.
+  </Tab>
+  <Tab title="HP Anyware PCoIP">
+    ### Privacy preferences (PPPC / TCC)
 
-Citrix VDA installs system extensions for camera and USB redirection. Pre-approve these to prevent user-facing prompts.
+    | Permission | Required? | MDM pre-approvable? |
+    |---|---|---|
+    | Accessibility | Required | Yes |
+    | Screen Recording | Required | No (grant manually before sealing) |
+    | Microphone | Optional | No (user-controlled) |
+    | Camera | Optional | No (user-controlled) |
 
-| Extension | Bundle ID | Type | Team ID |
-|---|---|---|---|
-| Camera extension | `com.citrix.mvda.vdacfg.cameraextension` | System extension | `S272Y5R93J` |
-| USB redirection | `com.citrix.kext.gusb` | Kernel extension | `S272Y5R93J` |
+    **Bundle IDs for PPPC profiles:**
 
-On macOS 15 (Sequoia), admin users can remove system extensions via System Settings. Jamf Pro 11.9.1+ and Kandji 3.x both support marking extensions as non-removable.
+    | Application | Bundle ID | Team ID |
+    |---|---|---|
+    | HP Anyware Client | `com.teradici.swiftclient` | Not published by HP |
+    | HP Anyware User Agent | `com.teradici.pcoip-user-agent` | Not published by HP |
 
-Citrix also installs background services under `/Library/LaunchAgents` and `/Library/LaunchDaemons`. On Ventura and later, users see a "Background Items Added" notification on first login. This is expected. Do not suppress or disable these services.
+    HP does not document Team ID information for HP Anyware. To generate a code requirement string for use in a PPPC payload, run this against the installed host agent:
 
-### Apple Firewall and HP Anyware PCoIP
+    ```bash
+    # Locate the agent
+    mdfind "kMDItemCFBundleIdentifier == 'com.teradici.pcoip-user-agent'"
 
-MDM solutions typically enforce the Apple Firewall on a recurring check-in schedule (every 30 minutes with some platforms). Disabling the firewall manually does not hold if your MDM profile re-enables it on check-in.
+    # Generate the code requirement string
+    codesign -dr - /path/to/PCoIPAgent.app
+    ```
 
-Add PCoIP application exceptions instead of disabling the firewall. Application exceptions survive MDM check-ins:
+    Paste the `designated =>` line from the output into the Code Requirement field of your MDM's PPPC payload.
 
-```bash
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add "/Applications/PCoIP Agent/pcoip-agent"
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp "/Applications/PCoIP Agent/pcoip-agent"
-```
+    ### Apple Firewall
 
-To verify the exception is set:
+    MDM solutions typically enforce the Apple Firewall on a recurring check-in schedule (every 30 minutes with some platforms). Disabling the firewall manually does not hold if your MDM profile re-enables it on check-in.
 
-```bash
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --listapps | grep -i pcoip
-```
+    Add PCoIP application exceptions instead of disabling the firewall. Application exceptions survive MDM check-ins:
+
+    ```bash
+    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add "/Applications/PCoIP Agent/pcoip-agent"
+    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp "/Applications/PCoIP Agent/pcoip-agent"
+    ```
+
+    To verify the exception is set:
+
+    ```bash
+    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --listapps | grep -i pcoip
+    ```
+
+    ### Session management
+
+    Train users to end PCoIP sessions by closing the HP Anyware client window. Using the macOS **Log Out** option from within an active PCoIP session breaks the remote display state and prevents future connections until the host is rebooted. This applies to all macOS versions running the HP Anyware Graphics Agent.
+
+    If a host is in a broken display state due to a macOS logout within a session, a reboot is required to restore access. Reboots can be performed via SSH or Screen Share.
+  </Tab>
+</Tabs>
 
 ### MDM platform notes
 
@@ -118,14 +143,24 @@ Disable packet inspection and SSL interception on VDI session traffic. Both HDX 
 
 **Required ports:**
 
-| Protocol | Citrix HDX | HP Anyware PCoIP |
-|---|---|---|
-| Primary session | TCP/UDP 1494, 2598 | UDP 4172 |
-| Session fallback | N/A | TCP 4172 |
-| Broker / licensing | TCP 443 | TCP 443, 60443 |
-| EDT (performance) | UDP 1494, 2598 | N/A |
+<Tabs>
+  <Tab title="Citrix HDX">
+    | Protocol | Ports |
+    |---|---|
+    | Primary session | TCP/UDP 1494, 2598 |
+    | Broker / licensing | TCP 443 |
+    | EDT (performance) | UDP 1494, 2598 |
 
-Enable EDT (UDP 1494/2598) for Citrix where possible. It provides noticeably better performance over variable-quality connections compared to TCP-only transport.
+    Enable EDT (UDP 1494/2598) where possible. It provides noticeably better performance over variable-quality connections compared to TCP-only transport.
+  </Tab>
+  <Tab title="HP Anyware PCoIP">
+    | Protocol | Ports |
+    |---|---|
+    | Primary session | UDP 4172 |
+    | Session fallback | TCP 4172 |
+    | Broker / licensing | TCP 443, 60443 |
+  </Tab>
+</Tabs>
 
 **Bandwidth planning per concurrent user:**
 
@@ -153,51 +188,44 @@ MacStadium hosts use wired Ethernet. If any nodes in your cluster are on Wi-Fi, 
 
 ### Protocol-specific tuning
 
-| Setting | Citrix HDX | HP Anyware PCoIP |
-|---|---|---|
-| Transport tuning | EDT settings, H.264/H.265 codec selection, audio quality profiles (see [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac)) | `pcoip.max_link_rate`, image quality, and frame rate. Configure via the plist entries below. |
-| Config location | Citrix Workspace settings | `/Library/Preferences/com.teradici.pcoip-agent.plist` |
-| Applies to | VDA | Graphics Agent and Standard Agent |
+<Tabs>
+  <Tab title="Citrix HDX">
+    Configure transport via Citrix Workspace App for Mac settings: EDT, H.264/H.265 codec selection, and audio quality profiles. See the [Citrix Workspace App for Mac docs](https://docs.citrix.com/en-us/citrix-workspace-app-for-mac) for the full tuning reference.
+  </Tab>
+  <Tab title="HP Anyware PCoIP">
+    Configure via `/Library/Preferences/com.teradici.pcoip-agent.plist`. Set before sealing or push via MDM config profile:
 
-**HP Anyware plist directives** (set before sealing, or push via MDM config profile):
+    ```bash
+    # Bandwidth ceiling in kbps (default: 900000, effectively uncapped)
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.max_link_rate -int 25000
 
-```bash
-# Bandwidth ceiling in kbps (default: 900000, effectively uncapped)
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.max_link_rate -int 25000
+    # Image quality floor/ceiling, 0-100 (defaults: 40 / 80)
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.minimum_image_quality -int 40
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.maximum_initial_image_quality -int 80
 
-# Image quality floor/ceiling, 0-100 (defaults: 40 / 80)
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.minimum_image_quality -int 40
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.maximum_initial_image_quality -int 80
+    # Frame rate ceiling in fps (default: 30)
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.maximum_frame_rate -int 30
 
-# Frame rate ceiling in fps (default: 30)
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.maximum_frame_rate -int 30
+    # Audio bandwidth ceiling in kbps (default: 512)
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.audio_bandwidth_limit -int 256
 
-# Audio bandwidth ceiling in kbps (default: 512)
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.audio_bandwidth_limit -int 256
+    # MTU size in bytes (default: 1200)
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.mtu_size -int 1200
 
-# MTU size in bytes (default: 1200)
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.mtu_size -int 1200
+    # Build-to-lossless: 0 = off (default), 1 = on
+    # Sharpens to pixel-perfect during idle; useful for design review, increases bandwidth
+    sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.enable_build_to_lossless -int 0
+    ```
 
-# Build-to-lossless: 0 = off (default), 1 = on
-# Sharpens to pixel-perfect during idle; useful for design review, increases bandwidth
-sudo defaults write /Library/Preferences/com.teradici.pcoip-agent pcoip.enable_build_to_lossless -int 0
-```
-
-Changes take effect after the PCoIP agent service restarts or the VM reboots.
-
----
-
-## HP Anyware session management
-
-Train users to end PCoIP sessions by closing the HP Anyware client window. Using the macOS **Log Out** option from within an active PCoIP session breaks the remote display state and prevents future connections until the host is rebooted. This applies to all macOS versions running the HP Anyware Graphics Agent.
-
-If a host is in a broken display state due to a macOS logout within a session, a reboot is required to restore access. Reboots can be performed via SSH or Screen Share.
+    Changes take effect after the PCoIP agent service restarts or the VM reboots.
+  </Tab>
+</Tabs>
 
 ---
 
 ## Management and policy
 
-Define MDM policies before sealing your golden image. A baseline for Orka VDI:
+Define MDM policies before sealing your golden image. A baseline for MacStadium VDI:
 
 | Category | Policies |
 |---|---|
