@@ -11,7 +11,7 @@ noIndex: true
 
 Cloud Access, powered by [HP Anyware](https://anyware.hp.com/), enables secure, high-performance remote access to dedicated macOS systems hosted by MacStadium.
 
-This guide outlines how you can optimize connection quality, reduce latency, and recognize when to contact MacStadium Support for host-side assistance.
+This guide outlines how you can optimize connection quality and reduce latency when connecting to your MacStadium host.
 
 ### Network and Connectivity
 
@@ -46,7 +46,7 @@ If performance remains unstable after checking these items, record the time of t
 
   * Close background apps that use bandwidth such as streaming, video calls, or large downloads.
 
-  * If you encounter a black or frozen screen, end the session, wait 30 seconds, then reconnect. If the issue continues, MacStadium Support can verify the host’s virtual display configuration.
+  * If you encounter a black or frozen screen, end the session, wait 30 seconds, then reconnect. If the issue continues, MacStadium Support can verify the host's virtual display configuration.
 
 
 
@@ -85,7 +85,6 @@ If performance remains unstable after checking these items, record the time of t
 
 
 
-
 ### Common Symptoms and Recommended Actions  
   
 
@@ -96,62 +95,9 @@ Screen remains black or frozen | macOS host display adapter not initialized | En
 Image quality drops or becomes blocky | Network congestion or limited bandwidth | Run a speed test at https://www.speedtest.net; share results with Support  
 Repeated disconnects | VPN or firewall interference | Try wired Ethernet or temporarily disable VPN  
 Session ends after idle time | Broker timeout policy | Reconnect and report if the timeout seems unusually short  
-“Unable to connect to agent” | macOS host agent service offline | Contact Support with the timestamp and error text  
-Error 6405 | PCoIP agent failed to launch remote session | Reboot the host; if the error followed a macOS logout within the session, a reboot is required to restore access. See [Cloud Access Troubleshooting](/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting).  
+"Unable to connect to agent" | macOS host agent service offline | Contact Support with the timestamp and error text  
+Error 6405 | PCoIP agent failed to launch remote session | Reboot the host; if the error followed a macOS logout within the session, a reboot is required to restore access. See [Cloud Access Troubleshooting](/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting)  
   
-### When to Contact MacStadium Support
-
-MacStadium Support must intervene on the macOS host side for the following:
-
-  * Sessions repeatedly fail to connect or drop after a few seconds.
-
-  * The display remains blank after multiple reconnects.
-
-  * “Agent unreachable” or “Connection refused” messages appear.
-
-  * Login succeeds but the desktop never renders.
-
-  * A recent macOS update, reboot, or sleep state appears to have interrupted access.
-
-
-
-
-### When Opening a Ticket, Include
-
-  * Approximate time and timezone of the failure
-
-  * Any error messages shown in the HP Anyware Client
-
-  * Your Client OS and version
-
-  * A screenshot of the HP Anyware session statistics panel — open it from **Connection > Show Statistics** in the client (Windows: Shift+Ctrl+Alt+S, Mac: Shift+Cmd+Alt+S). It shows real-time RTT, packet loss, and bandwidth and helps Support diagnose whether the issue is on the network path or the host.
-
-  * A short description of what you were doing when the issue occurred
-
-
-
-
-MacStadium Support can then inspect host logs, restart services, or re-establish the Cloud Access agent as needed.
-
-### Quick Checklist Before Opening a Ticket
-
-  * Verify your internet speed (10 Mbps minimum, 25 Mbps recommended)
-
-  * Try a wired connection if on Wi-Fi
-
-  * Update to the latest HP Anyware Client
-
-  * Note the exact error message and time of occurrence
-
-  * Submit a ticket at [support@macstadium.com](mailto:support@macstadium.com)
-
-
-
-
 ### Need Help?
 
-Email [support@macstadium.com](mailto:support@macstadium.com) to open a ticket or visit [docs.macstadium.com](https://docs.macstadium.com) for additional MacStadium Cloud Access documentation.
-
-Support can verify macOS host availability, check agent health, and ensure your Cloud Access environment is running as expected.
-
-For host-side configuration, error code reference, and latency diagnostics, see [Cloud Access Troubleshooting](/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting).
+Contact [support@macstadium.com](mailto:support@macstadium.com) to open a ticket. For host-side troubleshooting, error codes, diagnostic steps, and what to include in your ticket, see [Cloud Access Troubleshooting](/remote-desktop-vdi/cloud-access-legacy/cloud-access-troubleshooting).
