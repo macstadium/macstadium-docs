@@ -35,6 +35,16 @@ Key behaviors:
 
 For usage and examples, see [Image caching](/orka/orka-resources/image-caching), the [orka3 CLI reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove), and the [Orka API reference](https://macstadium.github.io/orka-api-docs/).
 
+### Known issues
+
+**Concurrent imagecache operations**
+
+If `orka3 imagecache remove` is issued while `imagecache add` is in progress on the same node, the removal is deferred until the add completes and the image reaches `Ready`. The command does not fail — the remove executes automatically once the add finishes.
+
+Removal is also blocked if a VM deployment is actively in-flight on the target node.
+
+Use `orka3 imagecache info` to verify no active operations are running before issuing a remove.
+
 ### Improvements
 
 **AWS deployments**
