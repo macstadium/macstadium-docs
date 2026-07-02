@@ -433,17 +433,26 @@ The manual steps above work for static worker pools that stay running. For ephem
 
 The key to making ephemeral workers viable is having the worker process start automatically when the VM boots, so the GitHub Actions workflow doesn't need to SSH into each VM to configure it. Do this once when building your base image, then save it.
 
-**Create a startup script** at `/Users/admin/start-buildfarm-worker.sh`:
+**Create a startup script** at `/Users/admin/buildfarm/start-worker.sh`:
 
 ```bash
 #!/bin/bash
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-exec $JAVA_HOME/bin/java -jar /Users/admin/buildfarm/buildfarm-shard-worker_deploy.jar /Users/admin/buildfarm/worker-config.yml
+MY_IP=127.0.0.1
+sed -i "" "s|publicName:.*|publicName: ${MY_IP}:8981|" /Users/admin/buildfarm/worker-config.yml
+until nc -z 127.0.0.1 8980 2>/dev/null; do sleep 2; done
+mkdir -p /tmp/worker/cache /Users/admin/buildfarm/tmp
+exec /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java \
+  -Djava.net.preferIPv4Stack=true \
+  -Djava.io.tmpdir=/Users/admin/buildfarm/tmp \
+  -jar /Users/admin/buildfarm/buildfarm-shard-worker_deploy.jar \
+  /Users/admin/buildfarm/worker-config.yml
 ```
 
 ```bash
-chmod +x /Users/admin/start-buildfarm-worker.sh
+chmod +x /Users/admin/buildfarm/start-worker.sh
 ```
+
+The script rewrites `publicName` on each boot to match `MY_IP`. This matters: if `publicName` is set to just `:8981` (no hostname), the server will fail every `findMissingBlobs` call with `Invalid DNS name: :8981`. For a single-node setup where the server and worker share a VM, `127.0.0.1` is correct. For a multi-node setup where workers are on separate VMs, set `MY_IP` to the IP the server can reach the worker on.
 
 **Create a LaunchDaemon** at `/Library/LaunchDaemons/io.macstadium.buildfarm-worker.plist`:
 
@@ -454,21 +463,23 @@ chmod +x /Users/admin/start-buildfarm-worker.sh
 <dict>
     <key>Label</key>
     <string>io.macstadium.buildfarm-worker</string>
+    <key>UserName</key>
+    <string>admin</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/admin/buildfarm</string>
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/admin/start-buildfarm-worker.sh</string>
+        <string>/Users/admin/buildfarm/start-worker.sh</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
-    <key>WorkingDirectory</key>
-    <string>/Users/admin/bazel-buildfarm</string>
     <key>StandardOutPath</key>
-    <string>/var/log/buildfarm-worker.log</string>
+    <string>/Users/admin/buildfarm/worker.log</string>
     <key>StandardErrorPath</key>
-    <string>/var/log/buildfarm-worker.log</string>
+    <string>/Users/admin/buildfarm/worker.log</string>
 </dict>
 </plist>
 ```
