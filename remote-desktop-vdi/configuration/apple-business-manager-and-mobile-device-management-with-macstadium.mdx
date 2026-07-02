@@ -19,43 +19,34 @@ To support IT management activities for MacStadium customers, it is important to
 
 When ABM is paired with an MDM/UEM platform, organizations can deploy, configure, and manage Mac devices across the enterprise with consistent policy enforcement and zero-touch provisioning.
 
-## Key functions of ABM
+## Registering your MacStadium devices
 
-![Diagram of Apple Business Manager key functions: Automated Device Enrollment, App License Distribution, Managed Apple IDs, and Federated Authentication](https://files.readme.io/cd167336f08f2d57b186da178df11ce2537da382d22edcf2c94e4626d7c9c502-ABMKeyFunctions.png)
+![Diagram of the MacStadium device registration process for Apple Business Manager MDM assignment](https://files.readme.io/ecd074c1754281e381130bc0bf82a959d0741481c2dc406878ea40e229d28fc2-MDMAssignment.png)
 
-**Automated Device Enrollment (ADE):** Ensures that Mac computers are automatically enrolled in MDM during setup, enforcing organizational policies from the first boot.
+This is different from a standard ABM setup. Normally, your organization owns the ABM instance and assigns devices to your MDM server directly. On MacStadium, MacStadium owns the ABM registration for your hardware, and you connect your MDM server to it through a token exchange.
 
-**App License Distribution:** Allows IT teams to purchase and assign App Store licenses in bulk via Apple's Volume Purchase Program (VPP), now integrated into ABM.
+<Steps>
+  <Step title="MacStadium creates your MDM Server entry">
+    MacStadium creates an MDM Server entry for your account inside MacStadium's own Apple Business Manager instance.
+  </Step>
+  <Step title="Send MacStadium your MDM server's public key">
+    Retrieve the public key from your MDM platform (Jamf, Kandji, Workspace ONE, or Intune) and send it to your MacStadium account team.
+  </Step>
+  <Step title="MacStadium generates an ABM MDM Server Token">
+    MacStadium generates a token from your public key and sends it back to you.
+  </Step>
+  <Step title="Install the token in your MDM server">
+    Upload the token to your MDM platform to link it to the MDM Server entry MacStadium created in ABM.
+  </Step>
+  <Step title="MacStadium adds your Apple servers to the ABM MDM">
+    Once the token is installed, MacStadium adds your MacStadium Apple hardware to the ABM MDM Server record.
+  </Step>
+  <Step title="Devices auto-enroll">
+    From that point on, every Apple server added to this ABM MDM Server auto-enrolls into your MDM platform automatically.
+  </Step>
+</Steps>
 
-**Managed Apple IDs:** Enables the creation of organization-owned Apple IDs for staff with role-based access to Apple services.
-
-**Federated Authentication:** Supports integration with Microsoft Azure AD for Single Sign-On (SSO) using existing enterprise credentials.
-
-## How ABM works with MDM/UEM tools
-
-Apple Business Manager acts as the authoritative source of truth for Apple devices in the organization, while MDM tools handle configuration, compliance, and ongoing management.
-
-![Diagram showing how Apple Business Manager integrates with MDM/UEM tools for device enrollment and management](https://files.readme.io/76513fcbb175c67ac192f292015254b783688dbb0837372ad9bc207623b0ebb4-UEMTools.png)
-
-### Device enrollment workflow
-
-When a Mac is purchased from Apple or an authorized reseller, it is automatically added to the ABM portal using the reseller's ID. An IT administrator then assigns the device to an MDM server within ABM (for example, Jamf or Kandji). During macOS Setup Assistant, the device contacts Apple, retrieves its assigned MDM configuration, and installs the MDM profile automatically. This process enforces zero-touch deployment with pre-defined settings and restrictions.
-
-## Configuration management
-
-Once enrolled, MDM/UEM tools apply configuration profiles to the Mac. These profiles can include Wi-Fi, VPN, and email settings; security policies such as FileVault, Gatekeeper, and firewall rules; and Dock and system preferences. MDM tools can also install required software and scripts, manage certificates, and monitor device compliance.
-
-## Content and license distribution
-
-ABM integrates with MDM tools to deliver and manage Volume Purchase Program (VPP) app licenses. IT administrators can purchase app licenses in bulk and distribute them to managed devices through their MDM tool. Licenses can be assigned, reassigned, and revoked as needed without manual intervention on each device.
-
-Because ABM and MDM work together, applications can be installed silently on devices without requiring end-user Apple IDs. IT administrators control app deployment and updates, keeping devices consistent with the required applications while meeting security and compliance requirements.
-
-## Lifecycle and security management
-
-MDM and UEM tools support the full device lifecycle, from enrollment through decommissioning. Administrators can remotely lock, wipe, or reset devices to protect data if a device is lost or stolen.
-
-MDM/UEM solutions also provide device inventory and compliance reporting, giving IT teams visibility into the status and compliance of all managed devices. Conditional access policies ensure that only compliant devices can access corporate resources. These tools integrate with identity providers to support Single Sign-On (SSO) and Multi-Factor Authentication (MFA).
+{/* TODO: add portal screenshots for each step once available */}
 
 ## Supported MDM/UEM platforms
 
@@ -68,11 +59,9 @@ Kandji | Pre-built automation library ("Blueprints"), strong security posture
 Workspace ONE | Cross-platform UEM, identity and access control
 Microsoft Intune | Integrated with Microsoft 365 ecosystem, Azure AD compliance policies
 
-## Registering your MacStadium devices
+## Learn more about Apple Business Manager
 
-![Diagram of the MacStadium device registration process for Apple Business Manager MDM assignment](https://files.readme.io/ecd074c1754281e381130bc0bf82a959d0741481c2dc406878ea40e229d28fc2-MDMAssignment.png)
-
-MacStadium creates your MDM Server in MacStadium's ABM system. You then provide your MDM server's public key, and MacStadium generates an ABM MDM Server Token from that key. After you install the token in your MDM server, MacStadium adds your MacStadium Apple servers to the ABM MDM. All Apple servers added to this ABM MDM Server then auto-enroll into your MDM Server.
+This page covers how ABM and MDM/UEM integration work specifically on MacStadium. For general background on Apple Business Manager itself (Automated Device Enrollment, Volume Purchase Program, Managed Apple IDs, and Federated Authentication), see [Apple's Business Manager documentation](https://support.apple.com/guide/apple-business-manager/welcome/web).
 
 ## Get started
 
