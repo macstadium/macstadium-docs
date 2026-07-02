@@ -97,7 +97,7 @@ If you're on bare metal Mac, there's no Ansible Vault. Store the token in your p
     1. In Citrix Cloud Console, go to **Web Studio** > **Utilities** and download the Citrix VDA for macOS `.dmg`.
     2. Copy the `.dmg` to the host over SSH or Screen Sharing.
     3. Set the hostname to match your naming convention before installing. The VDA registers using the hostname at install time.
-    4. Run the installer on the host and grant the TCC (Privacy & Security) permissions it requests. See [Citrix's VDA for macOS installation guide](https://docs.citrix.com/en-us/mac-vda/install) for the exact prompts, they vary by macOS version.
+    4. Run the installer on the host and grant the TCC (Privacy & Security) permissions it requests. See [Citrix's VDA for macOS installation guide](https://docs.citrix.com/en-us/mac-vda/install) for the exact prompts; they vary by macOS version.
     5. Reboot the host. Wait for the reboot to complete before continuing to Step 4.
 
     There's no golden image step for bare metal. Each host is installed and registered individually.
@@ -121,7 +121,7 @@ If you're on bare metal Mac, there's no Ansible Vault. Store the token in your p
   <Tab title="Bare metal Mac">
     The Citrix VDA installer prompts for your Citrix Cloud customer ID and enrollment token during setup. Enter them there to register the host.
 
-    See [Citrix's VDA for macOS installation guide](https://docs.citrix.com/en-us/mac-vda/install) if you need to re-register a host after installation, the reconfiguration steps vary by VDA release.
+    See [Citrix's VDA for macOS installation guide](https://docs.citrix.com/en-us/mac-vda/install) if you need to re-register a host after installation; the reconfiguration steps vary by VDA release.
   </Tab>
 </Tabs>
 
@@ -232,7 +232,7 @@ Restart it with:
 ansible -i inventory all -m shell -a "sudo launchctl kickstart -k system/com.citrix.vda"
 ```
 
-On bare metal Mac, run the same `launchctl` commands directly on the host over SSH, there's no Ansible layer in between.
+On bare metal Mac, run the same `launchctl` commands directly on the host over SSH; there's no Ansible layer in between.
 
 ### Rendezvous connections failing
 
