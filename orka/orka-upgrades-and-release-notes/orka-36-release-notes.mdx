@@ -17,7 +17,7 @@ For downtime expectations, VM impact, and preparation steps by upgrade type, see
 
 ### Release summary
 
-Orka 3.6.3 introduces programmatic image cache removal via CLI and API, completing the `imagecache` command surface. This release also patches 15 CVEs in Go networking libraries, improves ARM node tooling upgrades for AWS deployments, and includes several Upgrade Service reliability fixes.
+Orka 3.6.3 introduces programmatic image cache removal via CLI and API, completing the `imagecache` command surface. This release also patches 15 CVEs in Go networking libraries and improves ARM node tooling upgrades for AWS deployments.
 
 ### New features
 
@@ -30,7 +30,6 @@ Before this release, removing a cached image required a support ticket and manua
 Key behaviors:
 
 * Supports `--tags` for node-scoped removal, consistent with `imagecache add`
-* Removal is blocked if a VM deployment is actively in-flight on the target node
 * Removal status is observable via `orka3 imagecache info`
 
 For usage and examples, see [Image caching](/orka/orka-resources/image-caching), the [orka3 CLI reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove), and the [Orka API reference](https://macstadium.github.io/orka-api-docs/).
@@ -41,7 +40,7 @@ For usage and examples, see [Image caching](/orka/orka-resources/image-caching),
 
 If `orka3 imagecache remove` is issued while `imagecache add` is in progress on the same node, the removal is deferred until the add completes and the image reaches `Ready`. The command does not fail — the remove executes automatically once the add finishes.
 
-Removal is also blocked if a VM deployment is actively in-flight on the target node.
+Removal is not blocked if a VM deployment is actively in progress on the same node. The removal proceeds while the deployment is in flight.
 
 Use `orka3 imagecache info` to verify no active operations are running before issuing a remove.
 
@@ -50,12 +49,6 @@ Use `orka3 imagecache info` to verify no active operations are running before is
 **AWS deployments**
 
 Upgrading tooling on ARM nodes no longer requires replacing the AMI. Previously, an ARM tooling upgrade required deleting the instance, waiting approximately 2 hours for the replacement to provision, redeploying, and reapplying any custom namespace or tag configuration. ARM nodes can now receive tooling updates in place.
-
-**Upgrade Service**
-
-* Fixed: Release workflow no longer appends a version entry if it already exists in the bundle
-* Fixed: Agent and operator image versions in the generated bundle were incorrect
-* Fixed: Master and release branch bundles were overwriting each other on the dev S3 path
 
 ### Bug fixes
 
