@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.6 Release Notes"
-description: "Orka 3.6 release notes: Orka Upgrade Service, Kubernetes 1.35 validation, VM network isolation policies, CloudFront artifact distribution, and patch 3.6.2."
+description: "Orka 3.6 release notes: Orka Upgrade Service, Kubernetes 1.35 validation, VM network isolation policies, CloudFront artifact distribution, and patches 3.6.2 and 3.6.3."
 ---
 
 **IMPORTANT**
@@ -12,6 +12,52 @@ Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools 
 **Some maintenance operations, such as adding Mac compute nodes, require the latest patch version** (the .z in x.y.z). Patch upgrades are zero-downtime, include the latest bug fixes, and can be requested through [MacStadium support](mailto:support@macstadium.com).
 
 For downtime expectations, VM impact, and preparation steps by upgrade type, see [Upgrading Orka](/orka/orka-upgrades-and-release-notes/orka-upgrades).
+
+## Orka 3.6.3
+
+### Release summary
+
+Orka 3.6.3 introduces programmatic image cache removal via CLI and API, completing the `imagecache` command surface. This release also patches 15 CVEs in Go networking libraries and improves ARM node tooling upgrades for AWS deployments.
+
+### New features
+
+#### Image cache removal
+
+Orka 3.6.3 adds `orka3 imagecache remove` and a corresponding `POST /v1/imagecache/remove` API endpoint, enabling selective removal of cached images from Apple silicon nodes.
+
+Before this release, removing a cached image required a support ticket and manual intervention by MacStadium. Customers can now remove images directly to reclaim disk space, rotate old images, and support automated image lifecycle policies.
+
+Key behaviors:
+
+* Supports `--tags` for node-scoped removal, consistent with `imagecache add`
+* Removal status is observable via `orka3 imagecache info`
+
+For usage and examples, see [Image caching](/orka/orka-resources/image-caching), the [orka3 CLI reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove), and the [Orka API reference](https://macstadium.github.io/orka-api-docs/).
+
+### Known issues
+
+**Concurrent imagecache operations**
+
+If `orka3 imagecache remove` is issued while `imagecache add` is in progress on the same node, the removal is deferred until the add completes and the image reaches `Ready`. The command does not fail — the remove executes automatically once the add finishes.
+
+Removal is not blocked if a VM deployment is actively in progress on the same node. The removal proceeds while the deployment is in flight.
+
+Use `orka3 imagecache info` to verify no active operations are running before issuing a remove.
+
+### Improvements
+
+**AWS deployments**
+
+Upgrading tooling on ARM nodes no longer requires replacing the AMI. Previously, an ARM tooling upgrade required deleting the instance, waiting approximately 2 hours for the replacement to provision, redeploying, and reapplying any custom namespace or tag configuration. ARM nodes can now receive tooling updates in place.
+
+### Bug fixes
+
+* Fixed: `imagecache add` with a `:latest` tag created duplicate and stale `ImageCache` CRDs due to missing tag normalization
+* Fixed: The API did not accept single-encoded image names in the imagecache path
+
+### Security
+
+* Updated `golang.org/x/crypto` and `golang.org/x/net` to address CVEs.
 
 ## Orka 3.6.2
 
