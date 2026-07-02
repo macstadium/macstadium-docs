@@ -1,11 +1,15 @@
 ---
 title: "Apple Business Manager and MDM with MacStadium"
-description: "How Apple Business Manager and MDM tools like Jamf and Kandji integrate with MacStadium: key constraints, enrollment workflows, and IT management."
+description: "How Apple Business Manager and MDM tools like Jamf and Intune integrate with MacStadium for bare metal Mac and Orka host enrollment."
 zendesk_id: 39595293549723
 keywords: ["Apple Business Manager", "MDM macOS VDI", "ABM device enrollment", "Jamf VDI", "Intune macOS", "device management"]
 ---
 
 To support IT management activities for MacStadium customers, it is important to understand the interaction and constraints between Apple Business Manager (ABM) and common Mobile Device Management (MDM) or Unified Endpoint Management (UEM) tools.
+
+<Note>
+  This page covers host-level enrollment through Apple Business Manager, which applies to bare metal Macs and Orka host machines. macOS VMs provisioned by Orka can't be registered with ABM directly. See [MDM enrollment for MacStadium VDI desktops](/remote-desktop-vdi/configuration/mdm-enrollment) for the VM enrollment workflow instead.
+</Note>
 
 ## Key concepts
 
@@ -74,4 +78,4 @@ MacStadium creates your MDM Server in MacStadium's ABM system. You then provide 
 
 Interested in evaluating how MacStadium's offerings work together with MDM, UEM, and ABM to solve your business needs? [Contact us for a consultation specific to your implementation.](https://www.macstadium.com/contact-sales)
 
-Want to learn more about technical details, onboarding, and support? [Read our existing documentation for Citrix macOS VDA on MacStadium](https://docs.macstadium.com/docs/macstadium-on-citrix).
+Want to learn more about deploying Citrix VDA for macOS on MacStadium? See [Citrix DaaS configuration](/remote-desktop-vdi/configuration/citrix-daas-configuration).
