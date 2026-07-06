@@ -37,11 +37,11 @@ Jamf Connect and other MDM SSO, MFA, or authentication methods can conflict with
 
 ## MDM and firewall configuration
 
-If your organization manages host machines with an <Tooltip tip="Mobile Device Management — a platform such as Jamf or Workspace ONE used to push configuration profiles and policies to macOS devices.">MDM</Tooltip> solution, MDM profiles can override settings that PCoIP requires.
+If your organization manages host machines with an <Tooltip tip="Mobile Device Management: a platform such as Jamf or Workspace ONE used to push configuration profiles and policies to macOS devices.">MDM</Tooltip> solution, MDM profiles can override settings that PCoIP requires.
 
 ### Apple Firewall re-enabled by MDM
 
-MDM solutions typically push firewall policy on a recurring check-in schedule (often every 30 minutes). If your MDM enforces the Apple Firewall, disabling the firewall manually won't hold — the MDM will re-enable it on the next check-in.
+MDM solutions typically push firewall policy on a recurring check-in schedule (often every 30 minutes). If your MDM enforces the Apple Firewall, disabling the firewall manually won't hold, because the MDM will re-enable it on the next check-in.
 
 The correct fix is to keep the firewall enabled and add explicit PCoIP application exceptions. Unlike a blanket firewall disable, application exceptions survive MDM check-ins.
 
@@ -98,7 +98,7 @@ Resolution: reboot the host.
 
 An active Screen Share or VNC session blocks PCoIP connections. PCoIP is a 1-to-1 protocol and can't establish a session while another remote display connection is open.
 
-Resolution: disconnect all Screen Share and VNC sessions, then retry PCoIP. If you use Screen Share to troubleshoot, always disconnect — don't just close the window — before the user attempts to reconnect via PCoIP.
+Resolution: disconnect all Screen Share and VNC sessions, then retry PCoIP. If you use Screen Share to troubleshoot, always disconnect (don't just close the window) before the user attempts to reconnect via PCoIP.
 
 **Dialog box open on the remote desktop**
 
