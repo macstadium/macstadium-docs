@@ -424,7 +424,7 @@ The machine reboots, re-enrolls, and the policy runs automatically. SSH is enabl
 - **Management Commands:** `EnableRemoteDesktop` shows status Completed.
 - **SSH:** `ssh administrator@[machine-ip]`
   <Note>
-    SSH as the managed admin account created by the PreStage (for example, `administrator`), not as the temporary user. If you used the **With temporary user** script, the temp user has a forced password change policy set. macOS can only fulfill that requirement via the GUI — any SSH session authenticated as the temp user will close immediately after password entry. The managed admin account has no such policy and works over SSH without restriction.
+    SSH as the managed admin account created by the PreStage (for example, `administrator`), not as the temporary user. If you used the **With temporary user** script, the temp user has a forced password change policy set. macOS can only fulfill that requirement via the GUI, so any SSH session authenticated as the temp user will close immediately after password entry. The managed admin account has no such policy and works over SSH without restriction.
   </Note>
 - **Screen Sharing:** connect to `vnc://[machine-ip]` and log in. Use the temporary credentials if you used the **With temporary user** script.
 - The machine no longer appears in the `Remote Management - Disabled` Smart Group.

@@ -38,7 +38,7 @@ For usage and examples, see [Image caching](/orka/orka-resources/image-caching),
 
 **Concurrent imagecache operations**
 
-If `orka3 imagecache remove` is issued while `imagecache add` is in progress on the same node, the removal is deferred until the add completes and the image reaches `Ready`. The command does not fail — the remove executes automatically once the add finishes.
+If `orka3 imagecache remove` is issued while `imagecache add` is in progress on the same node, the removal is deferred until the add completes and the image reaches `Ready`. The command does not fail; the remove executes automatically once the add finishes.
 
 Removal is not blocked if a VM deployment is actively in progress on the same node. The removal proceeds while the deployment is in flight.
 
