@@ -1,6 +1,6 @@
 ---
 title: "Orka Anywhere On-Prem: Troubleshooting VM Deployments"
-description: "Diagnose failed VM deployments on Orka Anywhere on-prem nodes. Covers log locations, keychain and GUI session issues, SIGKILL from Virtual Kubelet, and how to isolate the VM process from Kubernetes."
+description: "Diagnose failed Orka Anywhere on-prem VM deployments: log locations, keychain and GUI session issues, Virtual Kubelet SIGKILL, and Kubernetes isolation."
 ---
 
 When a VM deployment fails in an Orka Anywhere on-prem cluster, the error surfacing in the operator logs is usually generic: `Unable to deploy the VM as the underlying VM process has crashed.` The actual root cause almost always lives on the Mac node itself, not in the cluster. This guide covers where those logs are, how to find which node a failed deployment landed on, and how to work through the most common failures.
