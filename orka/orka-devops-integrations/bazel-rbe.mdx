@@ -1,9 +1,9 @@
 ---
 title: "Bazel Remote Build Execution with Orka"
-description: "Run macOS Bazel RBE workers on Orka VMs. Use open-source buildfarm or BuildBuddy as the RBE control plane — Orka provides the macOS worker fleet either way."
+description: "Run macOS Bazel RBE workers on Orka VMs. Use open-source buildfarm or BuildBuddy as the RBE control plane. Orka provides the macOS worker fleet either way."
 ---
 
-Bazel Remote Build Execution (RBE) splits a build into two distinct layers: the control plane, which schedules actions, manages the cache, and routes work to available workers; and the worker pool, which executes the actions on real hardware. For iOS and macOS builds, the worker pool has to be macOS — and that's where Orka fits.
+Bazel Remote Build Execution (RBE) splits a build into two distinct layers: the control plane, which schedules actions, manages the cache, and routes work to available workers; and the worker pool, which executes the actions on real hardware. For iOS and macOS builds, the worker pool has to be macOS. That's where Orka fits.
 
 This page covers two paths: using open-source [bazel-buildfarm](https://github.com/bazelbuild/bazel-buildfarm) as the control plane, and using [BuildBuddy](https://www.buildbuddy.io/) as the control plane. Both use Orka VMs as the macOS worker fleet.
 
@@ -14,25 +14,25 @@ This page covers two paths: using open-source [bazel-buildfarm](https://github.c
        |
        | gRPC (remote-apis protocol)
        v
-[RBE server — Linux VM]
+[RBE server (Linux VM)]
   bazel-buildfarm or BuildBuddy
   Redis backplane (buildfarm only)
        |
        | dispatch to workers
        v
-[Orka macOS VMs — worker pool]
+[Orka macOS VMs (worker pool)]
   Xcode, Homebrew, Java, Bazelisk
   bazel-buildfarm worker or BuildBuddy executor
        |
        v
-[Remote cache — Linux VM or S3]
+[Remote cache (Linux VM or S3)]
   bazel-remote, buildfarm CAS, or BuildBuddy cache
 ```
 
 The RBE server and cache typically run on a Linux VM co-located in your Orka cluster at MacStadium. The macOS workers are Orka VMs deployed from a versioned OCI image.
 
 <Note>
-Bazel 9.0.0 is not compatible with bazel-buildfarm as of February 2026. Pin your workers and client to Bazel 8.x by running `echo "8.2.1" > .bazelversion` in your buildfarm directory before building. This does not affect BuildBuddy setups.
+The `.bazelversion` file in the bazel-buildfarm source repo controls which Bazel version is used to **build buildfarm itself**. Pin it to 8.x before building the JARs. Your project's Bazel client version (8.x or 9.x) is unaffected. This does not apply to BuildBuddy setups.
 </Note>
 
 ---
@@ -132,7 +132,7 @@ backplane:
 ```
 
 <Note>
-The backplane type is `SHARD`, not `REDIS`. Use a flat YAML config — the `config.minimal.yml` in the examples directory uses a preprocessor format the server does not support at runtime.
+The backplane type is `SHARD`, not `REDIS`. Use a flat YAML config. The `config.minimal.yml` in the examples directory uses a preprocessor format the server does not support at runtime.
 </Note>
 
 **Start the buildfarm server:**
@@ -279,7 +279,7 @@ Because all workers use the same base image and the same buildfarm server addres
 A reasonable starting point for iOS simulator workloads is one worker VM per Orka node, with each VM sized to leave headroom for simulator processes. For compile-bound Bazel actions, higher VM density per node is fine since those workloads are CPU-bound rather than I/O-bound.
 
 <Note>
-If you're running parallel simulator tests across multiple VMs on the same node and see I/O slowdowns, the bottleneck is disk contention from concurrent simulator writes — not virtualization overhead. Distribute across more nodes at lower VM-per-node density rather than reducing the total VM count.
+If you're running parallel simulator tests across multiple VMs on the same node and see I/O slowdowns, the bottleneck is disk contention from concurrent simulator writes, not virtualization overhead. Distribute across more nodes at lower VM-per-node density rather than reducing the total VM count.
 </Note>
 
 ---
@@ -316,12 +316,12 @@ INFO: Build completed successfully, 65 total actions
 
 ## Option 2: BuildBuddy with Orka
 
-If your team is already using BuildBuddy as your RBE control plane, Orka VMs can serve as the self-hosted Mac executors that BuildBuddy dispatches work to. This keeps Orka in the stack as the macOS worker layer — you get clean VM boots, OCI image versioning, and node failover even when BuildBuddy is handling scheduling and caching.
+If your team is already using BuildBuddy as your RBE control plane, Orka VMs can serve as the self-hosted Mac executors that BuildBuddy dispatches work to. This keeps Orka in the stack as the macOS worker layer: clean VM boots, OCI image versioning, and node failover even when BuildBuddy is handling scheduling and caching.
 
 For teams evaluating options, the OSS buildfarm path above is the recommended starting point. It gives you full control over the stack, no additional vendor dependency, and the same Orka worker benefits.
 
 <Note>
-BuildBuddy's snapshot-based warm-runner technology (Firecracker) is Linux-only. On macOS, BuildBuddy falls back to runner recycling — keeping the executor process alive between invocations rather than snapshotting it. Orka VM snapshots work independently of this and are available regardless of which RBE control plane you use.
+BuildBuddy's snapshot-based warm-runner technology (Firecracker) is Linux-only. On macOS, BuildBuddy falls back to runner recycling, keeping the executor process alive between invocations rather than snapshotting it. Orka VM snapshots work independently of this and are available regardless of which RBE control plane you use.
 </Note>
 
 ### What you need
@@ -427,7 +427,7 @@ BuildBuddy's web UI shows build results, cache hit rates, and action timing at [
 
 ## Automate worker lifecycle with GitHub Actions
 
-The manual steps above work for static worker pools that stay running. For ephemeral workers that spin up per build and tear down when it's done, you can drive the whole thing from a GitHub Actions workflow. This pattern works for both the buildfarm and BuildBuddy setups — the difference is just what's installed on the worker image.
+The manual steps above work for static worker pools that stay running. For ephemeral workers that spin up per build and tear down when it's done, you can drive the whole thing from a GitHub Actions workflow. This pattern works for both the buildfarm and BuildBuddy setups; the difference is just what's installed on the worker image.
 
 ### Set up worker auto-start in the base image
 
@@ -452,7 +452,7 @@ exec /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java \
 chmod +x /Users/admin/buildfarm/start-worker.sh
 ```
 
-The script rewrites `publicName` on each boot to match `MY_IP`. This matters: if `publicName` is set to just `:8981` (no hostname), the server will fail every `findMissingBlobs` call with `Invalid DNS name: :8981`. For a single-node setup where the server and worker share a VM, `127.0.0.1` is correct. For a multi-node setup where workers are on separate VMs, set `MY_IP` to the IP the server can reach the worker on.
+The script rewrites `publicName` on each boot to match `MY_IP`. This matters: if `publicName` is set to just `:8981` (no hostname), the server will fail every `findMissingBlobs` call with `Invalid DNS name: :8981`. For a single-node setup where the server and worker share a VM, `127.0.0.1` is correct. For a multi-node setup where workers are on separate VMs, set `MY_IP` to the IP the server can reach that worker on.
 
 **Create a LaunchDaemon** at `/Library/LaunchDaemons/io.macstadium.buildfarm-worker.plist`:
 
@@ -490,13 +490,13 @@ sudo launchctl load /Library/LaunchDaemons/io.macstadium.buildfarm-worker.plist
 
 With this in place, every VM deployed from this image will register with your buildfarm server within about 30 seconds of boot. Save the image in Orka before continuing.
 
-For BuildBuddy setups, the LaunchDaemon above already covers auto-start — no separate script needed since the BuildBuddy LaunchDaemon is set up in the executor image prep steps above.
+For BuildBuddy setups, the LaunchDaemon above already covers auto-start. No separate script is needed since the BuildBuddy LaunchDaemon is set up in the executor image prep steps above.
 
 ---
 
 ### The workflow
 
-The workflow runs on a self-hosted runner that has access to your Orka cluster — the Linux VM running your buildfarm server is the natural home for it, since it's already in the same network as your Orka nodes. Store your Orka service account name and token as GitHub Actions secrets.
+The workflow runs on a self-hosted runner that has access to your Orka cluster. The Linux VM running your buildfarm server is the natural home for it, since it's already in the same network as your Orka nodes. Store your Orka service account token as a GitHub Actions secret (`ORKA_SA_TOKEN`). The runner must have `orka3` installed and configured to point at your cluster (`orka3 config set --api-url <ORKA_ENDPOINT>`).
 
 ```yaml
 name: Bazel RBE
@@ -519,13 +519,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Authenticate with Orka
-        id: auth
-        run: |
-          TOKEN=$(orka3 serviceaccount token "${{ secrets.ORKA_SA_NAME }}" \
-            --endpoint "${{ vars.ORKA_ENDPOINT }}")
-          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
-        env:
-          ORKA_SA_TOKEN: ${{ secrets.ORKA_SA_TOKEN }}
+        run: orka3 user set-token "${{ secrets.ORKA_SA_TOKEN }}"
 
       - name: Deploy worker VMs
         id: workers
@@ -534,10 +528,8 @@ jobs:
           for i in $(seq 1 "$WORKER_COUNT"); do
             NAME="bazel-worker-${{ github.run_id }}-${i}"
             orka3 vm deploy \
-              --vm-config "$WORKER_VM_CONFIG" \
-              --name "$NAME" \
-              --endpoint "${{ vars.ORKA_ENDPOINT }}" \
-              --token "${{ steps.auth.outputs.token }}"
+              --config "$WORKER_VM_CONFIG" \
+              --name "$NAME"
             NAMES+=("$NAME")
           done
           echo "names=${NAMES[*]}" >> "$GITHUB_OUTPUT"
@@ -547,9 +539,7 @@ jobs:
           echo "Waiting for VMs to boot and register with buildfarm..."
           sleep 45
           for NAME in ${{ steps.workers.outputs.names }}; do
-            orka3 vm list "$NAME" \
-              --endpoint "${{ vars.ORKA_ENDPOINT }}" \
-              --token "${{ steps.auth.outputs.token }}"
+            orka3 vm list "$NAME"
           done
 
       - name: Run Bazel build
@@ -563,25 +553,23 @@ jobs:
         if: always()
         run: |
           for NAME in ${{ steps.workers.outputs.names }}; do
-            orka3 vm delete "$NAME" \
-              --endpoint "${{ vars.ORKA_ENDPOINT }}" \
-              --token "${{ steps.auth.outputs.token }}" || true
+            orka3 vm delete "$NAME" || true
           done
 ```
 
 A few things worth noting:
 
-- **Service account auth** — `orka3 serviceaccount token` is the right auth method for CI/CD. User tokens from `orka3 login` expire after an hour and will fail mid-build. See [Manage service accounts](/orka/orka-cluster-access/orka-cluster-manage-service-accounts) for setup.
-- **Worker count** — `WORKER_COUNT` is the lever for parallelism. Start at 2–4 and increase if your build has enough parallelizable actions to justify it. Each VM adds to your cluster's VM slot consumption.
-- **The 45-second wait** — covers VM boot plus the time for the LaunchDaemon to start the buildfarm worker process and register with the server. Adjust down if your cluster consistently boots faster; adjust up if you see "no workers available" errors on the first few actions.
-- **`if: always()` on teardown** — ensures VMs are cleaned up even when the build fails. Without this, a failed build leaves orphaned VMs running until someone deletes them manually.
-- **Unique VM names** — appending `github.run_id` to the VM name avoids naming collisions when multiple builds run in parallel.
+- **Service account auth:** Store the SA token as a long-lived secret (generated once with `orka3 sa token <name> --no-expiration`). In CI, authenticate with `orka3 user set-token`. User tokens from `orka3 login` expire after an hour and will fail mid-build. See [Manage service accounts](/orka/orka-cluster-access/orka-cluster-manage-service-accounts) for setup.
+- **Worker count:** `WORKER_COUNT` is the lever for parallelism. Start at 2-4 and increase if your build has enough parallelizable actions to justify it. Each VM adds to your cluster's VM slot consumption.
+- **The 45-second wait:** Covers VM boot plus the time for the LaunchDaemon to start the buildfarm worker process and register with the server. Adjust down if your cluster consistently boots faster; adjust up if you see "no workers available" errors on the first few actions.
+- **`if: always()` on teardown:** Ensures VMs are cleaned up even when the build fails. Without this, a failed build leaves orphaned VMs running until someone deletes them manually.
+- **Unique VM names:** Appending `github.run_id` to the VM name avoids naming collisions when multiple builds run in parallel.
 
 ---
 
 ### Scale across multiple runs
 
-If your team runs many concurrent builds, the `WORKER_COUNT` per workflow multiplies by the number of parallel runs. Watch your cluster's available VM slots — the Orka web UI shows current VM counts per node. For sustained high-concurrency usage, a persistent warm pool (always-on workers) is more efficient than deploying and tearing down per-build, since it avoids the per-build boot latency and avoids VM slot churn.
+If your team runs many concurrent builds, the `WORKER_COUNT` per workflow multiplies by the number of parallel runs. Watch your cluster's available VM slots in the Orka web UI. For sustained high-concurrency usage, a persistent warm pool (always-on workers) is more efficient than deploying and tearing down per-build, since it avoids per-build boot latency and VM slot churn.
 
 ---
 
@@ -603,7 +591,7 @@ Point your Bazel client at it:
 build --remote_cache=http://<LINUX_VM_IP>:9090
 ```
 
-For buildfarm setups, the buildfarm server also provides a Content-Addressable Store (CAS) — you don't need a separate cache server unless you want to share the cache with clients that bypass RBE.
+For buildfarm setups, the buildfarm server also provides a Content-Addressable Store (CAS). You don't need a separate cache server unless you want to share the cache with clients that bypass RBE.
 
 ---
 
@@ -612,7 +600,7 @@ For buildfarm setups, the buildfarm server also provides a Content-Addressable S
 Bazel RBE handles scheduling, caching, and build orchestration. What it doesn't provide is the macOS worker fleet itself. Running Bazel RBE on macOS requires clean, versioned, isolated Mac workers that don't turn into an ops problem at scale. That's what Orka handles.
 
 - **Clean workers on demand.** Deploying a fresh Orka VM from a versioned OCI image takes seconds. Bare-metal re-imaging takes hours: DEP enrollment, a full Xcode install, re-configuration. At CI cadence, that's not a viable clean-boot story.
-- **Pinned build environments.** Bazel pins toolchain state into the action hash. If your worker's Xcode version or SDK drifts, cache hits collapse. Orka 3.5's Harbor OCI registry lets you version, sign, and pin your build images the same way you'd pin a container image. Bare metal has no equivalent primitive.
+- **Pinned build environments.** Bazel pins toolchain state into the action hash. If your worker's Xcode version or SDK drifts, cache hits collapse. Orka's OCI image support lets you version and pin your build environments using any OCI-compatible registry (ghcr.io, ECR, etc.), the same way you'd pin a container image. Bare metal has no equivalent primitive.
 - **Isolation per project or team.** VMs are isolated by definition. If one build poisons a worker, it doesn't affect other workers. On bare metal, a bad build corrupts the host until someone re-images it.
 - **Worker pool scaling without physical hardware.** Deploy more workers from the same base image. Orka's Kubernetes-native operator supports declarative pool sizing.
 - **Node failover.** If an Orka node goes down, VMs reschedule to healthy nodes. A bare-metal host failure is a manual remediation.

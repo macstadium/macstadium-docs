@@ -8,7 +8,7 @@ This guide walks through a working PoC setup: a remote execution server, an Orka
 The RBE server is [bazel-buildfarm](https://github.com/bazelbuild/bazel-buildfarm), an open-source remote execution implementation maintained by the Bazel team. Everything in this guide runs on a single Orka VM: Redis, the buildfarm server, and the worker all communicate over localhost, which removes the cross-node networking complexity that a production setup would need to address.
 
 <Note>
-**Client compatibility.** Bazel 8.x and 9.x both work as clients against buildfarm. The `.bazelversion` file in the buildfarm source repo reflects what Bazel version is used to *build buildfarm itself* — that's separate from which version your project uses. The guide uses Bazel 8.2.1 for the client.
+**Client compatibility.** Bazel 8.x and 9.x both work as clients against buildfarm. The `.bazelversion` file in the buildfarm source repo controls what Bazel version is used to *build buildfarm itself*, which is separate from which version your project uses. The guide uses Bazel 8.2.1 for the client.
 </Note>
 
 ## What you'll need
@@ -45,7 +45,7 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Java 21 — buildfarm compiles to class version 65 (Java 21), so 17 is not sufficient
+# Java 21 required: buildfarm compiles to class version 65 (Java 21), so 17 is not sufficient
 brew install --cask temurin@21
 
 # Bazelisk (used to build buildfarm from source) and Redis
@@ -61,7 +61,7 @@ redis-cli ping   # should return PONG
 
 ## Step 3: Build buildfarm from source
 
-buildfarm does not publish pre-built JARs. You build both the server and worker JARs from source using Bazelisk. Use the system git — the Homebrew-installed version has a libcurl mismatch on Sonoma.
+buildfarm does not publish pre-built JARs. You build both the server and worker JARs from source using Bazelisk. Use the system git; the Homebrew-installed version has a libcurl mismatch on Sonoma.
 
 ```bash
 mkdir -p ~/buildfarm && cd ~/buildfarm
@@ -112,7 +112,7 @@ backplane:
 ```
 
 <Note>
-The backplane type is `SHARD`, not `REDIS`. The config format uses a flat YAML file — the `!include`-based `config.minimal.yml` in the buildfarm examples directory is a dev preprocessor format the server does not support at runtime.
+The backplane type is `SHARD`, not `REDIS`. The config format uses a flat YAML file. The `!include`-based `config.minimal.yml` in the buildfarm examples directory is a dev preprocessor format the server does not support at runtime.
 </Note>
 
 Start the server:
@@ -245,7 +245,7 @@ The second build should complete in a few seconds with all actions restored from
 INFO: 18 processes: 8 remote cache hit, 10 internal.
 ```
 
-You'll also see a deprecation warning about the buildfarm server's supported API version — this is harmless for a PoC and does not affect correctness.
+You'll also see a deprecation warning about the buildfarm server's supported API version. This is harmless for a PoC and does not affect correctness.
 
 ## Where to go from here
 
@@ -253,7 +253,7 @@ You'll also see a deprecation warning about the buildfarm server's supported API
 
 **Scale workers.** Once the server image is stable, the worker process is the unit you want to multiply. Deploy additional VMs from the same image on the same node (they share the `192.168.64.x` subnet and can reach the server). On M4 Pro hardware, each node supports two concurrent VMs.
 
-**Cross-node networking.** Orka VMs on different physical nodes cannot reach each other's internal IPs — each host runs its own NAT subnet. For a multi-node worker pool, you'll need either a VPN across your cluster, or a dedicated node that runs the server and all workers together. This is the main architectural decision to resolve before moving to production.
+**Cross-node networking.** Orka VMs on different physical nodes cannot reach each other's internal IPs: each host runs its own NAT subnet. For a multi-node worker pool, you'll need either a VPN across your cluster or a dedicated node that runs the server and all workers together. This is the main architectural decision to resolve before moving to production.
 
 **Production cache backend.** Redis on localhost is sufficient for a PoC. For production, use a Redis cluster or managed equivalent sized for your artifact volume.
 
