@@ -253,7 +253,7 @@ You'll also see a deprecation warning about the buildfarm server's supported API
 
 **Scale workers.** Once the server image is stable, the worker process is the unit you want to multiply. Deploy additional VMs from the same image on the same node (they share the `192.168.64.x` subnet and can reach the server). On M4 Pro hardware, each node supports two concurrent VMs.
 
-**Cross-node networking.** Orka VMs on different physical nodes cannot reach each other's internal IPs: each host runs its own NAT subnet. For a multi-node worker pool, you'll need either a VPN across your cluster or a dedicated node that runs the server and all workers together. This is the main architectural decision to resolve before moving to production.
+**Cross-node networking.** With bridge networking enabled (Orka 3.5+), VMs get a routable IP on the host network and can reach each other across nodes directly -- straightforward for a multi-node buildfarm setup. If your cluster is running in NAT mode, VMs on different nodes cannot reach each other's internal IPs; in that case you'll need either a VPN across your cluster or a dedicated node that runs the server and all workers together. Contact MacStadium support to confirm your cluster's network configuration before planning a multi-node setup.
 
 **Production cache backend.** Redis on localhost is sufficient for a PoC. For production, use a Redis cluster or managed equivalent sized for your artifact volume.
 
