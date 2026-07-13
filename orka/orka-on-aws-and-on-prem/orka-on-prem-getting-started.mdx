@@ -266,18 +266,16 @@ The resources you need to backup are:
 
   1. All namespaces with the label orka.macstadium.com/namespace
 
-```
-     kubectl get namespaces -l orka.macstadium.com/namespace=true -o yaml \
-        | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.annotations, .items[].metadata.spec, .items[].metadata.generation, .items[].status, .items[].spec)'
+```bash
+kubectl get namespaces -l orka.macstadium.com/namespace=true -o yaml | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.annotations, .items[].metadata.spec, .items[].metadata.generation, .items[].status, .items[].spec)'
 ```
 Note - we are removing some metadata as otherwise restore would fail.
 
   2. OrkaNodes, VirtualMachineConfigs, ServiceAccounts, Rolebindings from these namespaces
 Note - you need to remove some metadata from these resources. To do that, run the following:
 
-```
-     kubectl get "$resource" -n "$namespace" -o yaml \
-        | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
+```bash
+kubectl get "$resource" -n "$namespace" -o yaml | yq eval 'del(.items[].metadata.resourceVersion, .items[].metadata.uid, .items[].metadata.creationTimestamp, .items[].metadata.selfLink, .items[].metadata.managedFields, .items[].metadata.ownerReferences, .items[].metadata.generation, .items[].status)'
 ```
 These resources can be stored in a yml file, which you can archive and store somewhere.
 

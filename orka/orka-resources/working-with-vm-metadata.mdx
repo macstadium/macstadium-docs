@@ -65,13 +65,7 @@ Keys and values cannot contain commas (`,`) or equal signs (`=`).
 **Orka API**
 
 ```bash
-curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{namespace}/vms' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer <TOKEN>' \
---data-raw '{
-    "orka_vm_name": "<VM_NAME>",
-    "vm_metadata": { "items": [{"key": "<MY_METADATA_KEY>", "value": "<MY_METADATA_VALUE>" }] }
-}'
+curl --location -g --request POST 'http://<ORKA_API_IP>/api/v1/namespaces/{namespace}/vms' --header 'Content-Type: application/json' --header 'Authorization: Bearer <TOKEN>' --data-raw '{"orka_vm_name": "<VM_NAME>", "vm_metadata": { "items": [{"key": "<MY_METADATA_KEY>", "value": "<MY_METADATA_VALUE>" }] }}'
 ```
 
 ## Retrieve VM metadata

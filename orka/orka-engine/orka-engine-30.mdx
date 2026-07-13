@@ -116,15 +116,8 @@ If no options are provided, then defaults are used.
 The following example sets CPU allocation of 4, memory allocation of 8GB, and display resolution settings for 4K with a 23” display (3840 x 2160, DPI=185):
     
     
-```
-orka-engine vm run sonoma-base-4k \
-  --ipsw latest \
-  --disk-size 90 \
-  --cpu 4 \
-  --memory 8192 \
-  --display-width 3840 \
-  --display-height 2160 \
-  --display-dpi 185
+```bash
+orka-engine vm run sonoma-base-4k --ipsw latest --disk-size 90 --cpu 4 --memory 8192 --display-width 3840 --display-height 2160 --display-dpi 185
 ```
 **Another common option is to run headless, and Orka Engine provides an option:**
 
@@ -142,11 +135,8 @@ Without the graphical console, you must use SSH or other non-GUI methods to inte
 </Note>
     
     
-```
-orka-engine vm run sonoma-base \
-  --image latest-ipsw \
-  --disable-graphical-console \
-  sonoma-fix
+```bash
+orka-engine vm run sonoma-base --image latest-ipsw --disable-graphical-console sonoma-fix
 ```
 ## Listing Current Running VMs
 
