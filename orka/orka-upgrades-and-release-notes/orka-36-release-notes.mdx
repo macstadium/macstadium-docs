@@ -45,6 +45,14 @@ The GitHub Actions integration releases independently of Orka and is compatible 
 * Fixed: VM deadlock on long-lived VMs.
 * Fixed: Intel node disk performance regression.
 
+### Known issues
+
+**imagecache remove and concurrent VM deployments**
+
+`orka3 imagecache remove` is not protected against concurrent VM deployments. If removal runs during the brief window between a deployment's pull and clone stages on the same node, the deployment may fail with a generic error. The Engine has no visibility into concurrent VK operations and cannot surface a more specific error.
+
+Do not run `imagecache remove` while VMs are actively being deployed from that image on the target node. Wait for in-flight deployments to complete first. See the [orka3 imagecache remove reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove) for details.
+
 ### Upgrade notes
 
 **CLI API URL for clusters with public NAT IPs**
