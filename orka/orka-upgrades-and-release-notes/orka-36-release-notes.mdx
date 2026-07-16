@@ -17,10 +17,28 @@ For downtime expectations, VM impact, and preparation steps by upgrade type, see
 
 ### Release summary
 
-Orka 3.6.2 is a patch release that fixes a VM runtime deadlock, adds UDP support for host/guest port reservations, ships code-signed `darwin-arm64` binaries for the Virtual Kubelet and Upgrade Service agent, and includes an updated GitHub Actions integration (v1.1.14). It also includes several bug fixes.
+Orka 3.6.2 adds `orka3 imagecache remove` and a corresponding `POST /v1/imagecache/remove` API endpoint, fixes a VM runtime deadlock, adds UDP support for host/guest port reservations, ships code-signed `darwin-arm64` binaries for the Virtual Kubelet and Upgrade Service agent, and includes an updated GitHub Actions integration (v1.1.14).
+
+### New features
+
+#### Image cache removal
+
+Orka 3.6.2 adds `orka3 imagecache remove` and a corresponding `POST /v1/imagecache/remove` API endpoint, enabling selective removal of cached images from Apple silicon nodes.
+
+Before this release, removing a cached image required a support ticket and manual intervention by MacStadium. Customers can now remove images directly to reclaim disk space, rotate old images, and support automated image lifecycle policies.
+
+Key behaviors:
+
+* Supports `--nodes`, `--tags`, and `--all` for targeted or cluster-wide removal, consistent with `imagecache add`
+* Removal is asynchronous; use `orka3 imagecache info` to check status
+
+For usage and examples, see [Image caching](/orka/orka-resources/image-caching), the [orka3 CLI reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove), and the [Orka API reference](https://macstadium.github.io/orka-api-docs/).
 
 ### Improvements
 
+**AWS deployments**
+
+Upgrading tooling on ARM nodes no longer requires replacing the AMI. Previously, an ARM tooling upgrade required deleting the instance, waiting approximately 2 hours for the replacement to provision, redeploying, and reapplying any custom namespace or tag configuration. ARM nodes can now receive tooling updates in place.
 **On-prem deployments**
 
 * Network isolation policy Ansible variables are now available for on-prem deployments. The VM network isolation feature introduced in Orka 3.6.0 can now be configured via Ansible for on-prem clusters. Contact [MacStadium support](mailto:support@macstadium.com) to configure network isolation policies for your cluster.
@@ -44,6 +62,20 @@ The GitHub Actions integration releases independently of Orka and is compatible 
 
 * Fixed: VM deadlock on long-lived VMs.
 * Fixed: Intel node disk performance regression.
+* Fixed: `imagecache add` with a `:latest` tag created duplicate and stale `ImageCache` CRDs due to missing tag normalization.
+* Fixed: The API did not accept single-encoded image names in the imagecache path.
+
+### Security
+
+* Updated `golang.org/x/crypto` and `golang.org/x/net` to address CVEs.
+
+### Known issues
+
+**imagecache remove and concurrent VM deployments**
+
+`orka3 imagecache remove` is not protected against concurrent VM deployments. If removal runs during the brief window between a deployment's pull and clone stages on the same node, the deployment may fail with a generic error.
+
+Do not run `imagecache remove` while VMs are actively being deployed from that image on the target node. Wait for in-flight deployments to complete first. See the [orka3 imagecache remove reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove) for details.
 
 ### Upgrade notes
 
