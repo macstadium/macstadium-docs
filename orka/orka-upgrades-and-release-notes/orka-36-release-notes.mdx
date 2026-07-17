@@ -1,6 +1,6 @@
 ---
 title: "Orka 3.6 Release Notes"
-description: "Orka 3.6 release notes: Orka Upgrade Service, Kubernetes 1.35 validation, VM network isolation policies, CloudFront artifact distribution, and patch 3.6.2."
+description: "Orka 3.6 release notes: Orka Upgrade Service, Kubernetes 1.35, VM network isolation, CloudFront artifact distribution, and patches 3.6.2 and 3.6.3."
 ---
 
 **IMPORTANT**
@@ -13,15 +13,48 @@ Always ensure that your cluster, Orka tools and integrations, and Orka VM Tools 
 
 For downtime expectations, VM impact, and preparation steps by upgrade type, see [Upgrading Orka](/orka/orka-upgrades-and-release-notes/orka-upgrades).
 
+## Orka 3.6.3
+
+### Release summary
+
+Orka 3.6.3 makes image cache removal generally available: `orka3 imagecache remove` and the `POST /v1/imagecache/remove` API endpoint, introduced as early access in Orka 3.6.2, are now available to all customers. The release also adds cache tracking for images cached automatically during VM deployment, normalizes image cache naming to prevent duplicate cache entries, and updates dependencies to address CVEs.
+
+### New features
+
+#### Image cache removal is generally available
+
+Image cache removal, introduced as early access in Orka 3.6.2, is generally available as of Orka 3.6.3. Use `orka3 imagecache remove` or the `POST /v1/imagecache/remove` API endpoint to remove cached images from Apple silicon nodes: reclaim disk space, rotate old images, and automate image lifecycle policies without MacStadium intervention.
+
+Do not remove an image while VMs are actively being deployed from it on the target node; wait for in-flight deployments to complete first. For usage, examples, and details on this limitation, see [Image caching](/orka/orka-resources/image-caching), the [orka3 CLI reference](/orka/orka3-cli-reference/image-management#orka3-imagecache-remove), and the [Orka API reference](https://macstadium.github.io/orka-api-docs/).
+
+### Improvements
+
+**Image cache**
+
+* Images cached automatically during VM deployment on Apple silicon nodes are now tracked as cache entries, the same as images cached explicitly with `orka3 imagecache add`. They appear in `orka3 imagecache info` output and can be removed with `orka3 imagecache remove`, without re-downloading the image.
+* Image cache names are normalized when caching, so the same image referenced in different formats no longer creates duplicate cache entries.
+* The `(Admin-only)` label has been removed from the `orka3 imagecache add` help text. The command does not require administrator privileges.
+
+### Bug fixes
+
+* Fixed: `imagecache add` with a `:latest` tag created duplicate and stale `ImageCache` CRDs due to missing tag normalization.
+* Fixed: The API did not accept single-encoded image names in the imagecache path.
+
+### Security
+
+* Updated `golang.org/x/crypto`, `golang.org/x/net`, `swift-nio`, and other dependencies to address CVEs.
+
 ## Orka 3.6.2
 
 ### Release summary
 
-Orka 3.6.2 adds `orka3 imagecache remove` and a corresponding `POST /v1/imagecache/remove` API endpoint, fixes a VM runtime deadlock, adds UDP support for host/guest port reservations, ships code-signed `darwin-arm64` binaries for the Virtual Kubelet and Upgrade Service agent, and includes an updated GitHub Actions integration (v1.1.14).
+Orka 3.6.2 introduces `orka3 imagecache remove` and a corresponding `POST /v1/imagecache/remove` API endpoint as early access, fixes a VM runtime deadlock, adds UDP support for host/guest port reservations, ships code-signed `darwin-arm64` binaries for the Virtual Kubelet and Upgrade Service agent, and includes an updated GitHub Actions integration (v1.1.14).
 
 ### New features
 
-#### Image cache removal
+#### Image cache removal (early access)
+
+<Note>Image cache removal shipped in Orka 3.6.2 as early access. It is generally available as of Orka 3.6.3.</Note>
 
 Orka 3.6.2 adds `orka3 imagecache remove` and a corresponding `POST /v1/imagecache/remove` API endpoint, enabling selective removal of cached images from Apple silicon nodes.
 
@@ -62,12 +95,6 @@ The GitHub Actions integration releases independently of Orka and is compatible 
 
 * Fixed: VM deadlock on long-lived VMs.
 * Fixed: Intel node disk performance regression.
-* Fixed: `imagecache add` with a `:latest` tag created duplicate and stale `ImageCache` CRDs due to missing tag normalization.
-* Fixed: The API did not accept single-encoded image names in the imagecache path.
-
-### Security
-
-* Updated `golang.org/x/crypto` and `golang.org/x/net` to address CVEs.
 
 ### Known issues
 
