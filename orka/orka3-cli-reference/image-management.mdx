@@ -362,6 +362,7 @@ orka3 imagecache remove ghcr.io/macstadium/orka-images/sequoia:latest --nodes mi
 If the targeted node no longer exists, the cache entry is cleaned up immediately. If the image is not currently cached on a targeted node, the operation completes without error.
 
 If removal reaches `Failed` and retrying does not resolve it, contact [support@macstadium.com](mailto:support@macstadium.com).
+
 ## Remote images (deprecated)
 
 <Warning>This functionality will be removed in future releases. MacStadium recommends using OCI registries for image storage and management. The `orka3 imagecache` command should be used as a replacement to load images into the cluster.</Warning>
