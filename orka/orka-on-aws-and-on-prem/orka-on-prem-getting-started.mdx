@@ -60,8 +60,8 @@ This can be done by setting the following values for your Kubernetes API Server:
 
 
 ```
-  --oidc-issuer-url={{ kube_oidc_url }} # Provided by MacStadium
-  --oidc-client-id={{ kube_oidc_client_id }} # Provided by MacStadium
+  --oidc-issuer-url=KUBE_OIDC_URL # Provided by MacStadium
+  --oidc-client-id=KUBE_OIDC_CLIENT_ID # Provided by MacStadium
   --oidc-username-claim=email
   --oidc-groups-claim=cognito:groups
   --oidc-username-prefix=-
@@ -76,8 +76,8 @@ kind: ClusterConfiguration
 ...
 apiServer:
   extraArgs:
-    oidc-issuer-url: "{{ kube_oidc_url }}" # Provided by MacStadium
-    oidc-client-id: "{{ kube_oidc_client_id }}" # Provided by MacStadium
+    oidc-issuer-url: "KUBE_OIDC_URL" # Provided by MacStadium
+    oidc-client-id: "KUBE_OIDC_CLIENT_ID" # Provided by MacStadium
     oidc-username-claim: "email"
     oidc-groups-claim: "cognito:groups"
     oidc-username-prefix: "-"
