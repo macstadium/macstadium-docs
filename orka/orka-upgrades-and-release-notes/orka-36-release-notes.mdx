@@ -35,6 +35,10 @@ Do not remove an image while VMs are actively being deployed from it on the targ
 * Image cache names are normalized when caching, so the same image referenced in different formats no longer creates duplicate cache entries.
 * The `(Admin-only)` label has been removed from the `orka3 imagecache add` help text. The command does not require administrator privileges.
 
+**Networking**
+
+* VM network isolation allow-list rules are now enforced with explicit precedence over block rules, rather than relying on chain ordering. No effect on existing allow-list configurations.
+
 ### Bug fixes
 
 * Fixed: `imagecache add` with a `:latest` tag created duplicate and stale `ImageCache` CRDs due to missing tag normalization.
