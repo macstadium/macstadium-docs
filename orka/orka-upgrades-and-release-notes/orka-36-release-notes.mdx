@@ -39,6 +39,7 @@ Do not remove an image while VMs are actively being deployed from it on the targ
 
 * Fixed: `imagecache add` with a `:latest` tag created duplicate and stale `ImageCache` CRDs due to missing tag normalization.
 * Fixed: The API did not accept single-encoded image names in the imagecache path.
+* Fixed: VMs deployed to a Mac node with an IP address recently freed by another VM could experience hung NFS mounts, caused by stale firewall connection state left over from the previous VM. VM lifecycle operations now flush this state on deploy and delete.
 
 ### Security
 
