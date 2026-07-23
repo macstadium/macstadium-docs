@@ -83,7 +83,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
   1. **Talk to your MacStadium Account Team about your Orka on AWS install.**
      1. Provide MacStadium with your AWS account ID and region to be used. This is needed so that the Orka AMI can be shared with your account.
   2. Follow the installation steps below for the EKS Cluster and the CodeBuild role.
-     1. **Take note of the EKS Node IAM role and the CodeBuild role ARN, and share the 2 ARNs with your MacStadium Account Team**
+     1. **Take note of the EKS Node IAM role and the CodeBuild role ARN.** You'll use these later in this guide to create access entries for each role; you do not need to share them with MacStadium.
   3. MacStadium provides customers with an OIDC Client ID to use during CodeBuild execution and with AMI details so they can install Orka software onto EC2 Mac.
   4. Follow the steps below to update your build spec with the OIDC Client ID, set up IAM roles so that CodeBuild can manage the EKS cluster, and execute CodeBuild to install Orka Services into the EKS cluster.
   5. Follow the steps below to set up the OIDC Provider
@@ -101,7 +101,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
      1. Select the same region for the cluster as the one used for deploying the EC2 Mac nodes to avoid costly cross-region traffic.
      2. Deploy the cluster in private subnets only, as none of the Orka services need to be accessed from the Internet directly.
      3. Deploy at least two Linux worker nodes for resiliency and high availability.
-  3. **Note down the ARN of the** [**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** MacStadium needs this ARN to configure EKS cluster admin access for the node.
+  3. **Note down the ARN of the** [**EKS Node IAM role**](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)**.** You'll use it to create an EKS access entry for the node later in this guide (see [EKS Access Policies](#eks-access-policies)).
   4. **Optional:**
      1. Set Cluster endpoint access to “Private” to restrict access to your cluster API from the Internet.
         1. This setting depends on your access needs. All Orka clients (CLI, integrations, etc.) must have connectivity to the cluster.
@@ -120,7 +120,7 @@ We recommend that you deploy the Orka services to a distinct VPC and implement y
 
 MacStadium recommends using CodeBuild to run Ansible and configure the EKS cluster. CodeBuild provides direct visibility to the cluster, alleviating networking concerns. To set up a CodeBuild project as an Ansible runner:
 
-  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role; you will need to share the ARN with MacStadium and modify the role later.**
+  1. **Allow AWS to create the CodeBuild role for you. Note down the name and ARN of the role; you will need it to create an access entry and modify the role's permissions later in these steps.**
   2. Select the following options:
      1. Project type - Default project
      2. Source - no source
@@ -145,7 +145,7 @@ MacStadium recommends using CodeBuild to run Ansible and configure the EKS clust
 Where:
 `{cluster_name}` - the name of your EKS cluster
 `{region}` - the region where the cluster is deployed
-`{k8s_api_address}` - the K8s API address of your cluster
+`{k8s_api_address}` - the K8s API address of your cluster. In the EKS console, open your cluster's **Overview** tab and copy the **API server endpoint**.
 `{kube_oidc_client_id}` - the OIDC client ID provided by MacStadium
 
   5. Save the configuration.
