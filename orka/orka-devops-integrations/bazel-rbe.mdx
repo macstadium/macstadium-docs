@@ -1,0 +1,608 @@
+---
+title: "Bazel Remote Build Execution with Orka"
+description: "Run macOS Bazel RBE workers on Orka VMs. Use open-source buildfarm or BuildBuddy as the RBE control plane. Orka provides the macOS worker fleet either way."
+---
+
+Bazel Remote Build Execution (RBE) splits a build into two distinct layers: the control plane, which schedules actions, manages the cache, and routes work to available workers; and the worker pool, which executes the actions on real hardware. For iOS and macOS builds, the worker pool has to be macOS. That's where Orka fits.
+
+This page covers two paths: using open-source [bazel-buildfarm](https://github.com/bazelbuild/bazel-buildfarm) as the control plane, and using [BuildBuddy](https://www.buildbuddy.io/) as the control plane. Both use Orka VMs as the macOS worker fleet.
+
+## Architecture
+
+```
+[Developer / CI]
+       |
+       | gRPC (remote-apis protocol)
+       v
+[RBE server (Linux VM)]
+  bazel-buildfarm or BuildBuddy
+  Redis backplane (buildfarm only)
+       |
+       | dispatch to workers
+       v
+[Orka macOS VMs (worker pool)]
+  Xcode, Homebrew, Java, Bazelisk
+  bazel-buildfarm worker or BuildBuddy executor
+       |
+       v
+[Remote cache (Linux VM or S3)]
+  bazel-remote, buildfarm CAS, or BuildBuddy cache
+```
+
+The RBE server and cache typically run on a Linux VM co-located in your Orka cluster at MacStadium. The macOS workers are Orka VMs deployed from a versioned OCI image.
+
+<Note>
+The `.bazelversion` file in the bazel-buildfarm source repo controls which Bazel version is used to **build buildfarm itself**. Pin it to 8.x before building the JARs. Your project's Bazel client version (8.x or 9.x) is unaffected. This does not apply to BuildBuddy setups.
+</Note>
+
+---
+
+## Option 1: Open-source RBE with bazel-buildfarm
+
+### What you need
+
+- One Ubuntu VM (or bare-metal Linux) for the buildfarm server and Redis. This can be a co-located VM in your MacStadium environment.
+- One or more Orka VMs as macOS workers. Scale the worker count to match your parallelism target.
+- Your Bazel client (local dev machine or CI runner) with network access to the buildfarm server.
+
+### Set up the buildfarm server
+
+On your Ubuntu VM:
+
+**Install Java:**
+
+```bash
+sudo apt install default-jdk
+```
+
+**Install Docker:**
+
+```bash
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+**Install Bazel:**
+
+```bash
+sudo apt install npm
+sudo npm install -g @bazel/bazelisk
+```
+
+**Start Redis:**
+
+```bash
+sudo docker run -d --rm --name buildfarm-redis -p 6379:6379 redis:7.2.4
+```
+
+**Install redis-cli and configure Redis:**
+
+```bash
+sudo apt install redis-tools
+redis-cli config set stop-writes-on-bgsave-error no
+```
+
+**Clone and build buildfarm:**
+
+```bash
+sudo apt install gh
+gh auth login
+gh repo clone bazelbuild/bazel-buildfarm
+cd bazel-buildfarm
+
+# Pin Bazel version (9.0.0 is not supported)
+echo "8.2.1" > .bazelversion
+
+mkdir -p ~/buildfarm
+bazel build //src/main/java/build/buildfarm:buildfarm-server_deploy.jar
+cp bazel-bin/src/main/java/build/buildfarm/buildfarm-server_deploy.jar ~/buildfarm/
+```
+
+**Create the server config** at `~/buildfarm/server-config.yml`:
+
+```yaml
+digestFunction: SHA256
+defaultActionTimeout: 600
+maximumActionTimeout: 3600
+server:
+  instanceType: SHARD
+  name: shard
+  port: 8980
+backplane:
+  type: SHARD
+  redisUri: redis://<LINUX_VM_IP>:6379
+  queues:
+  - name: cpu
+    allowUnmatched: true
+    properties:
+    - name: min-cores
+      value: '*'
+    - name: max-cores
+      value: '*'
+```
+
+<Note>
+The backplane type is `SHARD`, not `REDIS`. Use a flat YAML config. The `config.minimal.yml` in the examples directory uses a preprocessor format the server does not support at runtime.
+</Note>
+
+**Start the buildfarm server:**
+
+```bash
+cd ~/buildfarm
+nohup java -jar buildfarm-server_deploy.jar server-config.yml > server.log 2>&1 &
+```
+
+The server listens on port `8980` by default.
+
+---
+
+### Prepare your Orka worker image
+
+Create a base macOS VM image with the following installed. You'll deploy multiple workers from this image, so getting it right once avoids repeating the setup on each VM.
+
+**Install Xcode:**
+
+Download Xcode from [developer.apple.com](https://developer.apple.com/xcode/). Launch it, accept the license agreements, and complete the initial setup. Make sure the version matches your project's minimum Xcode requirement.
+
+**Install Homebrew:**
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Follow the post-install instructions to add Homebrew to your shell path.
+
+**Install dependencies:**
+
+```bash
+brew install temurin    # Java
+brew install bazelisk   # Bazel version manager
+brew install gh         # GitHub CLI
+```
+
+**Clone and build buildfarm:**
+
+```bash
+gh auth login
+gh repo clone bazelbuild/bazel-buildfarm
+cd bazel-buildfarm
+echo "8.2.1" > .bazelversion
+```
+
+Build the worker JAR. The `--copt` flags work around a macOS deployment target issue in abseil-cpp and protobuf:
+
+```bash
+bazel build \
+  //src/main/java/build/buildfarm:buildfarm-shard-worker_deploy.jar \
+  --host_copt=-mmacosx-version-min=10.15 \
+  --copt=-mmacosx-version-min=10.15
+
+mkdir -p ~/buildfarm
+cp bazel-bin/src/main/java/build/buildfarm/buildfarm-shard-worker_deploy.jar ~/buildfarm/
+```
+
+This takes 3 to 5 minutes on first run.
+
+**Create the macOS execution wrapper:**
+
+```bash
+printf '#!/bin/bash\nexec "$@"\n' > ~/buildfarm/macos-wrapper.sh
+chmod +x ~/buildfarm/macos-wrapper.sh
+```
+
+Once everything is installed, save this VM as a base image in Orka. You'll use this image for all your workers.
+
+---
+
+### Deploy and configure workers
+
+For each worker, deploy an Orka VM from your base image and configure it to point at the buildfarm server.
+
+**Deploy a worker VM:**
+
+```bash
+orka3 vm deploy --vm-config <your-worker-config> --name <worker-name>
+```
+
+**Create the worker config** at `~/buildfarm/worker-config.yml`:
+
+```yaml
+digestFunction: SHA256
+defaultActionTimeout: 600
+maximumActionTimeout: 3600
+backplane:
+  type: SHARD
+  redisUri: redis://<LINUX_VM_IP>:6379
+  queues:
+  - name: cpu
+    allowUnmatched: true
+    properties:
+    - name: min-cores
+      value: '*'
+    - name: max-cores
+      value: '*'
+worker:
+  port: 8981
+  publicName: <WORKER_VM_IP>:8981
+  root: /tmp/worker
+  dequeueMatchSettings:
+    allowUnmatched: true
+  storages:
+  - type: FILESYSTEM
+    path: /tmp/worker/cache
+    maxSizeBytes: 2147483648
+    fileDirectoriesIndexInMemory: false
+    skipLoad: false
+    hexBucketLevels: 0
+    execRootCopyFallback: false
+  executeStageWidth: 1
+  inputFetchStageWidth: 1
+  inputFetchDeadline: 60
+  reportResultStageWidth: 1
+  linkExecFileSystem: false
+  linkInputDirectories: false
+  executionPolicies:
+  - name: test
+    executionWrapper:
+      path: /Users/admin/buildfarm/macos-wrapper.sh
+      arguments:
+```
+
+The `publicName` field must be unique for each worker. Use each VM's IP address. Workers that share a `publicName` will conflict.
+
+**Start the worker:**
+
+```bash
+mkdir -p /tmp/worker/cache
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+nohup $JAVA_HOME/bin/java -jar ~/buildfarm/buildfarm-shard-worker_deploy.jar ~/buildfarm/worker-config.yml > ~/buildfarm/worker.log 2>&1 &
+```
+
+Repeat for each worker VM. All workers point at the same Redis and buildfarm server; the server distributes work across the pool automatically.
+
+---
+
+### Scale the worker pool
+
+Because all workers use the same base image and the same buildfarm server address, scaling is straightforward: deploy more Orka VMs from the base image, set a unique `publicName` on each, and start the worker process.
+
+A reasonable starting point for iOS simulator workloads is one worker VM per Orka node, with each VM sized to leave headroom for simulator processes. For compile-bound Bazel actions, higher VM density per node is fine since those workloads are CPU-bound rather than I/O-bound.
+
+<Note>
+If you're running parallel simulator tests across multiple VMs on the same node and see I/O slowdowns, the bottleneck is disk contention from concurrent simulator writes, not virtualization overhead. Distribute across more nodes at lower VM-per-node density rather than reducing the total VM count.
+</Note>
+
+---
+
+### Connect your Bazel client
+
+Add the following to your project's `.bazelrc`:
+
+```
+build --remote_executor=grpc://<LINUX_VM_IP>:8980
+build --remote_default_exec_properties=execution-policy=test
+```
+
+Or pass the flags directly:
+
+```bash
+bazel build \
+  --remote_executor=grpc://<LINUX_VM_IP>:8980 \
+  --remote_default_exec_properties=execution-policy=test \
+  //your:target
+```
+
+To verify the cache is working, run the build once (cold), then run `bazel clean --expunge` and build again. The second build should show `remote cache hit` for most actions and complete significantly faster.
+
+Expected output on a warm cache:
+
+```
+INFO: Elapsed time: 6.595s, Critical Path: 0.14s
+INFO: 65 processes: 28 remote cache hit, 37 internal.
+INFO: Build completed successfully, 65 total actions
+```
+
+---
+
+## Option 2: BuildBuddy with Orka
+
+If your team is already using BuildBuddy as your RBE control plane, Orka VMs can serve as the self-hosted Mac executors that BuildBuddy dispatches work to. This keeps Orka in the stack as the macOS worker layer: clean VM boots, OCI image versioning, and node failover even when BuildBuddy is handling scheduling and caching.
+
+For teams evaluating options, the OSS buildfarm path above is the recommended starting point. It gives you full control over the stack, no additional vendor dependency, and the same Orka worker benefits.
+
+<Note>
+BuildBuddy's snapshot-based warm-runner technology (Firecracker) is Linux-only. On macOS, BuildBuddy falls back to runner recycling, keeping the executor process alive between invocations rather than snapshotting it. Orka VM snapshots work independently of this and are available regardless of which RBE control plane you use.
+</Note>
+
+### What you need
+
+- An existing BuildBuddy deployment (cloud or self-hosted).
+- One or more Orka VMs as macOS executors.
+- Your Bazel client with network access to BuildBuddy's gRPC endpoint.
+
+### Prepare your Orka executor image
+
+Install the following on a base macOS VM:
+
+**Xcode:** Download from [developer.apple.com](https://developer.apple.com/xcode/). Accept the license and complete setup.
+
+**Homebrew:**
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+**Dependencies:**
+
+```bash
+brew install bazelisk
+```
+
+**BuildBuddy executor binary:**
+
+Download the latest `buildbuddy-executor` binary for macOS/ARM from [BuildBuddy's GitHub releases](https://github.com/buildbuddy-io/buildbuddy/releases). Move it to a stable path:
+
+```bash
+chmod +x buildbuddy-executor
+sudo mv buildbuddy-executor /usr/local/bin/buildbuddy-executor
+```
+
+**Create the executor config file** at `/etc/buildbuddy/executor.yaml`:
+
+```yaml
+executor:
+  app_target: "grpcs://remote.buildbuddy.io:443"
+  api_key: "<YOUR_BUILDBUDDY_API_KEY>"
+  local_cache_size_bytes: 10000000000  # 10 GB local disk cache
+```
+
+For a self-hosted BuildBuddy deployment, replace `remote.buildbuddy.io` with your BuildBuddy server address.
+
+**Run the executor:**
+
+```bash
+buildbuddy-executor --config_file /etc/buildbuddy/executor.yaml
+```
+
+To keep the executor running across VM restarts, configure it as a LaunchDaemon. Create `/Library/LaunchDaemons/io.buildbuddy.executor.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>io.buildbuddy.executor</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/buildbuddy-executor</string>
+        <string>--config_file</string>
+        <string>/etc/buildbuddy/executor.yaml</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/var/log/buildbuddy-executor.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/buildbuddy-executor.log</string>
+</dict>
+</plist>
+```
+
+Load it:
+
+```bash
+sudo launchctl load /Library/LaunchDaemons/io.buildbuddy.executor.plist
+```
+
+Save this VM as a base image and deploy additional executor VMs from it to scale the pool.
+
+---
+
+### Connect your Bazel client
+
+Add the following to your `.bazelrc`:
+
+```
+build --remote_executor=grpcs://remote.buildbuddy.io:443
+build --remote_cache=grpcs://remote.buildbuddy.io:443
+build --remote_header=x-buildbuddy-api-key=<YOUR_API_KEY>
+```
+
+BuildBuddy's web UI shows build results, cache hit rates, and action timing at [app.buildbuddy.io](https://app.buildbuddy.io).
+
+---
+
+## Automate worker lifecycle with GitHub Actions
+
+The manual steps above work for static worker pools that stay running. For ephemeral workers that spin up per build and tear down when it's done, you can drive the whole thing from a GitHub Actions workflow. This pattern works for both the buildfarm and BuildBuddy setups; the difference is just what's installed on the worker image.
+
+### Set up worker auto-start in the base image
+
+The key to making ephemeral workers viable is having the worker process start automatically when the VM boots, so the GitHub Actions workflow doesn't need to SSH into each VM to configure it. Do this once when building your base image, then save it.
+
+**Create a startup script** at `/Users/admin/buildfarm/start-worker.sh`:
+
+```bash
+#!/bin/bash
+MY_IP=127.0.0.1
+sed -i "" "s|publicName:.*|publicName: ${MY_IP}:8981|" /Users/admin/buildfarm/worker-config.yml
+until nc -z 127.0.0.1 8980 2>/dev/null; do sleep 2; done
+mkdir -p /tmp/worker/cache /Users/admin/buildfarm/tmp
+exec /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java \
+  -Djava.net.preferIPv4Stack=true \
+  -Djava.io.tmpdir=/Users/admin/buildfarm/tmp \
+  -jar /Users/admin/buildfarm/buildfarm-shard-worker_deploy.jar \
+  /Users/admin/buildfarm/worker-config.yml
+```
+
+```bash
+chmod +x /Users/admin/buildfarm/start-worker.sh
+```
+
+The script rewrites `publicName` on each boot to match `MY_IP`. This matters: if `publicName` is set to just `:8981` (no hostname), the server will fail every `findMissingBlobs` call with `Invalid DNS name: :8981`. For a single-node setup where the server and worker share a VM, `127.0.0.1` is correct. For a multi-node setup where workers are on separate VMs, set `MY_IP` to the IP the server can reach that worker on.
+
+**Create a LaunchDaemon** at `/Library/LaunchDaemons/io.macstadium.buildfarm-worker.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>io.macstadium.buildfarm-worker</string>
+    <key>UserName</key>
+    <string>admin</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/admin/buildfarm</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/admin/buildfarm/start-worker.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/admin/buildfarm/worker.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/admin/buildfarm/worker.log</string>
+</dict>
+</plist>
+```
+
+```bash
+sudo launchctl load /Library/LaunchDaemons/io.macstadium.buildfarm-worker.plist
+```
+
+With this in place, every VM deployed from this image will register with your buildfarm server within about 30 seconds of boot. Save the image in Orka before continuing.
+
+For BuildBuddy setups, the LaunchDaemon above already covers auto-start. No separate script is needed since the BuildBuddy LaunchDaemon is set up in the executor image prep steps above.
+
+---
+
+### The workflow
+
+The workflow runs on a self-hosted runner that has access to your Orka cluster. The Linux VM running your buildfarm server is the natural home for it, since it's already in the same network as your Orka nodes. Store your Orka service account token as a GitHub Actions secret (`ORKA_SA_TOKEN`). The runner must have `orka3` installed and configured to point at your cluster (`orka3 config set --api-url <ORKA_ENDPOINT>`).
+
+```yaml
+name: Bazel RBE
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  BUILDFARM_SERVER: "10.221.188.8"    # IP of your persistent buildfarm server
+  WORKER_COUNT: "4"                    # How many Orka worker VMs to deploy
+  WORKER_VM_CONFIG: "bazel-worker"    # Name of your saved Orka VM config
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate with Orka
+        run: orka3 user set-token "${{ secrets.ORKA_SA_TOKEN }}"
+
+      - name: Deploy worker VMs
+        id: workers
+        run: |
+          NAMES=()
+          for i in $(seq 1 "$WORKER_COUNT"); do
+            NAME="bazel-worker-${{ github.run_id }}-${i}"
+            orka3 vm deploy \
+              --config "$WORKER_VM_CONFIG" \
+              --name "$NAME"
+            NAMES+=("$NAME")
+          done
+          echo "names=${NAMES[*]}" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for workers to register
+        run: |
+          echo "Waiting for VMs to boot and register with buildfarm..."
+          sleep 45
+          for NAME in ${{ steps.workers.outputs.names }}; do
+            orka3 vm list "$NAME"
+          done
+
+      - name: Run Bazel build
+        run: |
+          bazel build \
+            --remote_executor=grpc://${{ env.BUILDFARM_SERVER }}:8980 \
+            --remote_default_exec_properties=execution-policy=test \
+            //...
+
+      - name: Tear down worker VMs
+        if: always()
+        run: |
+          for NAME in ${{ steps.workers.outputs.names }}; do
+            orka3 vm delete "$NAME" || true
+          done
+```
+
+A few things worth noting:
+
+- **Service account auth:** Store the SA token as a long-lived secret (generated once with `orka3 sa token <name> --no-expiration`). In CI, authenticate with `orka3 user set-token`. User tokens from `orka3 login` expire after an hour and will fail mid-build. See [Manage service accounts](/orka/orka-cluster-access/orka-cluster-manage-service-accounts) for setup.
+- **Worker count:** `WORKER_COUNT` is the lever for parallelism. Start at 2-4 and increase if your build has enough parallelizable actions to justify it. Each VM adds to your cluster's VM slot consumption.
+- **The 45-second wait:** Covers VM boot plus the time for the LaunchDaemon to start the buildfarm worker process and register with the server. Adjust down if your cluster consistently boots faster; adjust up if you see "no workers available" errors on the first few actions.
+- **`if: always()` on teardown:** Ensures VMs are cleaned up even when the build fails. Without this, a failed build leaves orphaned VMs running until someone deletes them manually.
+- **Unique VM names:** Appending `github.run_id` to the VM name avoids naming collisions when multiple builds run in parallel.
+
+---
+
+### Scale across multiple runs
+
+If your team runs many concurrent builds, the `WORKER_COUNT` per workflow multiplies by the number of parallel runs. Watch your cluster's available VM slots in the Orka web UI. For sustained high-concurrency usage, a persistent warm pool (always-on workers) is more efficient than deploying and tearing down per-build, since it avoids per-build boot latency and VM slot churn.
+
+---
+
+For both setups, a shared remote cache means build outputs survive VM restarts and are shared across all workers and clients. The simplest approach is running [bazel-remote](https://github.com/buchgr/bazel-remote) on your Linux VM:
+
+```bash
+docker run -d \
+  -u 1000:1000 \
+  -v /path/to/cache:/data \
+  -p 9090:8080 \
+  --restart unless-stopped \
+  buchgr/bazel-remote-cache \
+  --max_size=50
+```
+
+Point your Bazel client at it:
+
+```
+build --remote_cache=http://<LINUX_VM_IP>:9090
+```
+
+For buildfarm setups, the buildfarm server also provides a Content-Addressable Store (CAS). You don't need a separate cache server unless you want to share the cache with clients that bypass RBE.
+
+---
+
+## Why Orka for the worker pool
+
+Bazel RBE handles scheduling, caching, and build orchestration. What it doesn't provide is the macOS worker fleet itself. Running Bazel RBE on macOS requires clean, versioned, isolated Mac workers that don't turn into an ops problem at scale. That's what Orka handles.
+
+- **Clean workers on demand.** Deploying a fresh Orka VM from a versioned OCI image takes seconds. Bare-metal re-imaging takes hours: DEP enrollment, a full Xcode install, re-configuration. At CI cadence, that's not a viable clean-boot story.
+- **Pinned build environments.** Bazel pins toolchain state into the action hash. If your worker's Xcode version or SDK drifts, cache hits collapse. Orka's OCI image support lets you version and pin your build environments using any OCI-compatible registry (ghcr.io, ECR, etc.), the same way you'd pin a container image. Bare metal has no equivalent primitive.
+- **Isolation per project or team.** VMs are isolated by definition. If one build poisons a worker, it doesn't affect other workers. On bare metal, a bad build corrupts the host until someone re-images it.
+- **Worker pool scaling without physical hardware.** Deploy more workers from the same base image. Orka's Kubernetes-native operator supports declarative pool sizing.
+- **Node failover.** If an Orka node goes down, VMs reschedule to healthy nodes. A bare-metal host failure is a manual remediation.
+
+For more on running Bazel RBE on Orka, contact [support@macstadium.com](mailto:support@macstadium.com) or speak with your MacStadium solutions engineer.

@@ -1,0 +1,267 @@
+---
+title: "Bazel RBE + Orka: Getting Started"
+description: "How to set up a Bazel Remote Build Execution proof of concept with Orka-hosted macOS workers: server setup, worker image preparation, and running your first remote build."
+---
+
+This guide walks through a working PoC setup: a remote execution server, an Orka-hosted macOS worker registered against it, and a Bazel client that offloads actions to that worker. By the end, you can run a build, confirm actions executed remotely, and verify cache hits on a clean rebuild.
+
+The RBE server is [bazel-buildfarm](https://github.com/bazelbuild/bazel-buildfarm), an open-source remote execution implementation maintained by the Bazel team. Everything in this guide runs on a single Orka VM: Redis, the buildfarm server, and the worker all communicate over localhost, which removes the cross-node networking complexity that a production setup would need to address.
+
+<Note>
+**Client compatibility.** Bazel 8.x and 9.x both work as clients against buildfarm. The `.bazelversion` file in the buildfarm source repo controls what Bazel version is used to *build buildfarm itself*, which is separate from which version your project uses. The guide uses Bazel 8.2.1 for the client.
+</Note>
+
+## What you'll need
+
+- An Orka 3.x cluster with at least one arm64 node
+- A macOS base image in your Orka cluster with Remote Login (SSH) enabled
+- Bazelisk installed on the machine where you'll run Bazel: `brew install bazelisk`
+
+No Linux host, no Docker. The macOS VM handles everything.
+
+## How it fits together
+
+Three processes run on a single Orka VM:
+
+1. **Redis** stores the Content Addressable Storage (CAS) and Action Cache (AC).
+2. **buildfarm server** accepts remote execution requests from Bazel clients and schedules actions.
+3. **buildfarm shard worker** executes build actions and reports results back to the server.
+
+The Bazel client connects to the server from outside the VM over an SSH tunnel.
+
+## Step 1: Deploy the VM
+
+```bash
+orka3 vm deploy buildfarm --image <your-base-image>
+```
+
+Note the SSH port from the output. All subsequent steps SSH into this VM.
+
+## Step 2: Install dependencies
+
+```bash
+# Homebrew (non-interactive)
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Java 21 required: buildfarm compiles to class version 65 (Java 21), so 17 is not sufficient
+brew install --cask temurin@21
+
+# Bazelisk (used to build buildfarm from source) and Redis
+brew install bazelisk redis
+```
+
+Start Redis bound to localhost:
+
+```bash
+redis-server /opt/homebrew/etc/redis.conf --daemonize yes
+redis-cli ping   # should return PONG
+```
+
+## Step 3: Build buildfarm from source
+
+buildfarm does not publish pre-built JARs. You build both the server and worker JARs from source using Bazelisk. Use the system git; the Homebrew-installed version has a libcurl mismatch on Sonoma.
+
+```bash
+mkdir -p ~/buildfarm && cd ~/buildfarm
+/usr/bin/git clone --depth=1 https://github.com/bazelbuild/bazel-buildfarm.git
+cd bazel-buildfarm
+```
+
+Build both JARs. The `--host_copt` and `--copt` flags are required to work around a macOS deployment target issue in abseil-cpp and protobuf:
+
+```bash
+bazel build \
+  //src/main/java/build/buildfarm:buildfarm-server_deploy.jar \
+  //src/main/java/build/buildfarm:buildfarm-shard-worker_deploy.jar \
+  --host_copt=-mmacosx-version-min=10.15 \
+  --copt=-mmacosx-version-min=10.15
+```
+
+This takes 3 to 5 minutes on first run. Copy the JARs out of the build cache:
+
+```bash
+cp bazel-bin/src/main/java/build/buildfarm/buildfarm-server_deploy.jar ~/buildfarm/
+cp bazel-bin/src/main/java/build/buildfarm/buildfarm-shard-worker_deploy.jar ~/buildfarm/
+```
+
+## Step 4: Configure and start the server
+
+Create `~/buildfarm/server-config.yml`:
+
+```yaml
+digestFunction: SHA256
+defaultActionTimeout: 600
+maximumActionTimeout: 3600
+server:
+  instanceType: SHARD
+  name: shard
+  port: 8980
+backplane:
+  type: SHARD
+  redisUri: redis://127.0.0.1:6379
+  queues:
+  - name: cpu
+    allowUnmatched: true
+    properties:
+    - name: min-cores
+      value: '*'
+    - name: max-cores
+      value: '*'
+```
+
+<Note>
+The backplane type is `SHARD`, not `REDIS`. The config format uses a flat YAML file. The `!include`-based `config.minimal.yml` in the buildfarm examples directory is a dev preprocessor format the server does not support at runtime.
+</Note>
+
+Start the server:
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+cd ~/buildfarm
+nohup $JAVA_HOME/bin/java -jar buildfarm-server_deploy.jar server-config.yml > server.log 2>&1 &
+```
+
+Confirm it initialized:
+
+```bash
+grep "initialized" ~/buildfarm/server.log
+# Jun 04, 2026 ... buildfarm-server-127.0.0.1:8980-... initialized
+```
+
+## Step 5: Configure and start the worker
+
+Create the macOS execution wrapper. buildfarm requires a wrapper script around action invocations; on macOS, a passthrough is sufficient:
+
+```bash
+printf '#!/bin/bash\nexec "$@"\n' > ~/buildfarm/macos-wrapper.sh
+chmod +x ~/buildfarm/macos-wrapper.sh
+```
+
+Create `~/buildfarm/worker-config.yml`:
+
+```yaml
+digestFunction: SHA256
+defaultActionTimeout: 600
+maximumActionTimeout: 3600
+backplane:
+  type: SHARD
+  redisUri: redis://127.0.0.1:6379
+  queues:
+  - name: cpu
+    allowUnmatched: true
+    properties:
+    - name: min-cores
+      value: '*'
+    - name: max-cores
+      value: '*'
+worker:
+  port: 8981
+  publicName: 127.0.0.1:8981
+  root: /tmp/worker
+  dequeueMatchSettings:
+    allowUnmatched: true
+  storages:
+  - type: FILESYSTEM
+    path: /tmp/worker/cache
+    maxSizeBytes: 2147483648
+    fileDirectoriesIndexInMemory: false
+    skipLoad: false
+    hexBucketLevels: 0
+    execRootCopyFallback: false
+  executeStageWidth: 1
+  inputFetchStageWidth: 1
+  inputFetchDeadline: 60
+  reportResultStageWidth: 1
+  linkExecFileSystem: false
+  linkInputDirectories: false
+  executionPolicies:
+  - name: test
+    executionWrapper:
+      path: /Users/admin/buildfarm/macos-wrapper.sh
+      arguments:
+```
+
+Start the worker:
+
+```bash
+mkdir -p /tmp/worker/cache
+nohup $JAVA_HOME/bin/java -jar ~/buildfarm/buildfarm-shard-worker_deploy.jar ~/buildfarm/worker-config.yml > ~/buildfarm/worker.log 2>&1 &
+```
+
+Confirm it registered:
+
+```bash
+grep "initialized" ~/buildfarm/worker.log
+# Jun 04, 2026 ... buildfarm-worker-127.0.0.1:8981-... initialized
+```
+
+Warnings about missing `process-wrapper`, `linux-sandbox`, and cgroups are expected on macOS and do not affect functionality. A Prometheus port conflict on 9090 (already used by the server) is also harmless.
+
+## Step 6: Connect your Bazel client
+
+Port 8980 is not forwarded by Orka's default port mapping. Open an SSH tunnel from the machine where you'll run Bazel:
+
+```bash
+ssh -N -L 8980:127.0.0.1:8980 -p <SSH_PORT> admin@<NODE_IP>
+```
+
+Leave the tunnel running. In a separate terminal, add to your project's `.bazelrc`:
+
+```
+build --remote_executor=grpc://localhost:8980
+build --jobs=10
+```
+
+Pin your Bazel version in `.bazelversion`:
+
+```
+8.2.1
+```
+
+## Step 7: Run a build and verify
+
+```bash
+bazel build --verbose_failures //:your_target
+```
+
+In the output, the `processes:` line shows how many actions ran remotely:
+
+```
+INFO: 18 processes: 10 internal, 8 remote.
+```
+
+To confirm cache hits, run a full clean and rebuild:
+
+```bash
+bazel clean --expunge
+bazel build //:your_target
+```
+
+The second build should complete in a few seconds with all actions restored from the remote cache:
+
+```
+INFO: 18 processes: 8 remote cache hit, 10 internal.
+```
+
+You'll also see a deprecation warning about the buildfarm server's supported API version. This is harmless for a PoC and does not affect correctness.
+
+## Where to go from here
+
+**Automate startup.** Add launchd plists to the VM for Redis, the server, and the worker so all three start on boot. Save the configured VM as an Orka image and it becomes your baseline.
+
+**Scale workers.** Once the server image is stable, the worker process is the unit you want to multiply. Deploy additional VMs from the same image on the same node (they share the `192.168.64.x` subnet and can reach the server). On M4 Pro hardware, each node supports two concurrent VMs.
+
+**Cross-node networking.** With bridge networking enabled (Orka 3.5+), VMs get a routable IP on the host network and can reach each other across nodes directly -- straightforward for a multi-node buildfarm setup. If your cluster is running in NAT mode, VMs on different nodes cannot reach each other's internal IPs; in that case you'll need either a VPN across your cluster or a dedicated node that runs the server and all workers together. Contact MacStadium support to confirm your cluster's network configuration before planning a multi-node setup.
+
+**Production cache backend.** Redis on localhost is sufficient for a PoC. For production, use a Redis cluster or managed equivalent sized for your artifact volume.
+
+**Warm pool.** Use an Orka VM config to keep a declared number of worker VMs running. The Orka operator maintains the pool size without manual dispatch.
+
+## Related
+
+- [Orka + Bazel RBE: Architecture and positioning](/orka/orka-devops-integrations/bazel-rbe)
+- [OCI images overview](/orka/oci-images/oci-images-overview)
+- [Image caching](/orka/orka-resources/image-caching)
+- [VM configs](/orka/orka3-cli-reference/vm-deployment-and-configuration)
